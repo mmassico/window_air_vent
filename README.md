@@ -57,6 +57,22 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 
 PETG. The foam-side lip in each bore seals with its underside, so it prints as a flat 5.6 mm overhang. If it sags, paint a support enforcer under those two half-rings only; the foam tape covers the face anyway.
 
+### Filament
+
+About **0.35–0.4 kg of PETG** for one unit (less than half a 1 kg spool), or roughly $10–14 at $25–35/kg.
+
+| Part | Qty | Solid volume |
+|---|---|---|
+| `body` | 1 | 257 cm³ |
+| `disc` | 2 | 2 × 14 = 28 cm³ |
+| `motor_plate` | 1 | 11 cm³ |
+| `magnet_cap` | 1 | 0.4 cm³ |
+| **Total** | | **≈ 296 cm³** |
+
+- Printed fully solid, 296 cm³ of PETG (1.27 g/cm³) weighs about 376 g.
+- Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 330–380 g, plus a little for the skirt or brim and purging.
+- Print time: very roughly 10–14 hours in total on a Bambu Lab P1, mostly for the housing. The slicer gives the exact figure.
+
 ## Hardware
 
 Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
