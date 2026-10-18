@@ -50,10 +50,10 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 
 | Part | Qty | Description | Size (mm) | Print orientation | |
 |---|---|---|---|---|---|
-| `body` | 1 | Housing: two ducts with the damper lips, drip dams and shaft bosses, O-ring spigots, fan plate, motor frame and encoder plate | 90 × 233 × 114 | Fan plate on the bed, no supports | <img src="images/part_body.png" width="90"> |
-| `disc` | 2 | Butterfly damper disc, clamped to the shaft by two M3 grub screws | 67 × 67 × 14 | Plate on the bed, hub up | <img src="images/part_disc.png" width="90"> |
-| `motor_plate` | 1 | The motor screws to it on the bench; it then screws onto the frame on top of the housing | 56 × 56 × 4 | Flat | <img src="images/part_motor_plate.png" width="90"> |
-| `magnet_cap` | 1 | Holds the encoder magnet on the bottom end of the shaft | 10 × 10 × 7 | Bore down | <img src="images/part_magnet_cap.png" width="90"> |
+| `body` | 1 | Housing: two ducts with the damper lips, drip dams and shaft bosses, O-ring spigots, fan plate, motor frame and encoder plate | 90 × 233 × 114 | Fan plate on the bed, no supports | <img src="images/part_body.png" width="180"> |
+| `disc` | 2 | Butterfly damper disc, clamped to the shaft by two M3 grub screws | 67 × 67 × 14 | Plate on the bed, hub up | <img src="images/part_disc.png" width="180"> |
+| `motor_plate` | 1 | The motor screws to it on the bench; it then screws onto the frame on top of the housing | 56 × 56 × 4 | Flat | <img src="images/part_motor_plate.png" width="180"> |
+| `magnet_cap` | 1 | Holds the encoder magnet on the bottom end of the shaft | 10 × 10 × 7 | Bore down | <img src="images/part_magnet_cap.png" width="180"> |
 
 PETG. The foam-side lip in each bore seals with its underside, so it prints as a flat 5.6 mm overhang. If it sags, paint a support enforcer under those two half-rings only; the foam tape covers the face anyway.
 
