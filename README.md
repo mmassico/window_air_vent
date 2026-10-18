@@ -18,7 +18,7 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 - **Motor and encoder.** A NEMA 17 pancake stepper on top turns the shaft through a flexible coupler. A TMC2209 driver keeps it silent. The motor screws to a separate plate on the bench, and the plate then screws onto a frame on top of the housing from above. An AS5600 magnetic encoder at the bottom reads the absolute shaft angle, so the firmware always knows whether the dampers are really closed, with no homing and no limit switch.
 - **Fans.** Two 80 mm PWM fans screw onto the room end of the housing.
 - **Water stays out of the room.** A 3 mm drip dam across the lower part of each bore, just before the fan, stops droplets from running indoors. Around the bottom shaft hole in each duct, a 16 mm boss rises 3 mm above the floor, so water flows around it instead of down the shaft.
-- **How it seals.** The lips do the sealing, not the gap between the disc and the bore: they are 5.6 mm wide and overlap the disc edge by 2 mm, with foam tape in between. The disc is 67 mm in a 74 mm bore so it can be slid in edge-on past the dam and the bosses. Around the shaft, where the lips must stop to clear the hub, a matching boss at the top and the one at the bottom bring the gap down to 0.6 mm.
+- **How it seals.** The lips do the sealing, not the gap between the disc and the bore: they are 5.6 mm wide and overlap the disc edge by 2 mm, with foam tape in between. The disc is 67 mm in a 74 mm bore so it can be slid in edge-on past the dam and the bosses. Around the shaft, where the lips must stop to clear the hub, a boss at the top and the one at the bottom close the gap. Their inner faces are curved, coaxial with the bore, so they follow the disc edge with an even gap of about 0.75 mm.
 
 <p align="center">
   <img src="images/damper_section.png" alt="Top-down section through the upper duct: disc closed against the two half-ring lips, at 45 degrees, and fully open" width="640">
@@ -26,6 +26,10 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 
 <p align="center">
   <img src="images/damper_cutaway.png" alt="Cutaway of a closed damper: the disc (orange) sits between two red half-ring lips, one on each side of the shaft and on opposite faces of the disc; the floor boss surrounds the bottom shaft hole" width="480">
+</p>
+
+<p align="center">
+  <img src="images/damper_closed_view.png" alt="Looking along the duct at the closed disc: curved shaft bosses at the top and bottom follow the disc edge, and the lip behind the disc covers the rest of the gap" width="360">
 </p>
 
 <p align="center">
@@ -70,7 +74,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | M3 × 35 screws + M3 nuts | 8 each | Fans | — |
 | M3 × 8 screws | 4 | Motor to motor plate | — |
 | M3 × 10 screws + M3 nuts | 4 each | Motor plate to the housing (nuts slide into side slots in the frame) | — |
-| M3 grub screws | 2 | Clamp each disc to the shaft (self-tapping into the hub) | — |
+| M3 grub screws | 4 | Two per disc, 24 mm apart along the hub, so the disc can't rock on the shaft (self-tapping into the hub) | — |
 | O-rings, about 76 × 2.5 mm, EPDM or silicone | 4 | Two per spigot. Optional at first: the spigots also fit a snug hole | — |
 | Thin foam tape, about 1 mm | 1 roll | Lips | |
 | 12 V supply | 1 | Fans and motor | — |
@@ -89,7 +93,7 @@ The AS5600 measures the direction of the magnetic field across the shaft, so the
 1. Line the lips with foam tape.
 2. Slide each disc edge-on into its duct from the fan end, hub toward the room.
 3. Push the shaft down through the frame on top, both ducts and both disc hubs.
-4. Turn both discs closed against the lips and tighten their grub screws through the duct openings.
+4. Turn both discs closed against the lips and tighten their grub screws (two per disc) through the duct openings.
 5. Glue the magnet into the cap and press the cap onto the shaft's bottom end. Fit the AS5600 board under it, 1–2 mm from the magnet.
 6. On the bench, screw the motor to the motor plate (4 × M3 × 8 from below) and fit the coupler on the motor shaft.
 7. Slide four M3 nuts into the side slots of the frame on top of the housing. Lower the motor and plate onto the frame, with the coupler over the shaft end, and screw the plate down (4 × M3 × 10 from above). Tighten the coupler's lower screw through a side window.

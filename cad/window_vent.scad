@@ -43,14 +43,17 @@ hc       = 5.5;     // shaft axis above the disc plate bottom (the disc prints f
 hub_w    = 10;      // hub width
 hub_l    = 40;      // hub length along the shaft
 hub_h    = 14;      // hub height above the plate bottom
+grub_n   = 2;       // [1:1:3] M3 grub screws per disc (2 = no rocking on the shaft)
+grub_sp  = 24;      // spacing between them along the shaft
 gasket   = 1;       // foam tape thickness on the lips
 lip_ovl  = 2;       // lips overlap the disc edge by this much
 lip_t    = 2;       // lip thickness (along the flow)
 lip_gap  = 7;       // no lip within this distance of the shaft (clears the hub and the edge-on disc)
-dam_h    = 3;       // drip dam near the fan end, on the lower part of each bore
+dam_h    = 3;       // drip dam near the fan end, on the lower part of each bore (sizes the disc; its inner face follows the disc sweep)
 dam_ang  = 60;      // the dam covers +/- this angle from the bottom of the bore
-sboss_d  = 16;      // bosses around both shaft holes inside each duct: at the bottom, water flows
-sboss_h  = 3;       // around it instead of down the shaft; at both ends, they close the gap the lips leave around the shaft
+sboss_d  = 16;      // bosses around both shaft holes inside each duct: at the bottom, water flows around it
+                    // instead of down the shaft; at both ends, they close the gap the lips leave around the shaft
+sboss_clr = 0.3;    // their inner face is curved, coaxial with the bore, this far outside the disc's sweep
 
 /* [Fans] */
 fan       = 80;     // fan frame size
@@ -90,9 +93,12 @@ z_mp1  = z_mp0 + mp_t;
 z_cap1 = -(z_top + boss_h + 1);            // magnet cap top
 z_ep1  = z_cap1 - cap_h - enc_gap - enc_stack;  // encoder plate top
 z_ep0  = z_ep1 - 4;
-// The disc goes in edge-on, so it must clear the drip dam and the floor boss: that sets its size.
-disc_d = duct_id - 2 * (max(dam_h, sboss_h) + 0.6);
+// The disc goes in edge-on, so it must clear the drip dam: that sets its size.
+disc_d = duct_id - 2 * (dam_h + 0.6);
 lip_w  = (duct_id - disc_d) / 2 + lip_ovl;   // lips reach in far enough to overlap the disc
+// The plate is hc off the shaft, so while it turns its edge reaches this far from the bore axis.
+r_sweep = sqrt(pow(disc_d / 2, 2) + pow(hc, 2));
+boss_rc = r_sweep + sboss_clr;               // curved inner face of the shaft bosses
 y_br   = ys - mplate / 2;                  // bracket walls start here (they run to the fan plate)
 x_br   = mplate / 2;                       // bracket walls: x from x_br - tower_t to x_br, under the frame corners
 y_dam  = ys + (r - 0.4) + 1;               // drip dam face, just outside the disc swing
@@ -147,10 +153,10 @@ module drip_dam(z) {   // lower part of the bore, flat face toward the foam, 45 
     intersection() {
         translate([-ro, y_dam - 1, z - ro]) cube([2 * ro, duct_len, ro - r * cos(dam_ang)]);
         union() {
-            difference() { ycyl(y_dam, y_dam + 2, duct_id + 1, z); ycyl(y_dam - 1, y_dam + 3, duct_id - 2 * dam_h, z); }
+            difference() { ycyl(y_dam, y_dam + 2, duct_id + 1, z); ycyl(y_dam - 1, y_dam + 3, 2 * boss_rc, z); }
             difference() {
                 ycyl(y_dam + 2, y_dam + 2 + dam_h, duct_id + 1, z);
-                ycyl(y_dam + 2 - eps, y_dam + 2 + dam_h + eps, duct_id - 2 * dam_h, z, duct_id + 2 * eps);
+                ycyl(y_dam + 2 - eps, y_dam + 2 + dam_h + eps, 2 * boss_rc, z, duct_id + 2 * eps);
             }
         }
     }
@@ -217,8 +223,13 @@ module body() {
             for (z = zc) {
                 lips(z);
                 drip_dam(z);
-                translate([0, ys, z - r - 1]) cylinder(d = sboss_d, h = 1 + sboss_h, $fn = 48);   // shaft boss on the floor
-                translate([0, ys, z + r - sboss_h]) cylinder(d = sboss_d, h = 1 + sboss_h, $fn = 48);   // and on the ceiling
+                intersection() {   // shaft bosses, floor and ceiling: a tall cylinder cut by the bore-axis cylinder
+                    translate([0, ys, z - r - 1]) cylinder(d = sboss_d, h = 2 * r + 2, $fn = 48);
+                    difference() {
+                        ycyl(ys - sboss_d, ys + sboss_d, duct_id + 1, z);
+                        ycyl(ys - sboss_d - 1, ys + sboss_d + 1, 2 * boss_rc, z, undef);
+                    }
+                }
             }
         }
         // shaft
@@ -237,7 +248,8 @@ module disc() {
             translate([0, 0, hc]) sphere(r = r - 0.4);   // stays inside the bore at every angle
         }
         translate([0, -50, hc]) rotate([-90, 0, 0]) cylinder(d = shaft_d + 0.2, h = 100, $fn = 32);
-        translate([0, 0, hc]) cylinder(d = 2.5, h = hub_h, $fn = 24);   // M3 grub screw (self-tapping)
+        for (k = [0 : grub_n - 1])   // M3 grub screws (self-tapping), spread along the hub
+            translate([0, (k - (grub_n - 1) / 2) * (grub_n > 1 ? grub_sp / (grub_n - 1) : 0), hc]) cylinder(d = 2.5, h = hub_h, $fn = 24);
     }
 }
 
