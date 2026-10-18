@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, body, disc, motor_plate, magnet_cap]
+part  = "assembly"; // [assembly, body, disc, motor_plate, magnet_cap, assembly_nofan]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -291,8 +291,28 @@ module assembly() {
     %translate([-50, -50, -pitch / 2 - 90]) cube([100, 50, pitch + 180]);   // foam insert (ghost)
 }
 
-if (part == "assembly")   assembly();
-if (part == "body")       translate([0, 0, duct_len]) rotate([-90, 0, 0]) body();   // fan plate on the bed
-if (part == "disc")       disc();
-if (part == "motor_plate") motor_plate();
-if (part == "magnet_cap") magnet_cap();
+module assembly_nofan() {
+    color([0.85, 0.85, 0.88]) body();
+    for (z = zc) color([0.95, 0.6, 0.25]) disc_installed(z, angle);
+    /*
+    color([0.6, 0.6, 0.62]) translate([0, ys, z_cap1 - 3.3]) cylinder(d = shaft_d, h = z_mp1 - 12 - z_cap1 + 3.3);
+    */
+    color([0.3, 0.5, 0.9]) translate([0, ys, z_cap1]) rotate([180, 0, 0]) magnet_cap();
+    color([0.55, 0.75, 0.95]) translate([0, ys, z_mp1]) motor_plate();
+    /*
+    color([0.15, 0.15, 0.17]) translate([-nema / 2, ys - nema / 2, z_mp1 + mplate_t]) cube([nema, nema, 20]);
+    color([0.75, 0.75, 0.3]) translate([0, ys, z_mp0 - 25]) cylinder(d = 19, h = 25);
+    color([0.2, 0.55, 0.3]) translate([-11, ys - 11, z_ep1]) cube([22, 22, 1.6]);
+    for (z = zc) color([0.2, 0.2, 0.22]) translate([-fan / 2, duct_len, z - fan / 2])
+        difference() { cube([fan, fan_t, fan]); translate([fan / 2, -1, fan / 2]) rotate([-90, 0, 0]) cylinder(d = 76, h = fan_t + 2); }
+    %translate([-50, -50, -pitch / 2 - 90]) cube([100, 50, pitch + 180]);   // foam insert (ghost)
+    */
+}
+
+
+if (part == "assembly")       assembly();
+if (part == "body")           translate([0, 0, duct_len]) rotate([-90, 0, 0]) body();   // fan plate on the bed
+if (part == "disc")           disc();
+if (part == "motor_plate")    motor_plate();
+if (part == "magnet_cap")     magnet_cap();
+if (part == "assembly_nofan") assembly_nofan();
