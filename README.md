@@ -157,6 +157,7 @@ images/                renders used in this README
 cad/window_vent.scad   parametric model (Customizer; part = "assembly" for the preview)
 stl/                   exported parts (default parameters)
 tools/check.py         geometry checks (must print ALL CHECKS PASSED)
+tools/wiring_svg.py    draws firmware/images/wiring.svg (the wiring diagram)
 firmware/baremetal/    Arduino sketch: serial commands to test each electronic part (not tested on hardware yet; see firmware/README.md)
 PRINT_CHECKLIST.md     every printed/bought part interface to verify before printing
 ```

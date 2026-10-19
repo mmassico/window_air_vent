@@ -34,6 +34,10 @@ arduino-cli compile --fqbn "esp32:esp32:esp32s3:FlashSize=16M,PSRAM=opi,Partitio
 
 Every pin is defined in [`baremetal/Pins.h`](baremetal/Pins.h). "3V3" and "GND" are the ESP32 board's pins. Every ground is common.
 
+<img src="images/wiring.svg" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209 and stepper on the right, 12 V supply and buck converter on top" width="100%">
+
+The table below gives the same connections, pin by pin.
+
 | Part | Pin | Goes to | Extra parts |
 |---|---|---|---|
 | **SCD40** (CO₂) | VDD, GND | 3V3, GND | |

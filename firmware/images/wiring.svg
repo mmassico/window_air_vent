@@ -1,0 +1,246 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="1230" viewBox="0 0 1640 1230" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="1640" height="1230" fill="#ffffff"/>
+<rect x="640" y="150" width="260" height="910" rx="8" fill="#e8eef7" stroke="#222" stroke-width="2"/>
+<text x="770.0" y="172" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">ESP32-S3</text>
+<text x="770.0" y="190" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">Freenove WROOM Lite (FNK0099)</text>
+<text x="770.0" y="705" font-size="13" text-anchor="middle" font-weight="bold" fill="#111">USB-UART connector</text>
+<text x="770.0" y="723" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">to the PC: flashing + console</text>
+<text x="700" y="212" font-size="13" text-anchor="middle" font-weight="bold" fill="#111">5V</text>
+<text x="770" y="212" font-size="13" text-anchor="middle" font-weight="bold" fill="#111">3V3</text>
+<text x="840" y="212" font-size="13" text-anchor="middle" font-weight="bold" fill="#111">GND</text>
+<polyline points="770,150 770,124" fill="none" stroke="#d17a00" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="750.5" y="102" width="39" height="22" rx="11" fill="#d17a00"/>
+<text x="770.0" y="118" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">3V3</text>
+<polyline points="840,150 840,124" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="820.5" y="102" width="39" height="22" rx="11" fill="#333333"/>
+<text x="840.0" y="118" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<rect x="150" y="200" width="180" height="130" rx="8" fill="#f4f6f8" stroke="#222" stroke-width="2"/>
+<text x="240.0" y="222" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">SCD40</text>
+<text x="240.0" y="240" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">CO2 sensor, I2C 0x62</text>
+<text x="160" y="265" font-size="14" text-anchor="start" font-weight="normal" fill="#111">VDD</text>
+<polyline points="150,260 124,260" fill="none" stroke="#d17a00" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="85" y="249.0" width="39" height="22" rx="11" fill="#d17a00"/>
+<text x="104.5" y="265.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">3V3</text>
+<text x="160" y="305" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GND</text>
+<polyline points="150,300 124,300" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="85" y="289.0" width="39" height="22" rx="11" fill="#333333"/>
+<text x="104.5" y="305.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="320" y="265" font-size="14" text-anchor="end" font-weight="normal" fill="#111">SDA</text>
+<text x="320" y="305" font-size="14" text-anchor="end" font-weight="normal" fill="#111">SCL</text>
+<text x="650" y="265" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GPIO 8  SDA0</text>
+<polyline points="330,260 640,260" fill="none" stroke="#1b7f3b" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="650" y="305" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GPIO 9  SCL0</text>
+<polyline points="330,300 640,300" fill="none" stroke="#1b7f3b" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="485" y="330" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#1b7f3b" font-style="italic">1-2 m cable, 100 kHz</text>
+<rect x="150" y="370" width="180" height="150" rx="8" fill="#f4f6f8" stroke="#222" stroke-width="2"/>
+<text x="240.0" y="392" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">AS5600</text>
+<text x="240.0" y="410" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">encoder, I2C 0x36</text>
+<text x="160" y="430" font-size="14" text-anchor="start" font-weight="normal" fill="#111">VCC</text>
+<polyline points="150,425 124,425" fill="none" stroke="#d17a00" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="85" y="414.0" width="39" height="22" rx="11" fill="#d17a00"/>
+<text x="104.5" y="430.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">3V3</text>
+<text x="160" y="465" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GND</text>
+<polyline points="150,460 124,460" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="85" y="449.0" width="39" height="22" rx="11" fill="#333333"/>
+<text x="104.5" y="465.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="160" y="500" font-size="14" text-anchor="start" font-weight="normal" fill="#111">DIR</text>
+<polyline points="150,495 124,495" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="85" y="484.0" width="39" height="22" rx="11" fill="#333333"/>
+<text x="104.5" y="500.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="320" y="430" font-size="14" text-anchor="end" font-weight="normal" fill="#111">SDA</text>
+<text x="320" y="465" font-size="14" text-anchor="end" font-weight="normal" fill="#111">SCL</text>
+<text x="650" y="430" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GPIO 6  SDA1</text>
+<polyline points="330,425 640,425" fill="none" stroke="#1b7f3b" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="650" y="465" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GPIO 7  SCL1</text>
+<polyline points="330,460 640,460" fill="none" stroke="#1b7f3b" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="485" y="490" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#1b7f3b" font-style="italic">local, 400 kHz</text>
+<text x="650" y="635" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GPIO 1  12 V sense</text>
+<polyline points="430,630 640,630" fill="none" stroke="#b3261e" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="430" cy="630" r="4.5" fill="#b3261e"/>
+<polyline points="430,630 430,618" fill="none" stroke="#b3261e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="430,574 437,577.6666666666666 423,585.0 437,592.3333333333334 423,599.6666666666666 437,607.0 423,614.3333333333334 430,618" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="442" y="601.0" font-size="13" text-anchor="start" font-weight="normal" fill="#222">100 k</text>
+<rect x="410.5" y="552" width="39" height="22" rx="11" fill="#b3261e"/>
+<text x="430.0" y="568" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">12V</text>
+<polyline points="430,630 430,642" fill="none" stroke="#b3261e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="430,642 437,645.6666666666666 423,653.0 437,660.3333333333334 423,667.6666666666666 437,675.0 423,682.3333333333334 430,686" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="442" y="669.0" font-size="13" text-anchor="start" font-weight="normal" fill="#222">22 k</text>
+<rect x="410.5" y="686" width="39" height="22" rx="11" fill="#333333"/>
+<text x="430.0" y="702" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="330" y="635" font-size="14" text-anchor="end" font-weight="bold" fill="#b3261e">12 V sense</text>
+<text x="330" y="654" font-size="12.5" text-anchor="end" font-weight="normal" fill="#444">12 V reads 2.2 V</text>
+<rect x="150" y="730" width="180" height="130" rx="8" fill="#f4f6f8" stroke="#222" stroke-width="2"/>
+<text x="240.0" y="752" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">Fan 0 (intake)</text>
+<text x="240.0" y="770" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">Noctua NF-A8 PWM</text>
+<text x="160" y="805" font-size="14" text-anchor="start" font-weight="normal" fill="#111">12 V</text>
+<polyline points="150,800 124,800" fill="none" stroke="#b3261e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="85" y="789.0" width="39" height="22" rx="11" fill="#b3261e"/>
+<text x="104.5" y="805.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">12V</text>
+<text x="160" y="845" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GND</text>
+<polyline points="150,840 124,840" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="85" y="829.0" width="39" height="22" rx="11" fill="#333333"/>
+<text x="104.5" y="845.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="320" y="805" font-size="14" text-anchor="end" font-weight="normal" fill="#111">tach (green)</text>
+<text x="320" y="845" font-size="14" text-anchor="end" font-weight="normal" fill="#111">PWM (blue)</text>
+<text x="650" y="805" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GPIO 15  FAN0 tach</text>
+<polyline points="330,800 640,800" fill="none" stroke="#c25e00" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="650" y="845" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GPIO 4  FAN0 PWM</text>
+<polyline points="330,840 640,840" fill="none" stroke="#c25e00" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="520" cy="800" r="4.5" fill="#c25e00"/>
+<polyline points="520,800 520,788" fill="none" stroke="#c25e00" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="520,744 527,747.6666666666666 513,755.0 527,762.3333333333334 513,769.6666666666666 527,777.0 513,784.3333333333334 520,788" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="532" y="771.0" font-size="13" text-anchor="start" font-weight="normal" fill="#222">10 k</text>
+<rect x="500.5" y="722" width="39" height="22" rx="11" fill="#d17a00"/>
+<text x="520.0" y="738" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">3V3</text>
+<circle cx="400" cy="840" r="4.5" fill="#c25e00"/>
+<polyline points="400,840 400,852" fill="none" stroke="#c25e00" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="400,852 407,855.6666666666666 393,863.0 407,870.3333333333334 393,877.6666666666666 407,885.0 393,892.3333333333334 400,896" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="412" y="879.0" font-size="13" text-anchor="start" font-weight="normal" fill="#222">10 k</text>
+<rect x="380.5" y="896" width="39" height="22" rx="11" fill="#333333"/>
+<text x="400.0" y="912" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<rect x="150" y="900" width="180" height="130" rx="8" fill="#f4f6f8" stroke="#222" stroke-width="2"/>
+<text x="240.0" y="922" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">Fan 1 (exhaust)</text>
+<text x="240.0" y="940" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">Noctua NF-A8 PWM</text>
+<text x="160" y="975" font-size="14" text-anchor="start" font-weight="normal" fill="#111">12 V</text>
+<polyline points="150,970 124,970" fill="none" stroke="#b3261e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="85" y="959.0" width="39" height="22" rx="11" fill="#b3261e"/>
+<text x="104.5" y="975.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">12V</text>
+<text x="160" y="1015" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GND</text>
+<polyline points="150,1010 124,1010" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="85" y="999.0" width="39" height="22" rx="11" fill="#333333"/>
+<text x="104.5" y="1015.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="320" y="975" font-size="14" text-anchor="end" font-weight="normal" fill="#111">tach (green)</text>
+<text x="320" y="1015" font-size="14" text-anchor="end" font-weight="normal" fill="#111">PWM (blue)</text>
+<text x="650" y="975" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GPIO 16  FAN1 tach</text>
+<polyline points="330,970 640,970" fill="none" stroke="#c25e00" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="650" y="1015" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GPIO 5  FAN1 PWM</text>
+<polyline points="330,1010 640,1010" fill="none" stroke="#c25e00" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="560" cy="970" r="4.5" fill="#c25e00"/>
+<polyline points="560,970 560,958" fill="none" stroke="#c25e00" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="560,914 567,917.6666666666666 553,925.0 567,932.3333333333334 553,939.6666666666666 567,947.0 553,954.3333333333334 560,958" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="572" y="941.0" font-size="13" text-anchor="start" font-weight="normal" fill="#222">10 k</text>
+<rect x="540.5" y="892" width="39" height="22" rx="11" fill="#d17a00"/>
+<text x="560.0" y="908" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">3V3</text>
+<circle cx="440" cy="1010" r="4.5" fill="#c25e00"/>
+<polyline points="440,1010 440,1022" fill="none" stroke="#c25e00" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="440,1022 447,1025.6666666666667 433,1033.0 447,1040.3333333333333 433,1047.6666666666667 447,1055.0 433,1062.3333333333333 440,1066" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="452" y="1049.0" font-size="13" text-anchor="start" font-weight="normal" fill="#222">10 k</text>
+<rect x="420.5" y="1066" width="39" height="22" rx="11" fill="#333333"/>
+<text x="440.0" y="1082" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<rect x="1150" y="200" width="200" height="440" rx="8" fill="#f4f6f8" stroke="#222" stroke-width="2"/>
+<text x="1250.0" y="222" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">TMC2209</text>
+<text x="1250.0" y="240" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">stepper driver module</text>
+<text x="1160" y="305" font-size="14" text-anchor="start" font-weight="normal" fill="#111">EN</text>
+<text x="890" y="305" font-size="14" text-anchor="end" font-weight="normal" fill="#111">GPIO 10  EN</text>
+<polyline points="900,300 1150,300" fill="none" stroke="#6a3fb5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1160" y="365" font-size="14" text-anchor="start" font-weight="normal" fill="#111">STEP</text>
+<text x="890" y="365" font-size="14" text-anchor="end" font-weight="normal" fill="#111">GPIO 11  STEP</text>
+<polyline points="900,360 1150,360" fill="none" stroke="#6a3fb5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1160" y="405" font-size="14" text-anchor="start" font-weight="normal" fill="#111">DIR</text>
+<text x="890" y="405" font-size="14" text-anchor="end" font-weight="normal" fill="#111">GPIO 12  DIR</text>
+<polyline points="900,400 1150,400" fill="none" stroke="#6a3fb5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1160" y="445" font-size="14" text-anchor="start" font-weight="normal" fill="#111">DIAG</text>
+<text x="890" y="445" font-size="14" text-anchor="end" font-weight="normal" fill="#111">GPIO 13  DIAG</text>
+<polyline points="900,440 1150,440" fill="none" stroke="#6a3fb5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="990" cy="300" r="4.5" fill="#6a3fb5"/>
+<polyline points="990,300 990,288" fill="none" stroke="#6a3fb5" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="990,244 997,247.66666666666666 983,255.0 997,262.3333333333333 983,269.6666666666667 997,277.0 983,284.3333333333333 990,288" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1002" y="271.0" font-size="13" text-anchor="start" font-weight="normal" fill="#222">10 k</text>
+<rect x="970.5" y="222" width="39" height="22" rx="11" fill="#d17a00"/>
+<text x="990.0" y="238" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">3V3</text>
+<text x="890" y="525" font-size="14" text-anchor="end" font-weight="normal" fill="#111">GPIO 17  UART TX</text>
+<polyline points="900,520 980,520" fill="none" stroke="#6a3fb5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="980,520 983.6666666666666,527 991.0,513 998.3333333333334,527 1005.6666666666666,513 1013.0,527 1020.3333333333334,513 1024,520" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1002.0" y="508" font-size="13" text-anchor="middle" font-weight="normal" fill="#222">1 k</text>
+<polyline points="1024,520 1080,520 1080,580" fill="none" stroke="#6a3fb5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="890" y="585" font-size="14" text-anchor="end" font-weight="normal" fill="#111">GPIO 18  UART RX</text>
+<polyline points="900,580 1150,580" fill="none" stroke="#6a3fb5" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="1080" cy="580" r="4.5" fill="#6a3fb5"/>
+<text x="1160" y="585" font-size="14" text-anchor="start" font-weight="normal" fill="#111">PDN_UART</text>
+<text x="1200" y="268" font-size="14" text-anchor="middle" font-weight="normal" fill="#111">VIO</text>
+<polyline points="1200,200 1200,174" fill="none" stroke="#d17a00" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1180.5" y="152" width="39" height="22" rx="11" fill="#d17a00"/>
+<text x="1200.0" y="168" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">3V3</text>
+<text x="1300" y="268" font-size="14" text-anchor="middle" font-weight="normal" fill="#111">GND</text>
+<polyline points="1300,200 1300,174" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1280.5" y="152" width="39" height="22" rx="11" fill="#333333"/>
+<text x="1300.0" y="168" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="1340" y="305" font-size="14" text-anchor="end" font-weight="normal" fill="#111">VM</text>
+<text x="1340" y="365" font-size="14" text-anchor="end" font-weight="normal" fill="#111">GND</text>
+<polyline points="1350,360 1380,360" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1380" y="349.0" width="39" height="22" rx="11" fill="#333333"/>
+<text x="1399.5" y="365.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="1340" y="405" font-size="14" text-anchor="end" font-weight="normal" fill="#111">MS1</text>
+<polyline points="1350,400 1380,400" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1380" y="389.0" width="39" height="22" rx="11" fill="#333333"/>
+<text x="1399.5" y="405.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="1340" y="445" font-size="14" text-anchor="end" font-weight="normal" fill="#111">MS2</text>
+<polyline points="1350,440 1380,440" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1380" y="429.0" width="39" height="22" rx="11" fill="#333333"/>
+<text x="1399.5" y="445.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<polyline points="1350,300 1560,300" fill="none" stroke="#b3261e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1560" y="289.0" width="39" height="22" rx="11" fill="#b3261e"/>
+<text x="1579.5" y="305.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">12V</text>
+<circle cx="1510" cy="300" r="4.5" fill="#111"/>
+<polyline points="1510,300 1510,315.0" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1496,315.0 1524,315.0" fill="none" stroke="#111" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1496,325.0 1524,325.0" fill="none" stroke="#111" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1510,325.0 1510,340" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1488" y="312.0" font-size="13" text-anchor="middle" font-weight="normal" fill="#111">+</text>
+<text x="1530" y="325.0" font-size="13" text-anchor="start" font-weight="normal" fill="#111"></text>
+<rect x="1490.5" y="340" width="39" height="22" rx="11" fill="#333333"/>
+<text x="1510.0" y="356" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="1510" y="385" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">100 uF, 25 V,</text>
+<text x="1510" y="402" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444" font-style="italic">close to the module</text>
+<text x="1180" y="630" font-size="13" text-anchor="middle" font-weight="normal" fill="#111">A1</text>
+<polyline points="1180,640 1180,700" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1220" y="630" font-size="13" text-anchor="middle" font-weight="normal" fill="#111">A2</text>
+<polyline points="1220,640 1220,700" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1280" y="630" font-size="13" text-anchor="middle" font-weight="normal" fill="#111">B1</text>
+<polyline points="1280,640 1280,700" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1320" y="630" font-size="13" text-anchor="middle" font-weight="normal" fill="#111">B2</text>
+<polyline points="1320,640 1320,700" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1180,700 1180,720 1225,745" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1220,700 1220,715 1240,735" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1280,700 1280,715 1265,735" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1320,700 1320,720 1280,745" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="1250" cy="800" r="62" fill="#f4f6f8" stroke="#222" stroke-width="2.5"/>
+<text x="1250" y="812" font-size="34" text-anchor="middle" font-weight="bold" fill="#111">M</text>
+<text x="1250" y="890" font-size="14" text-anchor="middle" font-weight="bold" fill="#111">NEMA 17 pancake stepper</text>
+<text x="1250" y="908" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">coil A: A1-A2, coil B: B1-B2</text>
+<text x="1250" y="926" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#b3261e" font-style="italic">never plug or unplug it with 12 V on</text>
+<rect x="1150" y="10" width="200" height="110" rx="8" fill="#f4f6f8" stroke="#222" stroke-width="2"/>
+<text x="1250.0" y="32" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">12 V supply</text>
+<text x="1250.0" y="50" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">fans, motor, buck</text>
+<text x="1340" y="75" font-size="16" text-anchor="end" font-weight="bold" fill="#111">+</text>
+<polyline points="1350,70 1380,70" fill="none" stroke="#b3261e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1380" y="59.0" width="39" height="22" rx="11" fill="#b3261e"/>
+<text x="1399.5" y="75.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">12V</text>
+<text x="1340" y="105" font-size="16" text-anchor="end" font-weight="bold" fill="#111">-</text>
+<polyline points="1350,100 1380,100" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1380" y="89.0" width="39" height="22" rx="11" fill="#333333"/>
+<text x="1399.5" y="105.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<rect x="930" y="10" width="160" height="110" rx="8" fill="#f4f6f8" stroke="#222" stroke-width="2"/>
+<text x="1010.0" y="32" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">Buck 12 V to 5 V</text>
+<text x="1010.0" y="50" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">e.g. Mini-360</text>
+<text x="1080" y="75" font-size="13" text-anchor="end" font-weight="normal" fill="#111">IN+</text>
+<polyline points="1090,70 1116,70" fill="none" stroke="#b3261e" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1116" y="59.0" width="39" height="22" rx="11" fill="#b3261e"/>
+<text x="1135.5" y="75.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">12V</text>
+<text x="1080" y="105" font-size="13" text-anchor="end" font-weight="normal" fill="#111">IN-</text>
+<polyline points="1090,100 1116,100" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1116" y="89.0" width="39" height="22" rx="11" fill="#333333"/>
+<text x="1135.5" y="105.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="940" y="105" font-size="13" text-anchor="start" font-weight="normal" fill="#111">OUT-</text>
+<polyline points="930,100 930,100" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="891" y="89.0" width="39" height="22" rx="11" fill="#333333"/>
+<text x="910.5" y="105.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="940" y="75" font-size="13" text-anchor="start" font-weight="normal" fill="#111">OUT+</text>
+<polyline points="930,70 700,70 700,150" fill="none" stroke="#1f5fbf" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="815" y="62" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#1f5fbf">to the board's 5V pin</text>
+<text x="60" y="1115" font-size="14" text-anchor="start" font-weight="normal" fill="#333">Coloured tags with the same name are the same net: every GND is common, and 3V3 comes from the board's 3V3 pin.</text>
+<text x="60" y="1139" font-size="14" text-anchor="start" font-weight="normal" fill="#333">On the bench, power the board from USB and leave the buck's OUT+ disconnected (two 5 V supplies must not meet).</text>
+<text x="60" y="1163" font-size="14" text-anchor="start" font-weight="normal" fill="#333">SCD40 and AS5600 modules usually carry their own I2C pull-ups; on a long SCD40 cable, 4.7 k to 3V3 at the ESP32 end helps.</text>
+<text x="60" y="1187" font-size="14" text-anchor="start" font-weight="normal" fill="#333">Pins as in firmware/baremetal/Pins.h. GPIO 38, 39, 40 stay free for the INMP441 microphone.</text>
+<text x="60" y="34" font-size="24" text-anchor="start" font-weight="bold" fill="#111">Window vent: wiring</text>
+</svg>
