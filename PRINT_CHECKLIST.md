@@ -111,6 +111,20 @@ Two common boards are supported. The chip is centred on both.
 | Tie-wrap anchors | 3 on each side, on the back of the fan plate; top and bottom touch the outer fan nut pockets; slot 4.5 × 2 | tie wraps up to 3.6 wide | ✅ |
 | SCD40 | not on the unit: on a free cable, out through a cable entry | I²C, about 1–2 m | ✅ place it in the room (near head height), away from the fresh-air jet, the electronics box and the sun; run the bus at 100 kHz or slower, pair SDA and SCL with GND and VCC |
 
+## Split housing (`body_top`, `body_bottom`, `splice`): 180 mm printers only
+
+| Item | Model | Hardware | Status |
+|---|---|---|---|
+| Part sizes | 90 × 130 × 114, 90 × 116 × 114, 60 × 32 × 6 | 180 × 180 × 180 bed (A1 mini) | ✅ |
+| Halves = housing | identical except the four joint screw holes | | ✅ `check.py`, check 6 |
+| Joint screws | Ø 3.4 holes; under the head: 3 (fan plate) + 6 (splice) | M3 × 10: through the nut, 1 mm out the back | ✅ |
+| Nut pockets (back of the splice) | hex 5.8 across flats, 2.6 deep | M3 nut: 5.5 AF, 2.4 thick | ✅ |
+| Screw heads on the fan face | counterbores Ø 6.5 × 3 deep, at z = ±4.5 | socket head Ø 5.5 × 3 | ✅ flush with the fan face, so no contact with the fan frames (they start at ±8) |
+| Splice to the ducts | 1 mm clearance all round | | ✅ |
+| Middle tie-wrap anchors | whole, on `body_top`; the cut steps down 5 mm under them (1 mm below the anchor), so they print from the bed | | ✅ |
+| Alignment | 0.2 mm radial play in the screw holes | shaft through all four bearing holes | ✅ tighten the screws after the shaft is in |
+| Both halves from the same spool and profile | | | 📏 shrinkage must match for the shaft line |
+
 ## Open questions
 
 1. Confirm the kit magnet's size when it arrives (6 × 2.5 expected). Nothing needs to change unless it is not 6 mm across.

@@ -57,6 +57,18 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | `magnet_cap` | 1 | Holds the encoder magnet on the bottom end of the shaft; one M3 grub screw, height adjustable ±1 mm | 14 × 14 × 12 | Bore down | <img src="images/part_magnet_cap.png" width="180"> |
 | `ebox` | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay | 80 × 76 × 62 | Floor on the bed | <img src="images/part_ebox.png" width="180"> |
 
+**For a 180 mm printer** (e.g. Bambu Lab A1 mini), print the housing in two halves instead of `body`. The cut runs midway between the two ducts, where only the fan plate joins them; a small splice plate behind the fan plate joins the halves again with four M3 screws, driven from the fan side in the band between the two fans. Each half prints like the full housing, in about half the time (roughly 5–6 h), so they can go on different days; use the same spool and profile for both.
+
+| Part | Qty | Description | Size (mm) | Print orientation | |
+|---|---|---|---|---|---|
+| `body_top` | 1 | Upper half: intake duct, upper fan, motor frame, and both middle tie-wrap anchors (whole) | 90 × 130 × 114 | Fan plate on the bed, no supports | <img src="images/part_body_top.png" width="180"> |
+| `body_bottom` | 1 | Lower half: exhaust duct, lower fan, encoder plate; notched under the two middle anchors | 90 × 116 × 114 | Fan plate on the bed, no supports | <img src="images/part_body_bottom.png" width="180"> |
+| `splice` | 1 | Joins the halves behind the fan plate; four M3 nut pockets on its back | 60 × 32 × 6 | Flat, nut pockets down | <img src="images/part_splice.png" width="180"> |
+
+<p align="center">
+  <img src="images/split_view.png" alt="Exploded view of the split housing: upper and lower halves, the splice plate in the gap between the ducts behind the fan plate, and the four screws in front" width="360">
+</p>
+
 **Optional test prints, before the housing.** Print the small real parts first (discs, motor plate, magnet cap, about 1.5–2 h): they test the rod, the grub screws, the motor and the magnet. Then:
 
 | Part | Size (mm) | Time | What it tests |
@@ -93,6 +105,8 @@ About **0.4–0.45 kg of PETG** for one unit (less than half a 1 kg spool), or r
 | `ebox` | 1 | 47 cm³ |
 | **Total** | | **≈ 353 cm³** |
 
+The split housing (`body_top` 130 cm³, `body_bottom` 135 cm³, `splice` 8 cm³) adds about 7 cm³ (10 g).
+
 - Printed fully solid, 353 cm³ of PETG (1.27 g/cm³) weighs about 448 g.
 - Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 400–450 g, plus a little for the skirt or brim and purging.
 - The optional test prints add about 32 cm³ (40 g): `fittest` 14 cm³, `oring_test` 18.5 cm³.
@@ -123,6 +137,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | Resistors and capacitor for the perfboard | | 1 kΩ (TMC2209 UART), 10 kΩ × 5 (driver enable pull-up, two fan PWM pull-downs, two tach pull-ups), 100 kΩ + 22 kΩ (12 V sense), 100 µF ≥ 25 V electrolytic (TMC2209 motor supply). See [firmware/README.md](firmware/README.md) | — |
 | Female pin headers, 2.54 mm | to suit | Sockets for the ESP32 and the TMC2209, so they unplug for flashing or replacement | |
 | M2 screws, about 6 mm | 4 | Perfboard onto the box standoffs (self-tapping) | |
+| M3 × 10 screws (socket head) + M3 nuts | 4 each | Split housing only: fan plate to the splice, heads sunk flush in the fan plate | — |
 | M3 × 12 screws | 4 | Electronics box: two through the front cover, two from above through the encoder plate (self-tapping) | — |
 | Small tie wraps, 2.5–3.6 mm | 3+ | Cable anchors (three on each side; use one side) | |
 | 12 V supply | 1 | Fans and motor | — |
@@ -138,9 +153,10 @@ The AS5600 measures the direction of the magnetic field across the shaft, so the
 
 ## Assembly
 
+0. Split housing only: press four M3 nuts into the splice's pockets. Stand the lower half upright, cut face up, hold the splice against the back of its fan plate, just above the duct, and fit the two lower M3 × 10 from the fan side. Lower the upper half onto it and fit the other two. Leave all four slightly loose until step 3.
 1. Line the lips with foam tape.
 2. Slide each disc edge-on into its duct from the fan end, hub toward the room.
-3. Push the shaft down through the frame on top, both ducts and both disc hubs.
+3. Push the shaft down through the frame on top, both ducts and both disc hubs. Split housing: the shaft now lines up the two halves; tighten the four splice screws.
 4. Turn both discs closed against the lips and tighten their grub screws (two per disc) through the duct openings.
 5. Screw the AS5600 board onto the four standoff pads, chip up, with its wires soldered into its holes and led out through the window below. Glue the magnet into the cap and slide the cap onto the shaft's bottom end. Lay a 1 mm shim on the chip (a plastic card works), slide the cap down until the magnet rests on it, tighten the cap's grub screw, and remove the shim.
 6. On the bench, screw the motor to the motor plate (4 × M3 × 8 from below) and fit the coupler on the motor shaft.

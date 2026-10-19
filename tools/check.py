@@ -10,6 +10,8 @@ Checks
   3. The lips stop the disc: turning it 3 deg past closed must hit them.
   4. The disc can be fitted: slid in edge-on from the fan end, it touches nothing.
   5. The electronics box only touches the housing (zero-volume contact).
+  6. Split housing (for 180 mm beds): the two halves are exactly the housing minus the four joint
+     screw holes, they don't overlap, and the splice plate only touches them.
 """
 import os, subprocess, tempfile, warnings
 import trimesh
@@ -17,8 +19,11 @@ warnings.filterwarnings('ignore')
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCAD = os.path.join(ROOT, "cad", "window_vent.scad")
-PARTS = ["body", "disc", "motor_plate", "magnet_cap", "ebox", "fittest", "oring_test"]
-BED = 256.0
+PARTS = ["body", "disc", "motor_plate", "magnet_cap", "ebox", "fittest", "oring_test",
+         "body_top", "body_bottom", "splice"]
+BED = 256.0                                      # Bambu Lab P1/X1/A1
+SMALL_BED = 180.0                                # Bambu Lab A1 mini
+SPLIT = ["body_top", "body_bottom", "splice"]    # must fit the small bed; they replace "body" there
 tmp = tempfile.mkdtemp(prefix="wv_check_")
 ok = True
 
@@ -39,8 +44,10 @@ print("1. Parts")
 for p in PARTS:
     m = trimesh.load(openscad(os.path.join(tmp, p + ".stl"), [f'part="{p}"']))
     size = [round(float(v), 1) for v in m.extents]
-    report(p, m.is_watertight and len(m.split(only_watertight=False)) == 1 and max(size) <= BED,
-           f"size {size} mm, {m.volume/1000:.0f} cm3")
+    bed = SMALL_BED if p in SPLIT else BED
+    small = "fits 180" if max(size) <= SMALL_BED else "needs > 180"
+    report(p, m.is_watertight and len(m.split(only_watertight=False)) == 1 and max(size) <= bed,
+           f"size {size} mm, {m.volume/1000:.0f} cm3, {small}")
 
 # wrapper: overlap of the upper disc at angle a with the housing
 wrap = os.path.join(tmp, "wrap.scad")
@@ -73,5 +80,23 @@ with open(boxw, "w") as fh:
 f = openscad(os.path.join(tmp, "box_ov.stl"), None, boxw)
 v = 0.0 if f is None else abs(trimesh.load(f).volume)
 report("box on housing", v < 1e-6, f"{v:.3f} mm3")
+
+print("6. Split housing (leftover / overlap volumes must be 0)")
+def volume(name, expr):
+    w = os.path.join(tmp, name + ".scad")
+    with open(w, "w") as fh:
+        fh.write(f'include <{SCAD.replace(os.sep, "/")}>\npart = "none";\n{expr}\n')
+    f = openscad(os.path.join(tmp, name + ".stl"), None, w)
+    return 0.0 if f is None else abs(trimesh.load(f).volume)
+
+for label, name, expr in [
+        ("nothing of the housing lost (except the screw holes)", "sp_lost",
+         "difference() { body(); body_half(true); body_half(false); split_screws(); }"),
+        ("nothing added to the housing", "sp_added",
+         "difference() { union() { body_half(true); body_half(false); } body(); }"),
+        ("halves don't overlap", "sp_halves", "intersection() { body_half(true); body_half(false); }"),
+        ("splice only touches the housing", "sp_splice", "intersection() { body(); splice(); }")]:
+    v = volume(name, expr)
+    report(label, v < 1e-6, f"{v:.3f} mm3")
 
 print("\nALL CHECKS PASSED" if ok else "\nSOME CHECKS FAILED")

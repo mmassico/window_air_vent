@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, body, disc, motor_plate, magnet_cap, ebox, fittest, oring_test, assembly_nofan]
+part  = "assembly"; // [assembly, body, disc, motor_plate, magnet_cap, ebox, fittest, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -101,6 +101,14 @@ usb_slot  = [0, 10];   // optional slot in the left wall for the ESP32's USB-C (
 usb_z     = 18;     // slot centre above the box floor
 cable_in  = [16, 10];  // cable entries at the top of both side walls, toward the front (length along y, depth)
 
+/* [Split housing, for printers under 241 mm (e.g. 180 mm beds)] */
+splice_t  = 6;      // splice plate behind the fan plate, in the gap between the ducts
+splice_w  = 60;     // its width (x); stays inside the tie-wrap anchors
+splice_h  = 32;     // its height (z), before the 1 mm clearance cuts around the ducts
+split_sx  = 20;     // joint screws (4 x M3 x 10) at x = +/- split_sx ...
+split_sz  = 4.5;    //   ... and z = +/- split_sz: in the band between the fans
+split_cb  = 3;      // their heads sink this deep into the fan plate (6.5 mm counterbores), flush with the fan face
+
 /* [Hidden] */
 $fn = 96;
 eps = 0.01;
@@ -123,6 +131,7 @@ boss_rc = r_sweep + sboss_clr;               // curved inner face of the shaft b
 y_br   = ys - mplate / 2;                  // bracket walls start here (they run to the fan plate)
 x_br   = mplate / 2;                       // bracket walls: x from x_br - tower_t to x_br, under the frame corners
 y_dam  = ys + (r - 0.4) + 1;               // drip dam face, just outside the disc swing
+y_sp0  = duct_len - fan_plate - splice_t;  // splice plate back face
 ebox_top    = -pitch / 2 - fan / 2;         // the box cover rises to the bottom of the lower fan
 ebox_back_x = ebox_w / 2 - 6;               // back fixing screws, outside the bay walls
 ebox_back_y = y_br + 6;
@@ -297,6 +306,53 @@ module body() {
         // shaft
         translate([0, ys, -(z_top + boss_h) - 1]) cylinder(d = shaft_d + shaft_clr, h = z_mp0 + z_top + boss_h + 2, $fn = 32);
     }
+}
+
+/* =================== SPLIT HOUSING (printers under 241 mm) =================== */
+// The housing cut at z = 0, midway between the ducts. In that band only the fan plate joins
+// the two ducts, so a splice plate on its back, in the gap between the ducts, joins the halves
+// again: 4 x M3 x 10 from the fan face (between the two fans, heads in counterbores) into nuts in the splice.
+// Each half prints like the full housing, fan plate on the bed.
+module split_screws()
+    for (sx = [-1, 1], sz = [-1, 1])
+        translate([sx * split_sx, y_sp0 - 1, sz * split_sz]) rotate([-90, 0, 0]) {
+            cylinder(d = 3.4, h = splice_t + fan_plate + 2, $fn = 24);
+            translate([0, 0, splice_t + fan_plate + 1 - split_cb]) cylinder(d = 6.5, h = split_cb + 1, $fn = 32);   // head counterbore
+        }
+
+// The middle tie-wrap anchors (z = -4 to 4) stay whole on the upper half: under each one, the cut
+// steps down to z = -5 (1 mm below the anchor, so no faces coincide), so the upper half keeps the fan
+// plate under the anchor and it still prints from the bed.
+module mid_anchor_zone()
+    for (sx = [-1, 1])
+        translate([sx < 0 ? -fan / 2 - 1 : fan / 2 - 8, duct_len - fan_plate - 7, -5]) cube([9, fan_plate + 8, 6]);   // to z = +1: no face in the cut plane
+
+module body_half(upper) intersection() {
+    difference() { body(); split_screws(); }
+    if (upper) union() { translate([-100, -50, 0]) cube([200, 200, 300]); mid_anchor_zone(); }
+    else difference() { translate([-100, -50, -300]) cube([200, 200, 300]); mid_anchor_zone(); }
+}
+
+module splice() {   // modelled in place (installed coordinates)
+    difference() {
+        translate([-splice_w / 2, y_sp0, -splice_h / 2]) cube([splice_w, splice_t, splice_h]);
+        for (z = zc) ycyl(y_sp0 - 1, duct_len, 2 * (ro + 1), z);   // 1 mm clear of both ducts
+        split_screws();
+        for (sx = [-1, 1], sz = [-1, 1])   // M3 nut pockets on its back face
+            translate([sx * split_sx, y_sp0 - eps, sz * split_sz]) rotate([-90, 0, 0]) cylinder(r = 5.8 / sqrt(3), h = 2.6, $fn = 6);
+    }
+}
+
+// Exploded view: halves pulled apart, splice pulled back toward the foam, screws in front of the fan plate.
+module split_view(gap = 36, back = 30) {
+    color([0.85, 0.85, 0.88]) translate([0, 0, gap / 2]) body_half(true);
+    color([0.75, 0.78, 0.85]) translate([0, 0, -gap / 2]) body_half(false);
+    color([0.95, 0.6, 0.25]) translate([0, -back, 0]) splice();
+    for (sx = [-1, 1], sz = [-1, 1]) color([0.25, 0.25, 0.27])
+        translate([sx * split_sx, duct_len + 20, sz * (split_sz + gap / 2)]) rotate([-90, 0, 0]) {
+            cylinder(d = 3, h = 10, $fn = 16);
+            translate([0, 0, 10]) cylinder(d = 5.5, h = 3, $fn = 24);
+        }
 }
 
 /* =================== DISC (print frame: plate on the bed, hub up, shaft along y) =================== */
@@ -480,3 +536,7 @@ if (part == "ebox")           translate([0, 0, ebox_h + ebox_t - z_ep0]) ebox();
 if (part == "fittest")        fittest();
 if (part == "oring_test")     oring_test();
 if (part == "assembly_nofan") assembly_nofan();
+if (part == "body_top")       translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(true);    // fan plate on the bed
+if (part == "body_bottom")    translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(false);   // fan plate on the bed
+if (part == "splice")         translate([0, 0, -y_sp0]) rotate([90, 0, 0]) splice();              // nut pockets on the bed
+if (part == "split_view")     split_view();
