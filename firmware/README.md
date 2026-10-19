@@ -9,20 +9,20 @@ Two stages:
 
 ## Board and tools
 
-- **Board:** Freenove ESP32-S3-WROOM Lite (FNK0099): 16 MB flash, 8 MB octal PSRAM, and two USB-C ports. The left port, marked UART, goes through a CH343 USB-serial chip; the right one is the chip's native USB.
+- **Board:** Freenove ESP32-S3-WROOM Lite (FNK0099): 16 MB flash, 8 MB octal PSRAM, and two USB-C connectors: **USB-UART** (the onboard code uploader, a CH343 USB-serial chip wired to the ESP32's UART0) and **USB-OTG** (the ESP32-S3's own USB, host or device).
 - **Software:** Arduino IDE 2.x with the **esp32 by Espressif Systems** core, version 3.x (tested to compile with 3.3.12). No other library is needed.
 - **Arduino IDE settings (Tools menu):**
 
 | Setting | Value |
 |---|---|
 | Board | ESP32S3 Dev Module |
-| USB CDC On Boot | Disabled (the console is on the UART port) |
+| USB CDC On Boot | Disabled: the console (`Serial`) then goes through the USB-UART connector. Enabled would move it to the USB-OTG connector |
 | Flash Size | 16MB (128Mb) |
 | Partition Scheme | 16M Flash (3MB APP/9.9MB FATFS) |
 | PSRAM | OPI PSRAM |
 | Upload Mode | UART0 / Hardware CDC |
 
-Plug the cable into the **UART** port. For the console, use the Serial Monitor at 115200 baud, or a terminal such as PuTTY; the up and down arrows then recall earlier commands.
+Plug the cable into the **USB-UART** connector (silkscreen: onboard code uploader); it is used both to flash and for the console. Windows lists it as "USB-SERIAL CH343 (COMx)" under "Ports (COM & LPT)"; if it doesn't appear, install the CH343 driver from Freenove's package. Leave the TX/RX header pins (GPIO 43/44) unconnected. For the console, use the Serial Monitor at 115200 baud, or a terminal such as PuTTY; the up and down arrows then recall earlier commands.
 
 The same build from the command line:
 

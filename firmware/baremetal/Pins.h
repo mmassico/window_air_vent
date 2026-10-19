@@ -4,7 +4,7 @@
 // and the console UART (43 TX, 44 RX, through the board's CH343 USB-UART port).
 #pragma once
 
-// Console: UART0 on GPIO 43/44 (the "USB UART" connector), 115200 baud.
+// Console: UART0 on GPIO 43/44 (the USB-UART connector, "onboard code uploader"), 115200 baud.
 #define CONSOLE_BAUD    115200
 
 // I2C bus 0: SCD40 CO2 sensor, on a 1-2 m cable, so kept slow.
