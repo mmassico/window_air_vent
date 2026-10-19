@@ -3,6 +3,8 @@
 // A serial command interpreter to check each part on its own: I2C buses, SCD40 CO2 sensor, AS5600 encoder,
 // TMC2209 driver and stepper, fans, 12 V supply. No WiFi, no control loop.
 //
+// Status: compiles, NOT TESTED ON HARDWARE YET.
+//
 // Board:   Freenove ESP32-S3-WROOM Lite (FNK0099), Arduino core esp32 3.x, "ESP32S3 Dev Module".
 // Console: the board's USB-UART connector, 115200 baud. Pins are listed in Pins.h.
 

@@ -1,5 +1,7 @@
 # Firmware
 
+> **Not tested on hardware yet.** The bare-metal sketch compiles without warnings (Arduino core esp32 3.3.12), but it has not run on a board or with any of the parts. The pin assignment, the wiring table and the driver code may still change after the first bench tests.
+
 Two stages:
 
 1. **`baremetal/`** (this stage): a serial command console to check every electronic part on its own, with no Wi-Fi and no control logic.
