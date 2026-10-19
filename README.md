@@ -108,7 +108,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | Stepper motor, NEMA 17 pancake | 1 | StepperOnline 17HS08-1004S (42 × 42 × 20 mm, 5 mm shaft, 13 N·cm). Any NEMA 17 fits the mount | $26.50 |
 | TMC2209 stepper driver | 1 | StealthChop for silent moves; UART for StallGuard | $16.99 (pack of 2) |
 | AS5600 magnetic encoder board + **diametric** magnet | 1 | Sold with the magnet. Both common boards fit (20 × 20 with 15 mm hole spacing, 23 × 23 with 17 mm): 4 × M3 × 12 + nuts onto standoff pads on the bottom plate. See the magnet note below | $12.69 (pack of 2) |
-| ESP32 dev board | 1 | Any ESP32; an ESP32-S3-WROOM-1 board works. Flash it once over USB on the bench; after that, ESPHome updates it over Wi-Fi (OTA) | — |
+| ESP32-S3 dev board | 1 | Freenove ESP32-S3-WROOM Lite (FNK0099), the board the firmware's pinout is written for; other ESP32-S3-WROOM-1 boards work with a pin check. Flash it over USB on the bench; the final firmware updates over Wi-Fi | — |
 | Buck converter, 12 V → 5 V | 1 | Powers the ESP32 from the 12 V supply (e.g. a Mini-360 module, about 17 × 11 mm); on the perfboard | about $2 |
 | CO₂ sensor, NDIR | 1 | Sensirion SCD40 module (CO₂ + temperature + humidity, I²C). Not CCS811/SGP30 ("eCO₂" estimates) | $37.45 |
 | Steel rod, 5 mm × 200 mm | 1 | Damper shaft. 200 mm fits as is, no cutting. If it is HSS (very hard), grind a small flat with a rotary tool where each disc and the coupler clamp, so the screws can't slip | $12.79 (pack of 2) |
@@ -120,6 +120,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | O-rings, 74 × 3 mm, nitrile 70A | 4 | Two per spigot (grooves sized for this O-ring: 4.7% stretch, about 23% squeeze in an 82 mm hole). Optional at first: the spigots also fit a snug hole | $12.79 (pack of 10) |
 | Thin foam tape, about 1 mm | 1 roll | Lips | |
 | Perfboard (protoboard), 5 × 7 cm, holes 66 × 46 mm | 1 | Carrier for the ESP32 and the TMC2209 in the electronics box | |
+| Resistors and capacitor for the perfboard | | 1 kΩ (TMC2209 UART), 10 kΩ × 5 (driver enable pull-up, two fan PWM pull-downs, two tach pull-ups), 100 kΩ + 22 kΩ (12 V sense), 100 µF ≥ 25 V electrolytic (TMC2209 motor supply). See [firmware/README.md](firmware/README.md) | — |
 | Female pin headers, 2.54 mm | to suit | Sockets for the ESP32 and the TMC2209, so they unplug for flashing or replacement | |
 | M2 screws, about 6 mm | 4 | Perfboard onto the box standoffs (self-tapping) | |
 | M3 × 12 screws | 4 | Electronics box: two through the front cover, two from above through the encoder plate (self-tapping) | — |
@@ -156,6 +157,7 @@ images/                renders used in this README
 cad/window_vent.scad   parametric model (Customizer; part = "assembly" for the preview)
 stl/                   exported parts (default parameters)
 tools/check.py         geometry checks (must print ALL CHECKS PASSED)
+firmware/baremetal/    Arduino sketch: serial commands to test each electronic part (see firmware/README.md)
 PRINT_CHECKLIST.md     every printed/bought part interface to verify before printing
 ```
 
@@ -164,3 +166,5 @@ PRINT_CHECKLIST.md     every printed/bought part interface to verify before prin
 Copyright (c) 2026 Marc-Antoine Massicotte.
 
 This design (CAD model, STL files, images, documentation and scripts) is released under the [CERN Open Hardware Licence Version 2 - Permissive](LICENSE) (CERN-OHL-P-2.0). You may use, modify, make, share and sell it freely, as long as you keep this notice. It comes with no warranty of any kind, and the author accepts no liability for its use.
+
+The firmware in [`firmware/`](firmware) is software, so it is released under the [MIT License](firmware/LICENSE) instead: same idea, free to use, modify and share, keep the notice, no warranty.
