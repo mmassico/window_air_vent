@@ -5,7 +5,7 @@
 Two stages:
 
 1. **`baremetal/`** (this stage): a serial command console to check every electronic part on its own, with no Wi-Fi and no control logic.
-2. **The final application** (to come): CO₂ control running on the ESP32, with a web page on an external host for status and remote control. The ESP32 always starts the connection, so nothing on the home network is exposed.
+2. **The standalone application** (planned): CO₂ control running on the ESP32, with a web page served by the ESP32 itself on the home network (LAN) for status, settings and manual control.
 
 ## Board and tools
 
