@@ -9,6 +9,7 @@ Checks
   2. The disc swings freely: no overlap with the housing from closed (0 deg) to open (90 deg).
   3. The lips stop the disc: turning it 3 deg past closed must hit them.
   4. The disc can be fitted: slid in edge-on from the fan end, it touches nothing.
+  5. The electronics box only touches the housing (zero-volume contact).
 """
 import os, subprocess, tempfile, warnings
 import trimesh
@@ -16,7 +17,7 @@ warnings.filterwarnings('ignore')
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCAD = os.path.join(ROOT, "cad", "window_vent.scad")
-PARTS = ["body", "disc", "motor_plate", "magnet_cap"]
+PARTS = ["body", "disc", "motor_plate", "magnet_cap", "ebox", "fittest", "oring_test"]
 BED = 256.0
 tmp = tempfile.mkdtemp(prefix="wv_check_")
 ok = True
@@ -64,5 +65,13 @@ print("4. Disc can be fitted (edge-on, slid in from the fan end; overlap must be
 for dy in range(60, 0, -10):
     v = overlap(90, dy)
     report(f"disc {dy} mm short of its place", v < 1e-6, f"{v:.3f} mm3")
+
+print("5. Electronics box on the housing (overlap volume must be 0)")
+boxw = os.path.join(tmp, "box.scad")
+with open(boxw, "w") as fh:
+    fh.write(f'include <{SCAD.replace(os.sep, "/")}>\npart = "none";\nintersection() {{ body(); ebox(); }}\n')
+f = openscad(os.path.join(tmp, "box_ov.stl"), None, boxw)
+v = 0.0 if f is None else abs(trimesh.load(f).volume)
+report("box on housing", v < 1e-6, f"{v:.3f} mm3")
 
 print("\nALL CHECKS PASSED" if ok else "\nSOME CHECKS FAILED")

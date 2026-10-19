@@ -17,6 +17,7 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 - **Butterfly dampers.** One vertical 5 mm steel shaft runs through both ducts and carries a disc in each. A quarter turn opens or closes both. Each disc closes against two half-ring lips lined with thin foam tape, one on each side of the shaft.
 - **Motor and encoder.** A NEMA 17 pancake stepper on top turns the shaft through a flexible coupler. A TMC2209 driver keeps it silent. The motor screws to a separate plate on the bench, and the plate then screws onto a frame on top of the housing from above. An AS5600 magnetic encoder at the bottom reads the absolute shaft angle, so the firmware always knows whether the dampers are really closed, with no homing and no limit switch.
 - **Fans.** Two 80 mm PWM fans screw onto the room end of the housing.
+- **Electronics box.** A tray under the housing holds a 5 × 7 cm perfboard with the ESP32 and the TMC2209 in female headers. The encoder plate is its lid, and its front wall rises to close the front of the bottom bay. The cables run down the right side (seen from the room), hidden behind the fans and held by three tie-wrap anchors on the back of the fan plate; the same anchors and a cable entry on the left side allow the mirror image.
 - **Water stays out of the room.** A 3 mm drip dam across the lower part of each bore, just before the fan, stops droplets from running indoors. Around the bottom shaft hole in each duct, a 16 mm boss rises 3 mm above the floor, so water flows around it instead of down the shaft.
 - **How it seals.** The lips do the sealing, not the gap between the disc and the bore: they are 5.6 mm wide and overlap the disc edge by 2 mm, with foam tape in between. The disc is 67 mm in a 74 mm bore so it can be slid in edge-on past the dam and the bosses. Around the shaft, where the lips must stop to clear the hub, a boss at the top and the one at the bottom close the gap. Their inner faces are curved, coaxial with the bore, so they follow the disc edge with an even gap of about 0.75 mm.
 
@@ -50,28 +51,52 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 
 | Part | Qty | Description | Size (mm) | Print orientation | |
 |---|---|---|---|---|---|
-| `body` | 1 | Housing: two ducts with the damper lips, drip dams and shaft bosses, O-ring spigots, fan plate, motor frame and encoder plate | 90 × 233 × 114 | Fan plate on the bed, no supports | <img src="images/part_body.png" width="180"> |
+| `body` | 1 | Housing: two ducts with the damper lips, drip dams and shaft bosses, O-ring spigots, fan plate, motor frame and encoder plate | 90 × 241 × 114 | Fan plate on the bed, no supports | <img src="images/part_body.png" width="180"> |
 | `disc` | 2 | Butterfly damper disc, clamped to the shaft by two M3 grub screws | 67 × 67 × 14 | Plate on the bed, hub up | <img src="images/part_disc.png" width="180"> |
 | `motor_plate` | 1 | The motor screws to it on the bench; it then screws onto the frame on top of the housing | 56 × 56 × 4 | Flat | <img src="images/part_motor_plate.png" width="180"> |
-| `magnet_cap` | 1 | Holds the encoder magnet on the bottom end of the shaft | 10 × 10 × 7 | Bore down | <img src="images/part_magnet_cap.png" width="180"> |
+| `magnet_cap` | 1 | Holds the encoder magnet on the bottom end of the shaft; one M3 grub screw, height adjustable ±1 mm | 14 × 14 × 12 | Bore down | <img src="images/part_magnet_cap.png" width="180"> |
+| `ebox` | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay | 80 × 76 × 62 | Floor on the bed | <img src="images/part_ebox.png" width="180"> |
+
+**Optional test prints, before the housing.** Print the small real parts first (discs, motor plate, magnet cap, about 1.5–2 h): they test the rod, the grub screws, the motor and the magnet. Then:
+
+| Part | Size (mm) | Time | What it tests |
+|---|---|---|---|
+| `fittest` | 60 × 34 × 22 | about 20–30 min | The housing's printer-sensitive features, in its print orientation, engraved A to F (see below) |
+| `oring_test` | Ø 90 × 18 | about 30 min | One spigot section with an O-ring groove: push it, with an O-ring, into a hole cut in a foam scrap |
+
+<p align="center">
+  <img src="images/part_fittest.png" alt="Fit-test coupon with its features engraved A to F" width="420">
+</p>
+
+| | Feature | Copied from | Pass if |
+|---|---|---|---|
+| A | M3 hole + nut pocket | fan plate | the nut drops in and stays; an M3 screw passes freely |
+| B | Ø 2.5 self-tapping pilot | box bosses and back pillars | an M3 screw cuts a firm thread without splitting the post |
+| C | 5.6 mm flat ledge (on the back of the plate) | foam-side lip in each bore | the underside is flat, not sagging or stringy |
+| D | Ø 5.4 shaft hole, horizontal | bearing holes in the duct walls | the 5 mm rod turns freely (if not, ream with a 5.5 mm drill) |
+| E | AS5600 diagonal slot on a 2 mm standoff | encoder plate | the board's screw passes at both ends of the slot |
+| F | M3 hole + side nut slot | motor frame | the nut slides in, lines up, and the screw catches it |
+
 
 PETG. The foam-side lip in each bore seals with its underside, so it prints as a flat 5.6 mm overhang. If it sags, paint a support enforcer under those two half-rings only; the foam tape covers the face anyway.
 
 ### Filament
 
-About **0.35–0.4 kg of PETG** for one unit (less than half a 1 kg spool), or roughly $10–14 at $25–35/kg.
+About **0.4–0.45 kg of PETG** for one unit (less than half a 1 kg spool), or roughly $11–16 at $25–35/kg.
 
 | Part | Qty | Solid volume |
 |---|---|---|
-| `body` | 1 | 257 cm³ |
+| `body` | 1 | 266 cm³ |
 | `disc` | 2 | 2 × 14 = 28 cm³ |
 | `motor_plate` | 1 | 11 cm³ |
-| `magnet_cap` | 1 | 0.4 cm³ |
-| **Total** | | **≈ 296 cm³** |
+| `magnet_cap` | 1 | 1.6 cm³ |
+| `ebox` | 1 | 47 cm³ |
+| **Total** | | **≈ 353 cm³** |
 
-- Printed fully solid, 296 cm³ of PETG (1.27 g/cm³) weighs about 376 g.
-- Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 330–380 g, plus a little for the skirt or brim and purging.
-- Print time: very roughly 10–14 hours in total on a Bambu Lab P1, mostly for the housing. The slicer gives the exact figure.
+- Printed fully solid, 353 cm³ of PETG (1.27 g/cm³) weighs about 448 g.
+- Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 400–450 g, plus a little for the skirt or brim and purging.
+- The optional test prints add about 32 cm³ (40 g): `fittest` 14 cm³, `oring_test` 18.5 cm³.
+- Print time: very roughly 9–12 hours for the housing on a Bambu Lab P1 (0.2 mm layers; about 7–9 hours at 0.28 mm), and about 3–4 hours for all the other parts together. The slicer gives the exact figures.
 
 ## Hardware
 
@@ -82,19 +107,25 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | 80 mm PWM fan, ≥ 2 mm H₂O static pressure | 2 | Noctua NF-A8 PWM (2.37 mm H₂O, 17.7 dB(A) max). Run at 30–60% | 2 × $24.95 |
 | Stepper motor, NEMA 17 pancake | 1 | StepperOnline 17HS08-1004S (42 × 42 × 20 mm, 5 mm shaft, 13 N·cm). Any NEMA 17 fits the mount | $26.50 |
 | TMC2209 stepper driver | 1 | StealthChop for silent moves; UART for StallGuard | $16.99 (pack of 2) |
-| AS5600 magnetic encoder board + **diametric** magnet | 1 | Sold with the magnet. Board screws or zip-ties to the bottom plate. See the magnet note below | $12.69 (pack of 2) |
-| ESP32 dev board | 1 | Any ESP32; an ESP32-S3-WROOM-1 board works | — |
+| AS5600 magnetic encoder board + **diametric** magnet | 1 | Sold with the magnet. Both common boards fit (20 × 20 with 15 mm hole spacing, 23 × 23 with 17 mm): 4 × M3 × 12 + nuts onto standoff pads on the bottom plate. See the magnet note below | $12.69 (pack of 2) |
+| ESP32 dev board | 1 | Any ESP32; an ESP32-S3-WROOM-1 board works. Flash it once over USB on the bench; after that, ESPHome updates it over Wi-Fi (OTA) | — |
+| Buck converter, 12 V → 5 V | 1 | Powers the ESP32 from the 12 V supply (e.g. a Mini-360 module, about 17 × 11 mm); on the perfboard | about $2 |
 | CO₂ sensor, NDIR | 1 | Sensirion SCD40 module (CO₂ + temperature + humidity, I²C). Not CCS811/SGP30 ("eCO₂" estimates) | $37.45 |
 | Steel rod, 5 mm × 200 mm | 1 | Damper shaft. 200 mm fits as is, no cutting. If it is HSS (very hard), grind a small flat with a rotary tool where each disc and the coupler clamp, so the screws can't slip | $12.79 (pack of 2) |
 | Flexible shaft coupler, 5–5 mm, 19 × 25 mm | 1 | | $13.49 (pack of 2) |
 | M3 × 35 screws + M3 nuts | 8 each | Fans | — |
 | M3 × 8 screws | 4 | Motor to motor plate | — |
 | M3 × 10 screws + M3 nuts | 4 each | Motor plate to the housing (nuts slide into side slots in the frame) | — |
-| M3 grub screws | 4 | Two per disc, 24 mm apart along the hub, so the disc can't rock on the shaft (self-tapping into the hub) | — |
-| O-rings, about 76 × 2.5 mm, EPDM or silicone | 4 | Two per spigot. Optional at first: the spigots also fit a snug hole | — |
+| M3 grub screws, 6 or 8 mm | 5 | Two per disc, 24 mm apart along the hub, so the disc can't rock on the shaft; one in the magnet cap. Self-tapping into the plastic | — |
+| O-rings, 74 × 3 mm, nitrile 70A | 4 | Two per spigot (grooves sized for this O-ring: 4.7% stretch, about 23% squeeze in an 82 mm hole). Optional at first: the spigots also fit a snug hole | $12.79 (pack of 10) |
 | Thin foam tape, about 1 mm | 1 roll | Lips | |
+| Perfboard (protoboard), 5 × 7 cm, holes 66 × 46 mm | 1 | Carrier for the ESP32 and the TMC2209 in the electronics box | |
+| Female pin headers, 2.54 mm | to suit | Sockets for the ESP32 and the TMC2209, so they unplug for flashing or replacement | |
+| M2 screws, about 6 mm | 4 | Perfboard onto the box standoffs (self-tapping) | |
+| M3 × 12 screws | 4 | Electronics box: two through the front cover, two from above through the encoder plate (self-tapping) | — |
+| Small tie wraps, 2.5–3.6 mm | 3+ | Cable anchors (three on each side; use one side) | |
 | 12 V supply | 1 | Fans and motor | — |
-| **Total bought** | | Not counting the foam insert, O-rings and foam tape | **≈ $170** |
+| **Total bought** | | Not counting the foam insert and foam tape | **≈ $183** |
 
 ### The encoder magnet
 
@@ -110,11 +141,13 @@ The AS5600 measures the direction of the magnetic field across the shaft, so the
 2. Slide each disc edge-on into its duct from the fan end, hub toward the room.
 3. Push the shaft down through the frame on top, both ducts and both disc hubs.
 4. Turn both discs closed against the lips and tighten their grub screws (two per disc) through the duct openings.
-5. Glue the magnet into the cap and press the cap onto the shaft's bottom end. Fit the AS5600 board under it, 1–2 mm from the magnet.
+5. Screw the AS5600 board onto the four standoff pads, chip up, with its wires soldered into its holes and led out through the window below. Glue the magnet into the cap and slide the cap onto the shaft's bottom end. Lay a 1 mm shim on the chip (a plastic card works), slide the cap down until the magnet rests on it, tighten the cap's grub screw, and remove the shim.
 6. On the bench, screw the motor to the motor plate (4 × M3 × 8 from below) and fit the coupler on the motor shaft.
 7. Slide four M3 nuts into the side slots of the frame on top of the housing. Lower the motor and plate onto the frame, with the coupler over the shaft end, and screw the plate down (4 × M3 × 10 from above). Tighten the coupler's lower screw through a side window.
-8. Fit the fans: the top one blowing into the room, the bottom one blowing toward the window.
-9. Roll two O-rings onto each spigot and push the housing into the foam holes.
+8. Fit the fans: the top one blowing into the room, the bottom one blowing toward the window. Arrows engraved on both sides of the housing (above the upper duct and below the lower one) show each duct's airflow; match the arrows on the fan frames to them.
+9. Electronics: mount the ESP32 and the TMC2209 in female headers on the perfboard, wire it, and screw it onto the four standoffs in the box (M2). Bring the fan and motor cables down the right side, tie them to the three anchors behind the fans, and into the box through the notch at the top of its right wall. The AS5600 wires drop in through the window in the encoder plate.
+10. Fit the box under the housing: two M3 × 12 through the front cover into the bosses of the bottom bay, and two from above through the encoder plate (outside the bay walls) into the box's back tabs.
+11. Roll two O-rings onto each spigot and push the housing into the foam holes.
 
 ## Files
 
@@ -123,6 +156,7 @@ images/                renders used in this README
 cad/window_vent.scad   parametric model (Customizer; part = "assembly" for the preview)
 stl/                   exported parts (default parameters)
 tools/check.py         geometry checks (must print ALL CHECKS PASSED)
+PRINT_CHECKLIST.md     every printed/bought part interface to verify before printing
 ```
 
 ## License
