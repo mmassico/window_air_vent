@@ -129,7 +129,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | Flexible shaft coupler, 5–5 mm, 19 × 25 mm | 1 | | $13.49 (pack of 2) |
 | M3 × 35 screws + M3 nuts | 8 each | Fans | — |
 | M3 × 8 screws | 4 | Motor to motor plate | — |
-| M3 × 10 screws + M3 nuts | 4 each | Motor plate: two through the frame in front of the motor, two through the tower walls and the plate's back tabs | — |
+| M3 × 10 (or M3 × 12) screws + M3 nuts | 4 each | Motor plate: two through the frame in front of the motor, two through the tower walls and the plate's back tabs | — |
 | M3 grub screws, 6 or 8 mm | 5 | Two per disc, 24 mm apart along the hub, so the disc can't rock on the shaft; one in the magnet cap. Self-tapping into the plastic | — |
 | O-rings, 74 × 3 mm, nitrile 70A | 4 | Two per spigot (grooves sized for this O-ring: 4.7% stretch, about 23% squeeze in an 82 mm hole). Optional at first: the spigots also fit a snug hole | $12.79 (pack of 10) |
 | Closed-cell neoprene foam sheet, self-adhesive, 1/16 in (1.6 mm) | 1 | Lip seals, cut with the [templates](#cutting-the-lip-foam). The model leaves a 1 mm gap, so the foam is squeezed about 37 %, a good range for a seal | |
