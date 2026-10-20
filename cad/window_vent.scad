@@ -494,7 +494,12 @@ module disc() {
             }
             translate([0, 0, hc]) sphere(r = r - 0.4);   // stays inside the bore at every angle
         }
-        translate([0, -50, hc]) rotate([-90, 0, 0]) cylinder(d = shaft_d + 0.2, h = 100, $fn = 32);
+        // shaft bore: a teardrop, 45 deg point up (toward the grub screws), so it prints without support; the
+        // grub screws press the shaft into its round lower half
+        translate([0, 50, hc]) rotate([90, 0, 0]) linear_extrude(100) hull() {
+            circle(d = shaft_d + 0.2, $fn = 32);
+            translate([0, (shaft_d + 0.2) / 2 * sqrt(2)]) square(0.01, center = true);
+        }
         // half B (x > 0 here, the half that closes against the conical lip B): 45 deg bevel on the bed-side rim
         difference() {
             translate([0, -disc_d, -1]) cube([disc_d, 2 * disc_d, disc_bev + 1]);

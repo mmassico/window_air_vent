@@ -32,7 +32,7 @@ PETG holes usually come out 0.1–0.2 mm smaller than drawn, and holes printed *
 | Bearing bosses outside the ducts (4) | 45° cones, Ø 10 flat top around the shaft hole | | ✅ they stick out sideways when printing; the 45° sides leave no overhang |
 | Shaft bosses inside the ducts (4) | Ø 16, 45° plane cut on the fan-plate side only | | ✅ only that side faces the bed when printing; the footprint is unchanged, so water flows around them and the air sees them as before |
 | Water past lip B | the floor boss is cut back within 3 mm of lip B's end (x = −7 to −4), up to 3 mm past the lip on the fan side | | ✅ the conical lip reaches the boss along the floor; this keeps a 2–3 mm drain channel along the floor, and a 1.3 mm rim around the shaft hole |
-| Bore in each disc hub | Ø 5.2 | | ✅ ream if tight |
+| Bore in each disc hub | Ø 5.2, teardrop: 45° point up, toward the grub screws | | ✅ prints without support; the grub screws press the shaft into the round lower half; ream if tight |
 | Length needed | 200: from 4.6 inside the magnet cap to about 10 into the coupler (8 minimum) | 200 | ✅ fits uncut |
 | Grip | grub screws on a round rod | HSS is very hard | 📏 grind small flats where the discs, the coupler and the magnet cap clamp |
 | Real diameter | | 4.99 measured, 200 long | ✅ |
