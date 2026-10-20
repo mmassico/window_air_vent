@@ -103,7 +103,8 @@ enc_win   = 13.5;   // wire window: a diamond (point to point) under the chip; t
 
 /* [Electronics box and cables] */
 ebox_w    = 80;     // box width (= fan width); the encoder plate widens to match and becomes its lid
-ebox_h    = 34;     // inside height under the encoder plate (the TMC2209 in female headers, with its heatsink, reaches 32.2)
+ebox_h    = 34;     // inside height under the encoder plate (soldered, the TMC2209's heatsink reaches 24.0; in female
+                    // headers, 32.5)
 ebox_t    = 2.4;    // walls and floor
 pb_size   = [70, 50];  // perfboard carrier (5 x 7 cm protoboard)
 pb_holes  = [66, 46];  // its corner hole spacing (M2)
@@ -115,7 +116,7 @@ usb_side  = "both"; // [left, right, both] which side wall gets it: both lets on
 esp_usb   = "left"; // [left, right] the ESP32's USB end toward the left wall (view ebox_elec) or the right one
                     // (turned 180 deg, view ebox_elec_alt); shown in the assembly
 esp_mount = "soldered"; // [soldered, headers] ESP32 soldered straight into the perfboard, or in female headers
-tmc_mount = "headers";  // [soldered, headers] TMC2209 likewise
+tmc_mount = "soldered"; // [soldered, headers] TMC2209 likewise
 header_h  = 8.5;    // female header height
 esp_w     = 28.5;   // ESP32 board width; it lies across the back half of the perfboard, USB end toward a side wall
 esp_l     = 50;     // ESP32 PCB length (the module's antenna sticks out 7 more, over the middle 18.5)
@@ -123,9 +124,10 @@ esp_dy    = 0.5;    // ESP32 edge from the perfboard's back edge
 esp_dx    = 7.62;   // its USB end this far in from the side wall (3 perfboard holes): its pins clear the corner
                     // standoff and screw, and the free holes beyond its end are easy to solder. The plug enters the box
 esp_pcb   = [1.62, 2.78, 5.54];  // ESP32 PCB thickness, pin spacer, pin length below the spacer (measured)
-tmc_pcb   = [21, 15, 1.6];       // TMC2209 module (along x, along y, thickness)
-tmc_spacer = 2.5;   // its pin spacer (assumed; to measure)
-tmc_sink  = [14.5, 15, 13];     // its heatsink, on top
+tmc_pcb   = [21, 15, 1.62];      // TMC2209 module (along x = along its pin rows, along y, thickness; see doc/tmc2209.svg)
+tmc_spacer = 2.78;  // its pin spacer (assumed as on the ESP32; to measure)
+tmc_pin   = 5.54;   // its pins below the spacer (likewise); 2 rows of 8, 12.7 apart
+tmc_sink  = [15, 14.5, 13];     // its heatsink, on top, fins along the pin rows
 usb_dy    = 6;      // the USB-UART connector's offset from the board's centre line, toward the room (measured: 8.25 from the
                     // board's TX/GND edge, which faces the room; the USB-OTG one is 5.5 off on the other side)
 cable_in  = [16, 10];  // cable entries at the top of both side walls, toward the front (length along y, depth)
@@ -535,7 +537,7 @@ module magnet_cap() {
 /* =================== ELECTRONICS BOX =================== */
 // Open-top tray under the housing; the encoder plate is its lid. Its front wall rises to
 // the bottom of the lower fan and closes the front of the bottom bay. Inside: a 5 x 7 cm
-// perfboard on four standoffs, carrying the ESP32 and the TMC2209 in female headers.
+// perfboard on four standoffs, carrying the ESP32 and the TMC2209 (soldered, or in female headers).
 // Modelled in place (installed coordinates); printed floor down.
 module ebox() {
     x0 = -ebox_w / 2;  y0 = y_br;  y1 = duct_len + ebox_t;   // the front wall sits in front of the plate's edge
@@ -661,9 +663,19 @@ module electronics(usb = esp_usb) {
     tx0 = -pb_size[0] / 2 + 12.5;                           // TMC2209, front right (see doc/ebox_layout.svg)
     ty0 = yc + esp_w / 2 + 1;
     color([0.1, 0.1, 0.1]) translate([tx0, ty0, fl + tmc_z0]) cube(tmc_pcb);
-    color([0.2, 0.35, 0.8]) translate([tx0 + (tmc_pcb[0] - tmc_sink[0]) / 2, ty0, fl + tmc_z0 + tmc_pcb[2]]) cube(tmc_sink);
-    if (tmc_mount == "headers")
-        for (sy = [0, 1]) color([0.1, 0.1, 0.1]) translate([tx0, ty0 + sy * (tmc_pcb[1] - 2.5), fl + pb_top]) cube([tmc_pcb[0], 2.5, header_h]);
+    color([0.2, 0.35, 0.8]) translate([tx0 + (tmc_pcb[0] - tmc_sink[0]) / 2, ty0 + (tmc_pcb[1] - tmc_sink[1]) / 2, fl + tmc_z0 + tmc_pcb[2]]) cube(tmc_sink);
+    for (sy = [-1, 1]) {                                    // its pin rows: spacer, pins (into the headers or the perfboard), headers
+        ry = ty0 + tmc_pcb[1] / 2 + sy * 6.35;
+        color([0.25, 0.25, 0.25]) translate([tx0 + 0.4, ry - 1.25, fl + tmc_z0 - tmc_spacer]) cube([tmc_pcb[0] - 0.8, 2.5, tmc_spacer]);
+        for (i = [0 : 7])
+            color([0.95, 0.8, 0.3]) translate([tx0 + (tmc_pcb[0] - 7 * 2.54) / 2 + i * 2.54 - 0.32, ry - 0.32, fl + tmc_z0 - tmc_spacer - tmc_pin])
+                cube([0.64, 0.64, tmc_pin + tmc_spacer + tmc_pcb[2]]);
+        if (tmc_mount == "headers")
+            color([0.1, 0.1, 0.1]) difference() {             // female header, hollow so the pins show inside
+                translate([tx0 + 0.4, ry - 1.25, fl + pb_top]) cube([tmc_pcb[0] - 0.8, 2.5, header_h]);
+                for (i = [0 : 7]) translate([tx0 + (tmc_pcb[0] - 7 * 2.54) / 2 + i * 2.54 - 0.5, ry - 0.5, fl + pb_top + 1]) cube([1, 1, header_h]);
+            }
+    }
 }
 
 module assembly() {

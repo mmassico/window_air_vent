@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1420" height="900" viewBox="0 0 1420 900" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="1420" height="900" fill="#ffffff"/>
+<rect x="300" y="200" width="300.0" height="420.0" rx="4" fill="#1e1e1e" stroke="#000" stroke-width="2"/>
+<rect x="365.0" y="340.0" width="170.0" height="190.0" fill="#c9a55a" stroke="#8a6d2a"/>
+<circle cx="372.0" cy="226.0" r="15.0" fill="#d9a520" stroke="#7a5c00" stroke-width="1.5"/>
+<circle cx="412.0" cy="226.0" r="15.0" fill="#d9a520" stroke="#7a5c00" stroke-width="1.5"/>
+<circle cx="392.0" cy="260.0" r="15.0" fill="#d9a520" stroke="#7a5c00" stroke-width="1.5"/>
+<text x="360.0" y="292.0" font-size="12" text-anchor="middle" fill="#ffffff" font-weight="normal">EN</text>
+<rect x="486.0" y="212.0" width="56.0" height="60" rx="3" fill="#bbbbbb" stroke="#555"/>
+<circle cx="514.0" cy="242.0" r="18.0" fill="#888" stroke="#333"/>
+<rect x="305.0" y="260.0" width="290.0" height="300.0" fill="#2f5fd0" fill-opacity="0.18" stroke="#2f5fd0" stroke-width="2" stroke-dasharray="8,5"/>
+<text x="450.0" y="538.0" font-size="14" text-anchor="middle" fill="#9db8ff" font-weight="bold">heatsink</text>
+<text x="450.0" y="596.0" font-size="14" text-anchor="middle" fill="#e8c34a" font-weight="bold">TMC2209</text>
+<circle cx="323.0" cy="232.2" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="288.0" y="237.2" font-size="14" text-anchor="end" fill="#1b5fa8" font-weight="bold">EN</text>
+<circle cx="323.0" cy="283.0" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="288.0" y="288.0" font-size="14" text-anchor="end" fill="#1b5fa8" font-weight="bold">MS1</text>
+<circle cx="323.0" cy="333.8" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="288.0" y="338.8" font-size="14" text-anchor="end" fill="#1b5fa8" font-weight="bold">MS2</text>
+<circle cx="323.0" cy="384.6" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="288.0" y="389.6" font-size="14" text-anchor="end" fill="#1b5fa8" font-weight="bold">PDN</text>
+<circle cx="323.0" cy="435.4" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="288.0" y="440.4" font-size="14" text-anchor="end" fill="#1b5fa8" font-weight="bold">UART</text>
+<circle cx="323.0" cy="486.2" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="288.0" y="491.2" font-size="14" text-anchor="end" fill="#1b5fa8" font-weight="bold">CLK</text>
+<circle cx="323.0" cy="537.0" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="288.0" y="542.0" font-size="14" text-anchor="end" fill="#1b5fa8" font-weight="bold">STEP</text>
+<circle cx="323.0" cy="587.8" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="288.0" y="592.8" font-size="14" text-anchor="end" fill="#1b5fa8" font-weight="bold">DIR</text>
+<circle cx="577.0" cy="232.2" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="612.0" y="237.2" font-size="14" text-anchor="start" fill="#1b5fa8" font-weight="bold">VM</text>
+<circle cx="577.0" cy="283.0" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="612.0" y="288.0" font-size="14" text-anchor="start" fill="#1b5fa8" font-weight="bold">GND</text>
+<circle cx="577.0" cy="333.8" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="612.0" y="338.8" font-size="14" text-anchor="start" fill="#1b5fa8" font-weight="bold">M1B</text>
+<circle cx="577.0" cy="384.6" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="612.0" y="389.6" font-size="14" text-anchor="start" fill="#1b5fa8" font-weight="bold">M1A</text>
+<circle cx="577.0" cy="435.4" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="612.0" y="440.4" font-size="14" text-anchor="start" fill="#1b5fa8" font-weight="bold">M2A</text>
+<circle cx="577.0" cy="486.2" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="612.0" y="491.2" font-size="14" text-anchor="start" fill="#1b5fa8" font-weight="bold">M2B</text>
+<circle cx="577.0" cy="537.0" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="612.0" y="542.0" font-size="14" text-anchor="start" fill="#1b5fa8" font-weight="bold">VIO</text>
+<circle cx="577.0" cy="587.8" r="16.0" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="612.0" y="592.8" font-size="14" text-anchor="start" fill="#1b5fa8" font-weight="bold">GND</text>
+<line x1="300.0" y1="200.0" x2="300.0" y2="124.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="600.0" y1="200.0" x2="600.0" y2="124.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="300.0" y1="130.0" x2="600.0" y2="130.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="300.0,130.0 310.0,126.0 310.0,134.0" fill="#b3261e"/>
+<polygon points="600.0,130.0 590.0,134.0 590.0,126.0" fill="#b3261e"/>
+<text x="450.0" y="123.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">15</text>
+<line x1="305.0" y1="260.0" x2="305.0" y2="164.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="595.0" y1="260.0" x2="595.0" y2="164.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="305.0" y1="170.0" x2="595.0" y2="170.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="305.0,170.0 315.0,166.0 315.0,174.0" fill="#b3261e"/>
+<polygon points="595.0,170.0 585.0,174.0 585.0,166.0" fill="#b3261e"/>
+<text x="450.0" y="163.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">14.5 heatsink</text>
+<line x1="300.0" y1="200.0" x2="144.0" y2="200.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="300.0" y1="620.0" x2="144.0" y2="620.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="150.0" y1="200.0" x2="150.0" y2="620.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="150.0,200.0 154.0,210.0 146.0,210.0" fill="#b3261e"/>
+<polygon points="150.0,620.0 146.0,610.0 154.0,610.0" fill="#b3261e"/>
+<text x="142.0" y="410.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal" transform="rotate(-90 142.0 410.0)">21</text>
+<line x1="305.0" y1="260.0" x2="184.0" y2="260.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="305.0" y1="560.0" x2="184.0" y2="560.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="190.0" y1="260.0" x2="190.0" y2="560.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="190.0,260.0 194.0,270.0 186.0,270.0" fill="#b3261e"/>
+<polygon points="190.0,560.0 186.0,550.0 194.0,550.0" fill="#b3261e"/>
+<text x="182.0" y="410.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal" transform="rotate(-90 182.0 410.0)">15 heatsink</text>
+<line x1="323.0" y1="587.8" x2="323.0" y2="686.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="577.0" y1="587.8" x2="577.0" y2="686.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="323.0" y1="680.0" x2="577.0" y2="680.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="323.0,680.0 333.0,676.0 333.0,684.0" fill="#b3261e"/>
+<polygon points="577.0,680.0 567.0,684.0 567.0,676.0" fill="#b3261e"/>
+<text x="450.0" y="673.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">12.7</text>
+<text x="450.0" y="708.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">between the rows: 5 perfboard holes</text>
+<line x1="644.0" y1="232.2" x2="766.0" y2="232.2" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="644.0" y1="587.8" x2="766.0" y2="587.8" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="760.0" y1="232.2" x2="760.0" y2="587.8" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="760.0,232.2 764.0,242.2 756.0,242.2" fill="#b3261e"/>
+<polygon points="760.0,587.8 756.0,577.8 764.0,577.8" fill="#b3261e"/>
+<text x="752.0" y="410.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal" transform="rotate(-90 752.0 410.0)">7 x 2.54 = 17.78</text>
+<line x1="644.0" y1="587.8" x2="806.0" y2="587.8" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="644.0" y1="620.0" x2="806.0" y2="620.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="800.0" y1="587.8" x2="800.0" y2="620.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="800.0,587.8 804.0,597.8 796.0,597.8" fill="#b3261e"/>
+<polygon points="800.0,620.0 796.0,610.0 804.0,610.0" fill="#b3261e"/>
+<text x="792.0" y="603.9" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal" transform="rotate(-90 792.0 603.9)">1.61</text>
+<text x="40.0" y="50.0" font-size="22" text-anchor="start" fill="#111" font-weight="bold">TMC2209 stepper driver module (StepStick format): top view, heatsink side up, and side view (mm)</text>
+<rect x="1010.0" y="534.1" width="240.0" height="25.9" fill="#1e1e1e" stroke="#222" stroke-width="1.5"/>
+<rect x="1090.0" y="560.0" width="80.0" height="14.4" fill="#444" stroke="#222" stroke-width="1.5"/>
+<rect x="1008.4" y="560.0" width="40.0" height="44.5" fill="#555" stroke="#222" stroke-width="1.5"/>
+<rect x="1023.3" y="604.5" width="10.2" height="88.6" fill="#f4d35e" stroke="#222" stroke-width="1.5"/>
+<rect x="1211.6" y="560.0" width="40.0" height="44.5" fill="#555" stroke="#222" stroke-width="1.5"/>
+<rect x="1226.5" y="604.5" width="10.2" height="88.6" fill="#f4d35e" stroke="#222" stroke-width="1.5"/>
+<rect x="1014.0" y="326.1" width="232.0" height="208.0" fill="#2f5fd0" stroke="#222" stroke-width="1.5"/>
+<line x1="1250.0" y1="560.0" x2="1304.0" y2="560.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1250.0" y1="534.1" x2="1304.0" y2="534.1" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1298.0" y1="560.0" x2="1298.0" y2="534.1" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="1298.0,560.0 1294.0,550.0 1302.0,550.0" fill="#b3261e"/>
+<polygon points="1298.0,534.1 1302.0,544.1 1294.0,544.1" fill="#b3261e"/>
+<text x="1308.0" y="552.0" font-size="14" text-anchor="start" fill="#b3261e" font-weight="normal">1.62 PCB</text>
+<line x1="1250.0" y1="604.5" x2="1304.0" y2="604.5" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1250.0" y1="560.0" x2="1304.0" y2="560.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1298.0" y1="604.5" x2="1298.0" y2="560.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="1298.0,604.5 1294.0,594.5 1302.0,594.5" fill="#b3261e"/>
+<polygon points="1298.0,560.0 1302.0,570.0 1294.0,570.0" fill="#b3261e"/>
+<text x="1308.0" y="587.2" font-size="14" text-anchor="start" fill="#b3261e" font-weight="normal">2.78 spacer</text>
+<line x1="1250.0" y1="693.1" x2="1304.0" y2="693.1" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1250.0" y1="604.5" x2="1304.0" y2="604.5" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1298.0" y1="693.1" x2="1298.0" y2="604.5" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="1298.0,693.1 1294.0,683.1 1302.0,683.1" fill="#b3261e"/>
+<polygon points="1298.0,604.5 1302.0,614.5 1294.0,614.5" fill="#b3261e"/>
+<text x="1308.0" y="653.8" font-size="14" text-anchor="start" fill="#b3261e" font-weight="normal">5.54 pins</text>
+<line x1="1014.0" y1="534.1" x2="956.0" y2="534.1" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1014.0" y1="326.1" x2="956.0" y2="326.1" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="962.0" y1="534.1" x2="962.0" y2="326.1" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="962.0,534.1 958.0,524.1 966.0,524.1" fill="#b3261e"/>
+<polygon points="962.0,326.1 966.0,336.1 958.0,336.1" fill="#b3261e"/>
+<text x="952.0" y="435.1" font-size="14" text-anchor="end" fill="#b3261e" font-weight="normal">13 heatsink</text>
+<text x="1010.0" y="288.0" font-size="15" text-anchor="start" fill="#111" font-weight="bold">Side view, from the DIR/GND end</text>
+<text x="40" y="790" font-size="14" fill="#333">PCB and heatsink sizes from the seller; row spacing and pin span are the StepStick standard (0.5 in rows, 0.1 in pitch).</text>
+<text x="40" y="814" font-size="14" fill="#333">Side view heights assumed equal to the ESP32-S3 board's (1.62 PCB, 2.78 spacer, 5.54 pins): to measure on the part.</text>
+<text x="40" y="838" font-size="14" fill="#333">The chip is on the underside; its thermal pad, the heatsink side, faces up. The fins run along the pin rows.</text>
+<text x="40" y="862" font-size="14" fill="#333">Thermal pad, EN pads and potentiometer positions are approximate.</text>
+</svg>

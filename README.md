@@ -14,10 +14,10 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 
 - **Foam insert.** A block of 2 in (51 mm) XPS foam fills the window gap (100 mm or less, so a child can't fit through). Two 82 mm holes, stacked vertically: intake on top, exhaust below. An insect screen covers the outdoor face.
 - **Damper housing.** It sits on the **room** face of the foam, so its moving parts stay warm and dry (no ice). Its two spigots slide into the foam holes and seal with two O-rings each. The housing comes out in spring, and the foam insert stays reusable.
-- **Butterfly dampers.** One vertical 5 mm steel shaft runs through both ducts and carries a disc in each. A quarter turn opens or closes both. Each disc closes against two half-ring lips lined with thin foam tape, one on each side of the shaft. One lip is flat; the other is a 45° cone, and the half of the disc that closes against it (engraved B) has a matching 45° bevel, so neither prints as a flat overhang.
+- **Butterfly dampers.** One vertical 5 mm steel shaft runs through both ducts and carries a disc in each. A quarter turn opens or closes both. Each disc closes against two half-ring lips lined with thin foam, one on each side of the shaft. One lip is flat; the other is a 45° cone, and the half of the disc that closes against it (engraved B) has a matching 45° bevel, so neither prints as a flat overhang.
 - **Motor and encoder.** A NEMA 17 pancake stepper on top turns the shaft through a flexible coupler. A TMC2209 driver keeps it silent. The motor screws to a separate plate on the bench, and the plate then screws onto a frame on top of the housing from above. An AS5600 magnetic encoder at the bottom reads the absolute shaft angle, so the firmware always knows whether the dampers are really closed, with no homing and no limit switch.
 - **Fans.** Two 80 mm PWM fans screw onto the room end of the housing.
-- **Electronics box.** A tray under the housing holds a 5 × 7 cm perfboard with the ESP32 and the TMC2209 in female headers. The encoder plate is its lid, and its front wall rises to close the front of the bottom bay. The cables run down the right side (seen from the room), hidden behind the fans and held by three tie-wrap anchors on the back of the fan plate; the same anchors and a cable entry on the left side allow the mirror image. Power comes from two plug-in adapters: a 12 V brick for the fans and the motor, whose wire comes in with the other cables, and a 5 V USB-C adapter for the ESP32, whose cable passes through a diamond opening in the left wall. The [layout drawing](doc/ebox_layout.svg) shows where everything goes on the perfboard.
+- **Electronics box.** A tray under the housing holds a 5 × 7 cm perfboard with the ESP32 and the TMC2209 soldered on. The encoder plate is its lid, and its front wall rises to close the front of the bottom bay. The cables run down the right side (seen from the room), hidden behind the fans and held by three tie-wrap anchors on the back of the fan plate; the same anchors and a cable entry on the left side allow the mirror image. Power comes from two plug-in adapters: a 12 V brick for the fans and the motor, whose wire comes in with the other cables, and a 5 V USB-C adapter for the ESP32, whose cable passes through a diamond opening in the left wall. The [layout drawing](doc/ebox_layout.svg) shows where everything goes on the perfboard.
 - **Water stays out of the room.** A 3 mm drip dam across the lower part of each bore, just before the fan, stops droplets from running indoors. Around the bottom shaft hole in each duct, a 16 mm boss rises 3 mm above the floor, so water flows around it instead of down the shaft.
 - **How it seals.** The lips do the sealing, not the gap between the disc and the bore: the flat lip is 5.6 mm wide and overlaps the disc edge by 2 mm, and the conical lip meets the disc's bevelled rim over a band about 4 mm wide, with foam tape in between. The disc is 67 mm in a 74 mm bore so it can be slid in edge-on past the dam and the bosses. Around the shaft, where the lips must stop to clear the hub, a boss at the top and the one at the bottom close the gap. Their inner faces are curved, coaxial with the bore, so they follow the disc edge with an even gap of about 0.75 mm.
 
@@ -132,17 +132,17 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | M3 × 10 screws + M3 nuts | 4 each | Motor plate: two through the frame in front of the motor, two through the tower walls and the plate's back tabs | — |
 | M3 grub screws, 6 or 8 mm | 5 | Two per disc, 24 mm apart along the hub, so the disc can't rock on the shaft; one in the magnet cap. Self-tapping into the plastic | — |
 | O-rings, 74 × 3 mm, nitrile 70A | 4 | Two per spigot (grooves sized for this O-ring: 4.7% stretch, about 23% squeeze in an 82 mm hole). Optional at first: the spigots also fit a snug hole | $12.79 (pack of 10) |
-| Thin foam tape, about 1 mm | 1 roll | Lips | |
+| Closed-cell neoprene foam sheet, self-adhesive, 1/16 in (1.6 mm) | 1 | Lip seals, cut with the [templates](#cutting-the-lip-foam). The model leaves a 1 mm gap, so the foam is squeezed about 37 %, a good range for a seal | |
 | Perfboard (protoboard), 5 × 7 cm, holes 66 × 46 mm | 1 | Carrier for the ESP32 and the TMC2209 in the electronics box | |
 | Resistors and capacitor for the perfboard | | 1 kΩ (TMC2209 UART), 10 kΩ × 5 (driver enable pull-up, two fan PWM pull-downs, two tach pull-ups), 100 kΩ + 22 kΩ (12 V sense), 100 µF ≥ 25 V electrolytic (TMC2209 motor supply). See [firmware/README.md](firmware/README.md) | — |
-| Female pin headers, 2.54 mm | to suit | Sockets for the ESP32 and the TMC2209, so they unplug for flashing or replacement | |
+| Female pin headers, 2.54 mm (optional) | to suit | Sockets for the ESP32 and the TMC2209 instead of soldering them, so they unplug for replacement (`esp_mount`, `tmc_mount`; the box has room for both) | |
 | M2 screws, about 6 mm | 4 | Perfboard onto the box standoffs (self-tapping) | |
 | M3 × 12 countersunk (flat head, ISO 10642 or DIN 965) screws + M3 nuts | 4 each | Split housing only: fan plate to the splice, heads flush in 90° countersinks | — |
 | M3 × 12 screws | 4 | Electronics box: two through the front cover, two from above through the encoder plate (self-tapping) | — |
 | Small tie wraps, 2.5–3.6 mm | 3+ | Cable anchors (three on each side; use one side) | |
 | 12 V power brick | 1 | Fans and motor, about 1 A. Only its wire enters the box, to a 2-pin screw terminal on the perfboard | — |
 | USB-C power adapter, 5 V (1 A or more), and a USB-C cable | 1 | Powers the ESP32 through its USB-UART connector, which also gives the console. The cable passes through a diamond opening in the box's left or right wall (`usb_port`: or only a cross to drill, or nothing; `usb_side`: left, right or both) | — |
-| **Total bought** | | Not counting the foam insert and foam tape, or the two power adapters | **≈ $181** |
+| **Total bought** | | Not counting the foam insert and foam sheet, or the two power adapters | **≈ $181** |
 
 ### The AS5600 board
 
@@ -150,6 +150,30 @@ The kit board, measured. Its four mounting holes form a 16.7 × 16.2 mm rectangl
 
 <p align="center">
   <img src="doc/as5600.svg" alt="AS5600 kit board, dimensioned: 23.3 x 22.8 mm, four 3.6 mm holes 3.3 mm from the edges, a 3-pin row (VCC, OUT, GND) and a 4-pin row (DIR, SCL, SDA, GPO) 5.2 mm from the sides, chip in the middle; 1.6 mm board, 3.22 mm over the chip" width="520">
+</p>
+
+### The ESP32-S3 board
+
+The Freenove ESP32-S3-WROOM Lite, measured. Its two pin rows are 25.3 mm apart, so they land 10 holes apart on the perfboard. It has two USB-C connectors at one end: plug the cable into the USB-UART one (power and console). The module's antenna sticks out 7 mm beyond the other end.
+
+<p align="center">
+  <img src="doc/esp32_s3.svg" alt="Freenove ESP32-S3-WROOM Lite, dimensioned: PCB 50 x 28.5 mm, antenna 7 mm beyond it over the middle 18.5 mm, two rows of 20 pins 25.3 mm apart, USB-OTG and USB-UART connectors 9 mm wide at the USB end; side view: 1.62 mm PCB on a 2.78 mm pin spacer, 5.54 mm pins, 4.85 mm to the top of the tallest part" width="640">
+</p>
+
+### The TMC2209 module
+
+A StepStick-format driver: 21 × 15 mm, two rows of 8 pins 12.7 mm apart (5 holes on the perfboard). The chip is on the underside; its heatsink (15 × 14.5 × 13 mm, fins along the pin rows) sticks onto the thermal pad on top. The side-view heights are assumed equal to the ESP32's until measured on the part.
+
+<p align="center">
+  <img src="doc/tmc2209.svg" alt="TMC2209 module, dimensioned: PCB 15 x 21 mm, two rows of 8 pins 12.7 mm apart (EN, MS1, MS2, PDN, UART, CLK, STEP, DIR; VM, GND, M1B, M1A, M2A, M2B, VIO, GND), heatsink 14.5 x 15 mm outline; side view: 1.62 mm PCB on a 2.78 mm spacer, 5.54 mm pins, 13 mm heatsink" width="640">
+</p>
+
+### The electronics box layout
+
+The box seen from above, to scale, with the room at the bottom. The ESP32 lies across the back half, its USB end three holes in from the left wall so its pins clear the corner standoff; the TMC2209 sits at the front right, next to the 12 V terminal and the cable entry. The ESP32 can also be turned 180° in the same place, USB end toward the right wall: the box has a diamond opening on each side (views `ebox_elec` and `ebox_elec_alt` in the model). Keep wires and copper away from the antenna's end.
+
+<p align="center">
+  <img src="doc/ebox_layout.svg" alt="Electronics box from above, to scale: the perfboard on four standoffs; the ESP32 across the back half, its USB-C plug through a diamond in the left wall; the TMC2209, 12 V terminal and capacitor at the front right by the cable entry; fan, motor and sensor connectors and resistors at the front left; a second diamond in the right wall for the ESP32 turned the other way" width="640">
 </p>
 
 ### The encoder magnet
@@ -160,10 +184,20 @@ The AS5600 measures the direction of the magnetic field across the shaft, so the
 - An ordinary small cylinder magnet is usually **axial** (poles on its flat ends). Lying flat it would not work, but lying on its side it does: set `magnet = "sideways"` for a cap that holds a 2 × 2 mm cylinder across the shaft. A magnet that small may be too weak at 1–2 mm; the AS5600's status register reports "too weak / OK / too strong", so check it once.
 - Without any magnet, the TMC2209's StallGuard can find "closed" by sensing the stall against the lips.
 
+### Cutting the lip foam
+
+Full-size templates for the foam on the four lips (two per duct). The flat lip takes a half-ring; the conical lip takes the cone unrolled, a flatter arc that lies on the 45° slope without wrinkles. Print the [PDF](doc/lip_templates.pdf) at 100 % (Actual size, not Fit to page), check its 100 mm and 50 mm bars with a ruler, then trace the shapes on the foam's backing paper and cut.
+
+<p align="center">
+  <a href="doc/lip_templates.pdf"><img src="images/lip_templates.png" alt="Preview of the lip templates page: two half-rings for the flat lips, two unrolled arcs for the conical lips, and 100 mm and 50 mm scale bars" width="300"></a>
+</p>
+
+If the 1.6 mm foam proves too stiff for the disc to close, setting `gasket = 1.6` moves the lips back to suit it (checked: the disc still swings freely and the lips still stop it).
+
 ## Assembly
 
 0. Split housing only: press four M3 nuts into the splice's pockets. Stand the lower half upright, cut face up, hold the splice against the back of its fan plate, just above the duct, and fit the two lower countersunk M3 × 12 from the fan side. Lower the upper half onto it and fit the other two. Leave all four slightly loose until step 3.
-1. Line the lips with foam tape.
+1. Line the lips with foam cut from the [templates](#cutting-the-lip-foam): a half-ring on each flat lip, an unrolled arc on each conical lip (B).
 2. Slide each disc edge-on into its duct from the fan end, hub toward the room, with the half engraved B on the side of the conical lip (the right side, seen from the room).
 3. Push the shaft down through the frame on top, both ducts and both disc hubs. Split housing: the shaft now lines up the two halves; tighten the four splice screws.
 4. Turn both discs closed against the lips and tighten their grub screws (two per disc) through the duct openings.
@@ -171,7 +205,7 @@ The AS5600 measures the direction of the magnetic field across the shaft, so the
 6. On the bench, screw the motor to the motor plate (4 × M3 × 8 from below) and fit the coupler on the motor shaft.
 7. Lower the motor and plate onto the top of the housing, with the coupler through the big diamond and over the shaft end, and the plate's two back tabs down through the slots in the frame. In front of the motor, put an M3 × 10 down through the plate and the frame, with a nut underneath, reached from the tower's open front above the fan plate. At the back, put an M3 × 10 through each tower wall and its tab from outside, with a nut on the inside, reached from the tower's open back. Then tighten the coupler's lower screw through a side window.
 8. Fit the fans: the top one blowing into the room, the bottom one blowing toward the window. Arrows engraved on both sides of the housing (above the upper duct and below the lower one) show each duct's airflow; match the arrows on the fan frames to them.
-9. Electronics: mount the ESP32 and the TMC2209 in female headers on the perfboard, following the [layout](doc/ebox_layout.svg): the ESP32 across the back half with its USB end three holes in from the left wall (clear of the corner standoff), the TMC2209 at the front right. Or turn the ESP32 180° in the same place, its USB end toward the right wall (view `ebox_elec_alt`): the box has a diamond on each side. Wire it (connect the 12 V brick's GND to the ESP32's GND), and screw it onto the four standoffs in the box (M2). Plug the USB-C cable in through the matching side wall. Bring the 12 V wire and the fan and motor cables down the right side, tie them to the three anchors behind the fans, and into the box through the notch at the top of its right wall. The AS5600 wires drop in through the window in the encoder plate.
+9. Electronics: solder the ESP32 and the TMC2209 onto the perfboard (or into female headers), following the [layout](#the-electronics-box-layout): the ESP32 across the back half with its USB end three holes in from the left wall (clear of the corner standoff), the TMC2209 at the front right. Or turn the ESP32 180° in the same place, its USB end toward the right wall (view `ebox_elec_alt`): the box has a diamond on each side. Wire it (connect the 12 V brick's GND to the ESP32's GND), and screw it onto the four standoffs in the box (M2). Plug the USB-C cable in through the matching side wall. Bring the 12 V wire and the fan and motor cables down the right side, tie them to the three anchors behind the fans, and into the box through the notch at the top of its right wall. The AS5600 wires drop in through the window in the encoder plate.
 10. Fit the box under the housing: two M3 × 12 through the front cover into the bosses of the bottom bay, and two from above through the encoder plate (outside the bay walls) into the box's back tabs.
 11. Roll two O-rings onto each spigot and push the housing into the foam holes.
 
@@ -213,7 +247,8 @@ About 34 cm³ (45 g) of PETG in all. Also needed: a strip of 1 mm felt or foam t
 ## Files
 
 ```
-doc/                   reference drawings: the AS5600 and ESP32-S3 boards, the electronics box layout
+doc/                   reference drawings: the AS5600, ESP32-S3 and TMC2209 boards, the electronics box layout;
+                       the lip foam templates (PDF, to print at 100 %)
 images/                renders used in this README
 cad/window_vent.scad   parametric model (Customizer; part = "assembly" for the preview)
 cad/louvers.scad       optional adjustable louvers for the intake fan
@@ -223,6 +258,8 @@ tools/wiring_svg.py    draws firmware/images/wiring.svg (the wiring diagram)
 tools/as5600_svg.py    draws doc/as5600.svg (the AS5600 board, dimensioned)
 tools/ebox_layout_svg.py draws doc/ebox_layout.svg (the electronics box, to scale)
 tools/esp32_svg.py     draws doc/esp32_s3.svg (the ESP32-S3 board, dimensioned)
+tools/tmc2209_svg.py   draws doc/tmc2209.svg (the TMC2209 module, dimensioned)
+tools/lip_templates_svg.py draws doc/lip_templates.svg and .pdf (full-size foam templates) and their preview
 tools/render_images.py regenerates the images in images/ from the models
 firmware/baremetal/    Arduino sketch: serial commands to test each electronic part (not tested on hardware yet; see firmware/README.md)
 PRINT_CHECKLIST.md     every printed/bought part interface to verify before printing

@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="960" viewBox="0 0 1180 960" font-family="Segoe UI, Helvetica, Arial, sans-serif">
-<rect width="1180" height="960" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="1120" viewBox="0 0 1180 1120" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="1180" height="1120" fill="#ffffff"/>
 <rect x="320.0" y="120.0" width="640.0" height="611.2" rx="0" fill="#d9dde3" stroke="#222" stroke-width="2" fill-opacity="1.0"/>
 <rect x="339.2" y="139.2" width="601.6" height="572.8" rx="0" fill="#f7f8fa" stroke="#222" stroke-width="1" fill-opacity="1.0"/>
 <rect x="880.0" y="139.2" width="64.0" height="60.8" rx="0" fill="#c4c9d1" stroke="#222" stroke-width="1" fill-opacity="1.0"/>
@@ -586,7 +586,7 @@
 <text x="976.0" y="323.6" font-size="12" text-anchor="start" fill="#b3261e" font-weight="normal">alternative layout: ESP32</text>
 <text x="976.0" y="341.2" font-size="12" text-anchor="start" fill="#b3261e" font-weight="normal">turned 180 deg, USB here</text>
 <rect x="652.0" y="488.0" width="168.0" height="120.0" rx="2" fill="#222222" stroke="#000" stroke-width="2" fill-opacity="1.0"/>
-<rect x="678.0" y="488.0" width="116.0" height="120.0" rx="0" fill="#2f5fd0" stroke="#1b3a8a" stroke-width="1" fill-opacity="0.6"/>
+<rect x="676.0" y="490.0" width="120.0" height="116.0" rx="0" fill="#2f5fd0" stroke="#1b3a8a" stroke-width="1" fill-opacity="0.6"/>
 <circle cx="664.8" cy="498.4" r="2.4" fill="#f4d35e"/>
 <circle cx="685.1" cy="498.4" r="2.4" fill="#f4d35e"/>
 <circle cx="705.4" cy="498.4" r="2.4" fill="#f4d35e"/>
@@ -618,18 +618,61 @@
 <text x="483.2" y="506.4" font-size="11" text-anchor="middle" fill="#ffffff" font-weight="bold">SCD40</text>
 <rect x="364.0" y="528.0" width="160.0" height="56.0" rx="2" fill="#9e8a6a" stroke="#333" stroke-width="1.2" fill-opacity="1.0"/>
 <text x="444.0" y="560.0" font-size="11" text-anchor="middle" fill="#ffffff" font-weight="bold">resistors</text>
+<rect x="344.0" y="204.0" width="592.0" height="504.0" rx="0" fill="none" stroke="#1f7a3a" stroke-width="2" fill-opacity="1.0" stroke-dasharray="10,6"/>
+<line x1="360.0" y1="648.0" x2="360.0" y2="822.2" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="920.0" y1="648.0" x2="920.0" y2="822.2" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="360.0" y1="816.2" x2="920.0" y2="816.2" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="360.0,816.2 370.0,812.2 370.0,820.2" fill="#b3261e"/>
+<polygon points="920.0,816.2 910.0,820.2 910.0,812.2" fill="#b3261e"/>
+<text x="640.0" y="809.2" font-size="14" text-anchor="middle" fill="#b3261e" font-weight="bold">70: this perfboard (5 x 7 cm)</text>
+<line x1="344.0" y1="708.0" x2="344.0" y2="862.2" stroke="#1f7a3a" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="936.0" y1="708.0" x2="936.0" y2="862.2" stroke="#1f7a3a" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="344.0" y1="856.2" x2="936.0" y2="856.2" stroke="#1f7a3a" stroke-width="1.5"/>
+<polygon points="344.0,856.2 354.0,852.2 354.0,860.2" fill="#1f7a3a"/>
+<polygon points="936.0,856.2 926.0,860.2 926.0,852.2" fill="#1f7a3a"/>
+<text x="640.0" y="849.2" font-size="14" text-anchor="middle" fill="#1f7a3a" font-weight="bold">74 max</text>
+<line x1="360.0" y1="248.0" x2="104.0" y2="248.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="360.0" y1="648.0" x2="104.0" y2="648.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="110.0" y1="248.0" x2="110.0" y2="648.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="110.0,248.0 114.0,258.0 106.0,258.0" fill="#b3261e"/>
+<polygon points="110.0,648.0 106.0,638.0 114.0,638.0" fill="#b3261e"/>
+<text x="102.0" y="448.0" font-size="14" text-anchor="middle" fill="#b3261e" font-weight="bold" transform="rotate(-90 102.0 448.0)">50: this perfboard</text>
+<line x1="344.0" y1="204.0" x2="54.0" y2="204.0" stroke="#1f7a3a" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="344.0" y1="708.0" x2="54.0" y2="708.0" stroke="#1f7a3a" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="60.0" y1="204.0" x2="60.0" y2="708.0" stroke="#1f7a3a" stroke-width="1.5"/>
+<polygon points="60.0,204.0 64.0,214.0 56.0,214.0" fill="#1f7a3a"/>
+<polygon points="60.0,708.0 56.0,698.0 64.0,698.0" fill="#1f7a3a"/>
+<text x="52.0" y="456.0" font-size="14" text-anchor="middle" fill="#1f7a3a" font-weight="bold" transform="rotate(-90 52.0 456.0)">63 max</text>
+<text x="352.0" y="222.4" font-size="12" text-anchor="start" fill="#1f7a3a" font-weight="normal">largest board that fits</text>
+<circle cx="904.0" cy="264.0" r="24.0" fill="none" stroke="#1b5fa8" stroke-width="2" stroke-dasharray="4,3"/>
+<circle cx="904.0" cy="632.0" r="24.0" fill="none" stroke="#1b5fa8" stroke-width="2" stroke-dasharray="4,3"/>
+<circle cx="376.0" cy="264.0" r="24.0" fill="none" stroke="#1b5fa8" stroke-width="2" stroke-dasharray="4,3"/>
+<circle cx="376.0" cy="632.0" r="24.0" fill="none" stroke="#1b5fa8" stroke-width="2" stroke-dasharray="4,3"/>
+<line x1="376.0" y1="656.0" x2="376.0" y2="902.2" stroke="#1b5fa8" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="904.0" y1="656.0" x2="904.0" y2="902.2" stroke="#1b5fa8" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="376.0" y1="896.2" x2="904.0" y2="896.2" stroke="#1b5fa8" stroke-width="1.5"/>
+<polygon points="376.0,896.2 386.0,892.2 386.0,900.2" fill="#1b5fa8"/>
+<polygon points="904.0,896.2 894.0,900.2 894.0,892.2" fill="#1b5fa8"/>
+<text x="640.0" y="889.2" font-size="14" text-anchor="middle" fill="#1b5fa8" font-weight="bold">66: standoffs (6 mm, M2)</text>
+<line x1="928.0" y1="264.0" x2="1144.0" y2="264.0" stroke="#1b5fa8" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="928.0" y1="632.0" x2="1144.0" y2="632.0" stroke="#1b5fa8" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1150.0" y1="264.0" x2="1150.0" y2="632.0" stroke="#1b5fa8" stroke-width="1.5"/>
+<polygon points="1150.0,264.0 1154.0,274.0 1146.0,274.0" fill="#1b5fa8"/>
+<polygon points="1150.0,632.0 1146.0,622.0 1154.0,622.0" fill="#1b5fa8"/>
+<text x="1142.0" y="448.0" font-size="14" text-anchor="middle" fill="#1b5fa8" font-weight="bold" transform="rotate(-90 1142.0 448.0)">46: standoffs</text>
 <text x="640.0" y="80.0" font-size="14" text-anchor="middle" fill="#444" font-weight="normal">back wall (window side)</text>
 <text x="640.0" y="781.2" font-size="14" text-anchor="middle" fill="#444" font-weight="normal">front cover (room side)</text>
-<text x="320.0" y="771.2" font-size="14" text-anchor="middle" fill="#444" font-weight="normal">left wall</text>
-<text x="960.0" y="771.2" font-size="14" text-anchor="middle" fill="#444" font-weight="normal">right wall</text>
+<text x="320.0" y="104.0" font-size="14" text-anchor="middle" fill="#444" font-weight="normal">left wall</text>
+<text x="960.0" y="104.0" font-size="14" text-anchor="middle" fill="#444" font-weight="normal">right wall</text>
 <text x="976.0" y="652.0" font-size="13" text-anchor="start" fill="#b3261e" font-weight="normal">cables in: 12 V, fans, motor</text>
-<text x="304.0" y="652.0" font-size="13" text-anchor="end" fill="#b3261e" font-weight="normal">(mirror entry, unused)</text>
+<text x="304.0" y="680.0" font-size="13" text-anchor="end" fill="#b3261e" font-weight="normal">(mirror entry, unused)</text>
 <polygon points="640,290.0 694.0,344.0 640,398.0 586.0,344.0" fill="none" stroke="#1f5fbf" stroke-width="2" stroke-dasharray="6,4"/>
 <text x="640.0" y="414.0" font-size="12" text-anchor="middle" fill="#1f5fbf" font-weight="normal">AS5600 wires come down here</text>
 <text x="640.0" y="48.0" font-size="22" text-anchor="middle" fill="#111" font-weight="bold">Electronics box, top view, to scale (mm)</text>
-<text x="30" y="838" font-size="14" fill="#333">Inside: 75.2 x 71.6 mm, 34 mm high under the encoder plate. Perfboard 70 x 50 on 5 mm standoffs (grid 2.54 mm).</text>
-<text x="30" y="860" font-size="14" fill="#333">The ESP32's USB end sits 3 holes (7.6 mm) in from the left wall, clear of the corner standoff; its USB-C cable (5 V adapter) passes</text>
-<text x="30" y="882" font-size="14" fill="#333">through the diamond opening. Or turn the ESP32 180 deg in the same place, USB end to the right: the right-hand diamond (ebox_elec_alt).</text>
-<text x="30" y="904" font-size="14" fill="#333">12 V from an external power brick comes in through the right-hand cable entry, with the fan and motor cables.</text>
-<text x="30" y="926" font-size="14" fill="#333">Join the 12 V brick's GND and the ESP32's GND on the perfboard. The ESP32 lies components up, its 3V3/5V header row toward the window.</text>
+<text x="30" y="972" font-size="14" fill="#333">Inside: 75.2 x 71.6 mm, 34 mm high under the encoder plate. Perfboard 70 x 50 on 5 mm standoffs, holes 66 x 46 (grid 2.54 mm).</text>
+<text x="30" y="994" font-size="14" fill="#333">Any board from 70 x 50 up to 74 x 63 (dashed green) fits: set pb_size, pb_holes and pb_y (its centre) in the model to match it.</text>
+<text x="30" y="1016" font-size="14" fill="#333">The ESP32's USB end sits 3 holes (7.6 mm) in from the left wall, clear of the corner standoff; its USB-C cable (5 V adapter) passes</text>
+<text x="30" y="1038" font-size="14" fill="#333">through the diamond opening. Or turn the ESP32 180 deg in the same place, USB end to the right: the right-hand diamond (ebox_elec_alt).</text>
+<text x="30" y="1060" font-size="14" fill="#333">12 V from an external power brick comes in through the right-hand cable entry, with the fan and motor cables.</text>
+<text x="30" y="1082" font-size="14" fill="#333">Join the 12 V brick's GND and the ESP32's GND on the perfboard. The ESP32 lies components up, its 3V3/5V header row toward the window.</text>
 </svg>

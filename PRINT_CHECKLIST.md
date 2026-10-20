@@ -112,7 +112,7 @@ Two common boards are supported. The chip is centred on both. Board B is the one
 
 | Item | Model | Hardware | Status |
 |---|---|---|---|
-| Inside | 75.2 × 71.6, 32 high under the encoder plate | perfboard 70 × 50; TMC2209 with heatsink in female headers about 28 high | ✅ |
+| Inside | 75.2 × 71.6, 34 high under the encoder plate | perfboard 70 × 50; TMC2209 with its heatsink, soldered: 24.0 above the floor; in female headers: 32.5 ([drawing](doc/tmc2209.svg); spacer and PCB heights assumed, to measure) | ✅ 10 under the plate (1.5 in headers) |
 | Perfboard standoffs | 4, 5 high, 66 × 46 apart, Ø 1.8 pilot | 5 × 7 cm protoboard, M2 holes about 2 from the corners | 📏 check your perfboard's hole spacing; set `pb_holes` |
 | Layout | ESP32 across the back half, USB end 7.6 mm (3 holes) in from the left wall (`esp_dx`), or turned 180° toward the right wall (`ebox_elec_alt`); TMC2209 front right, by the cable entry ([drawing](doc/ebox_layout.svg)) | | ✅ |
 | USB-C (power and console) | 18 mm diamond in each side wall (`usb_side`, `usb_port`; `"mark"` engraves a cross to drill a 12 mm hole instead), centre 18.2 above the inner floor | plug 11 × 6.25, 20 long, through the wall and 7.6 into the box; 5 V USB-C adapter | ✅ centred on the USB-UART connector (`usb_dy = 6`, measured: 8.25 from the board's TX/GND edge); the ESP32 lies components up, its 3V3/5V header row toward the window (toward the room when turned; the right-hand diamond is mirrored to match, 6 toward the window); both layouts checked clear of the standoffs |

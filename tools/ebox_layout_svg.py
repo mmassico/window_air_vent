@@ -20,13 +20,13 @@ PILLAR = (34.0, 21.0)        # back fixing pillars: x = +/- 34, y = 21 (8 x 8 ar
 CABLE_IN = (72.5, 88.5)      # cable entries at the top of both side walls (y range)
 ESP = (57.0, 28.5)           # Freenove ESP32-S3 Lite: overall length (with the antenna), width
 ESP_PCB = 50.0               # its PCB; the module's antenna sticks out 7 mm beyond it, over the middle 18.5 mm
-TMC = (21.0, 15.0)           # TMC2209 module (heatsink 14.5 x 15 on top)
+TMC = (21.0, 15.0)           # TMC2209 module (heatsink 15 x 14.5 on top, fins along the pin rows)
 PLUG = 20.0                  # USB-C plug housing, outside the wall
 PITCH = 2.54
 
 K = 8                        # px per mm
 CX, CY = 640, 120            # canvas position of x = 0, y = Y0
-W, H = 1180, 960
+W, H = 1180, 1120
 
 out = []
 
@@ -118,7 +118,7 @@ tx0, tx1 = -PB[0] / 2 + 12.5, -PB[0] / 2 + 12.5 + TMC[0]   # 12 V terminal and c
 ty0 = ey1 + 1
 ty1 = ty0 + TMC[1]
 rect(tx0, ty0, tx1, ty1, "#222222", "#000", 2, rx=2)
-rect((tx0 + tx1) / 2 - 7.25, (ty0 + ty1) / 2 - 7.5, (tx0 + tx1) / 2 + 7.25, (ty0 + ty1) / 2 + 7.5, "#2f5fd0", "#1b3a8a", 1, op=0.6)
+rect((tx0 + tx1) / 2 - 7.5, (ty0 + ty1) / 2 - 7.25, (tx0 + tx1) / 2 + 7.5, (ty0 + ty1) / 2 + 7.25, "#2f5fd0", "#1b3a8a", 1, op=0.6)
 for e in (ty0 + 1.3, ty1 - 1.3):
     for i in range(8):
         cx, cy = P(tx1 - 1.6 - i * PITCH, e)
@@ -140,13 +140,62 @@ block(tx1 + 3, ty0 + 9.5, 10.2, 2.6, "MOTOR", "#6a3fb5")
 block(tx1 + 16, ty0 + 0.5, 10.2, 2.6, "SCD40", "#1b7f3b")
 block(tx1 + 16, ty0 + 5, 20, 7, "resistors", "#9e8a6a")
 
+# --- perfboard size: this one (70 x 50) and the largest that fits ----------------------------------
+C_DIM, C_MAX = "#b3261e", "#1f7a3a"
+MAX_X = 74.0                           # inside width 75.2, 0.6 clear each side
+MAX_Y = (PILLAR[1] + 4 + 0.5, Y1 - T - 0.5)   # from just in front of the back pillars to the front wall: 63
+rect(-MAX_X / 2, MAX_Y[0], MAX_X / 2, MAX_Y[1], "none", C_MAX, 2)
+out[-1] = out[-1].replace("/>", ' stroke-dasharray="10,6"/>')
+
+
+def arrowhead(x, y, dx, dy, color):
+    out.append(f'<polygon points="{x:.1f},{y:.1f} {x - dx * 10 - dy * 4:.1f},{y - dy * 10 + dx * 4:.1f} '
+               f'{x - dx * 10 + dy * 4:.1f},{y - dy * 10 - dx * 4:.1f}" fill="{color}"/>')
+
+
+def hdim(xa, xb, ext_y, cy, label, color):
+    """horizontal dimension between model x = xa and xb, drawn at canvas y = cy, extension lines from model y = ext_y"""
+    (a, ey), (b, _) = P(xa, ext_y), P(xb, ext_y)
+    for x in (a, b):
+        out.append(f'<line x1="{x:.1f}" y1="{ey:.1f}" x2="{x:.1f}" y2="{cy + 6:.1f}" stroke="{color}" stroke-width="1" stroke-dasharray="3,3"/>')
+    out.append(f'<line x1="{a:.1f}" y1="{cy:.1f}" x2="{b:.1f}" y2="{cy:.1f}" stroke="{color}" stroke-width="1.5"/>')
+    arrowhead(min(a, b), cy, -1, 0, color); arrowhead(max(a, b), cy, 1, 0, color)
+    ctext((a + b) / 2, cy - 7, label, 14, color, "bold")
+
+
+def vdim(ya, yb, ext_x, cx, label, color):
+    """vertical dimension between model y = ya and yb, drawn at canvas x = cx, extension lines from model x = ext_x"""
+    (ex, a), (_, b) = P(ext_x, ya), P(ext_x, yb)
+    for y in (a, b):
+        out.append(f'<line x1="{ex:.1f}" y1="{y:.1f}" x2="{cx - 6:.1f}" y2="{y:.1f}" stroke="{color}" stroke-width="1" stroke-dasharray="3,3"/>')
+    out.append(f'<line x1="{cx:.1f}" y1="{a:.1f}" x2="{cx:.1f}" y2="{b:.1f}" stroke="{color}" stroke-width="1.5"/>')
+    arrowhead(cx, a, 0, -1, color); arrowhead(cx, b, 0, 1, color)
+    out.append(f'<text x="{cx - 8:.1f}" y="{(a + b) / 2:.1f}" font-size="14" text-anchor="middle" fill="{color}" '
+               f'font-weight="bold" transform="rotate(-90 {cx - 8:.1f} {(a + b) / 2:.1f})">{label}</text>')
+
+
+bx = CY + (Y1 - Y0) * K                # canvas y of the box's front face
+hdim(PB[0] / 2, -PB[0] / 2, py1, bx + 85, f"{PB[0]:g}: this perfboard (5 x 7 cm)", C_DIM)
+hdim(MAX_X / 2, -MAX_X / 2, MAX_Y[1], bx + 125, f"{MAX_X:g} max", C_MAX)
+vdim(py0, py1, PB[0] / 2, 110, f"{PB[1]:g}: this perfboard", C_DIM)
+vdim(MAX_Y[0], MAX_Y[1], MAX_X / 2, 60, f"{MAX_Y[1] - MAX_Y[0]:g} max", C_MAX)
+text(MAX_X / 2 - 1, MAX_Y[0] + 2.3, "largest board that fits", 12, "start", C_MAX)
+# standoffs (6 mm, under the board's corner holes) and their spacing
+C_STAND = "#1b5fa8"
+for dx in (-1, 1):
+    for dy in (-1, 1):
+        cx, cy = P(dx * PB_HOLES[0] / 2, PB_Y + dy * PB_HOLES[1] / 2)
+        out.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{3.0 * K}" fill="none" stroke="{C_STAND}" stroke-width="2" stroke-dasharray="4,3"/>')
+hdim(PB_HOLES[0] / 2, -PB_HOLES[0] / 2, PB_Y + PB_HOLES[1] / 2 + 3, bx + 165, f"{PB_HOLES[0]:g}: standoffs (6 mm, M2)", C_STAND)
+vdim(PB_Y - PB_HOLES[1] / 2, PB_Y + PB_HOLES[1] / 2, -PB_HOLES[0] / 2 - 3, W - 30, f"{PB_HOLES[1]:g}: standoffs", C_STAND)
+
 # --- labels and dimensions -----------------------------------------------------------------------
 ctext(CX, CY - 40, "back wall (window side)", 14, "#444")
 ctext(CX, CY + (Y1 - Y0) * K + 50, "front cover (room side)", 14, "#444")
-text(xo, Y1 + 5, "left wall", 14, "middle", "#444")
-text(-xo, Y1 + 5, "right wall", 14, "middle", "#444")
+text(xo, Y0 - 2, "left wall", 14, "middle", "#444")
+text(-xo, Y0 - 2, "right wall", 14, "middle", "#444")
 text(-xo - 2, (CABLE_IN[0] + CABLE_IN[1]) / 2 + 1, "cables in: 12 V, fans, motor", 13, "start", "#b3261e")
-text(xo + 2, (CABLE_IN[0] + CABLE_IN[1]) / 2 + 1, "(mirror entry, unused)", 13, "end", "#b3261e")
+text(xo + 2, (CABLE_IN[0] + CABLE_IN[1]) / 2 + 4.5, "(mirror entry, unused)", 13, "end", "#b3261e")
 # AS5600 wires come down through the diamond window under the chip (x = 0, y = 43)
 cx, cy = P(0, 43)
 out.append(f'<polygon points="{cx},{cy - 6.75 * K} {cx + 6.75 * K},{cy} {cx},{cy + 6.75 * K} {cx - 6.75 * K},{cy}" '
@@ -155,14 +204,15 @@ ctext(cx, cy + 6.75 * K + 16, "AS5600 wires come down here", 12, "#1f5fbf")
 
 text(0, Y0 - 9, "Electronics box, top view, to scale (mm)", 22, "middle", "#111", "bold")
 notes = [
-    "Inside: 75.2 x 71.6 mm, 34 mm high under the encoder plate. Perfboard 70 x 50 on 5 mm standoffs (grid 2.54 mm).",
+    "Inside: 75.2 x 71.6 mm, 34 mm high under the encoder plate. Perfboard 70 x 50 on 5 mm standoffs, holes 66 x 46 (grid 2.54 mm).",
+    "Any board from 70 x 50 up to 74 x 63 (dashed green) fits: set pb_size, pb_holes and pb_y (its centre) in the model to match it.",
     "The ESP32's USB end sits 3 holes (7.6 mm) in from the left wall, clear of the corner standoff; its USB-C cable (5 V adapter) passes",
     "through the diamond opening. Or turn the ESP32 180 deg in the same place, USB end to the right: the right-hand diamond (ebox_elec_alt).",
     "12 V from an external power brick comes in through the right-hand cable entry, with the fan and motor cables.",
     "Join the 12 V brick's GND and the ESP32's GND on the perfboard. The ESP32 lies components up, its 3V3/5V header row toward the window.",
 ]
 for i, n in enumerate(notes):
-    out.append(f'<text x="30" y="{H - 122 + i * 22}" font-size="14" fill="#333">{n}</text>')
+    out.append(f'<text x="30" y="{H - 148 + i * 22}" font-size="14" fill="#333">{n}</text>')
 
 svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
        f'font-family="Segoe UI, Helvetica, Arial, sans-serif">\n<rect width="{W}" height="{H}" fill="#ffffff"/>\n'
