@@ -49,8 +49,8 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 
 ## Printed parts
 
-| Part | Qty | Description | Size (mm) | Print orientation | |
-|---|---|---|---|---|---|
+| Part | Qty | Description | Size (mm) | Print orientation | <div style="width:180px">Thumbnail</div> |
+|---|---|---|---|---|:---:|
 | `body` | 1 | Housing: two ducts with the damper lips, drip dams and shaft bosses, O-ring spigots, fan plate, motor frame and encoder plate | 90 × 241 × 114 | Fan plate on the bed, no supports | <img src="images/part_body.png" width="180"> |
 | `disc` | 2 | Butterfly damper disc, clamped to the shaft by two M3 grub screws; the half engraved B has a 45° bevel on its rim | 67 × 67 × 14 | Plate on the bed, hub up | <img src="images/part_disc.png" width="180"> |
 | `motor_plate` | 1 | The motor screws to it on the bench; it then sits on top of the housing: two screws in front of the motor, and two tabs at the back, down through the frame and screwed to the tower walls | 56 × 61 × 15 | Top face on the bed, tabs up | <img src="images/part_motor_plate.png" width="180"> |
@@ -59,8 +59,8 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 
 **For a 180 mm printer** (e.g. Bambu Lab A1 mini), print the housing in two halves instead of `body`. The cut runs midway between the two ducts, where only the fan plate joins them; a small splice plate behind the fan plate joins the halves again with four M3 screws, driven from the fan side in the band between the two fans. Each half prints like the full housing, in about half the time (roughly 5–6 h), so they can go on different days; use the same spool and profile for both.
 
-| Part | Qty | Description | Size (mm) | Print orientation | |
-|---|---|---|---|---|---|
+| Part | Qty | Description | Size (mm) | Print orientation | <div style="width:180px">Thumbnail</div> |
+|---|---|---|---|---|:---:|
 | `body_top` | 1 | Upper half: intake duct, upper fan, motor frame, and both middle tie-wrap anchors (whole) | 90 × 130 × 114 | Fan plate on the bed, no supports | <img src="images/part_body_top.png" width="180"> |
 | `body_bottom` | 1 | Lower half: exhaust duct, lower fan, encoder plate; notched under the two middle anchors | 90 × 116 × 114 | Fan plate on the bed, no supports | <img src="images/part_body_bottom.png" width="180"> |
 | `splice` | 1 | Joins the halves behind the fan plate; four M3 nut pockets on its back | 60 × 32 × 6 | Flat, nut pockets up | <img src="images/part_splice.png" width="180"> |
