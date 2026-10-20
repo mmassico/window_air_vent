@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1000" viewBox="0 0 900 1000" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="900" height="1000" fill="#ffffff"/>
+<rect x="170" y="175" width="466.0" height="456.0" rx="24.0" fill="#f2f2ee" stroke="#222" stroke-width="2"/>
+<circle cx="236.0" cy="241.0" r="36.0" fill="#ffffff" stroke="#222" stroke-width="2"/>
+<line x1="228.0" y1="241.0" x2="244.0" y2="241.0" stroke="#888" stroke-width="1"/>
+<line x1="236.0" y1="233.0" x2="236.0" y2="249.0" stroke="#888" stroke-width="1"/>
+<circle cx="570.0" cy="241.0" r="36.0" fill="#ffffff" stroke="#222" stroke-width="2"/>
+<line x1="562.0" y1="241.0" x2="578.0" y2="241.0" stroke="#888" stroke-width="1"/>
+<line x1="570.0" y1="233.0" x2="570.0" y2="249.0" stroke="#888" stroke-width="1"/>
+<circle cx="236.0" cy="565.0" r="36.0" fill="#ffffff" stroke="#222" stroke-width="2"/>
+<line x1="228.0" y1="565.0" x2="244.0" y2="565.0" stroke="#888" stroke-width="1"/>
+<line x1="236.0" y1="557.0" x2="236.0" y2="573.0" stroke="#888" stroke-width="1"/>
+<circle cx="570.0" cy="565.0" r="36.0" fill="#ffffff" stroke="#222" stroke-width="2"/>
+<line x1="562.0" y1="565.0" x2="578.0" y2="565.0" stroke="#888" stroke-width="1"/>
+<line x1="570.0" y1="557.0" x2="570.0" y2="573.0" stroke="#888" stroke-width="1"/>
+<rect x="364.0" y="354.0" width="78.0" height="98.0" rx="3" fill="#2b2b2b"/>
+<rect x="344.0" y="360.90000000000003" width="20.0" height="8.0" fill="#9a9a9a"/>
+<rect x="442.0" y="360.90000000000003" width="20.0" height="8.0" fill="#9a9a9a"/>
+<rect x="344.0" y="386.3" width="20.0" height="8.0" fill="#9a9a9a"/>
+<rect x="442.0" y="386.3" width="20.0" height="8.0" fill="#9a9a9a"/>
+<rect x="344.0" y="411.70000000000005" width="20.0" height="8.0" fill="#9a9a9a"/>
+<rect x="442.0" y="411.70000000000005" width="20.0" height="8.0" fill="#9a9a9a"/>
+<rect x="344.0" y="437.1" width="20.0" height="8.0" fill="#9a9a9a"/>
+<rect x="442.0" y="437.1" width="20.0" height="8.0" fill="#9a9a9a"/>
+<text x="403.0" y="409.0" font-size="13" text-anchor="middle" fill="#ffffff" font-weight="bold">AS5600</text>
+<rect x="258.0" y="336.2" width="32.0" height="32.0" fill="none" stroke="#b07a00" stroke-width="2"/>
+<circle cx="274.0" cy="352.2" r="10.0" fill="#ffffff" stroke="#b07a00" stroke-width="2"/>
+<text x="255.0" y="357.2" font-size="14" text-anchor="end" fill="#111" font-weight="bold">VCC</text>
+<rect x="258.0" y="387.0" width="32.0" height="32.0" fill="none" stroke="#b07a00" stroke-width="2"/>
+<circle cx="274.0" cy="403.0" r="10.0" fill="#ffffff" stroke="#b07a00" stroke-width="2"/>
+<text x="255.0" y="408.0" font-size="14" text-anchor="end" fill="#111" font-weight="bold">OUT</text>
+<rect x="258.0" y="437.8" width="32.0" height="32.0" fill="none" stroke="#b07a00" stroke-width="2"/>
+<circle cx="274.0" cy="453.8" r="10.0" fill="#ffffff" stroke="#b07a00" stroke-width="2"/>
+<text x="255.0" y="458.8" font-size="14" text-anchor="end" fill="#111" font-weight="bold">GND</text>
+<rect x="516.0" y="310.8" width="32.0" height="32.0" fill="none" stroke="#b07a00" stroke-width="2"/>
+<circle cx="532.0" cy="326.8" r="10.0" fill="#ffffff" stroke="#b07a00" stroke-width="2"/>
+<text x="551.0" y="331.8" font-size="14" text-anchor="start" fill="#111" font-weight="bold">DIR</text>
+<rect x="516.0" y="361.6" width="32.0" height="32.0" fill="none" stroke="#b07a00" stroke-width="2"/>
+<circle cx="532.0" cy="377.6" r="10.0" fill="#ffffff" stroke="#b07a00" stroke-width="2"/>
+<text x="551.0" y="382.6" font-size="14" text-anchor="start" fill="#111" font-weight="bold">SCL</text>
+<rect x="516.0" y="412.4" width="32.0" height="32.0" fill="none" stroke="#b07a00" stroke-width="2"/>
+<circle cx="532.0" cy="428.4" r="10.0" fill="#ffffff" stroke="#b07a00" stroke-width="2"/>
+<text x="551.0" y="433.4" font-size="14" text-anchor="start" fill="#111" font-weight="bold">SDA</text>
+<rect x="516.0" y="463.20000000000005" width="32.0" height="32.0" fill="none" stroke="#b07a00" stroke-width="2"/>
+<circle cx="532.0" cy="479.20000000000005" r="10.0" fill="#ffffff" stroke="#b07a00" stroke-width="2"/>
+<text x="551.0" y="484.2" font-size="14" text-anchor="start" fill="#111" font-weight="bold">GPO</text>
+<line x1="170.0" y1="175.0" x2="170.0" y2="79.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="636.0" y1="175.0" x2="636.0" y2="79.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="170.0" y1="85.0" x2="636.0" y2="85.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="170.0,85.0 180.0,81.0 180.0,89.0" fill="#b3261e"/>
+<polygon points="636.0,85.0 626.0,89.0 626.0,81.0" fill="#b3261e"/>
+<text x="403.0" y="78.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">23.3</text>
+<line x1="170.0" y1="175.0" x2="170.0" y2="119.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="236.0" y1="175.0" x2="236.0" y2="119.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="170.0" y1="125.0" x2="236.0" y2="125.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="170.0,125.0 180.0,121.0 180.0,129.0" fill="#b3261e"/>
+<polygon points="236.0,125.0 226.0,129.0 226.0,121.0" fill="#b3261e"/>
+<text x="203.0" y="118.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">3.3</text>
+<line x1="532.0" y1="310.8" x2="532.0" y2="119.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="636.0" y1="310.8" x2="636.0" y2="119.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="532.0" y1="125.0" x2="636.0" y2="125.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="532.0,125.0 542.0,121.0 542.0,129.0" fill="#b3261e"/>
+<polygon points="636.0,125.0 626.0,129.0 626.0,121.0" fill="#b3261e"/>
+<text x="584.0" y="118.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">5.2</text>
+<line x1="170.0" y1="469.8" x2="170.0" y2="687.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="274.0" y1="469.8" x2="274.0" y2="687.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="170.0" y1="681.0" x2="274.0" y2="681.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="170.0,681.0 180.0,677.0 180.0,685.0" fill="#b3261e"/>
+<polygon points="274.0,681.0 264.0,685.0 264.0,677.0" fill="#b3261e"/>
+<text x="222.0" y="674.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">5.2</text>
+<line x1="236.0" y1="565.0" x2="236.0" y2="727.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="570.0" y1="565.0" x2="570.0" y2="727.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="236.0" y1="721.0" x2="570.0" y2="721.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="236.0,721.0 246.0,717.0 246.0,725.0" fill="#b3261e"/>
+<polygon points="570.0,721.0 560.0,725.0 560.0,717.0" fill="#b3261e"/>
+<text x="403.0" y="714.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">16.7 (hole centres)</text>
+<line x1="170.0" y1="175.0" x2="114.0" y2="175.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="170.0" y1="403.0" x2="114.0" y2="403.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="120.0" y1="175.0" x2="120.0" y2="403.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="120.0,175.0 124.0,185.0 116.0,185.0" fill="#b3261e"/>
+<polygon points="120.0,403.0 116.0,393.0 124.0,393.0" fill="#b3261e"/>
+<text x="112.0" y="289.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal" transform="rotate(-90 112 289.0)">11.4 (OUT)</text>
+<line x1="170.0" y1="175.0" x2="74.0" y2="175.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="170.0" y1="241.0" x2="74.0" y2="241.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="80.0" y1="175.0" x2="80.0" y2="241.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="80.0,175.0 84.0,185.0 76.0,185.0" fill="#b3261e"/>
+<polygon points="80.0,241.0 76.0,231.0 84.0,231.0" fill="#b3261e"/>
+<text x="72.0" y="208.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal" transform="rotate(-90 72 208.0)">3.3</text>
+<line x1="636.0" y1="175.0" x2="802.0" y2="175.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="636.0" y1="631.0" x2="802.0" y2="631.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="796.0" y1="175.0" x2="796.0" y2="631.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="796.0,175.0 800.0,185.0 792.0,185.0" fill="#b3261e"/>
+<polygon points="796.0,631.0 792.0,621.0 800.0,621.0" fill="#b3261e"/>
+<text x="788.0" y="403.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal" transform="rotate(-90 788.0 403.0)">22.8</text>
+<line x1="570.0" y1="241.0" x2="762.0" y2="241.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="570.0" y1="565.0" x2="762.0" y2="565.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="756.0" y1="241.0" x2="756.0" y2="565.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="756.0,241.0 760.0,251.0 752.0,251.0" fill="#b3261e"/>
+<polygon points="756.0,565.0 752.0,555.0 760.0,555.0" fill="#b3261e"/>
+<text x="748.0" y="403.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal" transform="rotate(-90 748.0 403.0)">16.2 (hole centres)</text>
+<line x1="254.0" y1="583.0" x2="300.0" y2="637.0" stroke="#b3261e" stroke-width="1.2"/>
+<text x="302.0" y="653.0" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">&#216; 3.6 (M3)</text>
+<text x="508.0" y="464.4" font-size="13" text-anchor="end" fill="#b3261e" font-weight="normal">pitch 2.54</text>
+<rect x="170" y="843.4" width="466.0" height="32.0" fill="#f2f2ee" stroke="#222" stroke-width="2"/>
+<rect x="364.0" y="811.0" width="78.0" height="32.400000000000006" fill="#2b2b2b"/>
+<line x1="642.0" y1="843.4" x2="682.0" y2="843.4" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="642.0" y1="875.4" x2="682.0" y2="875.4" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="676.0" y1="843.4" x2="676.0" y2="875.4" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="676.0,843.4 680.0,853.4 672.0,853.4" fill="#b3261e"/>
+<polygon points="676.0,875.4 672.0,865.4 680.0,865.4" fill="#b3261e"/>
+<text x="684.0" y="864.4" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">1.6</text>
+<line x1="642.0" y1="811.0" x2="752.0" y2="811.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="642.0" y1="875.4" x2="752.0" y2="875.4" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="746.0" y1="811.0" x2="746.0" y2="875.4" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="746.0,811.0 750.0,821.0 742.0,821.0" fill="#b3261e"/>
+<polygon points="746.0,875.4 742.0,865.4 750.0,865.4" fill="#b3261e"/>
+<text x="754.0" y="848.2" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">3.22 over the chip</text>
+<line x1="442.0" y1="811.0" x2="752.0" y2="811.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="170.0" y="797.0" font-size="15" text-anchor="start" fill="#111" font-weight="bold">Side view</text>
+<text x="40.0" y="40.0" font-size="22" text-anchor="start" fill="#111" font-weight="bold">AS5600 kit board: top view, chip side (mm)</text>
+<text x="40.0" y="970.0" font-size="14" text-anchor="start" fill="#333" font-weight="normal">Measured on the kit board sold with the 3.95 &#215; 2 mm diametric magnet. Holes form a 16.7 &#215; 16.2 rectangle, not a square.</text>
+</svg>

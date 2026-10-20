@@ -72,6 +72,8 @@ PETG holes usually come out 0.1–0.2 mm smaller than drawn, and holes printed *
 
 Two common boards are supported. The chip is centred on both. Board B is the one in the kit, measured.
 
+<p align="center"><img src="doc/as5600.svg" alt="AS5600 kit board, dimensioned: 23.3 x 22.8 mm, holes 3.6 mm at 3.3 mm from the edges, pin rows 5.2 mm from the sides" width="520"></p>
+
 | Board | Size | Holes (centres) | Holes | Headers |
 |---|---|---|---|---|
 | A | 20 × 20 | 15 × 15 | not stated | 4-pin connector |

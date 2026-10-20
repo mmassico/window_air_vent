@@ -144,6 +144,14 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | 12 V supply | 1 | Fans and motor | — |
 | **Total bought** | | Not counting the foam insert and foam tape | **≈ $183** |
 
+### The AS5600 board
+
+The kit board, measured. Its four mounting holes form a 16.7 × 16.2 mm rectangle (not a square); the diagonal slots in the encoder plate take it as well as the smaller 20 × 20 boards. Mount it chip up, under the magnet, and solder the wires straight into its holes: they run inward under the board, in the 2 mm the standoff pads leave, and down through the diamond window under the chip.
+
+<p align="center">
+  <img src="doc/as5600.svg" alt="AS5600 kit board, dimensioned: 23.3 x 22.8 mm, four 3.6 mm holes 3.3 mm from the edges, a 3-pin row (VCC, OUT, GND) and a 4-pin row (DIR, SCL, SDA, GPO) 5.2 mm from the sides, chip in the middle; 1.6 mm board, 3.22 mm over the chip" width="520">
+</p>
+
 ### The encoder magnet
 
 The AS5600 measures the direction of the magnetic field across the shaft, so the magnet's north-south axis must lie **across** the shaft and turn with it.
@@ -205,12 +213,15 @@ About 34 cm³ (45 g) of PETG in all. Also needed: a strip of 1 mm felt or foam t
 ## Files
 
 ```
+doc/                   reference drawings of bought parts (the AS5600 board)
 images/                renders used in this README
 cad/window_vent.scad   parametric model (Customizer; part = "assembly" for the preview)
 cad/louvers.scad       optional adjustable louvers for the intake fan
 stl/                   exported parts (default parameters)
 tools/check.py         geometry checks (must print ALL CHECKS PASSED)
 tools/wiring_svg.py    draws firmware/images/wiring.svg (the wiring diagram)
+tools/as5600_svg.py    draws doc/as5600.svg (the AS5600 board, dimensioned)
+tools/render_images.py regenerates the images in images/ from the models
 firmware/baremetal/    Arduino sketch: serial commands to test each electronic part (not tested on hardware yet; see firmware/README.md)
 PRINT_CHECKLIST.md     every printed/bought part interface to verify before printing
 ```
