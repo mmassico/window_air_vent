@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, body, disc, motor_plate, magnet_cap, ebox, fittest, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view]
+part  = "assembly"; // [assembly, body, disc, motor_plate, magnet_cap, ebox, fittest, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -33,6 +33,8 @@ sp_od     = 82;     // spigot OD = foam hole diameter
 oring_cs  = 3;      // O-ring cross-section (default: 74 x 3 mm O-rings, stretched about 4.7%)
 oring_dep = 0.75;   // groove depth as a fraction of cs (about 24% squeeze in the foam hole); width is 1.4 x cs
 oring_pos = [6, 16];// groove starts, measured from the foam face into the foam
+oring_slope = true; // 45 deg groove wall on the spigot-tip side: the spigots print tip up, so that wall would
+                    // otherwise be a flat overhang; floor depth (squeeze) and the other wall are unchanged
 stop_od   = 90;     // stop ring that rests on the room face of the foam
 stop_t    = 3;
 
@@ -50,6 +52,8 @@ gasket   = 1;       // foam tape thickness on the lips
 lip_ovl  = 2;       // lips overlap the disc edge by this much
 lip_t    = 2;       // lip thickness (along the flow)
 lip_gap  = 7;       // no lip within this distance of the shaft (clears the hub and the edge-on disc)
+disc_bev = 2;       // 45 deg bevel on the foam-side rim of the disc half that closes against lip B (engraved B);
+                    // lip B is a matching 45 deg cone, so neither prints a flat overhang
 dam_h    = 3;       // drip dam near the fan end, on the lower part of each bore (sizes the disc; its inner face follows the disc sweep)
 dam_ang  = 60;      // the dam covers +/- this angle from the bottom of the bore
 sboss_d  = 16;      // bosses around both shaft holes inside each duct: at the bottom, water flows around it
@@ -69,25 +73,33 @@ boss_h    = 4;      // bearing bosses on the duct walls
 nema      = 42.3;   // NEMA 17 frame
 nema_hole = 31;     // NEMA 17 screw spacing (M3)
 nema_boss = 22;     // NEMA 17 centring boss
-coupler_room = 28;  // space for a 5-5 mm flexible coupler (19 x 25 mm)
-mp_t      = 6;      // motor frame thickness (on top of the housing)
-mplate    = 56;     // motor plate: the motor screws to it on the bench,
-mplate_t  = 4;      //   then it screws to the frame from above (4 x M3)
-mplate_hole = 48;   // corner screw spacing
+coupler_room = 31;  // space under the frame for a 5-5 mm flexible coupler (19 x 25 mm)
+mp_t      = 3;      // motor frame (the tower's roof) thickness, the same as the walls
+mplate    = 56;     // motor plate width; it covers the top of the tower from its open back to just past the front screws. The motor screws to it
+mplate_t  = 4;      //   on the bench, then it goes on the frame: two screws in front of the motor (M3 x 10 + nuts,
+mp_front  = [20, 27];  //   from the tower's open front), at x = +/- [0], [1] in front of the shaft, and two tabs at the back
+mp_tab    = [3, 10, 8];  // back tabs (thickness, width, depth below the frame), flush with the back edge: through notches in the frame, against the
+                    //   inner faces of the tower walls, one M3 + nut each through the wall
 tower_t   = 3;      // motor and encoder bracket walls
 cap_h     = 12;     // magnet cap on the shaft end
 cap_d     = 14;     // wide enough for a radial M3 grub screw
 cap_grub_z = 2;     // grub screw height above the cap's shaft end (the shaft reaches about 4.6 mm in)
 cap_slide = 1;      // the cap can slide this much up or down before its grub screw is tightened
 magnet    = "diametric"; // [diametric:diametric disc lying flat (as sold with AS5600 boards), sideways:2 x 2 mm axial cylinder lying across the shaft]
-magnet_d  = 6;      // diametric magnet diameter (AS5600 kits: usually 6 x 2.5 mm, some 6 x 3 mm)
-magnet_h  = 2.5;    // diametric magnet thickness
+magnet_d  = 4;      // diametric magnet diameter (the kit magnet measures 3.95 x 2 mm; other kits: 6 x 2.5 or 6 x 3)
+magnet_h  = 2;      // diametric magnet thickness
 enc_gap   = 1.5;    // nominal magnet face to AS5600 chip top (datasheet: 0.5-3); set on assembly with a shim
-enc_chip  = 1.5;    // AS5600 package height (SOIC-8)
-enc_board = 1.6;    // board thickness
+enc_chip  = 1.62;   // AS5600 package height above the board (kit board measured: 3.22 with the 1.6 board)
+enc_board = 1.6;    // board thickness (measured)
 enc_standoff = 2;   // pads lift the board over its solder joints
-enc_holes = [15, 17];  // board hole squares supported by the diagonal slots (20 x 20 and 23 x 23 boards)
-enc_win   = [18, 9];   // window under the board for header pins pointing down (x, y)
+enc_holes = [15, 17];  // board hole squares supported by the diagonal slots (20 x 20 boards: 15 x 15; the kit
+                       // board, 23.3 x 22.8: 16.7 x 16.2, a rectangle, so its screws sit 0.18 off the slot axis)
+enc_slot  = 3.5;    // slot width: an M3 screw (3.0) passes even 0.18 off the slot axis
+enc_pad   = 5.5;    // standoff pads around the slots (a 1 mm wall around a 3.5 slot)
+enc_pad_bev = 1;    // 45 deg flare at the pads' base (they stick out sideways when printing); more would reach the
+                    // solder joints under the board's end pins
+enc_win   = 13.5;   // wire window: a diamond (point to point) under the chip; the wires soldered to the board
+                    // run inward under it (the standoffs leave 2 mm) and down through it
 
 /* [Electronics box and cables] */
 ebox_w    = 80;     // box width (= fan width); the encoder plate widens to match and becomes its lid
@@ -100,14 +112,17 @@ pb_stand  = 5;      // standoff height
 usb_slot  = [0, 10];   // optional slot in the left wall for the ESP32's USB-C (length along y, height); 0 = none (flash once on the bench, then OTA)
 usb_z     = 18;     // slot centre above the box floor
 cable_in  = [16, 10];  // cable entries at the top of both side walls, toward the front (length along y, depth)
+anchor_h  = 6;      // tie-wrap anchors: height off the back of the fan plate, to the top of their rounded back (the
+                    // wires rest on it). Their slot is house-shaped (floor on the plate, 2 mm straight walls 4.5 apart,
+                    // 45 deg roof), so it prints without a flat ceiling
 
 /* [Split housing, for printers under 241 mm (e.g. 180 mm beds)] */
 splice_t  = 6;      // splice plate behind the fan plate, in the gap between the ducts
 splice_w  = 60;     // its width (x); stays inside the tie-wrap anchors
 splice_h  = 32;     // its height (z), before the 1 mm clearance cuts around the ducts
-split_sx  = 20;     // joint screws (4 x M3 x 10) at x = +/- split_sx ...
+split_sx  = 20;     // joint screws (4 x M3 x 12 countersunk) at x = +/- split_sx ...
 split_sz  = 4.5;    //   ... and z = +/- split_sz: in the band between the fans
-split_cb  = 3;      // their heads sink this deep into the fan plate (6.5 mm counterbores), flush with the fan face
+split_csk = 7;      // 90 deg countersinks for their heads, this wide at the fan face (M3 flat heads: 5.5-6.7); 45 deg walls print from the bed
 
 /* [Hidden] */
 $fn = 96;
@@ -148,19 +163,40 @@ module ycyl(y0, y1, d, z = 0, d2 = undef)
     translate([0, y0, z]) rotate([-90, 0, 0]) cylinder(d1 = d, d2 = (d2 == undef ? d : d2), h = y1 - y0);
 
 /* =================== HOUSING =================== */
+// O-ring groove cut, as one profile turned around the spigot axis (+z here, toward the spigot tip):
+// flat floor from z = 0 to 1.4 cs, straight wall at z = 0, and with oring_slope a 45 deg wall at the tip end.
+module oring_groove() {
+    rf = sp_od / 2 - oring_dep * oring_cs;   // floor radius
+    ro = sp_od / 2 + 1;                      // beyond the spigot surface
+    w  = 1.4 * oring_cs;
+    rotate_extrude($fn = 96) polygon(oring_slope
+        ? [[rf, 0], [ro, 0], [ro, w + (ro - rf)], [rf, w]]
+        : [[rf, 0], [ro, 0], [ro, w], [rf, w]]);
+}
+
+// AS5600 standoff pad post, along +z from its base: flares 45 deg over its lower enc_pad_bev
+module enc_pad_post(extra = 0) {
+    cylinder(d1 = enc_pad + 2 * enc_pad_bev, d2 = enc_pad, h = enc_pad_bev + extra, $fn = 32);
+    cylinder(d = enc_pad, h = enc_standoff + extra, $fn = 32);
+}
+
+// Tie-wrap slot cross-section, in (y, z) once extruded along x with rotate([90, 0, 90]): floor at y = +1 (toward the
+// fan plate, i.e. the bed when printing), 2 mm straight walls 4.5 mm apart, and a 45 deg roof peaking at y = -3.25.
+module house_slot() polygon([[1, -2.25], [1, 2.25], [-1, 2.25], [-3.25, 0], [-1, -2.25]]);
+
 module duct_outer(z) {
     ycyl(-sp_len, 0, sp_od, z);                                   // spigot
     ycyl(0, stop_t, stop_od, z);                                  // stop ring
     ycyl(stop_t, stop_t + (stop_od / 2 - ro), stop_od, z, 2 * ro);// 45 deg underside (prints without support)
     ycyl(0, duct_len, 2 * ro, z);                                 // damper duct
-    for (s = [-1, 1])                                             // shaft bearing bosses
-        translate([0, ys, z + s * (r + (wall + boss_h) / 2)]) cylinder(d = 12, h = wall + boss_h + 0.5, center = true);
+    for (s = [-1, 1])                                             // shaft bearing bosses: 45 deg cones with a 10 mm flat top
+        translate([0, ys, z + s * (r - 0.25)]) mirror([0, 0, s < 0 ? 1 : 0])   // (they stick out sideways when printing)
+            cylinder(d1 = 10 + 2 * (wall + boss_h + 0.5), d2 = 10, h = wall + boss_h + 0.5, $fn = 64);
 }
 
 module lips(z) {
     // A: x > lip_gap, room side of the closed disc; B: x < -lip_gap, foam side
     ya = ys - hc + disc_t + gasket;
-    yb = ys - hc - gasket;
     intersection() {
         translate([lip_gap, -sp_len, z - ro]) cube([ro, duct_len + sp_len, 2 * ro]);
         union() {
@@ -171,9 +207,18 @@ module lips(z) {
             }
         }
     }
+    // B: a 45 deg conical seat (it faces the fan plate, i.e. the bed when printing), one gasket thickness
+    // (measured square to the slope) from the disc's bevelled rim; a flat land lip_t deep behind its inner edge
+    r_in = r - lip_w;
+    yc0  = ys - hc + r_in - (disc_d / 2 - disc_bev) - gasket * sqrt(2);   // the cone starts at r_in here
+    yc1  = yc0 + (r + 1 - r_in);                                          // and passes the bore wall here
     intersection() {
         translate([-lip_gap - ro, -sp_len, z - ro]) cube([ro, duct_len + sp_len, 2 * ro]);
-        difference() { ycyl(yb - lip_t, yb, duct_id + 1, z); ycyl(yb - lip_t - 1, yb + 1, duct_id - 2 * lip_w, z); }
+        difference() {
+            ycyl(yc0 - lip_t, yc1, duct_id + 1, z);
+            ycyl(yc0 - lip_t - 1, yc0 + eps, 2 * r_in, z);
+            ycyl(yc0, yc1 + eps, 2 * r_in, z, 2 * (r + 1));
+        }
     }
 }
 
@@ -211,29 +256,49 @@ module drip_dam(z) {   // lower part of the bore, flat face toward the foam, 45 
     }
 }
 
-// Square frame on top of the bracket. M3 nuts slide into side slots in the middle of
-// its thickness (the bracket walls run under the corners, so pockets from below would be blocked).
+// Square frame on top of the bracket. The motor plate's four screws pass inside the tower walls,
+// so their nuts go on from below, in the space under the frame.
 module motor_frame() {
     difference() {
         // runs to the fan plate, so it rests on the bed when printing (no bridge)
         translate([-mplate / 2, ys - mplate / 2, z_mp0]) cube([mplate, duct_len - (ys - mplate / 2), mp_t]);
-        translate([-(mplate_hole / 2 - 4), ys - (mplate_hole / 2 - 4), z_mp0 - 1]) cube([mplate_hole - 8, mplate_hole - 8, mp_t + 2]);
-        for (dx = [-1, 1], dy = [-1, 1]) {
-            translate([dx * mplate_hole / 2, ys + dy * mplate_hole / 2, z_mp0 - 1]) cylinder(d = 3.4, h = mp_t + 2, $fn = 24);
-            // nut slot from the outer x face, 2.8 mm thick, centred in the frame thickness
-            translate([dx > 0 ? mplate_hole / 2 - 3.4 : -mplate / 2 - 1, ys + dy * mplate_hole / 2 - 3.05, z_mp0 + (mp_t - 2.8) / 2])
-                cube([mplate / 2 - mplate_hole / 2 + 4.4, 6.1, 2.8]);
+        // diamond openings (pointed up and down when printing, so no bridges): a big one the coupler (19 mm) passes with 2 mm to spare
+        // through when the motor goes on, and four small ones for the heads of the motor screws under the motor plate
+        translate([0, ys, z_mp0 - 1]) linear_extrude(mp_t + 2) rotate(45) square(23.1, center = true);   // flats a little wider than the plate's 22.5 hole
+        for (dx = [-1, 1], dy = [-1, 1])
+            translate([dx * nema_hole / 2, ys + dy * nema_hole / 2, z_mp0 - 1]) linear_extrude(mp_t + 2) rotate(45) square(6.5, center = true);
+        for (sx = [-1, 1]) {
+            // front: M3 holes for the plate's two front screws (nuts from the tower's open front, above the fan plate)
+            translate([sx * mp_front[0], ys + mp_front[1], z_mp0 - 1]) cylinder(d = 3.4, h = mp_t + 2, $fn = 24);
+            // back: notches for the plate's tabs, open at the back edge, against the inner faces of the tower walls
+            translate([sx > 0 ? x_br - tower_t - mp_tab[0] - 0.4 : -(x_br - tower_t), y_br - 1, z_mp0 - 1])
+                cube([mp_tab[0] + 0.4, mp_tab[1] + 1.4, mp_t + 2]);
         }
     }
 }
 
-module motor_plate() {   // prints flat; the motor screws to it from below (4 x M3 x 8), heads in the frame opening
+// Modelled with the motor axis at the origin, the plate's underside at z = 0 (installed: on top of the frame).
+// The motor screws to it from below (4 x M3 x 8, heads in the frame's small diamonds); it covers the top of the
+// tower from its open back to just past the front screws. Front: two M3 x 10 + nuts through the frame. Back: two tabs down through the frame, against the
+// inner faces of the tower walls, each held by an M3 x 10 through the wall with a nut inside.
+module motor_plate() {
+    y0 = y_br - ys;                  // back edge (the tower's open back)
+    y1 = mp_front[1] + 6;            // front edge: 6 mm past the front screws (the roof carries on to the fan plate)
     difference() {
-        translate([-mplate / 2, -mplate / 2, 0]) cube([mplate, mplate, mplate_t]);
+        union() {
+            translate([-mplate / 2, y0, 0]) cube([mplate, y1 - y0, mplate_t]);
+            for (sx = [-1, 1])
+                translate([sx > 0 ? x_br - tower_t - mp_tab[0] - 0.2 : -(x_br - tower_t - 0.2), y0, -(mp_t + mp_tab[2])])
+                    cube([mp_tab[0], mp_tab[1], mp_t + mp_tab[2] + eps]);
+        }
         translate([0, 0, -1]) cylinder(d = nema_boss + 0.5, h = mplate_t + 2);
-        for (dx = [-1, 1], dy = [-1, 1]) {
+        for (dx = [-1, 1], dy = [-1, 1])
             translate([dx * nema_hole / 2, dy * nema_hole / 2, -1]) cylinder(d = 3.4, h = mplate_t + 2, $fn = 24);
-            translate([dx * mplate_hole / 2, dy * mplate_hole / 2, -1]) cylinder(d = 3.4, h = mplate_t + 2, $fn = 24);
+        for (sx = [-1, 1]) {
+            translate([sx * mp_front[0], mp_front[1], -1]) cylinder(d = 3.4, h = mplate_t + 2, $fn = 24);
+            // tab screw, across the tab (along x), level with the wall hole
+            translate([sx * (x_br - tower_t - mp_tab[0] / 2) - mp_tab[0], y0 + mp_tab[1] / 2, -(mp_t + mp_tab[2] / 2)])
+                rotate([0, 90, 0]) cylinder(d = 3.4, h = 2 * mp_tab[0], $fn = 24);
         }
     }
 }
@@ -253,28 +318,30 @@ module body() {
                     translate([-ebox_w / 2, y_br, z_ep0]) cube([ebox_w, duct_len - y_br, z_ep1 - z_ep0]);   // encoder plate = box lid
                     for (sx = [-1, 1])   // bosses at the front of the bay walls for the box cover screws
                         translate([sx * (x_br - tower_t / 2) - 3.5, duct_len - 8, ebox_screw_z - 4]) cube([7, 8, 8]);
-                    for (sx = [-1, 1], z = anchor_z)   // tie-wrap anchors on both sides (cables on the right, -x, by default)
-                        translate([sx < 0 ? -fan / 2 : fan / 2 - 7, duct_len - fan_plate - 6, z - 4]) cube([7, 6 + eps, 8]);
+                    for (sx = [-1, 1], z = anchor_z)   // tie-wrap anchors on both sides (cables on the right, -x, by default):
+                                                       // 8 wide, walls up to anchor_h - 4, then a half-cylinder back
+                        translate([sx < 0 ? -fan / 2 : fan / 2 - 7, duct_len - fan_plate, z]) rotate([90, 0, 90]) linear_extrude(7)
+                            hull() {
+                                translate([-(anchor_h - 4), 0]) circle(r = 4, $fn = 48);
+                                translate([-(anchor_h - 4), -4]) square([anchor_h - 4 + eps, 8]);
+                            }
                     for (dx = [-1, 1], dy = [-1, 1]) hull() for (h = enc_holes)   // standoff pads under the board corners
-                        translate([dx * h / 2, ys + dy * h / 2, z_ep1 - eps]) cylinder(d = 6, h = enc_standoff + eps, $fn = 32);
+                        translate([dx * h / 2, ys + dy * h / 2, z_ep1 - eps]) enc_pad_post(eps);
                 }
                 for (z = zc) {
                     ycyl(-sp_len - 1, duct_len + 1, duct_id, z);                     // bore
-                    for (p = oring_pos)                                               // O-ring grooves
-                        difference() {
-                            ycyl(-p - 1.4 * oring_cs, -p, sp_od + 2, z);
-                            ycyl(-p - 1.4 * oring_cs - 1, -p + 1, sp_od - 2 * oring_dep * oring_cs, z);
-                        }
+                    for (p = oring_pos)                                               // O-ring grooves (spigot tip toward -y)
+                        translate([0, -p, z]) rotate([90, 0, 0]) oring_groove();
                     for (dx = [-1, 1], dz = [-1, 1]) {                                 // fan screws + M3 nut pockets
                         translate([dx * fan_hole / 2, duct_len - fan_plate - 1, z + dz * fan_hole / 2]) rotate([-90, 0, 0]) cylinder(d = 3.4, h = fan_plate + 2, $fn = 24);
                         translate([dx * fan_hole / 2, duct_len - fan_plate - eps, z + dz * fan_hole / 2]) rotate([-90, 0, 0]) cylinder(r = 5.8 / sqrt(3), h = 2.6, $fn = 6);
                     }
                 }
-                // encoder plate: diagonal slots for both AS5600 board sizes (M3 or smaller screws), and a
-                // window under the board so header pins can point down (rows parallel to y)
+                // encoder plate: diagonal slots for both AS5600 board sizes (M3 or smaller screws)
                 for (dx = [-1, 1], dy = [-1, 1]) hull() for (h = enc_holes)
-                    translate([dx * h / 2, ys + dy * h / 2, z_ep0 - 1]) cylinder(d = 3.2, h = z_ep1 - z_ep0 + enc_standoff + 2, $fn = 24);
-                translate([-enc_win[0] / 2, ys - enc_win[1] / 2, z_ep0 - 1]) cube([enc_win[0], enc_win[1], z_ep1 - z_ep0 + 2]);
+                    translate([dx * h / 2, ys + dy * h / 2, z_ep0 - 1]) cylinder(d = enc_slot, h = z_ep1 - z_ep0 + enc_standoff + 2, $fn = 24);
+                // wire window: a diamond under the chip (pointed up and down when printing)
+                translate([0, ys, z_ep0 - 1]) linear_extrude(z_ep1 - z_ep0 + 2) rotate(45) square(enc_win / sqrt(2), center = true);
                 // box fixing: cover screws into the front bosses (self-tapping M3), and two M3 from above at the back
                 for (sx = [-1, 1]) {
                     translate([sx * (x_br - tower_t / 2), duct_len + 1, ebox_screw_z]) rotate([90, 0, 0]) cylinder(d = 2.5, h = 9, $fn = 24);
@@ -284,18 +351,36 @@ module body() {
                 // centred in the band between each diamond window and its duct
                 flow_arrows((z_top + boss_h + pitch / 2 + sqrt(ro * ro - x_br * x_br)) / 2, 1);
                 flow_arrows(-(z_top + boss_h + pitch / 2 + sqrt(ro * ro - x_br * x_br)) / 2, -1);
-                for (sx = [-1, 1])   // tie-wrap slot near the back edge of each motor tower wall, level with the
-                                     // bottom tip of its diamond window (the tie wraps around the 4 mm strip behind it)
-                    translate([sx * (x_br - tower_t / 2) - (tower_t + 2) / 2, y_br + 4, z_top + boss_h + 2]) cube([tower_t + 2, 2, 4.5]);
-                for (sx = [-1, 1], z = anchor_z)   // tie-wrap slot through each anchor, across the cable run
-                    translate([sx < 0 ? -fan / 2 - 1 : fan / 2 - 8, duct_len - fan_plate - 4, z - 2.25]) cube([9, 2, 4.5]);
+                for (sx = [-1, 1])   // M3 clearance holes for the motor plate's back tabs, through the tower walls
+                    translate([sx * (x_br - tower_t / 2) - tower_t, y_br + mp_tab[1] / 2, z_mp0 - mp_tab[2] / 2])
+                        rotate([0, 90, 0]) cylinder(d = 3.4, h = 2 * tower_t, $fn = 24);
+                for (sx = [-1, 1])   // tie-wrap slot near the back edge of each motor tower wall, level with the bottom
+                                     // tip of its diamond window; house-shaped, roof toward the back edge (up when printing),
+                                     // leaving a 3 mm strip behind the peak for the tie to wrap around
+                    translate([sx * (x_br - tower_t / 2) - (tower_t + 2) / 2, y_br + 3 + 3.25, z_top + boss_h + 2 + 2.25]) rotate([90, 0, 90])
+                        linear_extrude(tower_t + 2) house_slot();
+                for (sx = [-1, 1], z = anchor_z)   // tie-wrap slot through each anchor, across the cable run: house-shaped,
+                                                   // its roof pointing away from the fan plate (up when printing)
+                    translate([sx < 0 ? -fan / 2 - 1 : fan / 2 - 8, duct_len - fan_plate - 0.8, z]) rotate([90, 0, 90])
+                        linear_extrude(9) house_slot();   // floor 0.2 mm into the plate, so no faces coincide
             }
             // inside the bores
             for (z = zc) {
                 lips(z);
                 drip_dam(z);
-                intersection() {   // shaft bosses, floor and ceiling: a tall cylinder cut by the bore-axis cylinder
-                    translate([0, ys, z - r - 1]) cylinder(d = sboss_d, h = 2 * r + 2, $fn = 48);
+                for (s = [-1, 1]) intersection() {   // shaft bosses, floor and ceiling: a cylinder from the bore wall,
+                                                     // cut by the bore-axis cylinder
+                    difference() {
+                        translate([0, ys, z + s * (r + 1)]) mirror([0, 0, s > 0 ? 1 : 0]) cylinder(d = sboss_d, h = r + 1, $fn = 48);
+                        // 45 deg plane cut on the fan-plate side only: that side faces the bed when printing.
+                        // The footprint on the bore wall stays sboss_d, so water and air see the same boss.
+                        translate([0, ys + sboss_d / 2, z + s * r]) mirror([0, 0, s > 0 ? 1 : 0])
+                            rotate([-45, 0, 0]) translate([-50, -50, 0]) cube([100, 100, 50]);
+                        // floor only: a water channel past the end of lip B (x = -lip_gap). The conical lip reaches
+                        // the boss along the floor, so the boss gives way within 3 mm of the lip end, up to 3 mm past
+                        // the lip on the fan side; it keeps a 1.3 mm rim around the shaft hole
+                        if (s < 0) translate([-(lip_gap + 3), ys - sboss_d, z - r - 1]) cube([6, sboss_d + 2, sboss_d / 2]);
+                    }
                     difference() {
                         ycyl(ys - sboss_d, ys + sboss_d, duct_id + 1, z);
                         ycyl(ys - sboss_d - 1, ys + sboss_d + 1, 2 * boss_rc, z, undef);
@@ -311,13 +396,16 @@ module body() {
 /* =================== SPLIT HOUSING (printers under 241 mm) =================== */
 // The housing cut at z = 0, midway between the ducts. In that band only the fan plate joins
 // the two ducts, so a splice plate on its back, in the gap between the ducts, joins the halves
-// again: 4 x M3 x 10 from the fan face (between the two fans, heads in counterbores) into nuts in the splice.
+// again: 4 x M3 x 12 countersunk from the fan face (between the two fans, heads flush) into nuts in the splice.
 // Each half prints like the full housing, fan plate on the bed.
 module split_screws()
     for (sx = [-1, 1], sz = [-1, 1])
         translate([sx * split_sx, y_sp0 - 1, sz * split_sz]) rotate([-90, 0, 0]) {
             cylinder(d = 3.4, h = splice_t + fan_plate + 2, $fn = 24);
-            translate([0, 0, splice_t + fan_plate + 1 - split_cb]) cylinder(d = 6.5, h = split_cb + 1, $fn = 32);   // head counterbore
+            translate([0, 0, splice_t + fan_plate + 1 - (split_csk - 3.4) / 2]) {   // 90 deg countersink, open at the fan face
+                cylinder(d1 = 3.4, d2 = split_csk, h = (split_csk - 3.4) / 2, $fn = 32);
+                translate([0, 0, (split_csk - 3.4) / 2 - eps]) cylinder(d = split_csk, h = 1, $fn = 32);
+            }
         }
 
 // The middle tie-wrap anchors (z = -4 to 4) stay whole on the upper half: under each one, the cut
@@ -325,7 +413,7 @@ module split_screws()
 // plate under the anchor and it still prints from the bed.
 module mid_anchor_zone()
     for (sx = [-1, 1])
-        translate([sx < 0 ? -fan / 2 - 1 : fan / 2 - 8, duct_len - fan_plate - 7, -5]) cube([9, fan_plate + 8, 6]);   // to z = +1: no face in the cut plane
+        translate([sx < 0 ? -fan / 2 - 1 : fan / 2 - 8, duct_len - fan_plate - anchor_h - 1, -5]) cube([9, fan_plate + anchor_h + 2, 6]);   // to z = +1: no face in the cut plane
 
 module body_half(upper) intersection() {
     difference() { body(); split_screws(); }
@@ -350,9 +438,25 @@ module split_view(gap = 36, back = 30) {
     color([0.95, 0.6, 0.25]) translate([0, -back, 0]) splice();
     for (sx = [-1, 1], sz = [-1, 1]) color([0.25, 0.25, 0.27])
         translate([sx * split_sx, duct_len + 20, sz * (split_sz + gap / 2)]) rotate([-90, 0, 0]) {
-            cylinder(d = 3, h = 10, $fn = 16);
-            translate([0, 0, 10]) cylinder(d = 5.5, h = 3, $fn = 24);
+            cylinder(d = 3, h = 10.3, $fn = 16);
+            translate([0, 0, 10.3]) cylinder(d1 = 3, d2 = 6, h = 1.7, $fn = 24);   // flat (countersunk) head
         }
+}
+
+// The same parts assembled, with the four countersunk M3 x 12 (heads flush in the fan face, tips at the back of the
+// splice) and their nuts in the splice's pockets.
+module split_assembly() {
+    color([0.85, 0.85, 0.88]) body_half(true);
+    color([0.75, 0.78, 0.85]) body_half(false);
+    color([0.95, 0.6, 0.25]) splice();
+    for (sx = [-1, 1], sz = [-1, 1]) translate([sx * split_sx, 0, sz * split_sz]) {
+        color([0.25, 0.25, 0.27]) translate([0, duct_len - 12, 0]) rotate([-90, 0, 0]) {
+            cylinder(d = 3, h = 10.3, $fn = 16);
+            translate([0, 0, 10.3]) cylinder(d1 = 3, d2 = 6, h = 1.7, $fn = 24);   // flat head
+        }
+        color([0.7, 0.7, 0.72]) translate([0, y_sp0, 0]) rotate([-90, 0, 0])   // M3 nut (5.5 across flats, 2.4 thick)
+            difference() { cylinder(r = 5.5 / sqrt(3), h = 2.4, $fn = 6); translate([0, 0, -1]) cylinder(d = 3, h = 5, $fn = 16); }
+    }
 }
 
 /* =================== DISC (print frame: plate on the bed, hub up, shaft along y) =================== */
@@ -366,6 +470,12 @@ module disc() {
             translate([0, 0, hc]) sphere(r = r - 0.4);   // stays inside the bore at every angle
         }
         translate([0, -50, hc]) rotate([-90, 0, 0]) cylinder(d = shaft_d + 0.2, h = 100, $fn = 32);
+        // half B (x > 0 here, the half that closes against the conical lip B): 45 deg bevel on the bed-side rim
+        difference() {
+            translate([0, -disc_d, -1]) cube([disc_d, 2 * disc_d, disc_bev + 1]);
+            translate([0, 0, -1]) cylinder(r1 = disc_d / 2 - disc_bev - 1, r2 = disc_d / 2, h = disc_bev + 1);
+        }
+        translate([20, 0, disc_t - 0.6]) linear_extrude(1) rotate(90) fittest_letter_big("B");   // marks half B
         for (k = [0 : grub_n - 1])   // M3 grub screws (self-tapping), spread along the hub
             translate([0, (k - (grub_n - 1) / 2) * (grub_n > 1 ? grub_sp / (grub_n - 1) : 0), hc]) cylinder(d = 2.5, h = hub_h, $fn = 24);
     }
@@ -447,26 +557,29 @@ module fittest() {
             translate([0, wy, 0]) cube([50, mp_t, 22]);                       // wall
             translate([16, 2, 0]) cube([8, 8, 12]);                           // post for the self-tapping pilot
             translate([30, 2, 0]) cube([28, ebox_t, 20]);                     // lip test: upright plate ...
-            translate([30, 2 + ebox_t - eps, 12]) cube([28, lip_w, lip_t]);   // ... with a flat 5.6 mm ledge
+            translate([30, 2 + ebox_t - eps, 0]) rotate([90, 0, 90]) linear_extrude(28)   // ... with a 5.6 mm ledge,
+                polygon([[0, 12 - lip_w], [lip_w, 12], [lip_w, 12 + lip_t], [0, 12 + lip_t]]);   // 45 deg underside like lip B
             translate([0, wy + eps, 0]) rotate([90, 0, 0])                    // AS5600 standoff pad on the wall
-                linear_extrude(enc_standoff) hull() for (h = enc_holes) translate([28 + (h - 15) / 2, 12 + (h - 15) / 2]) circle(d = 6, $fn = 32);
+                hull() for (h = enc_holes) translate([28 + (h - 15) / 2, 12 + (h - 15) / 2, 0]) enc_pad_post(eps);
         }
         // fan plate: M3 clearance hole + nut pocket (pocket opens upward, as on the housing)
         translate([6, 6, -1]) cylinder(d = 3.4, h = fan_plate + 2, $fn = 24);
         translate([6, 6, fan_plate - 2.6]) cylinder(r = 5.8 / sqrt(3), h = 3, $fn = 6);
         // shaft bearing hole, horizontal
         translate([8, wy - 1, 12]) rotate([-90, 0, 0]) cylinder(d = shaft_d + shaft_clr, h = mp_t + 2, $fn = 32);
-        // motor frame: M3 hole crossed by a side nut slot, centred in the wall thickness
+        // motor frame: M3 clearance hole, horizontal when printing
         translate([44, wy - 1, 12]) rotate([-90, 0, 0]) cylinder(d = 3.4, h = mp_t + 2, $fn = 24);
-        translate([44 - 3.4, wy + (mp_t - 2.8) / 2, 12 - 3.05]) cube([50 - 44 + 3.4 + 1, 2.8, 6.1]);
         // AS5600 diagonal slot, through pad and wall
         translate([0, wy + mp_t + 1, 0]) rotate([90, 0, 0])
-            linear_extrude(mp_t + enc_standoff + 2) hull() for (h = enc_holes) translate([28 + (h - 15) / 2, 12 + (h - 15) / 2]) circle(d = 3.2, $fn = 24);
+            linear_extrude(mp_t + enc_standoff + 2) hull() for (h = enc_holes) translate([28 + (h - 15) / 2, 12 + (h - 15) / 2]) circle(d = enc_slot, $fn = 24);
         // self-tapping pilot (as in the box bosses and pillars)
         translate([20, 6, 3]) cylinder(d = 2.5, h = 10, $fn = 24);
+        // split housing joint: M3 hole with a 90 deg countersink opening on the bed, as in the fan face
+        translate([54, 29, -1]) cylinder(d = 3.4, h = 5, $fn = 24);
+        translate([54, 29, -eps]) cylinder(d1 = split_csk, d2 = 3.4, h = (split_csk - 3.4) / 2, $fn = 32);
         // engraved references (see the table in the README): on the base behind the pad and the post for A and B,
         // on the front faces of the lip plate and the wall for C to F
-        for (l = [["A", 6, 16], ["B", 20, 16]])
+        for (l = [["A", 6, 16], ["B", 20, 16], ["G", 54, 23]])
             translate([l[1], l[2], 3 - 0.6]) linear_extrude(1) fittest_letter(l[0]);
         translate([44, 2 + 0.6, 16]) rotate([90, 0, 0]) linear_extrude(1) fittest_letter("C");
         for (l = [["D", 8], ["E", 28.5], ["F", 44]])
@@ -474,6 +587,7 @@ module fittest() {
     }
 }
 module fittest_letter(t) text(t, size = 4, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
+module fittest_letter_big(t) text(t, size = 8, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
 
 // oring_test: the stop flange (on the bed) and 15 mm of spigot with one O-ring groove,
 // exactly as on the housing. Push it, with an O-ring, into a hole in a foam scrap.
@@ -485,10 +599,7 @@ module oring_test() {
             cylinder(d = sp_od, h = stop_t + 15);
         }
         translate([0, 0, -1]) cylinder(d = duct_id, h = stop_t + 17);
-        translate([0, 0, g0]) difference() {
-            cylinder(d = sp_od + 2, h = 1.4 * oring_cs);
-            translate([0, 0, -1]) cylinder(d = sp_od - 2 * oring_dep * oring_cs, h = 1.4 * oring_cs + 2);
-        }
+        translate([0, 0, g0]) oring_groove();   // the same groove as on the housing (the tip is up here too)
     }
 }
 
@@ -502,7 +613,7 @@ module assembly() {
     color([0.35, 0.4, 0.5]) ebox();
     color([0.15, 0.15, 0.17]) translate([-nema / 2, ys - nema / 2, z_mp1 + mplate_t]) cube([nema, nema, 20]);
     color([0.75, 0.75, 0.3]) translate([0, ys, z_mp0 - 25]) cylinder(d = 19, h = 25);
-    color([0.2, 0.55, 0.3]) translate([-11.5, ys - 11.5, z_ep1 + enc_standoff]) cube([23, 23, enc_board]);   // AS5600 board (23 x 23)
+    color([0.2, 0.55, 0.3]) translate([-11.65, ys - 11.4, z_ep1 + enc_standoff]) cube([23.3, 22.8, enc_board]);   // AS5600 kit board
     for (z = zc) color([0.2, 0.2, 0.22]) translate([-fan / 2, duct_len, z - fan / 2])
         difference() { cube([fan, fan_t, fan]); translate([fan / 2, -1, fan / 2]) rotate([-90, 0, 0]) cylinder(d = 76, h = fan_t + 2); }
     %translate([-50, -50, -pitch / 2 - 90]) cube([100, 50, pitch + 180]);   // foam insert (ghost)
@@ -519,7 +630,7 @@ module assembly_nofan() {
     /*
     color([0.15, 0.15, 0.17]) translate([-nema / 2, ys - nema / 2, z_mp1 + mplate_t]) cube([nema, nema, 20]);
     color([0.75, 0.75, 0.3]) translate([0, ys, z_mp0 - 25]) cylinder(d = 19, h = 25);
-    color([0.2, 0.55, 0.3]) translate([-11.5, ys - 11.5, z_ep1 + enc_standoff]) cube([23, 23, enc_board]);   // AS5600 board (23 x 23)
+    color([0.2, 0.55, 0.3]) translate([-11.65, ys - 11.4, z_ep1 + enc_standoff]) cube([23.3, 22.8, enc_board]);   // AS5600 kit board
     for (z = zc) color([0.2, 0.2, 0.22]) translate([-fan / 2, duct_len, z - fan / 2])
         difference() { cube([fan, fan_t, fan]); translate([fan / 2, -1, fan / 2]) rotate([-90, 0, 0]) cylinder(d = 76, h = fan_t + 2); }
     %translate([-50, -50, -pitch / 2 - 90]) cube([100, 50, pitch + 180]);   // foam insert (ghost)
@@ -530,7 +641,7 @@ module assembly_nofan() {
 if (part == "assembly")       assembly();
 if (part == "body")           translate([0, 0, duct_len]) rotate([-90, 0, 0]) body();   // fan plate on the bed
 if (part == "disc")           disc();
-if (part == "motor_plate")    motor_plate();
+if (part == "motor_plate")    translate([0, 0, mplate_t]) rotate([180, 0, 0]) motor_plate();   // top face on the bed, tabs up
 if (part == "magnet_cap")     magnet_cap();
 if (part == "ebox")           translate([0, 0, ebox_h + ebox_t - z_ep0]) ebox();   // floor on the bed
 if (part == "fittest")        fittest();
@@ -538,5 +649,6 @@ if (part == "oring_test")     oring_test();
 if (part == "assembly_nofan") assembly_nofan();
 if (part == "body_top")       translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(true);    // fan plate on the bed
 if (part == "body_bottom")    translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(false);   // fan plate on the bed
-if (part == "splice")         translate([0, 0, -y_sp0]) rotate([90, 0, 0]) splice();              // nut pockets on the bed
+if (part == "splice")         translate([0, 0, duct_len - fan_plate]) rotate([-90, 0, 0]) splice();   // nut pockets up (no bridging)
 if (part == "split_view")     split_view();
+if (part == "split_assembly") split_assembly();

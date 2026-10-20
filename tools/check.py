@@ -12,6 +12,9 @@ Checks
   5. The electronics box only touches the housing (zero-volume contact).
   6. Split housing (for 180 mm beds): the two halves are exactly the housing minus the four joint
      screw holes, they don't overlap, and the splice plate only touches them.
+  7. The motor plate only touches the housing (its back tabs pass through the frame's slots).
+  8. Optional louvers: each part is one closed solid that fits a 180 mm bed, and from -45 to 45 deg
+     the frame, blades, link and combs never collide.
 """
 import os, subprocess, tempfile, warnings
 import trimesh
@@ -98,5 +101,36 @@ for label, name, expr in [
         ("splice only touches the housing", "sp_splice", "intersection() { body(); splice(); }")]:
     v = volume(name, expr)
     report(label, v < 1e-6, f"{v:.3f} mm3")
+
+print("7. Motor plate on the housing, tabs in their slots (overlap volume must be 0)")
+v = volume("plate_ov", "intersection() { body(); translate([0, ys, z_mp1]) motor_plate(); }")
+report("motor plate on housing", v < 1e-6, f"{v:.3f} mm3")
+
+print("8. Optional louvers (cad/louvers.scad): parts, and no collisions from -45 to 45 deg")
+LOUV = os.path.join(ROOT, "cad", "louvers.scad")
+for p in ["chassis", "blade", "link", "retainer"]:
+    m = trimesh.load(openscad(os.path.join(tmp, f"louver_{p}.stl"), [f'part="{p}"'], LOUV))
+    size = [round(float(v), 1) for v in m.extents]
+    report(f"louver_{p}", m.is_watertight and len(m.split(only_watertight=False)) == 1 and max(size) <= SMALL_BED,
+           f"size {size} mm, {m.volume/1000:.1f} cm3")
+for a in [-45, 0, 45]:
+    w = os.path.join(tmp, f"louv_{a}.scad")
+    with open(w, "w") as fh:
+        fh.write(f'include <{LOUV.replace(os.sep, "/")}>\npart = "none";\na = {a};\n'
+                 "module link_at(a) translate([0, -arm * cos(a) + arm, -arm * sin(a)]) link();\n"
+                 "module blades(a) for (z = zs) blade_at(z, a);\n"
+                 "module combs() for (sx = [0, 1]) mirror([sx, 0, 0]) retainer();\n"
+                 "union() {\n"
+                 "  intersection() { chassis(); blades(a); }\n"
+                 "  intersection() { chassis(); link_at(a); }\n"
+                 "  intersection() { link_at(a); blades(a); }\n"
+                 "  intersection() { combs(); blades(a); }\n"
+                 "  intersection() { combs(); link_at(a); }\n"
+                 "  intersection() { chassis(); combs(); }\n"
+                 "  for (i = [0 : n_blades - 2]) intersection() { blade_at(zs[i], a); blade_at(zs[i + 1], a); }\n"
+                 "}\n")
+    f = openscad(os.path.join(tmp, f"louv_{a}.stl"), None, w)
+    v = 0.0 if f is None else abs(trimesh.load(f).volume)
+    report(f"louvers at {a:3d} deg (frame, blades, link, combs)", v < 1e-6, f"{v:.3f} mm3")
 
 print("\nALL CHECKS PASSED" if ok else "\nSOME CHECKS FAILED")
