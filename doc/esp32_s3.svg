@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="1200" viewBox="0 0 1640 1200" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="1640" height="1200" fill="#ffffff"/>
+<rect x="300" y="260" width="370.5" height="650.0" rx="6" fill="#d8453a" stroke="#222" stroke-width="2"/>
+<rect x="365.0" y="169.0" width="240.5" height="331.5" rx="3" fill="#2a2a2a" stroke="#111" stroke-width="1.5"/>
+<rect x="378.0" y="266.5" width="214.5" height="221" rx="3" fill="#c9cbcf" stroke="#888"/>
+<text x="485.2" y="383.5" font-size="15" text-anchor="middle" fill="#333" font-weight="bold">ESP32-S3-WROOM-1</text>
+<text x="485.2" y="222.3" font-size="14" text-anchor="middle" fill="#ffffff" font-weight="normal">antenna</text>
+<rect x="355.25" y="812.5" width="117.0" height="97.5" rx="5" fill="#c0c0c0" stroke="#555" stroke-width="1.5"/>
+<text x="413.8" y="951.6" font-size="15" text-anchor="middle" fill="#111" font-weight="bold">USB-OTG</text>
+<rect x="504.75" y="812.5" width="117.0" height="97.5" rx="5" fill="#c0c0c0" stroke="#555" stroke-width="1.5"/>
+<text x="563.2" y="951.6" font-size="15" text-anchor="middle" fill="#111" font-weight="bold">USB-UART</text>
+<circle cx="320.8" cy="271.3" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="276.3" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">3V3</text>
+<circle cx="320.8" cy="304.3" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="309.3" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">EN</text>
+<circle cx="320.8" cy="337.4" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="342.4" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">4</text>
+<circle cx="320.8" cy="370.4" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="375.4" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">5</text>
+<circle cx="320.8" cy="403.4" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="408.4" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">6</text>
+<circle cx="320.8" cy="436.4" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="441.4" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">7</text>
+<circle cx="320.8" cy="469.4" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="474.4" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">15</text>
+<circle cx="320.8" cy="502.5" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="507.5" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">16</text>
+<circle cx="320.8" cy="535.5" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="540.5" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">17</text>
+<circle cx="320.8" cy="568.5" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="573.5" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">18</text>
+<circle cx="320.8" cy="601.5" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="606.5" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">8</text>
+<circle cx="320.8" cy="634.5" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="639.5" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">3</text>
+<circle cx="320.8" cy="667.5" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="672.5" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">46</text>
+<circle cx="320.8" cy="700.6" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="705.6" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">9</text>
+<circle cx="320.8" cy="733.6" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="738.6" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">10</text>
+<circle cx="320.8" cy="766.6" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="771.6" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">11</text>
+<circle cx="320.8" cy="799.6" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="804.6" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">12</text>
+<circle cx="320.8" cy="832.6" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="837.6" font-size="12" text-anchor="start" fill="#111" font-weight="bold">13</text>
+<circle cx="320.8" cy="865.7" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="870.7" font-size="12" text-anchor="start" fill="#111" font-weight="bold">14</text>
+<circle cx="320.8" cy="898.7" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="336.4" y="903.7" font-size="12" text-anchor="start" fill="#111" font-weight="bold">5V</text>
+<circle cx="649.7" cy="271.3" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="276.3" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">TX</text>
+<circle cx="649.7" cy="304.3" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="309.3" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">RX</text>
+<circle cx="649.7" cy="337.4" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="342.4" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">1</text>
+<circle cx="649.7" cy="370.4" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="375.4" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">2</text>
+<circle cx="649.7" cy="403.4" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="408.4" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">42</text>
+<circle cx="649.7" cy="436.4" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="441.4" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">41</text>
+<circle cx="649.7" cy="469.4" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="474.4" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">40</text>
+<circle cx="649.7" cy="502.5" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="507.5" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">39</text>
+<circle cx="649.7" cy="535.5" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="540.5" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">38</text>
+<circle cx="649.7" cy="568.5" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="573.5" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">37</text>
+<circle cx="649.7" cy="601.5" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="606.5" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">36</text>
+<circle cx="649.7" cy="634.5" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="639.5" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">35</text>
+<circle cx="649.7" cy="667.5" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="672.5" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">0</text>
+<circle cx="649.7" cy="700.6" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="705.6" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">45</text>
+<circle cx="649.7" cy="733.6" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="738.6" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">48</text>
+<circle cx="649.7" cy="766.6" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="771.6" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">47</text>
+<circle cx="649.7" cy="799.6" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="804.6" font-size="12" text-anchor="end" fill="#ffffff" font-weight="bold">21</text>
+<circle cx="649.7" cy="832.6" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="837.6" font-size="12" text-anchor="end" fill="#111" font-weight="bold">20</text>
+<circle cx="649.7" cy="865.7" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="870.7" font-size="12" text-anchor="end" fill="#111" font-weight="bold">19</text>
+<circle cx="649.7" cy="898.7" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
+<text x="634.1" y="903.7" font-size="12" text-anchor="end" fill="#111" font-weight="bold">GND</text>
+<line x1="300.0" y1="260.0" x2="300.0" y2="93.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="670.5" y1="260.0" x2="670.5" y2="93.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="300.0" y1="99.0" x2="670.5" y2="99.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="300.0,99.0 310.0,95.0 310.0,103.0" fill="#b3261e"/>
+<polygon points="670.5,99.0 660.5,103.0 660.5,95.0" fill="#b3261e"/>
+<text x="485.2" y="92.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">28.5</text>
+<line x1="300.0" y1="260.0" x2="300.0" y2="138.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="365.0" y1="260.0" x2="365.0" y2="138.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="300.0" y1="144.0" x2="365.0" y2="144.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="300.0,144.0 310.0,140.0 310.0,148.0" fill="#b3261e"/>
+<polygon points="365.0,144.0 355.0,148.0 355.0,140.0" fill="#b3261e"/>
+<text x="332.5" y="137.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">5</text>
+<line x1="605.5" y1="260.0" x2="605.5" y2="138.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="670.5" y1="260.0" x2="670.5" y2="138.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="605.5" y1="144.0" x2="670.5" y2="144.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="605.5,144.0 615.5,140.0 615.5,148.0" fill="#b3261e"/>
+<polygon points="670.5,144.0 660.5,148.0 660.5,140.0" fill="#b3261e"/>
+<text x="638.0" y="137.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">5</text>
+<line x1="300.0" y1="169.0" x2="234.0" y2="169.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="300.0" y1="910.0" x2="234.0" y2="910.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="240.0" y1="169.0" x2="240.0" y2="910.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="240.0,169.0 244.0,179.0 236.0,179.0" fill="#b3261e"/>
+<polygon points="240.0,910.0 236.0,900.0 244.0,900.0" fill="#b3261e"/>
+<text x="232.0" y="539.5" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal" transform="rotate(-90 232.0 539.5)">57</text>
+<line x1="670.5" y1="260.0" x2="786.5" y2="260.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="670.5" y1="910.0" x2="786.5" y2="910.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="780.5" y1="260.0" x2="780.5" y2="910.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="780.5,260.0 784.5,270.0 776.5,270.0" fill="#b3261e"/>
+<polygon points="780.5,910.0 776.5,900.0 784.5,900.0" fill="#b3261e"/>
+<text x="772.5" y="585.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal" transform="rotate(-90 772.5 585.0)">50 (PCB)</text>
+<line x1="605.5" y1="169.0" x2="736.5" y2="169.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="605.5" y1="260.0" x2="736.5" y2="260.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="730.5" y1="169.0" x2="730.5" y2="260.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="730.5,169.0 734.5,179.0 726.5,179.0" fill="#b3261e"/>
+<polygon points="730.5,260.0 726.5,250.0 734.5,250.0" fill="#b3261e"/>
+<text x="722.5" y="214.5" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal" transform="rotate(-90 722.5 214.5)">7</text>
+<line x1="300.0" y1="910.0" x2="300.0" y2="986.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="355.2" y1="910.0" x2="355.2" y2="986.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="300.0" y1="980.0" x2="355.2" y2="980.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="300.0,980.0 310.0,976.0 310.0,984.0" fill="#b3261e"/>
+<polygon points="355.2,980.0 345.2,984.0 345.2,976.0" fill="#b3261e"/>
+<text x="327.6" y="973.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">4.25</text>
+<line x1="355.2" y1="910.0" x2="355.2" y2="1026.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="472.2" y1="910.0" x2="472.2" y2="1026.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="355.2" y1="1020.0" x2="472.2" y2="1020.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="355.2,1020.0 365.2,1016.0 365.2,1024.0" fill="#b3261e"/>
+<polygon points="472.2,1020.0 462.2,1024.0 462.2,1016.0" fill="#b3261e"/>
+<text x="413.8" y="1013.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">9</text>
+<line x1="504.8" y1="910.0" x2="504.8" y2="1026.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="621.8" y1="910.0" x2="621.8" y2="1026.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="504.8" y1="1020.0" x2="621.8" y2="1020.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="504.8,1020.0 514.8,1016.0 514.8,1024.0" fill="#b3261e"/>
+<polygon points="621.8,1020.0 611.8,1024.0 611.8,1016.0" fill="#b3261e"/>
+<text x="563.2" y="1013.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">9</text>
+<line x1="621.8" y1="910.0" x2="621.8" y2="986.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="670.5" y1="910.0" x2="670.5" y2="986.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="621.8" y1="980.0" x2="670.5" y2="980.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="621.8,980.0 631.8,976.0 631.8,984.0" fill="#b3261e"/>
+<polygon points="670.5,980.0 660.5,984.0 660.5,976.0" fill="#b3261e"/>
+<text x="646.1" y="973.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">3.75</text>
+<line x1="320.8" y1="898.7" x2="320.8" y2="1076.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="649.7" y1="898.7" x2="649.7" y2="1076.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="320.8" y1="1070.0" x2="649.7" y2="1070.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="320.8,1070.0 330.8,1066.0 330.8,1074.0" fill="#b3261e"/>
+<polygon points="649.7,1070.0 639.7,1074.0 639.7,1066.0" fill="#b3261e"/>
+<text x="485.2" y="1063.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">25.3 between the pin rows: 10 perfboard holes</text>
+<text x="40.0" y="50.0" font-size="22" text-anchor="start" fill="#111" font-weight="bold">Freenove ESP32-S3-WROOM Lite (FNK0099): top view, components up, and side view (mm)</text>
+<rect x="960.0" y="614.1" width="456.0" height="25.9" fill="#d8453a" stroke="#222" stroke-width="1.5"/>
+<rect x="965.6" y="640.0" width="40.0" height="44.5" fill="#555" stroke="#222" stroke-width="1.5"/>
+<rect x="980.5" y="684.5" width="10.2" height="88.6" fill="#f4d35e" stroke="#222" stroke-width="1.5"/>
+<rect x="980.5" y="598.1" width="10.2" height="16.0" fill="#f4d35e" stroke="#222" stroke-width="1.5"/>
+<rect x="1370.4" y="640.0" width="40.0" height="44.5" fill="#555" stroke="#222" stroke-width="1.5"/>
+<rect x="1385.3" y="684.5" width="10.2" height="88.6" fill="#f4d35e" stroke="#222" stroke-width="1.5"/>
+<rect x="1385.3" y="598.1" width="10.2" height="16.0" fill="#f4d35e" stroke="#222" stroke-width="1.5"/>
+<rect x="1028.0" y="562.1" width="144.0" height="52.0" fill="#c0c0c0" stroke="#222" stroke-width="1.5"/>
+<rect x="1212.0" y="562.1" width="144.0" height="52.0" fill="#c0c0c0" stroke="#222" stroke-width="1.5"/>
+<rect x="1140.0" y="562.4" width="96.0" height="51.7" fill="#33c8d8" stroke="#222" stroke-width="1.5"/>
+<line x1="1416.0" y1="640.0" x2="1486.0" y2="640.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1416.0" y1="614.1" x2="1486.0" y2="614.1" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1480.0" y1="640.0" x2="1480.0" y2="614.1" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="1480.0,640.0 1476.0,630.0 1484.0,630.0" fill="#b3261e"/>
+<polygon points="1480.0,614.1 1484.0,624.1 1476.0,624.1" fill="#b3261e"/>
+<text x="1490.0" y="632.0" font-size="14" text-anchor="start" fill="#b3261e" font-weight="normal">1.62 PCB</text>
+<line x1="1416.0" y1="684.5" x2="1486.0" y2="684.5" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1416.0" y1="640.0" x2="1486.0" y2="640.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1480.0" y1="684.5" x2="1480.0" y2="640.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="1480.0,684.5 1476.0,674.5 1484.0,674.5" fill="#b3261e"/>
+<polygon points="1480.0,640.0 1484.0,650.0 1476.0,650.0" fill="#b3261e"/>
+<text x="1490.0" y="667.2" font-size="14" text-anchor="start" fill="#b3261e" font-weight="normal">2.78 spacer</text>
+<line x1="1416.0" y1="773.1" x2="1486.0" y2="773.1" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1416.0" y1="684.5" x2="1486.0" y2="684.5" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1480.0" y1="773.1" x2="1480.0" y2="684.5" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="1480.0,773.1 1476.0,763.1 1484.0,763.1" fill="#b3261e"/>
+<polygon points="1480.0,684.5 1484.0,694.5 1476.0,694.5" fill="#b3261e"/>
+<text x="1490.0" y="733.8" font-size="14" text-anchor="start" fill="#b3261e" font-weight="normal">5.54 pins</text>
+<line x1="1140.0" y1="640.0" x2="890.0" y2="640.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="1140.0" y1="562.4" x2="890.0" y2="562.4" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="896.0" y1="640.0" x2="896.0" y2="562.4" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="896.0,640.0 892.0,630.0 900.0,630.0" fill="#b3261e"/>
+<polygon points="896.0,562.4 900.0,572.4 892.0,572.4" fill="#b3261e"/>
+<text x="886.0" y="606.2" font-size="14" text-anchor="end" fill="#b3261e" font-weight="normal">4.85 to the top</text>
+<text x="960.0" y="512.0" font-size="15" text-anchor="start" fill="#111" font-weight="bold">Side view, from the USB end</text>
+<text x="40" y="1120" font-size="14" fill="#333">Measured on the board. 2 x 20 pins, 2.54 pitch; the rows land 10 holes apart on a perfboard (25.4, within 0.1).</text>
+<text x="40" y="1144" font-size="14" fill="#333">Side view: 5.54 pins below a 2.78 spacer, 1.62 PCB; the tallest part is 4.85 above the PCB's underside, the USB-C sockets 3.25 above its top.</text>
+<text x="40" y="1168" font-size="14" fill="#333">In the electronics box, the USB end faces the left wall (or the right one, board turned 180 deg); plug the USB-UART connector (power and console).</text>
+</svg>

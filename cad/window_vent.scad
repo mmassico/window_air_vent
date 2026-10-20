@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, body, disc, motor_plate, magnet_cap, ebox, fittest, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly]
+part  = "assembly"; // [assembly, body, disc, motor_plate, magnet_cap, ebox, fittest, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -103,14 +103,31 @@ enc_win   = 13.5;   // wire window: a diamond (point to point) under the chip; t
 
 /* [Electronics box and cables] */
 ebox_w    = 80;     // box width (= fan width); the encoder plate widens to match and becomes its lid
-ebox_h    = 32;     // inside height under the encoder plate (TMC2209 with heatsink in female headers: about 28)
+ebox_h    = 34;     // inside height under the encoder plate (the TMC2209 in female headers, with its heatsink, reaches 32.2)
 ebox_t    = 2.4;    // walls and floor
 pb_size   = [70, 50];  // perfboard carrier (5 x 7 cm protoboard)
 pb_holes  = [66, 46];  // its corner hole spacing (M2)
 pb_y      = 56;     // perfboard centre (y)
 pb_stand  = 5;      // standoff height
-usb_slot  = [0, 10];   // optional slot in the left wall for the ESP32's USB-C (length along y, height); 0 = none (flash once on the bench, then OTA)
-usb_z     = 18;     // slot centre above the box floor
+usb_port  = "diamond"; // [none, mark, diamond] the ESP32's USB-C cable (5 V power and console) through a side wall:
+                    // an 18 mm diamond opening, or only an engraved cross to drill a 12 mm hole later
+usb_side  = "both"; // [left, right, both] which side wall gets it: both lets one box take either ESP32 layout
+esp_usb   = "left"; // [left, right] the ESP32's USB end toward the left wall (view ebox_elec) or the right one
+                    // (turned 180 deg, view ebox_elec_alt); shown in the assembly
+esp_mount = "soldered"; // [soldered, headers] ESP32 soldered straight into the perfboard, or in female headers
+tmc_mount = "headers";  // [soldered, headers] TMC2209 likewise
+header_h  = 8.5;    // female header height
+esp_w     = 28.5;   // ESP32 board width; it lies across the back half of the perfboard, USB end toward a side wall
+esp_l     = 50;     // ESP32 PCB length (the module's antenna sticks out 7 more, over the middle 18.5)
+esp_dy    = 0.5;    // ESP32 edge from the perfboard's back edge
+esp_dx    = 7.62;   // its USB end this far in from the side wall (3 perfboard holes): its pins clear the corner
+                    // standoff and screw, and the free holes beyond its end are easy to solder. The plug enters the box
+esp_pcb   = [1.62, 2.78, 5.54];  // ESP32 PCB thickness, pin spacer, pin length below the spacer (measured)
+tmc_pcb   = [21, 15, 1.6];       // TMC2209 module (along x, along y, thickness)
+tmc_spacer = 2.5;   // its pin spacer (assumed; to measure)
+tmc_sink  = [14.5, 15, 13];     // its heatsink, on top
+usb_dy    = 6;      // the USB-UART connector's offset from the board's centre line, toward the room (measured: 8.25 from the
+                    // board's TX/GND edge, which faces the room; the USB-OTG one is 5.5 off on the other side)
 cable_in  = [16, 10];  // cable entries at the top of both side walls, toward the front (length along y, depth)
 anchor_h  = 6;      // tie-wrap anchors: height off the back of the fan plate, to the top of their rounded back (the
                     // wires rest on it). Their slot is house-shaped (floor on the plate, 2 mm straight walls 4.5 apart,
@@ -151,6 +168,12 @@ ebox_top    = -pitch / 2 - fan / 2;         // the box cover rises to the bottom
 ebox_back_x = ebox_w / 2 - 6;               // back fixing screws, outside the bay walls
 ebox_back_y = y_br + 6;
 ebox_screw_z = z_ep1 + 8;                   // front cover screws: in the bay, above the encoder plate
+// electronics heights, above the box's inner floor
+pb_top    = pb_stand + 1.6;                                                      // perfboard top
+esp_z0    = pb_top + (esp_mount == "headers" ? header_h : 0) + esp_pcb[1];        // ESP32 PCB underside
+usb_z     = esp_z0 + esp_pcb[0] + 3.25 / 2;                                     // USB-C socket centre (the diamond's)
+tmc_z0    = pb_top + (tmc_mount == "headers" ? header_h : 0) + tmc_spacer;        // TMC2209 PCB underside
+esp_yc    = pb_y - pb_size[1] / 2 + esp_dy + esp_w / 2;                           // ESP32 centre line (y)
 // tie-wrap anchors on the back of the fan plate, right side: the top and bottom ones touch the
 // outer fan nut pockets (hex flat at fan_hole / 2 - 2.9 from the fan centre), the middle one sits between the fans
 anchor_zt = pitch / 2 + fan_hole / 2 - 5.8 / 2 - 4;
@@ -537,9 +560,19 @@ module ebox() {
         }
         for (dx = [-1, 1], dy = [-1, 1])
             translate([dx * pb_holes[0] / 2, pb_y + dy * pb_holes[1] / 2, zb + ebox_t]) cylinder(d = 1.8, h = pb_stand + 1, $fn = 16);
-        // USB-C slot in the left wall (+x, seen from the room)
-        if (usb_slot[0] > 0)
-            translate([ebox_w / 2 - ebox_t - 1, pb_y - usb_slot[0] / 2, zb + usb_z - usb_slot[1] / 2]) cube([ebox_t + 2, usb_slot[0], usb_slot[1]]);
+        // USB-C cable through the left wall (+x, seen from the room): a 45 deg diamond (points up and down when printing) that passes
+        // an 11 x 6.25 mm plug, or an engraved cross marking where to drill
+        // (left wall), or the right wall with the ESP32 turned 180 deg, so the connector lands on the other side
+        // of the board's centre line
+        for (sx = [-1, 1]) if (usb_side == "both" || (sx > 0) == (usb_side == "left")) {
+            usb_y = esp_yc + sx * usb_dy;
+            if (usb_port == "diamond")
+                translate([sx > 0 ? ebox_w / 2 - ebox_t - 1 : x0 - 1, usb_y, zb + ebox_t + usb_z]) rotate([0, 90, 0])
+                    linear_extrude(ebox_t + 2) rotate(45) square(18 / sqrt(2), center = true);
+            if (usb_port == "mark")
+                for (r = [0, 90]) translate([sx * ebox_w / 2, usb_y, zb + ebox_t + usb_z]) rotate([r, 0, 0])
+                    cube([1.2, 8, 1], center = true);   // 0.6 deep into the outer face
+        }
         for (sx = [-1, 1])   // cable entries (clear of the USB-C slot)
             translate([sx < 0 ? x0 - 1 : ebox_w / 2 - ebox_t - 1, duct_len - cable_in[0] - 0.5, z_ep0 - cable_in[1]]) cube([ebox_t + 2, cable_in[0], cable_in[1] + 1]);
     }
@@ -604,6 +637,35 @@ module oring_test() {
 }
 
 /* =================== PREVIEW =================== */
+// Electronics in the box, for the preview and the clearance check (installed coordinates): perfboard, ESP32-S3
+// (PCB, module and antenna, USB-C sockets, pins), its USB-C plug through the left wall, TMC2209 with its heatsink.
+module electronics(usb = esp_usb) {
+    fl  = z_ep0 - ebox_h;                                   // inner floor
+    x1  = ebox_w / 2 - ebox_t - 0.5 - esp_dx;               // ESP32 USB end (left layout)
+    yc  = esp_yc;
+    zp  = fl + esp_z0;                                      // ESP32 PCB underside
+    color([0.8, 0.68, 0.4]) translate([-pb_size[0] / 2, pb_y - pb_size[1] / 2, fl + pb_stand + 0.01]) cube([pb_size[0], pb_size[1], 1.6]);   // just clear of the standoffs
+    // the ESP32 and its plug, drawn USB end left; the right layout turns them 180 deg about the board's centre line
+    translate([0, yc, 0]) rotate(usb == "right" ? 180 : 0) translate([0, -yc, 0]) {
+        color([0.85, 0.27, 0.23]) translate([x1 - esp_l, yc - esp_w / 2, zp]) cube([esp_l, esp_w, esp_pcb[0]]);
+        color([0.17, 0.17, 0.17]) translate([x1 - esp_l - 7, yc - 9.25, zp + esp_pcb[0]]) cube([25.5, 18.5, 4.85 - esp_pcb[0]]);   // module + antenna
+        for (dy = [-5.5, usb_dy]) color([0.75, 0.75, 0.75]) translate([x1 - 7.5, yc + dy - 4.5, zp + esp_pcb[0]]) cube([7.8, 9, 3.25]);
+        for (sy = [-1, 1], i = [0 : 19])                    // pins (rows 25.3 apart)
+            color([0.95, 0.8, 0.3]) translate([x1 - (esp_l - 19 * 2.54) / 2 - i * 2.54 - 0.32, yc + sy * 12.65 - 0.32, zp - esp_pcb[1] - esp_pcb[2]])
+                cube([0.64, 0.64, esp_pcb[2] + esp_pcb[1] + esp_pcb[0] + 1]);
+        for (sy = [-1, 1]) color([0.25, 0.25, 0.25]) translate([x1 - esp_l + 0.4, yc + sy * 12.65 - 1.25, zp - esp_pcb[1]]) cube([esp_l - 0.8, 2.5, esp_pcb[1]]);
+        color([0.4, 0.4, 0.42]) translate([x1 + 0.3, yc + usb_dy - 5.5, fl + usb_z - 3.125]) cube([ebox_w / 2 - x1 + 20, 11, 6.25]);   // USB-C plug
+        if (esp_mount == "headers")
+            for (sy = [-1, 1]) color([0.1, 0.1, 0.1]) translate([x1 - esp_l + 0.4, yc + sy * 12.65 - 1.25, fl + pb_top]) cube([esp_l - 0.8, 2.5, header_h]);
+    }
+    tx0 = -pb_size[0] / 2 + 12.5;                           // TMC2209, front right (see doc/ebox_layout.svg)
+    ty0 = yc + esp_w / 2 + 1;
+    color([0.1, 0.1, 0.1]) translate([tx0, ty0, fl + tmc_z0]) cube(tmc_pcb);
+    color([0.2, 0.35, 0.8]) translate([tx0 + (tmc_pcb[0] - tmc_sink[0]) / 2, ty0, fl + tmc_z0 + tmc_pcb[2]]) cube(tmc_sink);
+    if (tmc_mount == "headers")
+        for (sy = [0, 1]) color([0.1, 0.1, 0.1]) translate([tx0, ty0 + sy * (tmc_pcb[1] - 2.5), fl + pb_top]) cube([tmc_pcb[0], 2.5, header_h]);
+}
+
 module assembly() {
     color([0.85, 0.85, 0.88]) body();
     for (z = zc) color([0.95, 0.6, 0.25]) disc_installed(z, angle);
@@ -611,6 +673,7 @@ module assembly() {
     color([0.3, 0.5, 0.9]) translate([0, ys, z_cap1]) rotate([180, 0, 0]) magnet_cap();
     color([0.55, 0.75, 0.95]) translate([0, ys, z_mp1]) motor_plate();
     color([0.35, 0.4, 0.5]) ebox();
+    electronics();
     color([0.15, 0.15, 0.17]) translate([-nema / 2, ys - nema / 2, z_mp1 + mplate_t]) cube([nema, nema, 20]);
     color([0.75, 0.75, 0.3]) translate([0, ys, z_mp0 - 25]) cylinder(d = 19, h = 25);
     color([0.2, 0.55, 0.3]) translate([-11.65, ys - 11.4, z_ep1 + enc_standoff]) cube([23.3, 22.8, enc_board]);   // AS5600 kit board
@@ -652,3 +715,5 @@ if (part == "body_bottom")    translate([0, 0, duct_len]) rotate([-90, 0, 0]) bo
 if (part == "splice")         translate([0, 0, duct_len - fan_plate]) rotate([-90, 0, 0]) splice();   // nut pockets up (no bridging)
 if (part == "split_view")     split_view();
 if (part == "split_assembly") split_assembly();
+if (part == "ebox_elec")      { color([0.35, 0.4, 0.5]) ebox(); electronics("left"); }    // the box and its boards, installed coordinates
+if (part == "ebox_elec_alt")  { color([0.35, 0.4, 0.5]) ebox(); electronics("right"); }   // the same, ESP32 USB end toward the right wall

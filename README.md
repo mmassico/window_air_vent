@@ -17,7 +17,7 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 - **Butterfly dampers.** One vertical 5 mm steel shaft runs through both ducts and carries a disc in each. A quarter turn opens or closes both. Each disc closes against two half-ring lips lined with thin foam tape, one on each side of the shaft. One lip is flat; the other is a 45° cone, and the half of the disc that closes against it (engraved B) has a matching 45° bevel, so neither prints as a flat overhang.
 - **Motor and encoder.** A NEMA 17 pancake stepper on top turns the shaft through a flexible coupler. A TMC2209 driver keeps it silent. The motor screws to a separate plate on the bench, and the plate then screws onto a frame on top of the housing from above. An AS5600 magnetic encoder at the bottom reads the absolute shaft angle, so the firmware always knows whether the dampers are really closed, with no homing and no limit switch.
 - **Fans.** Two 80 mm PWM fans screw onto the room end of the housing.
-- **Electronics box.** A tray under the housing holds a 5 × 7 cm perfboard with the ESP32 and the TMC2209 in female headers. The encoder plate is its lid, and its front wall rises to close the front of the bottom bay. The cables run down the right side (seen from the room), hidden behind the fans and held by three tie-wrap anchors on the back of the fan plate; the same anchors and a cable entry on the left side allow the mirror image.
+- **Electronics box.** A tray under the housing holds a 5 × 7 cm perfboard with the ESP32 and the TMC2209 in female headers. The encoder plate is its lid, and its front wall rises to close the front of the bottom bay. The cables run down the right side (seen from the room), hidden behind the fans and held by three tie-wrap anchors on the back of the fan plate; the same anchors and a cable entry on the left side allow the mirror image. Power comes from two plug-in adapters: a 12 V brick for the fans and the motor, whose wire comes in with the other cables, and a 5 V USB-C adapter for the ESP32, whose cable passes through a diamond opening in the left wall. The [layout drawing](doc/ebox_layout.svg) shows where everything goes on the perfboard.
 - **Water stays out of the room.** A 3 mm drip dam across the lower part of each bore, just before the fan, stops droplets from running indoors. Around the bottom shaft hole in each duct, a 16 mm boss rises 3 mm above the floor, so water flows around it instead of down the shaft.
 - **How it seals.** The lips do the sealing, not the gap between the disc and the bore: the flat lip is 5.6 mm wide and overlaps the disc edge by 2 mm, and the conical lip meets the disc's bevelled rim over a band about 4 mm wide, with foam tape in between. The disc is 67 mm in a 74 mm bore so it can be slid in edge-on past the dam and the bosses. Around the shaft, where the lips must stop to clear the hub, a boss at the top and the one at the bottom close the gap. Their inner faces are curved, coaxial with the bore, so they follow the disc edge with an even gap of about 0.75 mm.
 
@@ -124,7 +124,6 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | TMC2209 stepper driver | 1 | StealthChop for silent moves; UART for StallGuard | $16.99 (pack of 2) |
 | AS5600 magnetic encoder board + **diametric** magnet | 1 | Sold with the magnet (the kit: 23.3 × 22.8 mm board, 3.95 × 2 mm magnet). A 20 × 20 board with 15 mm hole spacing also fits: 4 × M3 × 12 + nuts onto standoff pads on the bottom plate. See the magnet note below | $12.69 (pack of 2) |
 | ESP32-S3 dev board | 1 | Freenove ESP32-S3-WROOM Lite (FNK0099), the board the firmware's pinout is written for; other ESP32-S3-WROOM-1 boards work with a pin check. Flash it over USB on the bench; the final firmware updates over Wi-Fi | — |
-| Buck converter, 12 V → 5 V | 1 | Powers the ESP32 from the 12 V supply (e.g. a Mini-360 module, about 17 × 11 mm); on the perfboard | about $2 |
 | CO₂ sensor, NDIR | 1 | Sensirion SCD40 module (CO₂ + temperature + humidity, I²C). Not CCS811/SGP30 ("eCO₂" estimates) | $37.45 |
 | Steel rod, 5 mm × 200 mm | 1 | Damper shaft. 200 mm fits as is, no cutting. If it is HSS (very hard), grind a small flat with a rotary tool where each disc and the coupler clamp, so the screws can't slip | $12.79 (pack of 2) |
 | Flexible shaft coupler, 5–5 mm, 19 × 25 mm | 1 | | $13.49 (pack of 2) |
@@ -141,8 +140,9 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | M3 × 12 countersunk (flat head, ISO 10642 or DIN 965) screws + M3 nuts | 4 each | Split housing only: fan plate to the splice, heads flush in 90° countersinks | — |
 | M3 × 12 screws | 4 | Electronics box: two through the front cover, two from above through the encoder plate (self-tapping) | — |
 | Small tie wraps, 2.5–3.6 mm | 3+ | Cable anchors (three on each side; use one side) | |
-| 12 V supply | 1 | Fans and motor | — |
-| **Total bought** | | Not counting the foam insert and foam tape | **≈ $183** |
+| 12 V power brick | 1 | Fans and motor, about 1 A. Only its wire enters the box, to a 2-pin screw terminal on the perfboard | — |
+| USB-C power adapter, 5 V (1 A or more), and a USB-C cable | 1 | Powers the ESP32 through its USB-UART connector, which also gives the console. The cable passes through a diamond opening in the box's left or right wall (`usb_port`: or only a cross to drill, or nothing; `usb_side`: left, right or both) | — |
+| **Total bought** | | Not counting the foam insert and foam tape, or the two power adapters | **≈ $181** |
 
 ### The AS5600 board
 
@@ -171,7 +171,7 @@ The AS5600 measures the direction of the magnetic field across the shaft, so the
 6. On the bench, screw the motor to the motor plate (4 × M3 × 8 from below) and fit the coupler on the motor shaft.
 7. Lower the motor and plate onto the top of the housing, with the coupler through the big diamond and over the shaft end, and the plate's two back tabs down through the slots in the frame. In front of the motor, put an M3 × 10 down through the plate and the frame, with a nut underneath, reached from the tower's open front above the fan plate. At the back, put an M3 × 10 through each tower wall and its tab from outside, with a nut on the inside, reached from the tower's open back. Then tighten the coupler's lower screw through a side window.
 8. Fit the fans: the top one blowing into the room, the bottom one blowing toward the window. Arrows engraved on both sides of the housing (above the upper duct and below the lower one) show each duct's airflow; match the arrows on the fan frames to them.
-9. Electronics: mount the ESP32 and the TMC2209 in female headers on the perfboard, wire it, and screw it onto the four standoffs in the box (M2). Bring the fan and motor cables down the right side, tie them to the three anchors behind the fans, and into the box through the notch at the top of its right wall. The AS5600 wires drop in through the window in the encoder plate.
+9. Electronics: mount the ESP32 and the TMC2209 in female headers on the perfboard, following the [layout](doc/ebox_layout.svg): the ESP32 across the back half with its USB end three holes in from the left wall (clear of the corner standoff), the TMC2209 at the front right. Or turn the ESP32 180° in the same place, its USB end toward the right wall (view `ebox_elec_alt`): the box has a diamond on each side. Wire it (connect the 12 V brick's GND to the ESP32's GND), and screw it onto the four standoffs in the box (M2). Plug the USB-C cable in through the matching side wall. Bring the 12 V wire and the fan and motor cables down the right side, tie them to the three anchors behind the fans, and into the box through the notch at the top of its right wall. The AS5600 wires drop in through the window in the encoder plate.
 10. Fit the box under the housing: two M3 × 12 through the front cover into the bosses of the bottom bay, and two from above through the encoder plate (outside the bay walls) into the box's back tabs.
 11. Roll two O-rings onto each spigot and push the housing into the foam holes.
 
@@ -213,7 +213,7 @@ About 34 cm³ (45 g) of PETG in all. Also needed: a strip of 1 mm felt or foam t
 ## Files
 
 ```
-doc/                   reference drawings of bought parts (the AS5600 board)
+doc/                   reference drawings: the AS5600 and ESP32-S3 boards, the electronics box layout
 images/                renders used in this README
 cad/window_vent.scad   parametric model (Customizer; part = "assembly" for the preview)
 cad/louvers.scad       optional adjustable louvers for the intake fan
@@ -221,6 +221,8 @@ stl/                   exported parts (default parameters)
 tools/check.py         geometry checks (must print ALL CHECKS PASSED)
 tools/wiring_svg.py    draws firmware/images/wiring.svg (the wiring diagram)
 tools/as5600_svg.py    draws doc/as5600.svg (the AS5600 board, dimensioned)
+tools/ebox_layout_svg.py draws doc/ebox_layout.svg (the electronics box, to scale)
+tools/esp32_svg.py     draws doc/esp32_s3.svg (the ESP32-S3 board, dimensioned)
 tools/render_images.py regenerates the images in images/ from the models
 firmware/baremetal/    Arduino sketch: serial commands to test each electronic part (not tested on hardware yet; see firmware/README.md)
 PRINT_CHECKLIST.md     every printed/bought part interface to verify before printing

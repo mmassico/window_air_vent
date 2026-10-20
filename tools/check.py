@@ -9,7 +9,8 @@ Checks
   2. The disc swings freely: no overlap with the housing from closed (0 deg) to open (90 deg).
   3. The lips stop the disc: turning it 3 deg past closed must hit them.
   4. The disc can be fitted: slid in edge-on from the fan end, it touches nothing.
-  5. The electronics box only touches the housing (zero-volume contact).
+  5. The electronics box only touches the housing (zero-volume contact), and the boards fit inside it in
+     both ESP32 layouts (its USB plug through the left or the right opening, the TMC2209's heatsink under the lid).
   6. Split housing (for 180 mm beds): the two halves are exactly the housing minus the four joint
      screw holes, they don't overlap, and the splice plate only touches them.
   7. The motor plate only touches the housing (its back tabs pass through the frame's slots).
@@ -83,6 +84,14 @@ with open(boxw, "w") as fh:
 f = openscad(os.path.join(tmp, "box_ov.stl"), None, boxw)
 v = 0.0 if f is None else abs(trimesh.load(f).volume)
 report("box on housing", v < 1e-6, f"{v:.3f} mm3")
+for usb in ["left", "right"]:
+    elw = os.path.join(tmp, f"elec_{usb}.scad")
+    with open(elw, "w") as fh:
+        fh.write(f'include <{SCAD.replace(os.sep, "/")}>\npart = "none";\n'
+                 f'intersection() {{ union() {{ body(); ebox(); }} electronics("{usb}"); }}\n')
+    f = openscad(os.path.join(tmp, f"elec_ov_{usb}.stl"), None, elw)
+    v = 0.0 if f is None else abs(trimesh.load(f).volume)
+    report(f"boards in the box, USB to the {usb} (perfboard, ESP32 and its USB plug, TMC2209)", v < 1e-6, f"{v:.3f} mm3")
 
 print("6. Split housing (leftover / overlap volumes must be 0)")
 def volume(name, expr):

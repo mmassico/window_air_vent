@@ -9,7 +9,7 @@ Two stages:
 
 ## Board and tools
 
-- **Board:** Freenove ESP32-S3-WROOM Lite (FNK0099): 16 MB flash, 8 MB octal PSRAM, and two USB-C connectors: **USB-UART** (the onboard code uploader, a CH343 USB-serial chip wired to the ESP32's UART0) and **USB-OTG** (the ESP32-S3's own USB, host or device).
+- **Board:** Freenove ESP32-S3-WROOM Lite (FNK0099): 16 MB flash, 8 MB octal PSRAM, and two USB-C connectors: **USB-UART** (the onboard code uploader, a CH343 USB-serial chip wired to the ESP32's UART0) and **USB-OTG** (the ESP32-S3's own USB, host or device). Dimensions and pinout: [doc/esp32_s3.svg](../doc/esp32_s3.svg).
 - **Software:** Arduino IDE 2.x with the **esp32 by Espressif Systems** core, version 3.x (tested to compile with 3.3.12). No other library is needed.
 - **Arduino IDE settings (Tools menu):**
 
@@ -34,7 +34,7 @@ arduino-cli compile --fqbn "esp32:esp32:esp32s3:FlashSize=16M,PSRAM=opi,Partitio
 
 Every pin is defined in [`baremetal/Pins.h`](baremetal/Pins.h). "3V3" and "GND" are the ESP32 board's pins. Every ground is common.
 
-<img src="images/wiring.svg" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209 and stepper on the right, 12 V supply and buck converter on top" width="100%">
+<img src="images/wiring.svg" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209 and stepper on the right, 12 V brick and 5 V USB-C adapter on top" width="100%">
 
 The table below gives the same connections, pin by pin.
 
@@ -58,11 +58,10 @@ The table below gives the same connections, pin by pin.
 | **Fan 1, exhaust** | PWM | GPIO 5 | 10 kΩ to GND |
 | | Tach | GPIO 16 | 10 kΩ to 3V3 |
 | **12 V sense** | | GPIO 1 | 100 kΩ from 12 V to GPIO 1, 22 kΩ from GPIO 1 to GND |
-| **Buck 12 V → 5 V** | OUT+ | Board 5V pin | See the note below |
 
 - **On the board itself:** the blue LED (GPIO 2) blinks as a heartbeat, and the RGB LED is on GPIO 48 (`led` command).
 - **Kept free for later:** GPIO 38, 39, 40, for the INMP441 microphone (I²S).
-- **USB and buck together:** on the bench, power the board from USB and leave the buck's 5 V output disconnected, unless you have checked that the board has a diode between USB and its 5V pin. Two supplies fighting on 5 V can damage one of them.
+- **Power:** two adapters. A 12 V brick feeds VM, the fans and the 12 V sense; a 5 V USB-C adapter powers the ESP32 through its USB-UART connector (the board makes the 3V3 for the sensors and the TMC2209 logic). Join the brick's GND and the ESP32's GND on the perfboard. The [layout drawing](../doc/ebox_layout.svg) shows where the parts go in the box.
 - **Driving the fan PWM directly:** the 3.3 V PWM output drives the Noctua PWM input as is (Noctua accepts a 3.3 V signal). If you ever add an inverting transistor, set `FAN_PWM_INVERT` to 1.
 
 ## Bring-up, one part at a time

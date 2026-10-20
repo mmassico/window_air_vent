@@ -127,7 +127,7 @@ def esp_right(y, label, color):
 
 
 # Power pins on top of the board.
-for x, lab in ((700, "5V"), (770, "3V3"), (840, "GND")):
+for x, lab in ((770, "3V3"), (840, "GND")):
     text(x, EY0 + 62, lab, 13, "middle", "bold")
 lead_tag(770, EY0, "3V3", "up", 26)
 lead_tag(840, EY0, "GND", "up", 26)
@@ -254,29 +254,23 @@ text(1250, 908, "coil A: A1-A2, coil B: B1-B2", 12.5, "middle", color="#444")
 text(1250, 926, "never plug or unplug it with 12 V on", 12.5, "middle", color=C_SNS, italic=True)
 
 # ---------------------------------------------------------------------------------------------
-# Top: 12 V supply and buck converter
+# Top: the two power adapters (12 V brick, 5 V USB-C)
 # ---------------------------------------------------------------------------------------------
-box(1150, 10, 1350, 120, "12 V supply", "fans, motor, buck")
+box(1150, 10, 1350, 120, "12 V power brick", "fans and motor")
 for y, pin, net in ((70, "+", "12V"), (100, "-", "GND")):
     text(1340, y + 5, pin, 16, "end", "bold")
     lead_tag(1350, y, net, "right", 30)
 
-box(930, 10, 1090, 120, "Buck 12 V to 5 V", "e.g. Mini-360")
-for y, pin, net in ((70, "IN+", "12V"), (100, "IN-", "GND")):
-    text(1080, y + 5, pin, 13, "end")
-    lead_tag(1090, y, net, "right", 26)
-text(940, 105, "OUT-", 13)
-lead_tag(930, 100, "GND", "left", 0)
-text(940, 75, "OUT+", 13)
-line([(930, 70), (700, 70), (700, EY0)], NET["5V"], 2.5)
-text(815, 62, "to the board's 5V pin", 12.5, "middle", color=NET["5V"])
+box(930, 10, 1090, 120, "USB-C adapter", "5 V, 1 A or more")
+line([(930, 70), (700, 70), (700, EY0)], NET["5V"], 4)
+text(815, 62, "USB-C cable to the USB-UART connector", 12.5, "middle", color=NET["5V"])
 
 # ---------------------------------------------------------------------------------------------
 # Notes
 # ---------------------------------------------------------------------------------------------
 notes = [
     "Coloured tags with the same name are the same net: every GND is common, and 3V3 comes from the board's 3V3 pin.",
-    "On the bench, power the board from USB and leave the buck's OUT+ disconnected (two 5 V supplies must not meet).",
+    "Two adapters: 12 V for the fans and motor, 5 V over USB-C for the ESP32 (which makes the 3V3). Join their GNDs on the perfboard.",
     "SCD40 and AS5600 modules usually carry their own I2C pull-ups; on a long SCD40 cable, 4.7 k to 3V3 at the ESP32 end helps.",
     "Pins as in firmware/baremetal/Pins.h. GPIO 38, 39, 40 stay free for the INMP441 microphone.",
 ]
