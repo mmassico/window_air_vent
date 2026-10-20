@@ -64,7 +64,7 @@ PETG holes usually come out 0.1–0.2 mm smaller than drawn, and holes printed *
 | Screw spacing | 31 square | 31 (NEMA 17) | ✅ |
 | Screw holes in the motor plate | Ø 3.4 | M3 | ✅ |
 | Centring boss hole | Ø 22.5 | boss Ø 22 × 2 | ✅ |
-| Motor plate thickness | 4 | M3 × 8: 4 mm into the motor | 📏 check the motor's thread depth (usually 4.5); never use longer than 8 |
+| Motor plate thickness | 4 | M3 × 6: 2 mm into the motor | ✅ the 17HS08-1004S's holes are 2.5 deep (sheet: 2.5 min; measured 2.5; [drawing](doc/motor_17hs08.svg)), so M3 × 8 would bottom out. Fallback: M3 × 8 over 2 mm of small washers (DIN 433, Ø 6: the head pockets are 6.5 across), but the head then sticks out below the 3 mm frame |
 | Shaft length | assumed 24 from the face | | 📏 measure; the coupler can slide up or down to suit |
 | Motor plate to frame | front: 2 holes at ±20, 27 in front of the motor axis, through the 3 mm frame; back: 2 tabs (3 × 10, 8 below the frame), flush with the back edge, through notches, against the tower walls, Ø 3.4 holes through tab and wall | M3 × 10 + nut, all four | ✅ the front heads clear the motor body by 3 mm; the front nuts are reached from the tower's open front, the back ones from its open back; no nut pockets; `check.py` check 7 |
 

@@ -303,7 +303,7 @@ module motor_frame() {
 }
 
 // Modelled with the motor axis at the origin, the plate's underside at z = 0 (installed: on top of the frame).
-// The motor screws to it from below (4 x M3 x 8, heads in the frame's small diamonds); it covers the top of the
+// The motor screws to it from below (4 x M3 x 6: the motor's holes are 2.5 deep; heads in the frame's small diamonds); it covers the top of the
 // tower from its open back to just past the front screws. Front: two M3 x 10 + nuts through the frame. Back: two tabs down through the frame, against the
 // inner faces of the tower walls, each held by an M3 x 10 through the wall with a nut inside.
 module motor_plate() {
