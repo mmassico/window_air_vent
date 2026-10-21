@@ -115,6 +115,27 @@ The split housing (`body_top` 127 cm³, `body_bottom` 136 cm³, `splice` 8 cm³)
 - The optional test prints add about 30 cm³ (37 g): `fittest` 12 cm³, `oring_test` 18 cm³.
 - Print time: very roughly 9–12 hours for the housing on a Bambu Lab P1 (0.2 mm layers; about 7–9 hours at 0.28 mm), and about 3–4 hours for all the other parts together. The slicer gives the exact figures.
 
+### Slicer settings
+
+Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall loops**) matters more than the infill percentage: with enough walls, the thin parts come out solid and the infill only fills the few thicker zones.
+
+| Part | Wall loops | Sparse infill | Why |
+|---|---|---|---|
+| `body` (or `body_top` and `body_bottom`) | 4 | 25 % | Thin walls everywhere; the infill only reaches the thick zones (bosses, spigot roots, fan plate) |
+| `disc` | 5 | 40 % | The grub screws thread into the hub: 5 loops leave about 2 mm of solid plastic around each hole |
+| `motor_plate` | 5 | 40 % | Screw holes, bosses and tabs under clamping load |
+| `magnet_cap` | | 100 % | Tiny, with a grub screw in it: print it solid |
+| `splice` | 5 | 40 % | Joins the two halves: nut pockets and countersunk screws |
+| `ebox` | 3 | 15–20 % | No real loads; the self-tapping holes get their own walls |
+| `fittest`, `oring_test` | 4 | 25 % | As the housing, so they test what the housing will be |
+| `louver_chassis` | 3 | 20 % | Light load |
+| `louver_blade` | 3 | 15 % | Thin and light; their pins come out solid anyway |
+| `louver_link`, `louver_retainer` | | 100 % | Small and thin |
+
+- **Infill pattern: gyroid.** Equally strong in every direction, and it prints smoothly in PETG.
+- **Top and bottom shell layers: 5.** Flat faces stay smooth and the infill doesn't show through.
+- **Supports: none.** Every part is designed to print without them. The slicer may still flag the housing's four shaft holes, which print horizontal: block supports there (paint them with the support blocker) and run a 5.5 mm drill through them by hand afterwards.
+
 ## Hardware
 
 Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
