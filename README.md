@@ -128,7 +128,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | Steel rod, 5 mm × 200 mm | 1 | Damper shaft. 200 mm fits as is, no cutting. If it is HSS (very hard), grind a small flat with a rotary tool where each disc and the coupler clamp, so the screws can't slip | $12.79 (pack of 2) |
 | Flexible shaft coupler, 5–5 mm, 19 × 25 mm | 1 | | $13.49 (pack of 2) |
 | M3 × 35 screws + M3 nuts | 8 each | Fans | — |
-| M3 × 6 screws | 4 | Motor to motor plate. Not longer: the motor's holes are only 2.5 mm deep ([drawing](doc/motor_17hs08.svg)) | — |
+| M3 × 8 screws | 4 | Motor to motor plate, through the bosses under the plate. Not longer: the motor's holes are only 2.5 mm deep ([section](doc/motor_mount.svg)) | — |
 | M3 × 10 (or M3 × 12) screws + M3 nuts | 4 each | Motor plate: two through the frame in front of the motor, two through the tower walls and the plate's back tabs | — |
 | M3 grub screws, 6 or 8 mm | 5 | Two per disc, 24 mm apart along the hub, so the disc can't rock on the shaft; one in the magnet cap. Self-tapping into the plastic | — |
 | O-rings, 74 × 3 mm, nitrile 70A | 4 | Two per spigot (grooves sized for this O-ring: 4.7% stretch, about 23% squeeze in an 82 mm hole). Optional at first: the spigots also fit a snug hole | $12.79 (pack of 10) |
@@ -144,12 +144,19 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | USB-C power adapter, 5 V (1 A or more), and a USB-C cable | 1 | Powers the ESP32 through its USB-UART connector, which also gives the console. The cable passes through a diamond opening in the box's left or right wall (`usb_port`: or only a cross to drill, or nothing; `usb_side`: left, right or both) | — |
 | **Total bought** | | Not counting the foam insert and foam sheet, or the two power adapters | **≈ $181** |
 
+> [!WARNING]
+> **SCD40: do not remove the white membrane on top of the sensor.** It looks like a small sticker, but it is part of the sensor: a gas-permeable filter that lets ambient air reach the photoacoustic NDIR cell while keeping dust, splashes and other contaminants out. Do not press on it, cover it, or clean near it with solvents or compressed air.
+
 ### The stepper motor
 
-The StepperOnline 17HS08-1004S, from its sheet and checked with a caliper. Its M3 holes are only 2.5 mm deep, hence the M3 × 6 screws through the 4 mm motor plate.
+The StepperOnline 17HS08-1004S, from its sheet and checked with a caliper. Its M3 holes are only 2.5 mm deep, so the motor plate has a 2 mm boss under each screw hole: through the 4 mm plate and the boss, an M3 × 8 reaches 2 mm into the motor. The bosses and the screw heads sit in the frame's diamond pockets.
 
 <p align="center">
   <img src="doc/motor_17hs08.svg" alt="17HS08-1004S stepper, dimensioned: 42.3 mm square frame, 20.5 mm long; M3 holes 31 mm apart, 2.5 mm deep; 22 mm centring boss, 2 mm high; 5 mm shaft, 20 mm long, with a 4.5 mm D-flat along its last 16.5 mm; 400 mm leads" width="640">
+</p>
+
+<p align="center">
+  <img src="doc/motor_mount.svg" alt="Section through a motor screw: motor end cap with a 2.5 mm deep M3 hole, 4 mm motor plate, 2 mm boss in the frame's 8 mm diamond pocket, 3 mm frame; an M3 x 8 button head reaches 2 mm into the motor, 0.5 mm short of the bottom, its head 0.65 mm below the frame" width="520">
 </p>
 
 ### The AS5600 board
@@ -214,7 +221,7 @@ If the 1.6 mm foam proves too stiff for the disc to close, setting `gasket = 1.6
 3. Push the shaft down through the frame on top, both ducts and both disc hubs. Split housing: the shaft now lines up the two halves; tighten the four splice screws.
 4. Turn both discs closed against the lips and tighten their grub screws (two per disc) through the duct openings.
 5. Screw the AS5600 board onto the four standoff pads, chip up, with its wires soldered into its holes and led inward under the board, then down through the diamond window under the chip. Glue the magnet into the cap and slide the cap onto the shaft's bottom end. Lay a 1 mm shim on the chip (a plastic card works), slide the cap down until the magnet rests on it, tighten the cap's grub screw, and remove the shim.
-6. On the bench, screw the motor to the motor plate (4 × M3 × 6 from below) and fit the coupler on the motor shaft.
+6. On the bench, screw the motor to the motor plate (4 × M3 × 8 from below) and fit the coupler on the motor shaft.
 7. Lower the motor and plate onto the top of the housing, with the coupler through the big diamond and over the shaft end, and the plate's two back tabs down through the slots in the frame. In front of the motor, put an M3 × 10 down through the plate and the frame, with a nut underneath, reached from the tower's open front above the fan plate. At the back, put an M3 × 10 through each tower wall and its tab from outside, with a nut on the inside, reached from the tower's open back. Then tighten the coupler's lower screw through a side window.
 8. Fit the fans: the top one blowing into the room, the bottom one blowing toward the window. Arrows engraved on both sides of the housing (above the upper duct and below the lower one) show each duct's airflow; match the arrows on the fan frames to them.
 9. Electronics: solder the ESP32 and the TMC2209 onto the perfboard (or into female headers), following the [layout](#the-electronics-box-layout): the ESP32 across the back half with its USB end three holes in from the left wall (clear of the corner standoff), the TMC2209 at the front right. Or turn the ESP32 180° in the same place, its USB end toward the right wall (view `ebox_elec_alt`): the box has a diamond on each side. Wire it (connect the 12 V brick's GND to the ESP32's GND), and screw it onto the four standoffs in the box (M2). Plug the USB-C cable in through the matching side wall. Bring the 12 V wire and the fan and motor cables down the right side, tie them to the three anchors behind the fans, and into the box through the notch at the top of its right wall. The AS5600 wires drop in through the window in the encoder plate.
@@ -272,6 +279,7 @@ tools/ebox_layout_svg.py draws doc/ebox_layout.svg (the electronics box, to scal
 tools/esp32_svg.py     draws doc/esp32_s3.svg (the ESP32-S3 board, dimensioned)
 tools/tmc2209_svg.py   draws doc/tmc2209.svg (the TMC2209 module, dimensioned)
 tools/motor_svg.py     draws doc/motor_17hs08.svg (the stepper motor, dimensioned)
+tools/motor_mount_svg.py draws doc/motor_mount.svg (section through a motor screw)
 tools/lip_templates_svg.py draws doc/lip_templates.svg and .pdf (full-size foam templates) and their preview
 tools/render_images.py regenerates the images in images/ from the models
 firmware/baremetal/    Arduino sketch: serial commands to test each electronic part (not tested on hardware yet; see firmware/README.md)
