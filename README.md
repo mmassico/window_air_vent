@@ -71,10 +71,12 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 
 **Optional test prints, before the housing.** Print the small real parts first (discs, motor plate, magnet cap, about 1.5–2 h): they test the rod, the grub screws, the motor and the magnet. Then:
 
-| Part | Size (mm) | Time | What it tests |
-|---|---|---|---|
-| `fittest` | 60 × 34 × 22 | about 20–30 min | The housing's printer-sensitive features, in its print orientation, engraved A to G (see below) |
-| `oring_test` | Ø 90 × 18 | about 30 min | One spigot section with an O-ring groove: push it, with an O-ring, into a hole cut in a foam scrap |
+| Part | <div style="width:180px">Thumbnail</div> | Size (mm) | Time | What it tests |
+|---|:---:|---|---|---|
+| `fittest` | <img src="images/part_fittest.png" width="180"> | 60 × 34 × 22 | about 20–30 min | The housing's printer-sensitive features, in its print orientation, engraved A to G (see below) |
+| `oring_test` | <img src="images/part_oring_test.png" width="180"> | Ø 90 × 18 | about 30 min | One spigot section with an O-ring groove: push it, with an O-ring, into a hole cut in a foam scrap |
+
+**The fit-test coupon.** It copies seven features of the housing that depend most on the printer: holes and a slot, a nut pocket, a pilot for self-tapping screws, the conical lip's 45° ledge and a countersink. Each is engraved with a letter, A to G. Print it with the housing's filament and settings, then check each feature against the table below: if one fails, adjust the slicer (or the hole sizes in the model) before starting the 9–12 hour housing print.
 
 <p align="center">
   <img src="images/part_fittest.png" alt="Fit-test coupon with its features engraved A to G" width="420">
