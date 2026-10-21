@@ -46,7 +46,7 @@
 #define V12_DIV_BOTTOM  22.0f
 
 // DS18B20 temperature sensors (1-Wire), one per pin so each is known by its pin. Three wires each (no parasite
-// power), 4.7 k pull-up to 3.3 V per pin at the ESP32 end. Wired, not read by this sketch yet.
+// power), 4.7 k pull-up to 3.3 V per pin at the ESP32 end. Read with the 'temp' command (Ds18b20.cpp).
 #define PIN_TEMP_OUT    14      // outdoor: waterproof probe through the foam insert, near the intake, in the shade
 #define PIN_TEMP_IN     21      // indoor, optional (the SCD40 also reads room temperature): on an inside wall at
                                 // about 1.2-1.5 m, away from the window and heaters

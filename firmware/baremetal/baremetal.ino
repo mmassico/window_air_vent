@@ -1,7 +1,7 @@
 // Window vent: bare-metal hardware validation.
 //
 // A serial command interpreter to check each part on its own: I2C buses, SCD40 CO2 sensor, AS5600 encoder,
-// TMC2209 driver and stepper, fans, 12 V supply. No WiFi, no control loop.
+// TMC2209 driver and stepper, fans, 12 V supply, DS18B20 temperature sensors. No WiFi, no control loop.
 //
 // Status: compiles, NOT TESTED ON HARDWARE YET.
 //
@@ -15,8 +15,9 @@
 #include "As5600.h"
 #include "Tmc2209.h"
 #include "Fans.h"
+#include "Ds18b20.h"
 
-#define FW_NAME          "window-vent baremetal 1.0"
+#define FW_NAME          "window-vent baremetal 1.1"
 #define STEPS_PER_REV    200        // full steps per motor turn (1.8 deg)
 #define DEF_MICROSTEPS   16
 #define DEF_RUN_MA       500
@@ -26,6 +27,7 @@
 static TwoWire*  s_i2c[2] = { &Wire, &Wire1 };
 static uint16_t s_encZero;          // raw AS5600 value taken as 0 deg ('enc zero')
 static bool     s_tmcOk;
+static const struct { const char* name; uint8_t pin; } s_temp[2] = { { "outdoor", PIN_TEMP_OUT }, { "indoor", PIN_TEMP_IN } };
 
 static const char* HELP =
     "General\r\n"
@@ -62,6 +64,9 @@ static const char* HELP =
     "Fans (0 = intake, 1 = exhaust)\r\n"
     "  fan                          duty and speed of both fans\r\n"
     "  fan <0|1|all> <duty%>        set the PWM duty\r\n"
+    "Temperature (DS18B20: outdoor on GPIO 14, indoor on GPIO 21, optional)\r\n"
+    "  temp                         read both (a conversion takes 0.75 s)\r\n"
+    "  temp rom                     their 64-bit ROM codes (family 28)\r\n"
     "Numbers: 42, 0x2A, 2Ah, 0b101010 or 101010b.";
 
 // ------------------------------------------------------------------------------------------------
@@ -125,6 +130,9 @@ static void cmdInfo()
     Serial.printf("Supply:  %.2f V\r\n", readSupply());
     Serial.printf("SCD40:   %s (bus 0, 0x62)\r\n", i2cPresent(Wire, SCD40_ADDR) ? "answers" : "absent");
     Serial.printf("AS5600:  %s (bus 1, 0x36)\r\n", i2cPresent(Wire1, AS5600_ADDR) ? "answers" : "absent");
+    for (int i = 0; i < 2; i++)
+        Serial.printf("DS18B20: %s %s (GPIO %d)\r\n", s_temp[i].name, Ds18b20Present(s_temp[i].pin) ? "answers" : "absent",
+                      s_temp[i].pin);
     uint32_t ioin;
     if (Tmc2209Read(TMC_IOIN, &ioin))
         Serial.printf("TMC2209: answers, version 0x%02lX (expected 0x21)", (unsigned long)(ioin >> 24));
@@ -456,11 +464,51 @@ static void cmdFan(int argc, char* argv[])
     Serial.print("OK (speed settles in a second or two: 'fan')");
 }
 
+static void cmdTemp(int argc, char* argv[])
+{
+    if (argc > 1 && strcmp(argv[1], "rom") == 0)
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            uint8_t rom[8];
+            Serial.printf("%-7s (GPIO %2d): ", s_temp[i].name, s_temp[i].pin);
+            if (Ds18b20Rom(s_temp[i].pin, rom))
+                Serial.printf("family %02X, serial %02X%02X%02X%02X%02X%02X%s", rom[0], rom[6], rom[5], rom[4], rom[3], rom[2],
+                              rom[1], rom[0] == 0x28 ? "" : " (not a DS18B20?)");
+            else
+                Serial.print("no answer, or bad CRC");
+            if (i == 0)
+                Serial.print("\r\n");
+        }
+        return;
+    }
+    bool started[2];
+    for (int i = 0; i < 2; i++)
+        started[i] = Ds18b20Start(s_temp[i].pin);
+    delay(800);
+    for (int i = 0; i < 2; i++)
+    {
+        float         t;
+        Ds18b20Status st = started[i] ? Ds18b20Read(s_temp[i].pin, &t) : DS18B20_ABSENT;
+        Serial.printf("%-7s (GPIO %2d): ", s_temp[i].name, s_temp[i].pin);
+        if (st == DS18B20_OK)
+            Serial.printf("%6.2f C", t);
+        else
+            Serial.print(Ds18b20Text(st));
+        if (i == 0)
+            Serial.print("\r\n");
+    }
+}
+
 static void cmdMon(int argc, char* argv[])
 {
     long         ms = 1000;
     Scd40Reading co2 = {};
     bool         haveCo2 = false;
+    float        temp[2];
+    bool         haveTemp[2] = { false, false };
+    uint32_t     tempStart = 0;
+    bool         tempBusy = false;
 
     if (argc > 1 && !ConArgInt(argc, argv, 1, &ms))
         return;
@@ -482,6 +530,23 @@ static void cmdMon(int argc, char* argv[])
             Serial.printf("enc %6.2f deg %-10s | ", encDegrees(enc.raw), As5600MagnetText(enc.status));
         else
             Serial.print("enc ---                   | ");
+        if (!tempBusy || millis() - tempStart >= 800)   // DS18B20: read the last conversion, start the next
+        {
+            for (int i = 0; i < 2; i++)
+                haveTemp[i] = tempBusy && Ds18b20Read(s_temp[i].pin, &temp[i]) == DS18B20_OK;
+            for (int i = 0; i < 2; i++)
+                Ds18b20Start(s_temp[i].pin);
+            tempStart = millis();
+            tempBusy = true;
+        }
+        if (haveTemp[0])
+            Serial.printf("out %5.1f ", temp[0]);
+        else
+            Serial.print("out   --- ");
+        if (haveTemp[1])
+            Serial.printf("in %5.1f C | ", temp[1]);
+        else
+            Serial.print("in   --- C | ");
         Serial.printf("fans %4d %4d rpm | ", FansRpm(0), FansRpm(1));
         if (Tmc2209Read(TMC_SG_RESULT, &sg))
             Serial.printf("SG %3lu DIAG %d | ", (unsigned long)sg, digitalRead(PIN_TMC_DIAG));
@@ -516,6 +581,7 @@ static void handleCommand(int argc, char* argv[])
     else if (strcmp(c, "mot") == 0) cmdMot(argc, argv);
     else if (strcmp(c, "tmc") == 0) cmdTmc(argc, argv);
     else if (strcmp(c, "fan") == 0) cmdFan(argc, argv);
+    else if (strcmp(c, "temp") == 0) cmdTemp(argc, argv);
     else Serial.printf("Unknown command '%s', type 'help'.", c);
 }
 
@@ -536,6 +602,8 @@ void setup()
     pinMode(PIN_LED, OUTPUT);
 
     FansBegin();
+    Ds18b20Begin(PIN_TEMP_OUT);
+    Ds18b20Begin(PIN_TEMP_IN);
     analogReadResolution(12);
 
     Serial.begin(CONSOLE_BAUD);

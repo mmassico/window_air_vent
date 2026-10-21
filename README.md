@@ -127,6 +127,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | AS5600 magnetic encoder board + **diametric** magnet | 1 | Sold with the magnet (the kit: 23.3 × 22.8 mm board, 3.95 × 2 mm magnet). A 20 × 20 board with 15 mm hole spacing also fits: 4 × M3 × 12 + nuts onto standoff pads on the bottom plate. See the magnet note below | $12.69 (pack of 2) |
 | ESP32-S3 dev board | 1 | Freenove ESP32-S3-WROOM Lite (FNK0099), the board the firmware's pinout is written for; other ESP32-S3-WROOM-1 boards work with a pin check. Flash it over USB on the bench; the final firmware updates over Wi-Fi | — |
 | CO₂ sensor, NDIR | 1 | Sensirion SCD40 module (CO₂ + temperature + humidity, I²C). Not CCS811/SGP30 ("eCO₂" estimates) | $37.45 |
+| DS18B20 temperature probe, waterproof | 1 (+1 optional) | Outdoor air: the 6 mm stainless probe on its cable goes through the foam insert, above the intake ([template](#drilling-the-foam-insert)). A second one, indoors on an inside wall, is optional: the SCD40 already reads the room's temperature | — |
 | Steel rod, 5 mm × 200 mm | 1 | Damper shaft. 200 mm fits as is, no cutting. If it is HSS (very hard), grind a small flat with a rotary tool where each disc and the coupler clamp, so the screws can't slip | $12.79 (pack of 2) |
 | Flexible shaft coupler, 5–5 mm, 19 × 25 mm | 1 | | $13.49 (pack of 2) |
 | M3 × 35 screws + M3 nuts | 8 each | Fans | — |
@@ -136,7 +137,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | O-rings, 74 × 3 mm, nitrile 70A | 4 | Optional, and not needed by default: the plain Ø 83.4 spigots are a snug fit in an 83 mm hole. For a hole that comes out loose, set `orings = true` before printing the housing: two grooves per spigot, sized for this O-ring (about 6% stretch, 25% squeeze in an 83 mm hole) | $12.79 (pack of 10) |
 | Closed-cell neoprene foam sheet, self-adhesive, 1/16 in (1.6 mm) | 1 | Lip seals, cut with the [templates](#cutting-the-lip-foam). The model leaves a 1 mm gap, so the foam is squeezed about 37 %, a good range for a seal | |
 | Perfboard (protoboard), 5 × 7 cm, holes 66 × 46 mm | 1 | Carrier for the ESP32 and the TMC2209 in the electronics box | |
-| Resistors and capacitor for the perfboard | | 1 kΩ (TMC2209 UART), 10 kΩ × 5 (driver enable pull-up, two fan PWM pull-downs, two tach pull-ups), 100 kΩ + 22 kΩ (12 V sense), 100 µF ≥ 25 V electrolytic (TMC2209 motor supply). See [firmware/README.md](firmware/README.md) | — |
+| Resistors and capacitor for the perfboard | | 1 kΩ (TMC2209 UART), 10 kΩ × 5 (driver enable pull-up, two fan PWM pull-downs, two tach pull-ups), 100 kΩ + 22 kΩ (12 V sense), 4.7 kΩ (DS18B20 pull-up; × 2 with the optional indoor sensor), 100 µF ≥ 25 V electrolytic (TMC2209 motor supply). See [firmware/README.md](firmware/README.md) | — |
 | Female pin headers, 2.54 mm (optional) | to suit | Sockets for the ESP32 and the TMC2209 instead of soldering them, so they unplug for replacement (`esp_mount`, `tmc_mount`; the box has room for both) | |
 | M2 screws, about 6 mm | 4 | Perfboard onto the box standoffs (self-tapping) | |
 | M3 × 12 countersunk (flat head, ISO 10642 or DIN 965) screws + M3 nuts | 4 each | Split housing only: fan plate to the splice, heads flush in 90° countersinks | — |
@@ -195,7 +196,7 @@ The box seen from above, to scale, with the room at the bottom. The ESP32 lies a
 
 ### Firmware
 
-The ESP32 runs an Arduino sketch (esp32 core 3.x, no other library). The first stage, [`firmware/baremetal/`](firmware/baremetal), is a serial command console that tests each electronic part on its own: fans, motor and driver, encoder, CO₂ sensor and the 12 V supply. It compiles cleanly but has not run on hardware yet. The CO₂ control with its own web page on the home network comes next. [firmware/README.md](firmware/README.md) has the board settings, the [wiring diagram](firmware/images/wiring.svg), a part-by-part bring-up and the command list.
+The ESP32 runs an Arduino sketch (esp32 core 3.x, no other library). The first stage, [`firmware/baremetal/`](firmware/baremetal), is a serial command console that tests each electronic part on its own: fans, motor and driver, encoder, CO₂ sensor, temperature probes and the 12 V supply. It compiles cleanly but has not run on hardware yet. The CO₂ control with its own web page on the home network comes next. [firmware/README.md](firmware/README.md) has the board settings, the [wiring diagram](firmware/images/wiring.svg), a part-by-part bring-up and the command list.
 
 ### The encoder magnet
 

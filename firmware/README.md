@@ -64,7 +64,7 @@ The table below gives the same connections, pin by pin.
 | | DQ | GPIO 21 | 4.7 kΩ to 3V3 |
 
 - **On the board itself:** the blue LED (GPIO 2) blinks as a heartbeat, and the RGB LED is on GPIO 48 (`led` command).
-- **Temperature sensors:** wired and defined in `Pins.h`, but not read by the sketch yet. The outdoor probe goes near the intake, away from the exhaust outlet and out of the sun.
+- **Temperature sensors:** read with the `temp` command; the sketch drives the 1-Wire bus itself (`Ds18b20.cpp`), so no library is needed. The outdoor probe goes near the intake, away from the exhaust outlet and out of the sun.
 - **Kept free for later:** GPIO 38, 39, 40, for the INMP441 microphone (I²S).
 - **Power:** two adapters. A 12 V brick feeds VM, the fans and the 12 V sense; a 5 V USB-C adapter powers the ESP32 through its USB-UART connector (the board makes the 3V3 for the sensors and the TMC2209 logic). Join the brick's GND and the ESP32's GND on the perfboard. The [layout drawing](../doc/ebox_layout.svg) shows where the parts go in the box.
 - **Driving the fan PWM directly:** the 3.3 V PWM output drives the Noctua PWM input as is (Noctua accepts a 3.3 V signal). If you ever add an inverting transistor, set `FAN_PWM_INVERT` to 1.
@@ -95,7 +95,12 @@ Each step only needs the parts before it. Each line shows a command, then what y
    - `mot step -800` comes back.
    - `mot vel 1000` turns continuously with the driver's own step generator. Run `mon`, slow the shaft with your fingers, and watch SG drop. `mot vel 0` stops it.
    - When the damper is fitted, the same test against the lips gives the StallGuard number for "closed".
-6. **Everything at once.** `mon 1000` prints one line per second with every reading, until a key is pressed.
+6. **Temperature probes.**
+   - `info` lists each DS18B20 as "answers" or "absent" (the indoor one is optional).
+   - `temp`: both temperatures after a 0.75 s conversion. Warm the probe in your hand and the next reading rises.
+   - `temp rom`: each probe's ROM code; family `28` is a genuine DS18B20 type.
+   - "absent" means no presence pulse: check the three wires and the 4.7 kΩ pull-up. "CRC error" usually means a weak or missing pull-up, or a long cable.
+7. **Everything at once.** `mon 1000` prints one line per second with every reading, until a key is pressed.
 
 Note any number that looks wrong: the magnet status, the AGC, the SG values while turning freely and against the lips, and the fan speeds at 30% and 100%. They become the settings of the final firmware.
 
@@ -112,6 +117,7 @@ Type `help` on the console for the full list. In brief:
 | Motor | `mot en <0\|1>`, `mot step <n> [speed]`, `mot vel <speed>`, `mot cur <mA> [hold%]`, `mot ustep <n>`, `mot sgt <n>` |
 | Driver registers | `tmc init`, `tmc status`, `tmc rd <reg>`, `tmc wr <reg> <value>` |
 | Fans | `fan`, `fan <0\|1\|all> <duty%>` |
+| Temperature | `temp`, `temp rom` |
 
 Numbers can be written as `42`, `0x2A`, `2Ah`, `0b101010` or `101010b`. A long move or `mon` stops when any key is pressed.
 
