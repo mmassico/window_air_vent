@@ -121,7 +121,7 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 
 | Part | Wall loops | Sparse infill | Why |
 |---|---|---|---|
-| `body` (or `body_top` and `body_bottom`) | 4 | 25 % | Thin walls everywhere; the infill only reaches the thick zones (bosses, spigot roots, fan plate) |
+| `body` (or `body_top` and `body_bottom`) | 4 | 25 % | Thin walls everywhere; the infill only reaches the thick zones (bosses, spigot roots, fan plate). The only part that may need supports, in its four shaft holes: print `fittest` without supports first and look at feature D (see below) |
 | `disc` | 5 | 40 % | The grub screws thread into the hub: 5 loops leave about 2 mm of solid plastic around each hole |
 | `motor_plate` | 5 | 40 % | Screw holes, bosses and tabs under clamping load |
 | `magnet_cap` | | 100 % | Tiny, with a grub screw in it: print it solid |
@@ -134,7 +134,7 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 
 - **Infill pattern: gyroid.** Equally strong in every direction, and it prints smoothly in PETG.
 - **Top and bottom shell layers: 5.** Flat faces stay smooth and the infill doesn't show through.
-- **Supports: none.** Every part is designed to print without them. The slicer may still flag the housing's four shaft holes, which print horizontal: block supports there (paint them with the support blocker) and run a 5.5 mm drill through them by hand afterwards.
+- **Supports: none.** Every part is designed to print without them. The slicer may still flag the housing's four shaft holes, which print horizontal: block supports there (paint them with the support blocker) and run a 5.5 mm drill through them by hand afterwards. Feature D of `fittest` is the same hole in the same orientation: if it comes out clean without supports, so will the housing.
 
 ## Hardware
 
