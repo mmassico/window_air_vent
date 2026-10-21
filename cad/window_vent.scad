@@ -80,6 +80,9 @@ mplate_t  = 4;      //   on the bench, then it goes on the frame: two screws in 
 mp_front  = [20, 27];  //   from the tower's open front), at x = +/- [0], [1] in front of the shaft, and two tabs at the back
 mp_tab    = [3, 10, 8];  // back tabs (thickness, width, depth below the frame), flush with the back edge: through notches in the frame, against the
                     //   inner faces of the tower walls, one M3 + nut each through the wall
+mp_boss   = [6, 2]; // motor screw bosses under the plate (diameter, height): with the 4 mm plate, an M3 x 8 reaches 2 mm
+                    //   into the motor, whose holes are 2.5 deep. They sit in the frame's small diamonds
+mp_pocket = 8;      // those diamonds, across their flats: 1 mm clear around each boss
 tower_t   = 3;      // motor and encoder bracket walls
 cap_h     = 12;     // magnet cap on the shaft end
 cap_d     = 14;     // wide enough for a radial M3 grub screw
@@ -288,10 +291,10 @@ module motor_frame() {
         // runs to the fan plate, so it rests on the bed when printing (no bridge)
         translate([-mplate / 2, ys - mplate / 2, z_mp0]) cube([mplate, duct_len - (ys - mplate / 2), mp_t]);
         // diamond openings (pointed up and down when printing, so no bridges): a big one the coupler (19 mm) passes with 2 mm to spare
-        // through when the motor goes on, and four small ones for the heads of the motor screws under the motor plate
+        // through when the motor goes on, and four small ones for the motor screw bosses and heads under the motor plate
         translate([0, ys, z_mp0 - 1]) linear_extrude(mp_t + 2) rotate(45) square(23.1, center = true);   // flats a little wider than the plate's 22.5 hole
         for (dx = [-1, 1], dy = [-1, 1])
-            translate([dx * nema_hole / 2, ys + dy * nema_hole / 2, z_mp0 - 1]) linear_extrude(mp_t + 2) rotate(45) square(6.5, center = true);
+            translate([dx * nema_hole / 2, ys + dy * nema_hole / 2, z_mp0 - 1]) linear_extrude(mp_t + 2) rotate(45) square(mp_pocket, center = true);
         for (sx = [-1, 1]) {
             // front: M3 holes for the plate's two front screws (nuts from the tower's open front, above the fan plate)
             translate([sx * mp_front[0], ys + mp_front[1], z_mp0 - 1]) cylinder(d = 3.4, h = mp_t + 2, $fn = 24);
@@ -303,7 +306,8 @@ module motor_frame() {
 }
 
 // Modelled with the motor axis at the origin, the plate's underside at z = 0 (installed: on top of the frame).
-// The motor screws to it from below (4 x M3 x 6: the motor's holes are 2.5 deep; heads in the frame's small diamonds); it covers the top of the
+// The motor screws to it from below (4 x M3 x 8 through bosses under the plate: the motor's holes are 2.5 deep; the
+// bosses and heads go down through the frame's small diamonds); it covers the top of the
 // tower from its open back to just past the front screws. Front: two M3 x 10 + nuts through the frame. Back: two tabs down through the frame, against the
 // inner faces of the tower walls, each held by an M3 x 10 through the wall with a nut inside.
 module motor_plate() {
@@ -312,13 +316,15 @@ module motor_plate() {
     difference() {
         union() {
             translate([-mplate / 2, y0, 0]) cube([mplate, y1 - y0, mplate_t]);
+            for (dx = [-1, 1], dy = [-1, 1])   // motor screw bosses (they print upward: the plate prints top face down)
+                translate([dx * nema_hole / 2, dy * nema_hole / 2, -mp_boss[1]]) cylinder(d = mp_boss[0], h = mp_boss[1] + eps, $fn = 32);
             for (sx = [-1, 1])
                 translate([sx > 0 ? x_br - tower_t - mp_tab[0] - 0.2 : -(x_br - tower_t - 0.2), y0, -(mp_t + mp_tab[2])])
                     cube([mp_tab[0], mp_tab[1], mp_t + mp_tab[2] + eps]);
         }
         translate([0, 0, -1]) cylinder(d = nema_boss + 0.5, h = mplate_t + 2);
         for (dx = [-1, 1], dy = [-1, 1])
-            translate([dx * nema_hole / 2, dy * nema_hole / 2, -1]) cylinder(d = 3.4, h = mplate_t + 2, $fn = 24);
+            translate([dx * nema_hole / 2, dy * nema_hole / 2, -mp_boss[1] - 1]) cylinder(d = 3.4, h = mplate_t + mp_boss[1] + 2, $fn = 24);
         for (sx = [-1, 1]) {
             translate([sx * mp_front[0], mp_front[1], -1]) cylinder(d = 3.4, h = mplate_t + 2, $fn = 24);
             // tab screw, across the tab (along x), level with the wall hole
