@@ -726,12 +726,11 @@ module assembly() {
 
 module assembly_nofan() {
     color([0.85, 0.85, 0.88]) body();
-    for (z = zc) color([0.95, 0.6, 0.25]) disc_installed(z, angle);
     /*
     color([0.6, 0.6, 0.62]) translate([0, ys, z_cap1 - 4.6]) cylinder(d = shaft_d, h = 200);   // 200 mm rod, 4.6 mm into the cap
     */
     color([0.3, 0.5, 0.9]) translate([0, ys, z_cap1]) rotate([180, 0, 0]) magnet_cap();
-    color([0.55, 0.75, 0.95]) translate([0, ys, z_mp1]) motor_plate();
+    color([0.55, 0.75, 0.95, 0.5]) translate([0, ys, z_mp1]) motor_plate();
     /*
     color([0.15, 0.15, 0.17]) translate([-nema / 2, ys - nema / 2, z_mp1 + mplate_t]) cube([nema, nema, 20]);
     color([0.75, 0.75, 0.3]) translate([0, ys, z_mp0 - 25]) cylinder(d = 19, h = 25);
@@ -740,6 +739,9 @@ module assembly_nofan() {
         difference() { cube([fan, fan_t, fan]); translate([fan / 2, -1, fan / 2]) rotate([-90, 0, 0]) cylinder(d = 76, h = fan_t + 2); }
     %translate([-50, -50, -pitch / 2 - 90]) cube([100, 50, pitch + 180]);   // foam insert (ghost)
     */
+    color([0.5, 0.6, 0.5, 0.5]) ebox();
+    for (z = zc) color([0.95, 0.6, 0.25, 0.5]) disc_installed(z, angle);
+    
 }
 
 
