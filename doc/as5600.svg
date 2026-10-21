@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1000" viewBox="0 0 900 1000" font-family="Segoe UI, Helvetica, Arial, sans-serif">
-<rect width="900" height="1000" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1100" viewBox="0 0 900 1100" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="900" height="1100" fill="#ffffff"/>
 <rect x="170" y="175" width="466.0" height="456.0" rx="24.0" fill="#f2f2ee" stroke="#222" stroke-width="2"/>
 <circle cx="236.0" cy="241.0" r="36.0" fill="#ffffff" stroke="#222" stroke-width="2"/>
 <line x1="228.0" y1="241.0" x2="244.0" y2="241.0" stroke="#888" stroke-width="1"/>
@@ -101,22 +101,47 @@
 <line x1="254.0" y1="583.0" x2="300.0" y2="637.0" stroke="#b3261e" stroke-width="1.2"/>
 <text x="302.0" y="653.0" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">&#216; 3.6 (M3)</text>
 <text x="508.0" y="464.4" font-size="13" text-anchor="end" fill="#b3261e" font-weight="normal">pitch 2.54</text>
-<rect x="170" y="843.4" width="466.0" height="32.0" fill="#f2f2ee" stroke="#222" stroke-width="2"/>
-<rect x="364.0" y="811.0" width="78.0" height="32.400000000000006" fill="#2b2b2b"/>
-<line x1="642.0" y1="843.4" x2="682.0" y2="843.4" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
-<line x1="642.0" y1="875.4" x2="682.0" y2="875.4" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
-<line x1="676.0" y1="843.4" x2="676.0" y2="875.4" stroke="#b3261e" stroke-width="1.5"/>
-<polygon points="676.0,843.4 680.0,853.4 672.0,853.4" fill="#b3261e"/>
-<polygon points="676.0,875.4 672.0,865.4 680.0,865.4" fill="#b3261e"/>
-<text x="684.0" y="864.4" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">1.6</text>
-<line x1="642.0" y1="811.0" x2="752.0" y2="811.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
-<line x1="642.0" y1="875.4" x2="752.0" y2="875.4" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
-<line x1="746.0" y1="811.0" x2="746.0" y2="875.4" stroke="#b3261e" stroke-width="1.5"/>
-<polygon points="746.0,811.0 750.0,821.0 742.0,821.0" fill="#b3261e"/>
-<polygon points="746.0,875.4 742.0,865.4 750.0,865.4" fill="#b3261e"/>
-<text x="754.0" y="848.2" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">3.22 over the chip</text>
-<line x1="442.0" y1="811.0" x2="752.0" y2="811.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
-<text x="170.0" y="797.0" font-size="15" text-anchor="start" fill="#111" font-weight="bold">Side view</text>
+<rect x="170" y="933.4" width="466.0" height="32.0" fill="#f2f2ee" stroke="#222" stroke-width="2"/>
+<rect x="364.0" y="901.0" width="78.0" height="32.400000000000006" fill="#2b2b2b"/>
+<line x1="642.0" y1="933.4" x2="682.0" y2="933.4" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="642.0" y1="965.4" x2="682.0" y2="965.4" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="676.0" y1="933.4" x2="676.0" y2="965.4" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="676.0,933.4 680.0,943.4 672.0,943.4" fill="#b3261e"/>
+<polygon points="676.0,965.4 672.0,955.4 680.0,955.4" fill="#b3261e"/>
+<text x="684.0" y="954.4" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">1.6</text>
+<line x1="642.0" y1="901.0" x2="752.0" y2="901.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="642.0" y1="965.4" x2="752.0" y2="965.4" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="746.0" y1="901.0" x2="746.0" y2="965.4" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="746.0,901.0 750.0,911.0 742.0,911.0" fill="#b3261e"/>
+<polygon points="746.0,965.4 742.0,955.4 750.0,955.4" fill="#b3261e"/>
+<text x="754.0" y="938.2" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">3.22 over the chip</text>
+<line x1="442.0" y1="901.0" x2="752.0" y2="901.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<text x="170.0" y="791.0" font-size="15" text-anchor="start" fill="#111" font-weight="bold">Side view, with the magnet over the chip</text>
+<rect x="363.5" y="841.0" width="39.5" height="40.0" fill="#d64541" stroke="#222" stroke-width="1.5"/>
+<rect x="403.0" y="841.0" width="39.5" height="40.0" fill="#3b6fb6" stroke="#222" stroke-width="1.5"/>
+<text x="383.2" y="867.0" font-size="15" text-anchor="middle" fill="#ffffff" font-weight="bold">N</text>
+<text x="422.8" y="867.0" font-size="15" text-anchor="middle" fill="#ffffff" font-weight="bold">S</text>
+<line x1="363.5" y1="837.0" x2="363.5" y2="813.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="442.5" y1="837.0" x2="442.5" y2="813.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="323.5" y1="819.0" x2="363.5" y2="819.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="363.5,819.0 353.5,823.0 353.5,815.0" fill="#b3261e"/>
+<line x1="442.5" y1="819.0" x2="482.5" y2="819.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="442.5,819.0 452.5,815.0 452.5,823.0" fill="#b3261e"/>
+<text x="488.5" y="824.0" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">&#216; 3.95 magnet, diametric (N and S across the diameter)</text>
+<line x1="359.5" y1="841.0" x2="327.5" y2="841.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="359.5" y1="881.0" x2="327.5" y2="881.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="333.5" y1="841.0" x2="333.5" y2="881.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="333.5,841.0 337.5,851.0 329.5,851.0" fill="#b3261e"/>
+<polygon points="333.5,881.0 329.5,871.0 337.5,871.0" fill="#b3261e"/>
+<text x="325.5" y="866.0" font-size="15" text-anchor="end" fill="#b3261e" font-weight="normal">2 thick</text>
+<line x1="359.5" y1="881.0" x2="327.5" y2="881.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="359.5" y1="901.0" x2="327.5" y2="901.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="333.5" y1="881.0" x2="333.5" y2="901.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="333.5,881.0 337.5,891.0 329.5,891.0" fill="#b3261e"/>
+<polygon points="333.5,901.0 329.5,891.0 337.5,891.0" fill="#b3261e"/>
+<text x="325.5" y="896.0" font-size="15" text-anchor="end" fill="#b3261e" font-weight="normal">1 gap (shim)</text>
+<line x1="359.5" y1="901.0" x2="364.0" y2="901.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
 <text x="40.0" y="40.0" font-size="22" text-anchor="start" fill="#111" font-weight="bold">AS5600 kit board: top view, chip side (mm)</text>
-<text x="40.0" y="970.0" font-size="14" text-anchor="start" fill="#333" font-weight="normal">Measured on the kit board sold with the 3.95 &#215; 2 mm diametric magnet. Holes form a 16.7 &#215; 16.2 rectangle, not a square.</text>
+<text x="40.0" y="1046.0" font-size="14" text-anchor="start" fill="#333" font-weight="normal">Measured on the kit board sold with the 3.95 &#215; 2 mm diametric magnet. Holes form a 16.7 &#215; 16.2 rectangle, not a square.</text>
+<text x="40.0" y="1070.0" font-size="14" text-anchor="start" fill="#333" font-weight="normal">The magnet's poles must lie across the shaft (diametric): an ordinary axial magnet, poles on its flat faces, would not work lying flat.</text>
 </svg>

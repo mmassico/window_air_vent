@@ -18,10 +18,11 @@ OUT_Y = BH / 2              # the 3-pin row's middle pin (OUT): centred, like th
 LEFT = ["VCC", "OUT", "GND"]
 RIGHT = ["DIR", "SCL", "SDA", "GPO"]
 T_BOARD, T_CHIP = 1.6, 3.22  # board thickness, board + chip
+MAG_D, MAG_H, MAG_GAP = 3.95, 2.0, 1.0   # the kit's diametric magnet (measured), and its gap over the chip (1 mm shim)
 
 K = 20                       # px per mm
 OX, OY = 170, 175            # board origin on the canvas
-W, H = 900, 1000
+W, H = 900, 1100
 C_DIM = "#b3261e"
 C_BLUE = "#1f5fbf"
 
@@ -137,7 +138,7 @@ px1, py1 = px(BW - ROW_E, right_y[2])
 text(px1 - 1.2 * K, py1 + 0.9 * K + 18, f"pitch {PITCH}", 13, "end", color=C_DIM)
 
 # --- side view ------------------------------------------------------------------------------
-sy = OY + BH * K + 180
+sy = OY + BH * K + 270
 sx = OX
 out.append(f'<rect x="{sx}" y="{sy + (T_CHIP - T_BOARD) * K}" width="{BW * K}" height="{T_BOARD * K}" fill="#f2f2ee" stroke="#222" stroke-width="2"/>')
 cx0 = sx + (BW / 2 - cw / 2) * K
@@ -151,11 +152,36 @@ for (ya, yb, lab, xo) in [(sy + (T_CHIP - T_BOARD) * K, sy + T_CHIP * K, f"{T_BO
     arrow(bx + xo, ya, 0, -1, C_DIM); arrow(bx + xo, yb, 0, 1, C_DIM)
     text(bx + xo + 8, (ya + yb) / 2 + 5, lab, 15, "start", color=C_DIM)
 line(cx0 + cw * K, sy, bx + 116, sy, C_DIM, 1, "3,3")
-text(sx, sy - 14, "Side view", 15, "start", weight="bold")
+text(sx, sy - (MAG_GAP + MAG_H) * K - 50, "Side view, with the magnet over the chip", 15, "start", weight="bold")
+
+# the magnet, centred over the chip at its working gap; diametric: N and S side by side, across the diameter
+mx0 = sx + (BW / 2 - MAG_D / 2) * K
+my0 = sy - (MAG_GAP + MAG_H) * K
+mw, mh = MAG_D * K, MAG_H * K
+out.append(f'<rect x="{mx0:.1f}" y="{my0:.1f}" width="{mw / 2:.1f}" height="{mh:.1f}" fill="#d64541" stroke="#222" stroke-width="1.5"/>')
+out.append(f'<rect x="{mx0 + mw / 2:.1f}" y="{my0:.1f}" width="{mw / 2:.1f}" height="{mh:.1f}" fill="#3b6fb6" stroke="#222" stroke-width="1.5"/>')
+text(mx0 + mw / 4, my0 + mh / 2 + 6, "N", 15, color="#ffffff", weight="bold")
+text(mx0 + 3 * mw / 4, my0 + mh / 2 + 6, "S", 15, color="#ffffff", weight="bold")
+# its diameter, above it
+ya = my0 - 22
+line(mx0, my0 - 4, mx0, ya - 6, C_DIM, 1, "3,3"); line(mx0 + mw, my0 - 4, mx0 + mw, ya - 6, C_DIM, 1, "3,3")
+line(mx0 - 40, ya, mx0, ya, C_DIM, 1.5); arrow(mx0, ya, 1, 0, C_DIM)         # arrows from outside: too narrow inside
+line(mx0 + mw, ya, mx0 + mw + 40, ya, C_DIM, 1.5); arrow(mx0 + mw, ya, -1, 0, C_DIM)
+text(mx0 + mw + 46, ya + 5, f"&#216; {MAG_D} magnet, diametric (N and S across the diameter)", 15, "start", color=C_DIM)
+# its thickness and the gap, on the left
+for (y1, y2, lab, xo) in [(my0, my0 + mh, f"{MAG_H:g} thick", 30), (my0 + mh, sy, f"{MAG_GAP:g} gap (shim)", 30)]:
+    xl = mx0 - xo
+    line(mx0 - 4, y1, xl - 6, y1, C_DIM, 1, "3,3"); line(mx0 - 4, y2, xl - 6, y2, C_DIM, 1, "3,3")
+    line(xl, y1, xl, y2, C_DIM, 1.5)
+    arrow(xl, y1, 0, -1, C_DIM); arrow(xl, y2, 0, 1, C_DIM)
+    text(xl - 8, (y1 + y2) / 2 + 5, lab, 15, "end", color=C_DIM)
+line(mx0 - 4, sy, cx0, sy, C_DIM, 1, "3,3")
 
 text(40, 40, "AS5600 kit board: top view, chip side (mm)", 22, "start", weight="bold")
-text(40, H - 30, "Measured on the kit board sold with the 3.95 &#215; 2 mm diametric magnet. "
+text(40, H - 54, "Measured on the kit board sold with the 3.95 &#215; 2 mm diametric magnet. "
      "Holes form a 16.7 &#215; 16.2 rectangle, not a square.", 14, "start", color="#333")
+text(40, H - 30, "The magnet's poles must lie across the shaft (diametric): an ordinary axial magnet, poles on its flat faces, "
+     "would not work lying flat.", 14, "start", color="#333")
 
 svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
        f'font-family="Segoe UI, Helvetica, Arial, sans-serif">\n<rect width="{W}" height="{H}" fill="#ffffff"/>\n'

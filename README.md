@@ -188,7 +188,7 @@ The StepperOnline 17HS08-1004S, from its sheet and checked with a caliper. Its M
 The kit board, measured. Its four mounting holes form a 16.7 × 16.2 mm rectangle (not a square); the diagonal slots in the encoder plate take it as well as the smaller 20 × 20 boards. Mount it chip up, under the magnet, and solder the wires straight into its holes: they run inward under the board, in the 2 mm the standoff pads leave, and down through the diamond window under the chip.
 
 <p align="center">
-  <img src="doc/as5600.svg" alt="AS5600 kit board, dimensioned: 23.3 x 22.8 mm, four 3.6 mm holes 3.3 mm from the edges, a 3-pin row (VCC, OUT, GND) and a 4-pin row (DIR, SCL, SDA, GPO) 5.2 mm from the sides, chip in the middle; 1.6 mm board, 3.22 mm over the chip" width="520">
+  <img src="doc/as5600.svg" alt="AS5600 kit board, dimensioned: 23.3 x 22.8 mm, four 3.6 mm holes 3.3 mm from the edges, a 3-pin row (VCC, OUT, GND) and a 4-pin row (DIR, SCL, SDA, GPO) 5.2 mm from the sides, chip in the middle; 1.6 mm board, 3.22 mm over the chip; the 3.95 x 2 mm diametric magnet 1 mm over the chip" width="520">
 </p>
 
 ### The ESP32-S3 board
