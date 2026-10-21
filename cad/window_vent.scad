@@ -117,7 +117,10 @@ ebox_h    = 34;     // inside height under the encoder plate (soldered, the TMC2
                     // headers, 32.5)
 ebox_t    = 2.4;    // walls and floor
 pb_size   = [70, 50];  // perfboard carrier (5 x 7 cm protoboard)
-pb_holes  = [66, 46];  // its corner hole spacing (M2)
+pb_holes  = [66, 46.26]; // its corner hole spacing (measured: Ø 2.3 holes, for M2, about 2 mm from the edges)
+pb_t      = 1.51;   // its thickness (measured)
+pb_grid   = [24, 18]; // its pin holes, 2.54 apart and centred: 24 columns along x (labelled A to X), 18 rows along y
+                    //   (1 to 18). Indices below count from 0: column 0 at the right wall's side, row 0 at the back
 pb_y      = 56;     // perfboard centre (y)
 pb_stand  = 5;      // standoff height
 usb_port  = "diamond"; // [none, mark, diamond] the ESP32's USB-C cable (5 V power and console) through a side wall:
@@ -130,14 +133,17 @@ tmc_mount = "soldered"; // [soldered, headers] TMC2209 likewise
 header_h  = 8.5;    // female header height
 esp_w     = 28.5;   // ESP32 board width; it lies across the back half of the perfboard, USB end toward a side wall
 esp_l     = 50;     // ESP32 PCB length (the module's antenna sticks out 7 more, over the middle 18.5)
-esp_dy    = 0.5;    // ESP32 edge from the perfboard's back edge
-esp_dx    = 7.62;   // its USB end this far in from the side wall (3 perfboard holes): its pins clear the corner
-                    // standoff and screw, and the free holes beyond its end are easy to solder. The plug enters the box
+esp_col   = 22;     // ESP32 soldered on the grid: its USB-end pins in column 22 (0 to 23; the right layout mirrors it
+                    //   into column 1). One free column beyond them, easy to solder; the pins clear the corner
+                    //   standoff by 3.1 and the spacer clears the M2 screw head by 3.6. The plug enters the box
+esp_row   = 0;      // its back pin row in row 0; the front row is 10 holes on (25.4; the board's rows are 25.3 apart)
 esp_pcb   = [1.62, 2.78, 5.54];  // ESP32 PCB thickness, pin spacer, pin length below the spacer (measured)
 tmc_pcb   = [21, 15, 1.62];      // TMC2209 module (along x = along its pin rows, along y, thickness; see doc/tmc2209.svg)
 tmc_spacer = 2.78;  // its pin spacer (assumed as on the ESP32; to measure)
 tmc_pin   = 5.54;   // its pins below the spacer (likewise); 2 rows of 8, 12.7 apart
 tmc_sink  = [15, 14.5, 13];     // its heatsink, on top, fins along the pin rows
+tmc_col   = 4;      // TMC2209 on the grid: its first pin in column 4 (room for the 12 V terminal by the right wall)
+tmc_row   = 12;     // its back pin row in row 12, the front one in row 17: one free row behind the ESP32's front row
 usb_dy    = 6;      // the USB-UART connector's offset from the board's centre line, toward the room (measured: 8.25 from the
                     // board's TX/GND edge, which faces the room; the USB-OTG one is 5.5 off on the other side)
 cable_in  = [16, 10];  // cable entries at the top of both side walls, toward the front (length along y, depth)
@@ -181,11 +187,13 @@ ebox_back_x = ebox_w / 2 - 6;               // back fixing screws, outside the b
 ebox_back_y = y_br + 6;
 ebox_screw_z = z_ep1 + 8;                   // front cover screws: in the bay, above the encoder plate
 // electronics heights, above the box's inner floor
-pb_top    = pb_stand + 1.6;                                                      // perfboard top
+pb_top    = pb_stand + pb_t;                                                     // perfboard top
+function pb_col(i) = (i - (pb_grid[0] - 1) / 2) * 2.54;                          // grid column i -> x
+function pb_row(j) = pb_y + (j - (pb_grid[1] - 1) / 2) * 2.54;                   // grid row j -> y
 esp_z0    = pb_top + (esp_mount == "headers" ? header_h : 0) + esp_pcb[1];        // ESP32 PCB underside
 usb_z     = esp_z0 + esp_pcb[0] + 3.25 / 2;                                     // USB-C socket centre (the diamond's)
 tmc_z0    = pb_top + (tmc_mount == "headers" ? header_h : 0) + tmc_spacer;        // TMC2209 PCB underside
-esp_yc    = pb_y - pb_size[1] / 2 + esp_dy + esp_w / 2;                           // ESP32 centre line (y)
+esp_yc    = pb_row(esp_row) + 5 * 2.54;                                          // ESP32 centre line (y), between its pin rows
 // tie-wrap anchors on the back of the fan plate, right side: the top and bottom ones touch the
 // outer fan nut pockets (hex flat at fan_hole / 2 - 2.9 from the fan centre), the middle one sits between the fans
 anchor_zt = pitch / 2 + fan_hole / 2 - 5.8 / 2 - 4;
@@ -665,10 +673,10 @@ module oring_test() {
 // (PCB, module and antenna, USB-C sockets, pins), its USB-C plug through the left wall, TMC2209 with its heatsink.
 module electronics(usb = esp_usb) {
     fl  = z_ep0 - ebox_h;                                   // inner floor
-    x1  = ebox_w / 2 - ebox_t - 0.5 - esp_dx;               // ESP32 USB end (left layout)
+    x1  = pb_col(esp_col) + (esp_l - 19 * 2.54) / 2;        // ESP32 USB end (left layout), its pins on the grid
     yc  = esp_yc;
     zp  = fl + esp_z0;                                      // ESP32 PCB underside
-    color([0.8, 0.68, 0.4]) translate([-pb_size[0] / 2, pb_y - pb_size[1] / 2, fl + pb_stand + 0.01]) cube([pb_size[0], pb_size[1], 1.6]);   // just clear of the standoffs
+    color([0.8, 0.68, 0.4]) translate([-pb_size[0] / 2, pb_y - pb_size[1] / 2, fl + pb_stand + 0.01]) cube([pb_size[0], pb_size[1], pb_t]);   // just clear of the standoffs
     // the ESP32 and its plug, drawn USB end left; the right layout turns them 180 deg about the board's centre line
     translate([0, yc, 0]) rotate(usb == "right" ? 180 : 0) translate([0, -yc, 0]) {
         color([0.85, 0.27, 0.23]) translate([x1 - esp_l, yc - esp_w / 2, zp]) cube([esp_l, esp_w, esp_pcb[0]]);
@@ -682,8 +690,8 @@ module electronics(usb = esp_usb) {
         if (esp_mount == "headers")
             for (sy = [-1, 1]) color([0.1, 0.1, 0.1]) translate([x1 - esp_l + 0.4, yc + sy * 12.65 - 1.25, fl + pb_top]) cube([esp_l - 0.8, 2.5, header_h]);
     }
-    tx0 = -pb_size[0] / 2 + 12.5;                           // TMC2209, front right (see doc/ebox_layout.svg)
-    ty0 = yc + esp_w / 2 + 1;
+    tx0 = pb_col(tmc_col) - (tmc_pcb[0] - 7 * 2.54) / 2;    // TMC2209, front right, its pins on the grid (see doc/ebox_layout.svg)
+    ty0 = pb_row(tmc_row) - (tmc_pcb[1] / 2 - 6.35);
     color([0.1, 0.1, 0.1]) translate([tx0, ty0, fl + tmc_z0]) cube(tmc_pcb);
     color([0.2, 0.35, 0.8]) translate([tx0 + (tmc_pcb[0] - tmc_sink[0]) / 2, ty0 + (tmc_pcb[1] - tmc_sink[1]) / 2, fl + tmc_z0 + tmc_pcb[2]]) cube(tmc_sink);
     for (sy = [-1, 1]) {                                    // its pin rows: spacer, pins (into the headers or the perfboard), headers

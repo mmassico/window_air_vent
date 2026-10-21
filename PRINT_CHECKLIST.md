@@ -20,8 +20,8 @@ PETG holes usually come out 0.1–0.2 mm smaller than drawn, and holes printed *
 | Hole spacing | 71.5 square | 71.5 (standard 80 mm fan, Noctua spec); about 71.8 measured edge to edge, within caliper error | ✅ |
 | Screw holes in the fan plate | Ø 3.4 | M3 clearance; the fan's own holes are Ø 4.3 (measured) | ✅ |
 | Fan plate thickness | 6 | | |
-| Nut pockets (back of the fan plate) | hex 5.8 across flats, 2.6 deep | M3 nut: 5.5 AF, 2.4 thick | ✅ |
-| Screws | | M3 × 35: 27 (fan with its rubber pads, measured) + 6 (plate), nut in the last 2.6 mm; the tip ends 2 mm past the nut | ✅ |
+| Nut pockets (back of the fan plate) | hex 5.8 across flats, 2.6 deep | M3 nut: 5.5 AF nominal, 2.4 thick (measured: 5.31, the low end of the 5.32-5.5 range) | ✅ it can't spin in the pocket, but may drop out: hold it with a finger until the screw catches |
+| Screws | | M3 × 35: 26.25 through the fan with its rubber pads (measured: 8.75 sticks out of the fan), then the 6 mm plate; the nut sits in its pocket, so the tip ends about 2.75 past the plate's back face. No washer: the pocket holds the nut | ✅ |
 | Bore | Ø 74 | NF-A8 blade circle about 76 | ✅ |
 
 ## Shaft: 5 mm steel rod, 200 mm (HSS)
@@ -115,9 +115,9 @@ Two common boards are supported. The chip is centred on both. Board B is the one
 | Item | Model | Hardware | Status |
 |---|---|---|---|
 | Inside | 75.2 × 71.6, 34 high under the encoder plate | perfboard 70 × 50; TMC2209 with its heatsink, soldered: 24.0 above the floor; in female headers: 32.5 ([drawing](doc/tmc2209.svg); spacer and PCB heights assumed, to measure) | ✅ 10 under the plate (1.5 in headers) |
-| Perfboard standoffs | 4, 5 high, 66 × 46 apart, Ø 1.8 pilot | 5 × 7 cm protoboard, M2 holes about 2 from the corners | 📏 check your perfboard's hole spacing; set `pb_holes` |
-| Layout | ESP32 across the back half, USB end 7.6 mm (3 holes) in from the left wall (`esp_dx`), or turned 180° toward the right wall (`ebox_elec_alt`); TMC2209 front right, by the cable entry ([drawing](doc/ebox_layout.svg)) | | ✅ |
-| USB-C (power and console) | 18 mm diamond in each side wall (`usb_side`, `usb_port`; `"mark"` engraves a cross to drill a 12 mm hole instead), centre 18.2 above the inner floor | plug 11 × 6.25, 20 long, through the wall and 7.6 into the box; 5 V USB-C adapter | ✅ centred on the USB-UART connector (`usb_dy = 6`, measured: 8.25 from the board's TX/GND edge); the ESP32 lies components up, its 3V3/5V header row toward the window (toward the room when turned; the right-hand diamond is mirrored to match, 6 toward the window); both layouts checked clear of the standoffs |
+| Perfboard standoffs | 4, 5 high, 66 × 46.26 apart (`pb_holes`), Ø 1.8 pilot | 5 × 7 cm protoboard, 1.51 thick, Ø 2.3 holes (measured: 63.70 and 43.96 between their facing edges) | ✅ M2 × 6 (laptop screws) |
+| Layout | Boards soldered on the perfboard's grid (24 × 18 holes at 2.54, centred; `pb_grid`). ESP32 across the back half: back pins in row 0, USB-end pins in column 22 (`esp_col`, `esp_row`; one free column beyond, 9.6 mm from the left wall), or turned 180° toward the right wall (`ebox_elec_alt`); TMC2209 pins from column 4, rows 12 and 17 (`tmc_col`, `tmc_row`); TMC2209 front right, by the cable entry ([drawing](doc/ebox_layout.svg)) | | ✅ |
+| USB-C (power and console) | 18 mm diamond in each side wall (`usb_side`, `usb_port`; `"mark"` engraves a cross to drill a 12 mm hole instead), centre 12.5 above the inner floor (ESP32 soldered) | plug 11 × 6.25, 20 long, through the wall and about 10 into the box; 5 V USB-C adapter | ✅ centred on the USB-UART connector (`usb_dy = 6`, measured: 8.25 from the board's TX/GND edge); the ESP32 lies components up, its 3V3/5V header row toward the window (toward the room when turned; the right-hand diamond is mirrored to match, 6 toward the window); both layouts checked clear of the standoffs |
 | Power | no buck converter: 12 V brick for VM, fans and the 12 V sense; the ESP32 on USB | the brick's GND joined to the ESP32's GND on the perfboard | 📏 the board's 3.3 V regulator is a SOT-223 (usually an AMS1117-3.3, about 1 A); confirm its marking (about 600 mA peaks: Wi-Fi plus the SCD40) |
 | Cable entries | notch at the top of each side wall, toward the front, 16 × 10 | 12 V brick wire, two fan cables, motor cable | ✅ use the one on the cable side |
 | Fixing | 2 × M3 × 12 through the front cover into bosses (Ø 2.5 pilot) at the bay walls; 2 × M3 × 12 from above through the plate into back tabs | | ✅ |

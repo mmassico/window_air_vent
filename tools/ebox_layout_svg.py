@@ -15,7 +15,8 @@ BOX_W, T = 80.0, 2.4
 Y0, Y1 = 15.0, 91.4
 PB = (70.0, 50.0)            # perfboard
 PB_Y = 56.0                  # its centre (y)
-PB_HOLES = (66.0, 46.0)
+PB_HOLES = (66.0, 46.26)     # measured: Ø 2.3 holes, 63.70 and 43.96 between their facing edges
+GRID = (24, 18)              # pin holes along x (A to X) and y (1 to 18), 2.54 apart, centred
 PILLAR = (34.0, 21.0)        # back fixing pillars: x = +/- 34, y = 21 (8 x 8 around)
 CABLE_IN = (72.5, 88.5)      # cable entries at the top of both side walls (y range)
 ESP = (57.0, 28.5)           # Freenove ESP32-S3 Lite: overall length (with the antenna), width
@@ -64,9 +65,11 @@ for sx in (-1, 1):                                                       # back 
 # --- perfboard ----------------------------------------------------------------------------------
 py0, py1 = PB_Y - PB[1] / 2, PB_Y + PB[1] / 2
 rect(-PB[0] / 2, py0, PB[0] / 2, py1, "#e8d6a8", "#8a6d2a", 1.5)
-nx, ny = int(PB[0] / PITCH), int(PB[1] / PITCH)
+nx, ny = GRID
 gx0 = -(nx - 1) * PITCH / 2
 gy0 = PB_Y - (ny - 1) * PITCH / 2
+col = lambda i: gx0 + i * PITCH        # grid column i (0 at the right wall's side) -> x
+row = lambda j: gy0 + j * PITCH        # grid row j (0 at the back) -> y
 for i in range(nx):
     for j in range(ny):
         cx, cy = P(gx0 + i * PITCH, gy0 + j * PITCH)
@@ -77,9 +80,9 @@ for dx in (-1, 1):
         out.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{1.0 * K}" fill="#ffffff" stroke="#222" stroke-width="1.5"/>')
 
 # --- ESP32-S3: across the back half, USB end toward the left wall (+x) -------------------------
-ex1 = xo - T - 0.5 - 7.62              # USB end, esp_dx = 3 holes in from the wall: the pins clear the corner standoff
+ex1 = col(22) + (ESP_PCB - 19 * PITCH) / 2   # USB end: its end pins in column 22 (esp_col), one free column beyond
 ex0 = ex1 - ESP[0]
-ey0 = py0 + 0.5                        # esp_dy
+ey0 = row(0) + 5 * PITCH - ESP[1] / 2  # back pins in row 0 (esp_row), front pins 10 rows on
 ey1 = ey0 + ESP[1]
 ax0 = ex1 - ESP_PCB                    # antenna end of the PCB
 rect(ax0, ey0, ex1, ey1, "#3b6fb6", "#183a6b", 2, rx=4, op=0.85)
@@ -87,7 +90,7 @@ am = (ESP[1] - 18.5) / 2               # antenna tab, 7 x 18.5, beyond the PCB
 rect(ex0, ey0 + am, ax0, ey1 - am, "#2a2a2a", "#111", 1.5, rx=1, op=0.9)
 rect(ex0 - 4, ey0 + am - 3, ax0 + 6, ey1 - am + 3, "none", "#b3261e", 1.5)   # keep-out
 text(ex0 - 4, py0 - 1.5, "antenna: no wires or copper nearby", 11, "end", "#b3261e")
-for e in (ey0 + 1.6, ey1 - 1.6):       # its two header rows (20 pins each, 25.3 apart, centred on the PCB)
+for e in (row(0), row(10)):            # its two pin rows (20 pins each; 25.3 apart on the board, 10 holes here)
     for i in range(20):
         cx, cy = P(ex1 - (ESP_PCB - 19 * PITCH) / 2 - i * PITCH, e)
         out.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="2.4" fill="#f4d35e"/>')
@@ -98,7 +101,7 @@ ctext(cx, cy + 16, "PCB 50 x 28.5 (+ 7 mm antenna)", 13, "#ffffff")
 for dy, lab in ((-5.5, "OTG"), (6.0, "UART")):
     rect(ex1 - 7.5, (ey0 + ey1) / 2 + dy - 4.5, ex1, (ey0 + ey1) / 2 + dy + 4.5, "#c0c0c0", "#555", 1.2, rx=2)
     text(ex1 - 3.75, (ey0 + ey1) / 2 + dy + 1.3, lab, 10)
-# USB-C plug through the left wall, into USB-UART (it reaches 7.6 mm into the box)
+# USB-C plug through the left wall, into USB-UART (it reaches about 10 mm into the box)
 uy = (ey0 + ey1) / 2 + 6.0
 rect(ex1 - 1, uy - 5.5, xo + PLUG, uy + 5.5, "#6b6b6b", "#333", 1.5, rx=3)
 text(xo + PLUG / 2, uy + 10, "USB-C plug", 13)
@@ -114,14 +117,15 @@ for i, t in enumerate(("18 mm diamond for the", "alternative layout: ESP32", "tu
     text(-xo - 2, uy_alt - 1.5 + i * 2.2, t, 12, "start", "#b3261e")
 
 # --- TMC2209: front right, near the cable entry --------------------------------------------------
-tx0, tx1 = -PB[0] / 2 + 12.5, -PB[0] / 2 + 12.5 + TMC[0]   # 12 V terminal and capacitor to its right
-ty0 = ey1 + 1
+tx0 = col(4) - (TMC[0] - 7 * PITCH) / 2   # first pin in column 4 (tmc_col); 12 V terminal and capacitor to its right
+tx1 = tx0 + TMC[0]
+ty0 = row(12) - 1.15                   # pin rows 12 and 17 (tmc_row), one free row behind the ESP32's front row
 ty1 = ty0 + TMC[1]
 rect(tx0, ty0, tx1, ty1, "#222222", "#000", 2, rx=2)
 rect((tx0 + tx1) / 2 - 7.5, (ty0 + ty1) / 2 - 7.25, (tx0 + tx1) / 2 + 7.5, (ty0 + ty1) / 2 + 7.25, "#2f5fd0", "#1b3a8a", 1, op=0.6)
-for e in (ty0 + 1.3, ty1 - 1.3):
+for e in (row(12), row(17)):
     for i in range(8):
-        cx, cy = P(tx1 - 1.6 - i * PITCH, e)
+        cx, cy = P(col(4 + i), e)
         out.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="2.4" fill="#f4d35e"/>')
 cx, cy = P((tx0 + tx1) / 2, (ty0 + ty1) / 2)
 ctext(cx, cy + 5, "TMC2209", 14, "#ffffff", "bold")
@@ -137,8 +141,8 @@ block(-PB[0] / 2 + 1, ty0 + 8.4, 10.2, 6, "100uF", "#8a6d9e")                # T
 block(tx1 + 3, ty0 + 0.5, 10.2, 2.6, "FAN 0", "#c25e00")
 block(tx1 + 3, ty0 + 5, 10.2, 2.6, "FAN 1", "#c25e00")
 block(tx1 + 3, ty0 + 9.5, 10.2, 2.6, "MOTOR", "#6a3fb5")
-block(tx1 + 16, ty0 + 0.5, 10.2, 2.6, "SCD40", "#1b7f3b")
-block(tx1 + 16, ty0 + 5, 20, 7, "resistors", "#9e8a6a")
+block(tx1 + 14.5, ty0 + 0.5, 10.2, 2.6, "SCD40", "#1b7f3b")
+block(tx1 + 14.5, ty0 + 5, 20, 7, "resistors", "#9e8a6a")
 
 # --- perfboard size: this one (70 x 50) and the largest that fits ----------------------------------
 C_DIM, C_MAX = "#b3261e", "#1f7a3a"
@@ -204,9 +208,10 @@ ctext(cx, cy + 6.75 * K + 16, "AS5600 wires come down here", 12, "#1f5fbf")
 
 text(0, Y0 - 9, "Electronics box, top view, to scale (mm)", 22, "middle", "#111", "bold")
 notes = [
-    "Inside: 75.2 x 71.6 mm, 34 mm high under the encoder plate. Perfboard 70 x 50 on 5 mm standoffs, holes 66 x 46 (grid 2.54 mm).",
+    "Inside: 75.2 x 71.6 mm, 34 mm high under the encoder plate. Perfboard 70 x 50 x 1.51 on 5 mm standoffs, holes 66 x 46.26, 24 x 18 grid at 2.54.",
     "Any board from 70 x 50 up to 74 x 63 (dashed green) fits: set pb_size, pb_holes and pb_y (its centre) in the model to match it.",
-    "The ESP32's USB end sits 3 holes (7.6 mm) in from the left wall, clear of the corner standoff; its USB-C cable (5 V adapter) passes",
+    "Both boards are soldered on the grid. The ESP32's USB-end pins sit one column in from the board's edge (9.6 mm from the left wall),",
+    "clear of the corner standoff (3.1) and its screw head (3.6); its USB-C cable (5 V adapter) passes",
     "through the diamond opening. Or turn the ESP32 180 deg in the same place, USB end to the right: the right-hand diamond (ebox_elec_alt).",
     "12 V from an external power brick comes in through the right-hand cable entry, with the fan and motor cables.",
     "Join the 12 V brick's GND and the ESP32's GND on the perfboard. The ESP32 lies components up, its 3V3/5V header row toward the window.",
