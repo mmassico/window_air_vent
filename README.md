@@ -183,7 +183,7 @@ The StepperOnline 17HS08-1004S, from its sheet and checked with a caliper. Its M
   <img src="doc/motor_mount.svg" alt="Section through a motor screw: motor end cap with a 2.5 mm deep M3 hole, 4 mm motor plate, 2 mm boss in the frame's 8 mm diamond pocket, 3 mm frame; an M3 x 8 button head reaches 2 mm into the motor, 0.5 mm short of the bottom, its head 0.65 mm below the frame" width="520">
 </p>
 
-### The AS5600 board
+### The AS5600 board, a magnetic rotary position sensor
 
 The kit board, measured. Its four mounting holes form a 16.7 × 16.2 mm rectangle (not a square); the diagonal slots in the encoder plate take it as well as the smaller 20 × 20 boards. Mount it chip up, under the magnet, and solder the wires straight into its holes: they run inward under the board, in the 2 mm the standoff pads leave, and down through the diamond window under the chip.
 
@@ -191,7 +191,7 @@ The kit board, measured. Its four mounting holes form a 16.7 × 16.2 mm rectangl
   <img src="doc/as5600.svg" alt="AS5600 kit board, dimensioned: 23.3 x 22.8 mm, four 3.6 mm holes 3.3 mm from the edges, a 3-pin row (VCC, OUT, GND) and a 4-pin row (DIR, SCL, SDA, GPO) 5.2 mm from the sides, chip in the middle; 1.6 mm board, 3.22 mm over the chip; the 3.95 x 2 mm diametric magnet 1 mm over the chip" width="520">
 </p>
 
-### The ESP32-S3 board
+### The ESP32-S3 board, the Wi-Fi microcontroller
 
 The Freenove ESP32-S3-WROOM Lite, measured. Its two pin rows are 25.3 mm apart, so they land 10 holes apart on the perfboard. It has two USB-C connectors at one end: plug the cable into the USB-UART one (power and console). The module's antenna sticks out 7 mm beyond the other end.
 
@@ -199,7 +199,7 @@ The Freenove ESP32-S3-WROOM Lite, measured. Its two pin rows are 25.3 mm apart, 
   <img src="doc/esp32_s3.svg" alt="Freenove ESP32-S3-WROOM Lite, dimensioned: PCB 50 x 28.5 mm, antenna 7 mm beyond it over the middle 18.5 mm, two rows of 20 pins 25.3 mm apart, USB-OTG and USB-UART connectors 9 mm wide at the USB end; side view: 1.62 mm PCB on a 2.78 mm pin spacer, 5.54 mm pins, 4.85 mm to the top of the tallest part" width="640">
 </p>
 
-### The TMC2209 module
+### The TMC2209 module, a silent stepper motor driver
 
 A StepStick-format driver: 21 × 15 mm, two rows of 8 pins 12.7 mm apart (5 holes on the perfboard). The chip is on the underside; its heatsink (15 × 14.5 × 13 mm, fins along the pin rows) sticks onto the thermal pad on top. The side-view heights are assumed equal to the ESP32's until measured on the part.
 
