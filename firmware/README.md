@@ -34,7 +34,7 @@ arduino-cli compile --fqbn "esp32:esp32:esp32s3:FlashSize=16M,PSRAM=opi,Partitio
 
 Every pin is defined in [`baremetal/Pins.h`](baremetal/Pins.h). "3V3" and "GND" are the ESP32 board's pins. Every ground is common.
 
-<img src="images/wiring.svg" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209 and stepper on the right, 12 V brick and 5 V USB-C adapter on top" width="100%">
+<img src="images/wiring.svg" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209, stepper and two DS18B20 temperature sensors on the right, 12 V brick and 5 V USB-C adapter on top" width="100%">
 
 The table below gives the same connections, pin by pin.
 
@@ -58,8 +58,13 @@ The table below gives the same connections, pin by pin.
 | **Fan 1, exhaust** | PWM | GPIO 5 | 10 kΩ to GND |
 | | Tach | GPIO 16 | 10 kΩ to 3V3 |
 | **12 V sense** | | GPIO 1 | 100 kΩ from 12 V to GPIO 1, 22 kΩ from GPIO 1 to GND |
+| **DS18B20, outdoor** (waterproof probe through the foam insert) | VDD, GND | 3V3, GND | Three wires, no parasite power |
+| | DQ | GPIO 14 | 4.7 kΩ to 3V3 |
+| **DS18B20, indoor** (optional: the SCD40 also reads the room's temperature) | VDD, GND | 3V3, GND | |
+| | DQ | GPIO 21 | 4.7 kΩ to 3V3 |
 
 - **On the board itself:** the blue LED (GPIO 2) blinks as a heartbeat, and the RGB LED is on GPIO 48 (`led` command).
+- **Temperature sensors:** wired and defined in `Pins.h`, but not read by the sketch yet. The outdoor probe goes near the intake, away from the exhaust outlet and out of the sun.
 - **Kept free for later:** GPIO 38, 39, 40, for the INMP441 microphone (I²S).
 - **Power:** two adapters. A 12 V brick feeds VM, the fans and the 12 V sense; a 5 V USB-C adapter powers the ESP32 through its USB-UART connector (the board makes the 3V3 for the sensors and the TMC2209 logic). Join the brick's GND and the ESP32's GND on the perfboard. The [layout drawing](../doc/ebox_layout.svg) shows where the parts go in the box.
 - **Driving the fan PWM directly:** the 3.3 V PWM output drives the Noctua PWM input as is (Noctua accepts a 3.3 V signal). If you ever add an inverting transistor, set `FAN_PWM_INVERT` to 1.

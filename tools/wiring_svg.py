@@ -8,13 +8,14 @@ import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "firmware", "images", "wiring.svg")
-W, H = 1640, 1230
+W, H = 1640, 1370
 
 C_I2C = "#1b7f3b"
 C_MOT = "#6a3fb5"
 C_FAN = "#c25e00"
 C_SNS = "#b3261e"
 C_PWR = "#1f5fbf"
+C_TMP = "#0b7a75"
 NET = {"12V": "#b3261e", "3V3": "#d17a00", "5V": "#1f5fbf", "GND": "#333333"}
 
 out = []
@@ -110,7 +111,7 @@ def pull(x, y, net, label, up, color):
 # ---------------------------------------------------------------------------------------------
 # ESP32 board
 # ---------------------------------------------------------------------------------------------
-EX0, EX1, EY0, EY1 = 640, 900, 150, 1060
+EX0, EX1, EY0, EY1 = 640, 900, 150, 1200
 box(EX0, EY0, EX1, EY1, "ESP32-S3", "Freenove WROOM Lite (FNK0099)", "#e8eef7")
 text((EX0 + EX1) / 2, 705, "USB-UART connector", 13, "middle", "bold")
 text((EX0 + EX1) / 2, 723, "to the PC: flashing + console", 12.5, "middle", color="#444")
@@ -253,6 +254,24 @@ text(1250, 890, "NEMA 17 pancake stepper", 14, "middle", "bold")
 text(1250, 908, "coil A: A1-A2, coil B: B1-B2", 12.5, "middle", color="#444")
 text(1250, 926, "never plug or unplug it with 12 V on", 12.5, "middle", color=C_SNS, italic=True)
 
+# Below the motor: the two DS18B20 temperature sensors (1-Wire), one pin each.
+def ds18b20(y0, where, sub, gpio, xpu, optional=False):
+    start = len(out)
+    box(TX0, y0, TX1, y0 + 90, f"DS18B20 ({where})", sub)
+    ydq, yv, yg = y0 + 66, y0 + 54, y0 + 78
+    text(TX0 + 10, ydq + 5, "DQ", 14)
+    line([esp_right(ydq, f"GPIO {gpio}  1-Wire {where}", C_TMP), (TX0, ydq)], C_TMP)
+    pull(xpu, ydq, "3V3", "4.7 k", True, C_TMP)
+    for y, pin, net in ((yv, "VDD", "3V3"), (yg, "GND", "GND")):
+        text(TX1 - 10, y + 5, pin, 14, "end")
+        lead_tag(TX1, y, net, "right", 30)
+    if optional:   # dotted outline for its box
+        out[start] = out[start].replace('stroke-width="2"/>', 'stroke-width="2" stroke-dasharray="3,4"/>')
+
+
+ds18b20(990, "outdoor", "waterproof probe", 14, 1000)
+ds18b20(1100, "indoor", "optional (SCD40 reads it too)", 21, 1060, optional=True)
+
 # ---------------------------------------------------------------------------------------------
 # Top: the two power adapters (12 V brick, 5 V USB-C)
 # ---------------------------------------------------------------------------------------------
@@ -272,10 +291,11 @@ notes = [
     "Coloured tags with the same name are the same net: every GND is common, and 3V3 comes from the board's 3V3 pin.",
     "Two adapters: 12 V for the fans and motor, 5 V over USB-C for the ESP32 (which makes the 3V3). Join their GNDs on the perfboard.",
     "SCD40 and AS5600 modules usually carry their own I2C pull-ups; on a long SCD40 cable, 4.7 k to 3V3 at the ESP32 end helps.",
+    "DS18B20: three wires each (no parasite power), one 4.7 k pull-up per sensor at the ESP32 end. The indoor one (dotted) is optional.",
     "Pins as in firmware/baremetal/Pins.h. GPIO 38, 39, 40 stay free for the INMP441 microphone.",
 ]
 for i, n in enumerate(notes):
-    text(60, 1115 + i * 24, n, 14, color="#333")
+    text(60, 1245 + i * 24, n, 14, color="#333")
 
 text(60, 34, "Window vent: wiring", 24, weight="bold")
 
