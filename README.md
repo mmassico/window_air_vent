@@ -49,21 +49,21 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 
 ## Printed parts
 
-| Part | Qty | Description | Size (mm) | Print orientation | <div style="width:180px">Thumbnail</div> |
-|---|---|---|---|---|:---:|
-| `body` | 1 | Housing: two ducts with the damper lips, drip dams and shaft bosses, O-ring spigots, fan plate, motor frame and encoder plate | 90 × 241 × 114 | Fan plate on the bed, no supports | <img src="images/part_body.png" width="180"> |
-| `disc` | 2 | Butterfly damper disc, clamped to the shaft by two M3 grub screws; the half engraved B has a 45° bevel on its rim | 67 × 67 × 14 | Plate on the bed, hub up | <img src="images/part_disc.png" width="180"> |
-| `motor_plate` | 1 | The motor screws to it on the bench; it then sits on top of the housing: two screws in front of the motor, and two tabs at the back, down through the frame and screwed to the tower walls | 56 × 61 × 15 | Top face on the bed, tabs up | <img src="images/part_motor_plate.png" width="180"> |
-| `magnet_cap` | 1 | Holds the encoder magnet on the bottom end of the shaft; one M3 grub screw, height adjustable ±1 mm | 14 × 14 × 12 | Bore down | <img src="images/part_magnet_cap.png" width="180"> |
-| `ebox` | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay | 80 × 76 × 62 | Floor on the bed | <img src="images/part_ebox.png" width="180"> |
+| Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
+|---|:---:|---|---|---|---|
+| `body` | <img src="images/part_body.png" width="180"> | 1 | Housing: two ducts with the damper lips, drip dams and shaft bosses, O-ring spigots, fan plate, motor frame and encoder plate | 90 × 241 × 114 | Fan plate on the bed, no supports |
+| `disc` | <img src="images/part_disc.png" width="180"> | 2 | Butterfly damper disc, clamped to the shaft by two M3 grub screws; the half engraved B has a 45° bevel on its rim | 67 × 67 × 14 | Plate on the bed, hub up |
+| `motor_plate` | <img src="images/part_motor_plate.png" width="180"> | 1 | The motor screws to it on the bench; it then sits on top of the housing: two screws in front of the motor, and two tabs at the back, down through the frame and screwed to the tower walls | 56 × 61 × 15 | Top face on the bed, tabs up |
+| `magnet_cap` | <img src="images/part_magnet_cap.png" width="180"> | 1 | Holds the encoder magnet on the bottom end of the shaft; one M3 grub screw, height adjustable ±1 mm | 14 × 14 × 12 | Bore down |
+| `ebox` | <img src="images/part_ebox.png" width="180"> | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay | 80 × 76 × 62 | Floor on the bed |
 
 **For a 180 mm printer** (e.g. Bambu Lab A1 mini), print the housing in two halves instead of `body`. The cut runs midway between the two ducts, where only the fan plate joins them; a small splice plate behind the fan plate joins the halves again with four M3 screws, driven from the fan side in the band between the two fans. Each half prints like the full housing, in about half the time (roughly 5–6 h), so they can go on different days; use the same spool and profile for both.
 
-| Part | Qty | Description | Size (mm) | Print orientation | <div style="width:180px">Thumbnail</div> |
-|---|---|---|---|---|:---:|
-| `body_top` | 1 | Upper half: intake duct, upper fan, motor frame, and both middle tie-wrap anchors (whole) | 90 × 130 × 114 | Fan plate on the bed, no supports | <img src="images/part_body_top.png" width="180"> |
-| `body_bottom` | 1 | Lower half: exhaust duct, lower fan, encoder plate; notched under the two middle anchors | 90 × 116 × 114 | Fan plate on the bed, no supports | <img src="images/part_body_bottom.png" width="180"> |
-| `splice` | 1 | Joins the halves behind the fan plate; four M3 nut pockets on its back | 60 × 32 × 6 | Flat, nut pockets up | <img src="images/part_splice.png" width="180"> |
+| Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
+|---|:---:|---|---|---|---|
+| `body_top` | <img src="images/part_body_top.png" width="180"> | 1 | Upper half: intake duct, upper fan, motor frame, and both middle tie-wrap anchors (whole) | 90 × 130 × 114 | Fan plate on the bed, no supports |
+| `body_bottom` | <img src="images/part_body_bottom.png" width="180"> | 1 | Lower half: exhaust duct, lower fan, encoder plate; notched under the two middle anchors | 90 × 116 × 114 | Fan plate on the bed, no supports |
+| `splice` | <img src="images/part_splice.png" width="180"> | 1 | Joins the halves behind the fan plate; four M3 nut pockets on its back | 60 × 32 × 6 | Flat, nut pockets up |
 
 <p align="center">
   <img src="images/split_view.png" alt="Exploded view of the split housing: upper and lower halves, the splice plate in the gap between the ducts behind the fan plate, and the four screws in front" width="360">
@@ -241,12 +241,12 @@ In winter the incoming air is cold, and a jet straight off the fan can feel like
 - **They hold their angle.** The pins fit snugly in their slots, and a strip of felt or foam tape on the link bar rubs on the side wall. The strip also damps vibration. On the other side, a collar on each blade's pivot bears on the wall.
 - **Nothing falls out.** The slots open toward the fan, so the blades drop in from behind. A retaining comb in each side wall then plugs the slots behind the pins.
 
-| Part | Qty | Size (mm) | Print orientation | <div style="width:180px">Thumbnail</div> |
-|---|---|---|---|:---:|
-| `louver_chassis` | 1 | 80 × 86 × 36 | Front face on the bed, clips up | <img src="images/part_louver_chassis.png" width="180"> |
-| `louver_blade` | 6 | 79 × 14 × 3.5 | Flat; its pins are flattened on the bed side | <img src="images/part_louver_blade.png" width="180"> |
-| `louver_link` | 1 | 53 × 5 × 2.4 | Flat, holes up | <img src="images/part_louver_link.png" width="180"> |
-| `louver_retainer` | 2 | 3 × 57 × 7.7 | Spine down, pegs up | <img src="images/part_louver_retainer.png" width="180"> |
+| Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
+|---|:---:|---|---|---|---|
+| `louver_chassis` | <img src="images/part_louver_chassis.png" width="180"> | 1 | Frame: clips onto the fan's corner flanges (recesses clear its screw heads), U-slots for the blade pins in both side walls | 80 × 86 × 36 | Front face on the bed, clips up |
+| `louver_blade` | <img src="images/part_louver_blade.png" width="180"> | 6 | Blade with a pivot pin at each end, a collar on one side and an offset pin for the link on the other | 79 × 14 × 3.5 | Flat; its pins are flattened on the bed side |
+| `louver_link` | <img src="images/part_louver_link.png" width="180"> | 1 | Link bar joining the six offset pins, so the blades turn together; the felt strip goes on its flat face | 53 × 5 × 2.4 | Flat, holes up |
+| `louver_retainer` | <img src="images/part_louver_retainer.png" width="180"> | 2 | Retaining comb, one per side wall: plugs the slots behind the pins | 3 × 57 × 7.7 | Spine down, pegs up |
 
 About 34 cm³ (45 g) of PETG in all. Also needed: a strip of 1 mm felt or foam tape, about 5 × 52 mm, for the link bar.
 
