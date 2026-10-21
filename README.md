@@ -12,8 +12,8 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 
 ## How it works
 
-- **Foam insert.** A block of 2 in (51 mm) XPS foam fills the window gap (100 mm or less, so a child can't fit through). Two 82 mm holes, stacked vertically: intake on top, exhaust below. An insect screen covers the outdoor face.
-- **Damper housing.** It sits on the **room** face of the foam, so its moving parts stay warm and dry (no ice). Its two spigots slide into the foam holes and seal with two O-rings each. The housing comes out in spring, and the foam insert stays reusable.
+- **Foam insert.** A block of 2 in (51 mm) XPS foam fills the window gap (100 mm or less, so a child can't fit through). Two 83 mm holes (a 3-1/4 in hole saw, see [drilling](#drilling-the-foam-insert)), stacked vertically: intake on top, exhaust below. An insect screen covers the outdoor face.
+- **Damper housing.** It sits on the **room** face of the foam, so its moving parts stay warm and dry (no ice). Its two spigots fit snugly in the foam holes; two O-rings on each are optional, for a hole that comes out loose. The housing comes out in spring, and the foam insert stays reusable.
 - **Butterfly dampers.** One vertical 5 mm steel shaft runs through both ducts and carries a disc in each. A quarter turn opens or closes both. Each disc closes against two half-ring lips lined with thin foam, one on each side of the shaft. One lip is flat; the other is a 45° cone, and the half of the disc that closes against it (engraved B) has a matching 45° bevel, so neither prints as a flat overhang.
 - **Motor and encoder.** A NEMA 17 pancake stepper on top turns the shaft through a flexible coupler. A TMC2209 driver keeps it silent. The motor screws to a separate plate on the bench, and the plate then screws onto a frame on top of the housing from above. An AS5600 magnetic encoder at the bottom reads the absolute shaft angle, so the firmware always knows whether the dampers are really closed, with no homing and no limit switch.
 - **Fans.** Two 80 mm PWM fans screw onto the room end of the housing.
@@ -51,7 +51,7 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 
 | Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
 |---|:---:|---|---|---|---|
-| `body` | <img src="images/part_body.png" width="180"> | 1 | Housing: two ducts with the damper lips, drip dams and shaft bosses, O-ring spigots, fan plate, motor frame and encoder plate | 90 × 241 × 114 | Fan plate on the bed, no supports |
+| `body` | <img src="images/part_body.png" width="180"> | 1 | Housing: two ducts with the damper lips, drip dams and shaft bosses, spigots for the foam, fan plate, motor frame and encoder plate | 90 × 241 × 114 | Fan plate on the bed, no supports |
 | `disc` | <img src="images/part_disc.png" width="180"> | 2 | Butterfly damper disc, clamped to the shaft by two M3 grub screws; the half engraved B has a 45° bevel on its rim | 67 × 67 × 14 | Plate on the bed, hub up |
 | `motor_plate` | <img src="images/part_motor_plate.png" width="180"> | 1 | The motor screws to it on the bench; it then sits on top of the housing: two screws in front of the motor, and two tabs at the back, down through the frame and screwed to the tower walls | 56 × 61 × 15 | Top face on the bed, tabs up |
 | `magnet_cap` | <img src="images/part_magnet_cap.png" width="180"> | 1 | Holds the encoder magnet on the bottom end of the shaft; one M3 grub screw, height adjustable ±1 mm | 14 × 14 × 12 | Bore down |
@@ -74,7 +74,7 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | Part | <div style="width:180px">Thumbnail</div> | Size (mm) | Time | What it tests |
 |---|:---:|---|---|---|
 | `fittest` | <img src="images/part_fittest.png" width="180"> | 60 × 34 × 22 | about 20–30 min | The housing's printer-sensitive features, in its print orientation, engraved A to G (see below) |
-| `oring_test` | <img src="images/part_oring_test.png" width="180"> | Ø 90 × 18 | about 30 min | One spigot section with an O-ring groove: push it, with an O-ring, into a hole cut in a foam scrap |
+| `oring_test` | <img src="images/part_oring_test.png" width="180"> | Ø 90 × 18 | about 30 min | One spigot section (with an O-ring groove): push it into a test hole cut in a foam scrap, bare first; if it's loose, try it with an O-ring |
 
 **The fit-test coupon.** It copies seven features of the housing that depend most on the printer: holes and a slot, a nut pocket, a pilot for self-tapping screws, the conical lip's 45° ledge and a countersink. Each is engraved with a letter, A to G. Print it with the housing's filament and settings, then check each feature against the table below: if one fails, adjust the slicer (or the hole sizes in the model) before starting the 9–12 hour housing print.
 
@@ -133,7 +133,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | M3 × 8 screws | 4 | Motor to motor plate, through the bosses under the plate. Not longer: the motor's holes are only 2.5 mm deep ([section](doc/motor_mount.svg)) | — |
 | M3 × 10 (or M3 × 12) screws + M3 nuts | 4 each | Motor plate: two through the frame in front of the motor, two through the tower walls and the plate's back tabs | — |
 | M3 grub screws, 6 or 8 mm | 5 | Two per disc, 24 mm apart along the hub, so the disc can't rock on the shaft; one in the magnet cap. Self-tapping into the plastic | — |
-| O-rings, 74 × 3 mm, nitrile 70A | 4 | Two per spigot (grooves sized for this O-ring: 4.7% stretch, about 23% squeeze in an 82 mm hole). Optional at first: the spigots also fit a snug hole | $12.79 (pack of 10) |
+| O-rings, 74 × 3 mm, nitrile 70A | 4 | Optional, and not needed by default: the plain Ø 83.4 spigots are a snug fit in an 83 mm hole. For a hole that comes out loose, set `orings = true` before printing the housing: two grooves per spigot, sized for this O-ring (about 6% stretch, 25% squeeze in an 83 mm hole) | $12.79 (pack of 10) |
 | Closed-cell neoprene foam sheet, self-adhesive, 1/16 in (1.6 mm) | 1 | Lip seals, cut with the [templates](#cutting-the-lip-foam). The model leaves a 1 mm gap, so the foam is squeezed about 37 %, a good range for a seal | |
 | Perfboard (protoboard), 5 × 7 cm, holes 66 × 46 mm | 1 | Carrier for the ESP32 and the TMC2209 in the electronics box | |
 | Resistors and capacitor for the perfboard | | 1 kΩ (TMC2209 UART), 10 kΩ × 5 (driver enable pull-up, two fan PWM pull-downs, two tach pull-ups), 100 kΩ + 22 kΩ (12 V sense), 100 µF ≥ 25 V electrolytic (TMC2209 motor supply). See [firmware/README.md](firmware/README.md) | — |
@@ -215,6 +215,25 @@ Full-size templates for the foam on the four lips (two per duct). The flat lip t
 
 If the 1.6 mm foam proves too stiff for the disc to close, setting `gasket = 1.6` moves the lips back to suit it (checked: the disc still swings freely and the lips still stop it).
 
+### Drilling the foam insert
+
+The insert takes two 83 mm holes, 96 mm apart, intake on top. The housing's plain Ø 83.4 spigots are a snug fit in them, so no O-rings are needed (sand a tight hole a little). Print the [drilling template](doc/foam_template.pdf) at 100 %, check its 100 mm bars, tape it on the foam centred across its width, and mark both centres with an awl. The template also marks an optional hole for the outdoor temperature probe, above the intake.
+
+<p align="center">
+  <a href="doc/foam_template.pdf"><img src="images/foam_template.png" alt="Preview of the drilling template: two 83 mm circles 96 mm apart, labelled intake and exhaust, with centre crosses, the stop ring outlines, a 100 mm width guide, an optional probe hole above the intake, and 100 mm scale bars" width="300"></a>
+</p>
+
+A 3-1/4 in (83 mm) bi-metal hole saw cuts only 32 mm deep, less than the 51 mm foam. Two ways to get through:
+
+- **From both faces (easiest):** drill the pilot hole right through at each centre (a skewer or a long nail finds it on the far face if the pilot drill is too short), cut halfway from one face, turn the foam over and finish from the other. The two cuts meet with about 13 mm of overlap, and neither face tears out.
+- **From one face:** cut 32 mm deep, carve the plug out (crossed cuts down to the groove, then pry the pieces out), and cut on: the pilot hole, already deeper, keeps the saw centred. Clamp a scrap board under the far face so the foam doesn't tear where the saw comes out.
+
+Run the drill slowly. Hole saws often cut a little wider than labelled, so cut a test hole in a scrap first and try `oring_test` in it. A hot-wire foam cutter also works, and leaves the smoothest bore.
+
+<p align="center">
+  <img src="doc/holesaw_83.svg" alt="83 mm hole saw: 32 mm cutting depth, pilot drill leading the teeth, 98 mm arbor; and a section of the 51 mm foam cut 32 mm from each face, with 13 mm of overlap" width="640">
+</p>
+
 ## Assembly
 
 0. Split housing only: press four M3 nuts into the splice's pockets. Stand the lower half upright, cut face up, hold the splice against the back of its fan plate, just above the duct, and fit the two lower countersunk M3 × 12 from the fan side. Lower the upper half onto it and fit the other two. Leave all four slightly loose until step 3.
@@ -228,7 +247,7 @@ If the 1.6 mm foam proves too stiff for the disc to close, setting `gasket = 1.6
 8. Fit the fans: the top one blowing into the room, the bottom one blowing toward the window. Arrows engraved on both sides of the housing (above the upper duct and below the lower one) show each duct's airflow; match the arrows on the fan frames to them.
 9. Electronics: solder the ESP32 and the TMC2209 onto the perfboard (or into female headers), following the [layout](#the-electronics-box-layout): the ESP32 across the back half with its USB end three holes in from the left wall (clear of the corner standoff), the TMC2209 at the front right. Or turn the ESP32 180° in the same place, its USB end toward the right wall (view `ebox_elec_alt`): the box has a diamond on each side. Wire it (connect the 12 V brick's GND to the ESP32's GND), and screw it onto the four standoffs in the box (M2). Plug the USB-C cable in through the matching side wall. Bring the 12 V wire and the fan and motor cables down the right side, tie them to the three anchors behind the fans, and into the box through the notch at the top of its right wall. The AS5600 wires drop in through the window in the encoder plate.
 10. Fit the box under the housing: two M3 × 12 through the front cover into the bosses of the bottom bay, and two from above through the encoder plate (outside the bay walls) into the box's back tabs.
-11. Roll two O-rings onto each spigot and push the housing into the foam holes.
+11. Push the housing's spigots into the foam holes. If they're tight, sand the holes a little. (With `orings = true`, roll two O-rings onto each spigot first.)
 
 ## Optional: adjustable louvers for the intake fan
 
@@ -269,7 +288,7 @@ About 34 cm³ (45 g) of PETG in all. Also needed: a strip of 1 mm felt or foam t
 
 ```
 doc/                       reference drawings: the motor, the AS5600, ESP32-S3 and TMC2209 boards, the electronics box layout;
-                           the lip foam templates (PDF, to print at 100 %)
+                           the lip foam and foam insert templates (PDF, to print at 100 %), the hole saw
 images/                    renders used in this README
 cad/window_vent.scad       parametric model (Customizer; part = "assembly" for the preview)
 cad/louvers.scad           optional adjustable louvers for the intake fan
@@ -283,6 +302,8 @@ tools/tmc2209_svg.py       draws doc/tmc2209.svg (the TMC2209 module, dimensione
 tools/motor_svg.py         draws doc/motor_17hs08.svg (the stepper motor, dimensioned)
 tools/motor_mount_svg.py   draws doc/motor_mount.svg (section through a motor screw)
 tools/lip_templates_svg.py draws doc/lip_templates.svg and .pdf (full-size foam templates) and their preview
+tools/foam_template_svg.py draws doc/foam_template.svg and .pdf (drilling template for the foam insert) and its preview
+tools/holesaw_svg.py   draws doc/holesaw_83.svg (the 83 mm hole saw, and cutting the foam from both faces)
 tools/render_images.py     regenerates the images in images/ from the models
 firmware/baremetal/        Arduino sketch: serial commands to test each electronic part (not tested on hardware yet; see firmware/README.md)
 PRINT_CHECKLIST.md         every printed/bought part interface to verify before printing

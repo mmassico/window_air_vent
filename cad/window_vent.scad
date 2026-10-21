@@ -2,12 +2,12 @@
 //  Window vent: dual butterfly damper with two 80 mm fans (prototype)
 //  Parametric OpenSCAD model (tested with OpenSCAD 2021.01).
 //
-//  * A foam insert fills the window gap (about 100 mm wide). Two 82 mm
+//  * A foam insert fills the window gap (about 100 mm wide). Two 83 mm
 //    holes, stacked vertically, go through it: intake on top, exhaust
 //    below.
 //  * This housing sits on the ROOM face of the foam (warm side, so no
 //    ice on the moving parts). Its spigots slide into the foam holes and
-//    seal with two O-rings each.
+//    fit snugly (two O-rings each are optional).
 //  * One vertical 5 mm shaft runs through both ducts and carries a
 //    butterfly disc in each, so a quarter turn opens or closes both.
 //    A NEMA 17 pancake stepper drives it from the top; an AS5600 magnetic
@@ -29,9 +29,16 @@ duct_id   = 74;     // duct bore (80 mm fans have about a 76 mm blade circle)
 wall      = 2.4;    // duct wall (6 perimeters at 0.4 mm)
 pitch     = 96;     // vertical distance between the two duct centres
 sp_len    = 25;     // spigot length inside the foam hole
-sp_od     = 82;     // spigot OD = foam hole diameter
-oring_cs  = 3;      // O-ring cross-section (default: 74 x 3 mm O-rings, stretched about 4.7%)
-oring_dep = 0.75;   // groove depth as a fraction of cs (about 24% squeeze in the foam hole); width is 1.4 x cs
+sp_od     = 83.4;   // spigot OD: snug in an 83 mm foam hole (3-1/4 in hole saw), about 0.4 mm of squeeze in XPS;
+                    //   a tight hole can be sanded, a loose one takes the O-rings
+sp_lead   = 1;      // 45 deg lead-in chamfer on the spigot tip, so it enters the foam without tearing it
+sp_wall   = 4;      // spigot wall at its tip: the bore widens from duct_id at the stop ring to sp_od - 2 sp_wall at
+                    //   the tip, so condensation runs out toward the outdoor end
+orings    = false;  // O-ring grooves in the housing's spigots: off, the plain spigot grips the foam along its whole
+                    //   length; on, for 74 x 3 O-rings in a hole that came out loose (oring_test always has one)
+oring_cs  = 3;      // O-ring cross-section (default: 74 x 3 mm O-rings; optional, see sp_od)
+oring_floor = 78.5; // groove floor diameter: the 74 x 3 O-rings stretch about 6%, squeeze about 25% in an 83 hole;
+                    //   width is 1.4 x cs
 oring_pos = [6, 16];// groove starts, measured from the foam face into the foam
 oring_slope = true; // 45 deg groove wall on the spigot-tip side: the spigots print tip up, so that wall would
                     // otherwise be a flat overhang; floor depth (squeeze) and the other wall are unchanged
@@ -194,7 +201,7 @@ module ycyl(y0, y1, d, z = 0, d2 = undef)
 // O-ring groove cut, as one profile turned around the spigot axis (+z here, toward the spigot tip):
 // flat floor from z = 0 to 1.4 cs, straight wall at z = 0, and with oring_slope a 45 deg wall at the tip end.
 module oring_groove() {
-    rf = sp_od / 2 - oring_dep * oring_cs;   // floor radius
+    rf = oring_floor / 2;                    // floor radius
     ro = sp_od / 2 + 1;                      // beyond the spigot surface
     w  = 1.4 * oring_cs;
     rotate_extrude($fn = 96) polygon(oring_slope
@@ -213,7 +220,8 @@ module enc_pad_post(extra = 0) {
 module house_slot() polygon([[1, -2.25], [1, 2.25], [-1, 2.25], [-3.25, 0], [-1, -2.25]]);
 
 module duct_outer(z) {
-    ycyl(-sp_len, 0, sp_od, z);                                   // spigot
+    ycyl(-sp_len, -sp_len + sp_lead, sp_od - 2 * sp_lead, z, sp_od);   // spigot: lead-in chamfer at the tip
+    ycyl(-sp_len + sp_lead, 0, sp_od, z);
     ycyl(0, stop_t, stop_od, z);                                  // stop ring
     ycyl(stop_t, stop_t + (stop_od / 2 - ro), stop_od, z, 2 * ro);// 45 deg underside (prints without support)
     ycyl(0, duct_len, 2 * ro, z);                                 // damper duct
@@ -361,7 +369,9 @@ module body() {
                 }
                 for (z = zc) {
                     ycyl(-sp_len - 1, duct_len + 1, duct_id, z);                     // bore
-                    for (p = oring_pos)                                               // O-ring grooves (spigot tip toward -y)
+                    sp_bore = sp_od - 2 * sp_wall;                                    // spigot bore: a long taper from the
+                    ycyl(-sp_len - 1, 0, sp_bore + (sp_bore - duct_id) / sp_len, z, duct_id);   // tip (past it by 1) to the stop ring
+                    if (orings) for (p = oring_pos)                                   // O-ring grooves (spigot tip toward -y)
                         translate([0, -p, z]) rotate([90, 0, 0]) oring_groove();
                     for (dx = [-1, 1], dz = [-1, 1]) {                                 // fan screws + M3 nut pockets
                         translate([dx * fan_hole / 2, duct_len - fan_plate - 1, z + dz * fan_hole / 2]) rotate([-90, 0, 0]) cylinder(d = 3.4, h = fan_plate + 2, $fn = 24);
@@ -642,7 +652,8 @@ module oring_test() {
     difference() {
         union() {
             cylinder(d = stop_od, h = stop_t);
-            cylinder(d = sp_od, h = stop_t + 15);
+            cylinder(d = sp_od, h = stop_t + 15 - sp_lead);
+            translate([0, 0, stop_t + 15 - sp_lead - eps]) cylinder(d1 = sp_od, d2 = sp_od - 2 * sp_lead, h = sp_lead + eps);   // lead-in
         }
         translate([0, 0, -1]) cylinder(d = duct_id, h = stop_t + 17);
         translate([0, 0, g0]) oring_groove();   // the same groove as on the housing (the tip is up here too)
