@@ -241,8 +241,8 @@ In winter the incoming air is cold, and a jet straight off the fan can feel like
 - **They hold their angle.** The pins fit snugly in their slots, and a strip of felt or foam tape on the link bar rubs on the side wall. The strip also damps vibration. On the other side, a collar on each blade's pivot bears on the wall.
 - **Nothing falls out.** The slots open toward the fan, so the blades drop in from behind. A retaining comb in each side wall then plugs the slots behind the pins.
 
-| Part | Qty | Size (mm) | Print orientation | |
-|---|---|---|---|---|
+| Part | Qty | Size (mm) | Print orientation | <div style="width:180px">Thumbnail</div> |
+|---|---|---|---|:---:|
 | `louver_chassis` | 1 | 80 × 86 × 36 | Front face on the bed, clips up | <img src="images/part_louver_chassis.png" width="180"> |
 | `louver_blade` | 6 | 79 × 14 × 3.5 | Flat; its pins are flattened on the bed side | <img src="images/part_louver_blade.png" width="180"> |
 | `louver_link` | 1 | 53 × 5 × 2.4 | Flat, holes up | <img src="images/part_louver_link.png" width="180"> |
