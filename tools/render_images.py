@@ -95,7 +95,7 @@ def t(name):
 
 # name -> function producing images/<name>
 def assembly():
-    save(render(t("a.png"), VENT, "0,0,0,65,0,215,0", (1000, 1100), ['angle=30'], viewall=True), "assembly.png")
+    save(render(t("a.png"), VENT, "0,0,0,68,0,198,0", (1000, 1100), ['angle=30'], viewall=True), "assembly.png")
 
 def damper_section():
     ims = [render(t(f"cut{a}.png"), None, "0,40,200,0,0,0,330", (700, 600), ortho=True, text=f"a = {a};\n" + CUT)
