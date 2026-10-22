@@ -310,26 +310,31 @@ About 34 cm³ (45 g) of PETG in all. Also needed: a strip of 1 mm felt or foam t
 ## Files
 
 ```
-doc/                       reference drawings: the motor, the AS5600, ESP32-S3 and TMC2209 boards, the electronics box layout;
-                           the lip foam and foam insert templates (PDF, to print at 100 %), the hole saw
-images/                    renders used in this README
-cad/window_vent.scad       parametric model (Customizer; part = "assembly" for the preview)
-cad/louvers.scad           optional adjustable louvers for the intake fan
-stl/                       exported parts (default parameters)
-tools/check.py             geometry checks (must print ALL CHECKS PASSED)
-tools/wiring_svg.py        draws firmware/images/wiring.svg (the wiring diagram)
-tools/as5600_svg.py        draws doc/as5600.svg (the AS5600 board, dimensioned)
-tools/ebox_layout_svg.py   draws doc/ebox_layout.svg (the electronics box, to scale)
-tools/esp32_svg.py         draws doc/esp32_s3.svg (the ESP32-S3 board, dimensioned)
-tools/tmc2209_svg.py       draws doc/tmc2209.svg (the TMC2209 module, dimensioned)
-tools/motor_svg.py         draws doc/motor_17hs08.svg (the stepper motor, dimensioned)
-tools/motor_mount_svg.py   draws doc/motor_mount.svg (section through a motor screw)
-tools/lip_templates_svg.py draws doc/lip_templates.svg and .pdf (full-size foam templates) and their preview
-tools/foam_template_svg.py draws doc/foam_template.svg and .pdf (drilling template for the foam insert) and its preview
-tools/holesaw_svg.py   draws doc/holesaw_83.svg (the 83 mm hole saw, and cutting the foam from both faces)
-tools/render_images.py     regenerates the images in images/ from the models
-firmware/baremetal/        Arduino sketch: serial commands to test each electronic part (not tested on hardware yet; see firmware/README.md)
-PRINT_CHECKLIST.md         every printed/bought part interface to verify before printing
+doc/                        reference drawings: the motor, the AS5600, ESP32-S3 and TMC2209 boards, 
+                            the electronics box layout; the lip foam and foam insert templates (PDF, 
+                            to print at 100 %), the hole saw
+images/                     renders used in this README
+cad/window_vent.scad        parametric model (Customizer; part = "assembly" for the preview)
+cad/louvers.scad            optional adjustable louvers for the intake fan
+stl/                        exported parts (default parameters)
+tools/check.py              geometry checks (must print ALL CHECKS PASSED)
+tools/wiring_svg.py         draws firmware/images/wiring.svg (the wiring diagram)
+tools/as5600_svg.py         draws doc/as5600.svg (the AS5600 board, dimensioned)
+tools/ebox_layout_svg.py    draws doc/ebox_layout.svg (the electronics box, to scale)
+tools/esp32_svg.py          draws doc/esp32_s3.svg (the ESP32-S3 board, dimensioned)
+tools/tmc2209_svg.py        draws doc/tmc2209.svg (the TMC2209 module, dimensioned)
+tools/motor_svg.py          draws doc/motor_17hs08.svg (the stepper motor, dimensioned)
+tools/motor_mount_svg.py    draws doc/motor_mount.svg (section through a motor screw)
+tools/lip_templates_svg.py  draws doc/lip_templates.svg and .pdf (full-size foam templates) and 
+                            their preview
+tools/foam_template_svg.py  draws doc/foam_template.svg and .pdf (drilling template for the foam 
+                            insert) and its preview
+tools/holesaw_svg.py        draws doc/holesaw_83.svg (the 83 mm hole saw, and cutting the foam 
+                            from both faces)
+tools/render_images.py      regenerates the images in images/ from the models
+firmware/baremetal/         Arduino sketch: serial commands to test each electronic part (not 
+                            tested on hardware yet; see firmware/README.md)
+PRINT_CHECKLIST.md          every printed/bought part interface to verify before printing
 ```
 
 ## License
