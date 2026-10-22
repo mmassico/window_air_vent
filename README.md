@@ -7,7 +7,7 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 > **Status: early prototype, not built.** The geometry is checked in CAD (closed solids, the discs swing freely, the lips stop them). Nothing has been printed or tested yet.
 
 <p align="center">
-  <img src="images/assembly.png" alt="Damper housing with two 80 mm fans, stepper motor on top, spigots in the foam insert" width="380">
+  <img src="images/assembly_lbl.png" alt="Damper housing with two 80 mm fans, stepper motor on top, spigots in the foam insert, with labels: stepper motor, motor plate, motor tower, shaft coupler, intake and exhaust fans, damper discs, shaft, spigot, damper housing, electronics box, foam insert" width="680">
 </p>
 
 ## How it works
