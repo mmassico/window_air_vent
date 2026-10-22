@@ -29,7 +29,8 @@ duct_id   = 74;     // duct bore (80 mm fans have about a 76 mm blade circle)
 wall      = 2.4;    // duct wall (6 perimeters at 0.4 mm)
 pitch     = 96;     // vertical distance between the two duct centres
 sp_len    = 25;     // spigot length inside the foam hole
-sp_od     = 83.4;   // spigot OD: snug in an 83 mm foam hole (3-1/4 in hole saw), about 0.4 mm of squeeze in XPS;
+sp_od     = 83.7;   // spigot OD: snug in the foam hole, about 0.4 mm of squeeze in XPS. The 3-1/4 in hole saw measures
+                    //   83.3 across its teeth, so its hole is about 83.3 (doc/holesaw_83.svg);
                     //   a tight hole can be sanded, a loose one takes the O-rings
 sp_lead   = 1;      // 45 deg lead-in chamfer on the spigot tip, so it enters the foam without tearing it
 sp_wall   = 4;      // spigot wall at its tip: the bore widens from duct_id at the stop ring to sp_od - 2 sp_wall at
@@ -37,7 +38,7 @@ sp_wall   = 4;      // spigot wall at its tip: the bore widens from duct_id at t
 orings    = false;  // O-ring grooves in the housing's spigots: off, the plain spigot grips the foam along its whole
                     //   length; on, for 74 x 3 O-rings in a hole that came out loose (oring_test always has one)
 oring_cs  = 3;      // O-ring cross-section (default: 74 x 3 mm O-rings; optional, see sp_od)
-oring_floor = 78.5; // groove floor diameter: the 74 x 3 O-rings stretch about 6%, squeeze about 25% in an 83 hole;
+oring_floor = 78.5; // groove floor diameter: the 74 x 3 O-rings stretch about 6%, squeeze about 20% in an 83.3 hole;
                     //   width is 1.4 x cs
 oring_pos = [6, 16];// groove starts, measured from the foam face into the foam
 oring_slope = true; // 45 deg groove wall on the spigot-tip side: the spigots print tip up, so that wall would

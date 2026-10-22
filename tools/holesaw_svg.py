@@ -11,12 +11,13 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "doc", "holesaw_83.svg")
 
 CUT_D = 83.0          # listed: hole diameter (3-1/4 in)
+TEETH_D = 83.3        # measured: widest sweep across the teeth (one tooth at 83.57, to bend back in)
+BODY_D = 82.6         # measured: the cup body, without the teeth's set
 DEPTH = 32.0          # listed: cutting depth
 ARBOR = 98.0          # listed: arbor, shank end to the pilot drill's tip
 DRILL_L = 68.0        # listed: pilot drill length
 FOAM = 51.0           # 2 in XPS
 # about (from the photos, or typical): to measure
-BODY_D = 80.0         # cup body, without the teeth's set (the reviewer's photo reads 79-80)
 CUP_H = 38.0          # cup, back plate to tooth tips
 LEAD = 15.0           # pilot drill tip ahead of the teeth
 DRILL_D = 6.35        # pilot drill (1/4 in)
@@ -73,7 +74,7 @@ AX = 470                                # axis x
 Y_TEETH = 270                           # canvas y of the tooth tips
 def Y(mm):                              # distance below the tooth tips -> canvas y
     return Y_TEETH + mm * K
-cut_r, body_r = CUT_D / 2 * K, BODY_D / 2 * K
+cut_r, body_r = TEETH_D / 2 * K, BODY_D / 2 * K
 y_back = Y(CUP_H)
 d = DRILL_D / 2 * K                                                        # pilot drill, tip ahead of the teeth
 poly([(AX - d, y_back), (AX - d, Y(-LEAD) + d), (AX, Y(-LEAD)), (AX + d, Y(-LEAD) + d), (AX + d, y_back)], "#b08a3c")
@@ -98,8 +99,8 @@ out.append(f'<rect x="{AX - 11 * K / 2:.1f}" y="{y_back:.1f}" width="{11 * K:.1f
 out.append(f'<rect x="{AX - SHANK_D / 2 * K:.1f}" y="{y_back + 14 * K:.1f}" width="{SHANK_D * K:.1f}" '
            f'height="{y_shank_end - y_back - 14 * K:.1f}" fill="#3a3a3a" stroke="#111"/>')
 
-hdim(AX - cut_r, AX + cut_r, Y(-LEAD) - 40, Y(-2), f"Ø {CUT_D:g} cut (3-1/4 in)")
-hdim(AX - body_r, AX + body_r, y_back + 50, y_back, f"body about Ø {BODY_D:g}", C_EST, lx=0.22)
+hdim(AX - cut_r, AX + cut_r, Y(-LEAD) - 40, Y(-2), f"Ø {TEETH_D:g} across the teeth (sold as {CUT_D:g}, 3-1/4 in)")
+hdim(AX - body_r, AX + body_r, y_back + 50, y_back, f"body Ø {BODY_D:g}", C_DIM, lx=0.22)
 vdim(Y(0), Y(DEPTH), AX + cut_r + 50, AX + cut_r, f"{DEPTH:g} cutting depth")
 vdim(Y(-LEAD), y_shank_end, AX - cut_r - 60, AX - d, f"{ARBOR:g} arbor + pilot drill", right=False)
 vdim(Y(-LEAD), Y(0), AX + cut_r + 50, AX + d, f"pilot leads about {LEAD:g}", C_EST)
@@ -133,11 +134,11 @@ text(FX + fw / 2 - 40, FY - 70, "Cutting the 51 mm foam (section)", 17, weight="
 text(40, 50, "3-1/4 in (83 mm) bi-metal hole saw (mm)", 22, "start", weight="bold")
 notes = [
     f"Listed: Ø {CUT_D:g} cut, {DEPTH:g} cutting depth, {ARBOR:g} arbor with its pilot drill, {DRILL_L:g} pilot drill. "
-    "Grey italic values are read from the photos or typical: measure them.",
+    f"Measured: Ø {TEETH_D:g} across the teeth, body Ø {BODY_D:g}. Grey italic values are estimates.",
     f"The cut ({DEPTH:g} deep) is shorter than the foam ({FOAM:g}): cut from both faces, on one pilot hole, so the kerfs meet with "
     f"{2 * DEPTH - FOAM:g} mm of overlap.",
     "The pilot drill may not reach through 51 mm: push a skewer or a long nail through the centre mark to find it on the other face.",
-    "The teeth are set alternately in and out, so the hole is wider than the body: measure a test hole before trusting 83.",
+    f"The teeth are set alternately in and out, so the hole follows the teeth ({TEETH_D:g}), not the body: cut a test hole and try oring_test in it.",
 ]
 for i, s in enumerate(notes):
     out.append(f'<text x="40" y="{H - 110 + i * 24}" font-size="14" fill="#333">{s}</text>')

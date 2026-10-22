@@ -101,12 +101,12 @@ Two common boards are supported. The chip is centred on both. Board B is the one
 
 | Item | Model | Hardware | Status |
 |---|---|---|---|
-| Spigot | Ø 83.4, 1 mm 45° lead-in chamfer at the tip (`sp_od`, `sp_lead`) | foam hole Ø 83 (3-1/4 in hole saw) | 📏 about 0.4 mm of squeeze in XPS; saws vary, so test on a scrap: sand a tight hole, use the O-rings in a loose one |
+| Spigot | Ø 83.7, 1 mm 45° lead-in chamfer at the tip (`sp_od`, `sp_lead`) | foam hole about Ø 83.3 (3-1/4 in hole saw, measured 83.3 across the teeth, body 82.6) | 📏 about 0.4 mm of squeeze in XPS; saws vary, so test on a scrap: sand a tight hole, use the O-rings in a loose one |
 | Groove bottom / width | Ø 78.5 / 4.2, two per spigot (`oring_floor`), only with `orings = true` (off by default; `oring_test` always has one) | O-ring 74 × 3, nitrile 70A (optional) | ✅ stretched about 6%: a little over the usual 5%, fine at these tiny pressures |
-| Spigot bore | tapers from Ø 74 at the stop ring (as the duct) to Ø 75.4 at the tip (`sp_wall` 4); wall 4.7 → 4.0 | | ✅ the floor drops 0.7 mm toward the outdoor end, so condensation drains out; thickest at the root; about 1.6° from vertical when printing |
-| Wall under the groove | 1.6 at the tip end, 2.0 near the stop ring | | ✅ no load on the spigot |
+| Spigot bore | tapers from Ø 74 at the stop ring (as the duct) to Ø 75.7 at the tip (`sp_wall` 4); wall 4.85 → 4.0 | | ✅ the floor drops 0.85 mm toward the outdoor end, so condensation drains out; thickest at the root; about 1.6° from vertical when printing |
+| Wall under the groove | 1.45 at the tip end, 2.05 near the stop ring | | ✅ no load on the spigot |
 | Groove profile | flat floor, straight wall on the stop-ring side, 45° wall on the tip side (`oring_slope`) | | ✅ the spigots print tip up, so no wall is a flat overhang; the O-ring bears on the floor and the straight wall when pushed in |
-| Squeeze in the hole (with O-rings) | about 25% in an 83.0 hole | | 📏 about 18% in an 83.4 hole; test the fit |
+| Squeeze in the hole (with O-rings) | about 20% in an 83.3 hole | | 📏 test the fit |
 | Cold | nitrile is rated to −20 °C | | ✅ the grooves are in the room-side half of the foam, well above that |
 | Hole spacing in the foam | 96 vertically, centred in the gap | | ✅ |
 

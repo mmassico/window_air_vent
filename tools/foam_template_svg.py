@@ -15,7 +15,7 @@ PDF = os.path.join(ROOT, "doc", "foam_template.pdf")
 PNG = os.path.join(ROOT, "images", "foam_template.png")
 CHROME = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 
-HOLE = 83.0                  # foam hole: 3-1/4 in (83 mm) hole saw; the spigots (sp_od 83.4) fit it snugly
+HOLE = 83.0                  # foam hole: 3-1/4 in (83 mm) hole saw, 83.3 across its teeth; the spigots (sp_od 83.7) fit it snugly
 PITCH = 96.0                 # pitch: duct centres, vertically
 STOP = 90.0                  # stop_od: the stop ring resting on the room face
 GAP = 100.0                  # largest window gap the insert fills
