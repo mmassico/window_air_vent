@@ -97,6 +97,48 @@ def t(name):
 def assembly():
     save(render(t("a.png"), VENT, "0,0,0,68,0,198,0", (1000, 1100), ['angle=30'], viewall=True), "assembly.png")
 
+
+# Labels for assembly_lbl: (side, label y, text, anchor x, anchor y). Anchors are pixels in the trimmed
+# 2x render of part "assembly_noplug" (813 x 1817); pick them again if the camera or the model's layout changes.
+ASM_LABELS = [
+    ("L", 130, "Stepper motor", 300, 140),
+    ("L", 350, "Shaft coupler", 360, 350),
+    ("L", 560, "Fan, intake", 60, 560),
+    ("L", 690, "Damper disc", 300, 680),
+    ("L", 800, "Shaft", 375, 800),
+    ("L", 1100, "Fan, exhaust", 70, 1100),
+    ("L", 1640, "Electronics box", 200, 1640),
+    ("R", 60, "Foam insert", 700, 80),
+    ("R", 215, "Motor plate", 545, 215),
+    ("R", 400, "Motor tower", 540, 400),
+    ("R", 700, "Spigot, in the foam", 660, 700),
+    ("R", 1200, "Damper housing", 540, 1200),
+]
+
+
+def assembly_lbl():
+    im = render(t("al.png"), VENT, "0,0,0,68,0,198,0", (2000, 2200), ['angle=30', 'part="assembly_noplug"'], viewall=True)
+    f = ImageFont.truetype("arial.ttf", 30) if os.path.exists(r"C:\Windows\Fonts\arial.ttf") else font()
+    mw, pad = 370, 30                            # margin for the labels on each side; blank border around it all
+    out = Image.new("RGB", (im.width + 2 * mw, im.height + 2 * pad), im.getpixel((2, 2)))
+    out.paste(im, (mw, pad))
+    d = ImageDraw.Draw(out)
+    ink, halo = (40, 40, 40), (255, 255, 255)
+    for side, ly, text, ax, ay in ASM_LABELS:
+        ly += pad
+        w = d.textlength(text, font=f)
+        if side == "L":
+            tx, lx = 40, 40 + w + 10
+        else:
+            tx = out.width - 40 - w
+            lx = tx - 10
+        d.text((tx, ly), text, font=f, fill=ink, anchor="lm")
+        a = (ax + mw, ay + pad)
+        for col, wid, r in ((halo, 6, 8), (ink, 2, 5)):
+            d.line([(lx, ly), a], fill=col, width=wid)
+            d.ellipse([a[0] - r, a[1] - r, a[0] + r, a[1] + r], fill=col)
+    save(out, "assembly_lbl.png")
+
 def damper_section():
     ims = [render(t(f"cut{a}.png"), None, "0,40,200,0,0,0,330", (700, 600), ortho=True, text=f"a = {a};\n" + CUT)
            for a in (0, 45, 90)]
@@ -146,7 +188,7 @@ def louvers():
         save(render(t(f"l_{name}.png"), LOUV, camera, size, [f'part="{name}"'], viewall=viewall), f"part_louver_{name}.png")
 
 
-JOBS = {f.__name__: f for f in (assembly, damper_section, side_section, damper_cutaway, damper_closed_view,
+JOBS = {f.__name__: f for f in (assembly, assembly_lbl, damper_section, side_section, damper_cutaway, damper_closed_view,
                                 parts, split_view, louvers)}
 
 if __name__ == "__main__":

@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, body, disc, motor_plate, magnet_cap, ebox, fittest, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt]
+part  = "assembly"; // [assembly, assembly_noplug, body, disc, motor_plate, magnet_cap, ebox, fittest, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -672,7 +672,7 @@ module oring_test() {
 /* =================== PREVIEW =================== */
 // Electronics in the box, for the preview and the clearance check (installed coordinates): perfboard, ESP32-S3
 // (PCB, module and antenna, USB-C sockets, pins), its USB-C plug through the left wall, TMC2209 with its heatsink.
-module electronics(usb = esp_usb) {
+module electronics(usb = esp_usb, plug = true) {
     fl  = z_ep0 - ebox_h;                                   // inner floor
     x1  = pb_col(esp_col) + (esp_l - 19 * 2.54) / 2;        // ESP32 USB end (left layout), its pins on the grid
     yc  = esp_yc;
@@ -687,7 +687,7 @@ module electronics(usb = esp_usb) {
             color([0.95, 0.8, 0.3]) translate([x1 - (esp_l - 19 * 2.54) / 2 - i * 2.54 - 0.32, yc + sy * 12.65 - 0.32, zp - esp_pcb[1] - esp_pcb[2]])
                 cube([0.64, 0.64, esp_pcb[2] + esp_pcb[1] + esp_pcb[0] + 1]);
         for (sy = [-1, 1]) color([0.25, 0.25, 0.25]) translate([x1 - esp_l + 0.4, yc + sy * 12.65 - 1.25, zp - esp_pcb[1]]) cube([esp_l - 0.8, 2.5, esp_pcb[1]]);
-        color([0.4, 0.4, 0.42]) translate([x1 + 0.3, yc + usb_dy - 5.5, fl + usb_z - 3.125]) cube([ebox_w / 2 - x1 + 20, 11, 6.25]);   // USB-C plug
+        if (plug) color([0.4, 0.4, 0.42]) translate([x1 + 0.3, yc + usb_dy - 5.5, fl + usb_z - 3.125]) cube([ebox_w / 2 - x1 + 20, 11, 6.25]);   // USB-C plug
         if (esp_mount == "headers")
             for (sy = [-1, 1]) color([0.1, 0.1, 0.1]) translate([x1 - esp_l + 0.4, yc + sy * 12.65 - 1.25, fl + pb_top]) cube([esp_l - 0.8, 2.5, header_h]);
     }
@@ -709,14 +709,14 @@ module electronics(usb = esp_usb) {
     }
 }
 
-module assembly() {
+module assembly(plug = true) {   // plug: the ESP32's USB-C plug (off for the labelled README view)
     color([0.85, 0.85, 0.88]) body();
     for (z = zc) color([0.95, 0.6, 0.25]) disc_installed(z, angle);
     color([0.6, 0.6, 0.62]) translate([0, ys, z_cap1 - 4.6]) cylinder(d = shaft_d, h = 200);   // 200 mm rod, 4.6 mm into the cap
     color([0.3, 0.5, 0.9]) translate([0, ys, z_cap1]) rotate([180, 0, 0]) magnet_cap();
     color([0.55, 0.75, 0.95]) translate([0, ys, z_mp1]) motor_plate();
     color([0.35, 0.4, 0.5]) ebox();
-    electronics();
+    electronics(plug = plug);
     color([0.15, 0.15, 0.17]) translate([-nema / 2, ys - nema / 2, z_mp1 + mplate_t]) cube([nema, nema, 20]);
     color([0.75, 0.75, 0.3]) translate([0, ys, z_mp0 - 25]) cylinder(d = 19, h = 25);
     color([0.2, 0.55, 0.3]) translate([-11.65, ys - 11.4, z_ep1 + enc_standoff]) cube([23.3, 22.8, enc_board]);   // AS5600 kit board
@@ -747,6 +747,7 @@ module assembly_nofan() {
 
 
 if (part == "assembly")       assembly();
+if (part == "assembly_noplug") assembly(plug = false);
 if (part == "body")           translate([0, 0, duct_len]) rotate([-90, 0, 0]) body();   // fan plate on the bed
 if (part == "disc")           disc();
 if (part == "motor_plate")    translate([0, 0, mplate_t]) rotate([180, 0, 0]) motor_plate();   // top face on the bed, tabs up
