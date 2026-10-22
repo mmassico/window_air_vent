@@ -220,6 +220,10 @@ The box seen from above, to scale, with the room at the bottom. The ESP32 lies a
 
 The ESP32 runs an Arduino sketch (esp32 core 3.x, no other library). The first stage, [`firmware/baremetal/`](firmware/baremetal), is a serial command console that tests each electronic part on its own: fans, motor and driver, encoder, CO₂ sensor, temperature probes and the 12 V supply. It compiles cleanly but has not run on hardware yet. The CO₂ control with its own web page on the home network comes next. [firmware/README.md](firmware/README.md) has the board settings, the [wiring diagram](firmware/images/wiring.svg), a part-by-part bring-up and the command list.
 
+<p align="center">
+  <img src="images/wiring.svg" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209, stepper and two DS18B20 temperature sensors on the right, 12 V brick and 5 V USB-C adapter on top" width="100%">
+</p>
+
 ### The encoder magnet
 
 The AS5600 measures the direction of the magnetic field across the shaft, so the magnet's north-south axis must lie **across** the shaft and turn with it.
