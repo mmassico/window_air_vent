@@ -23,7 +23,7 @@ warnings.filterwarnings('ignore')
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCAD = os.path.join(ROOT, "cad", "window_vent.scad")
-PARTS = ["body", "disc", "motor_plate", "magnet_cap", "ebox", "fittest", "oring_test",
+PARTS = ["body", "disc", "motor_plate", "magnet_cap", "ebox", "fittest", "oring_test", "drill_guide",
          "body_top", "body_bottom", "splice"]
 BED = 256.0                                      # Bambu Lab P1/X1/A1
 SMALL_BED = 180.0                                # Bambu Lab A1 mini

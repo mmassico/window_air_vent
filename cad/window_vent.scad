@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, assembly_noplug, body, disc, motor_plate, magnet_cap, ebox, fittest, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt]
+part  = "assembly"; // [assembly, assembly_noplug, body, disc, motor_plate, magnet_cap, ebox, fittest, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -159,6 +159,15 @@ splice_h  = 32;     // its height (z), before the 1 mm clearance cuts around the
 split_sx  = 20;     // joint screws (4 x M3 x 12 countersunk) at x = +/- split_sx ...
 split_sz  = 4.5;    //   ... and z = +/- split_sz: in the band between the fans
 split_csk = 7;      // 90 deg countersinks for their heads, this wide at the fan face (M3 flat heads: 5.5-6.7); 45 deg walls print from the bed
+
+/* [Drill guide for the foam insert's pilot holes] */
+guide_d     = [6.35, 6.5]; // bits: A, the hole saw's pilot holes (1/4 in); B, the outdoor probe's hole. Set them to
+                           //   your bits; each bore gets guide_clear more, and the bit itself sizes it on the first pass
+guide_clear = 0.2;
+guide_h     = 20;   // bushing height, base included: 20 mm and 0.2 clearance keep the bit within about 0.6 deg
+guide_pitch = 24;   // between the two bushings
+guide_base  = [26, 46, 4];   // base: width, length (along the bushings), thickness
+guide_notch = 2;    // depth of the 90 deg V-notches set on the template's lines
 
 /* [Hidden] */
 $fn = 96;
@@ -669,6 +678,32 @@ module oring_test() {
     }
 }
 
+// drill_guide: two bushings on a small base, for perpendicular pilot holes in the foam insert. Lay it on the drilling
+// template: the notches at both ends on the vertical centre line, the active bushing's side notches on the hole's
+// cross arm; then drill through the paper. Printed base down, so the bores are vertical and round.
+module drill_guide() {
+    od = max(guide_d) + guide_clear + 8;                  // bushing: 4 mm walls
+    w = guide_base[0]; l = guide_base[1]; t = guide_base[2];
+    ya = [-guide_pitch / 2, guide_pitch / 2];             // bushings A and B along y
+    difference() {
+        union() {
+            translate([-w / 2, -l / 2, 0]) cube([w, l, t]);
+            for (y = ya) translate([0, y, 0]) cylinder(d = od, h = guide_h);
+        }
+        for (i = [0, 1]) translate([0, ya[i], 0]) {
+            d = guide_d[i] + guide_clear;
+            translate([0, 0, -1]) cylinder(d = d, h = guide_h + 2);
+            translate([0, 0, guide_h - 0.8]) cylinder(d1 = d, d2 = d + 1.6 + eps, h = 0.8 + eps);   // lead-in for the bit
+            translate([0, 0, -eps]) cylinder(d1 = d + 0.8, d2 = d, h = 0.4);                    // against elephant's foot
+            for (sx = [-1, 1]) translate([sx * w / 2, 0, 0]) guide_notch();                     // side notches
+        }
+        for (sy = [-1, 1]) translate([0, sy * l / 2, 0]) rotate(90) guide_notch();                 // end notches
+        for (i = [0, 1]) translate([0, ya[i] * 0.21, t - 0.6]) linear_extrude(1)               // bore sizes, between the bushings
+            text(str(guide_d[i]), size = 3, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
+    }
+}
+module guide_notch() translate([0, 0, -1]) linear_extrude(guide_base[2] + 2) rotate(45) square(guide_notch * sqrt(2), center = true);
+
 /* =================== PREVIEW =================== */
 // Electronics in the box, for the preview and the clearance check (installed coordinates): perfboard, ESP32-S3
 // (PCB, module and antenna, USB-C sockets, pins), its USB-C plug through the left wall, TMC2209 with its heatsink.
@@ -755,6 +790,7 @@ if (part == "magnet_cap")     magnet_cap();
 if (part == "ebox")           translate([0, 0, ebox_h + ebox_t - z_ep0]) ebox();   // floor on the bed
 if (part == "fittest")        fittest();
 if (part == "oring_test")     oring_test();
+if (part == "drill_guide")    drill_guide();
 if (part == "assembly_nofan") assembly_nofan();
 if (part == "body_top")       translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(true);    // fan plate on the bed
 if (part == "body_bottom")    translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(false);   // fan plate on the bed

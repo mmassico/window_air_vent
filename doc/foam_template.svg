@@ -3,44 +3,47 @@
 <text x="12.00" y="15.00" font-size="6" text-anchor="start" fill="#333333" font-weight="bold">Foam insert: drilling template, full size (mm)</text>
 <text x="12.00" y="23.00" font-size="3.4" text-anchor="start" fill="#333333" font-weight="normal">Print at 100 % (Actual size, not Fit to page); both bars must measure 100 mm.</text>
 <text x="12.00" y="28.00" font-size="3.4" text-anchor="start" fill="#333333" font-weight="normal">Tape it on the foam, centred across the insert's width, INTAKE on top (it works from either face).</text>
-<text x="12.00" y="33.00" font-size="3.4" text-anchor="start" fill="#333333" font-weight="normal">Mark each centre with an awl and drill a pilot hole right through.</text>
+<text x="12.00" y="33.00" font-size="3.4" text-anchor="start" fill="#333333" font-weight="normal">Drill a pilot hole right through each centre: mark it with an awl, or set the drill_guide on the lines.</text>
 <text x="12.00" y="38.00" font-size="3.4" text-anchor="start" fill="#333333" font-weight="normal">Cut with a 3-1/4 in (83 mm) hole saw, halfway from each face, centred on the pilot hole.</text>
-<line x1="107.95" y1="44.00" x2="107.95" y2="249.00" stroke="#777" stroke-width="0.25" stroke-dasharray="6,2,1,2"/>
-<line x1="57.95" y1="46.00" x2="57.95" y2="249.00" stroke="#777" stroke-width="0.3" stroke-dasharray="3,2"/>
-<line x1="157.95" y1="46.00" x2="157.95" y2="249.00" stroke="#777" stroke-width="0.3" stroke-dasharray="3,2"/>
-<text x="159.45" y="247.00" font-size="2.8" text-anchor="start" fill="#555" font-weight="normal">100 max</text>
-<text x="56.45" y="247.00" font-size="2.8" text-anchor="end" fill="#555" font-weight="normal">insert width</text>
-<circle cx="107.95" cy="104.00" r="45.00" fill="none" stroke="#888" stroke-width="0.3" stroke-dasharray="1.5,1.5"/>
-<circle cx="107.95" cy="104.00" r="41.50" fill="none" stroke="#111111" stroke-width="0.5"/>
-<line x1="101.95" y1="104.00" x2="113.95" y2="104.00" stroke="#111111" stroke-width="0.3"/>
-<line x1="107.95" y1="98.00" x2="107.95" y2="110.00" stroke="#111111" stroke-width="0.3"/>
-<circle cx="107.95" cy="104.00" r="0.60" fill="none" stroke="#111111" stroke-width="0.3"/>
-<text x="107.95" y="92.00" font-size="6" text-anchor="middle" fill="#bbbbbb" font-weight="bold">INTAKE</text>
-<text x="107.95" y="120.00" font-size="3.6" text-anchor="middle" fill="#333333" font-weight="bold">Ø 83 hole</text>
-<text x="107.95" y="125.00" font-size="3" text-anchor="middle" fill="#666" font-weight="normal">top: outdoor air in</text>
-<circle cx="107.95" cy="200.00" r="45.00" fill="none" stroke="#888" stroke-width="0.3" stroke-dasharray="1.5,1.5"/>
-<circle cx="107.95" cy="200.00" r="41.50" fill="none" stroke="#111111" stroke-width="0.5"/>
-<line x1="101.95" y1="200.00" x2="113.95" y2="200.00" stroke="#111111" stroke-width="0.3"/>
-<line x1="107.95" y1="194.00" x2="107.95" y2="206.00" stroke="#111111" stroke-width="0.3"/>
-<circle cx="107.95" cy="200.00" r="0.60" fill="none" stroke="#111111" stroke-width="0.3"/>
-<text x="107.95" y="188.00" font-size="6" text-anchor="middle" fill="#bbbbbb" font-weight="bold">EXHAUST</text>
-<text x="107.95" y="216.00" font-size="3.6" text-anchor="middle" fill="#333333" font-weight="bold">Ø 83 hole</text>
-<text x="107.95" y="221.00" font-size="3" text-anchor="middle" fill="#666" font-weight="normal">bottom: room air out</text>
-<text x="159.45" y="235.95" font-size="2.8" text-anchor="start" fill="#777" font-weight="normal">dashed circle: stop ring Ø 90</text>
-<text x="159.45" y="239.45" font-size="2.8" text-anchor="start" fill="#777" font-weight="normal">(the housing on the room face)</text>
-<line x1="115.95" y1="104.00" x2="171.95" y2="104.00" stroke="#b3261e" stroke-width="0.25" stroke-dasharray="1,1"/>
-<line x1="115.95" y1="200.00" x2="171.95" y2="200.00" stroke="#b3261e" stroke-width="0.25" stroke-dasharray="1,1"/>
-<line x1="169.95" y1="104.00" x2="169.95" y2="200.00" stroke="#b3261e" stroke-width="0.35"/>
-<polygon points="169.95,104.00 170.75,106.20 169.15,106.20" fill="#b3261e"/>
-<polygon points="169.95,200.00 169.15,197.80 170.75,197.80" fill="#b3261e"/>
-<text x="171.95" y="153.20" font-size="3.4" text-anchor="start" fill="#b3261e" font-weight="bold">96 between centres</text>
-<circle cx="107.95" cy="50.00" r="3.25" fill="none" stroke="#0b7a75" stroke-width="0.4" stroke-dasharray="1,0.8"/>
-<line x1="103.45" y1="50.00" x2="112.45" y2="50.00" stroke="#0b7a75" stroke-width="0.3"/>
-<line x1="107.95" y1="45.50" x2="107.95" y2="54.50" stroke="#0b7a75" stroke-width="0.3"/>
-<circle cx="107.95" cy="50.00" r="0.60" fill="none" stroke="#0b7a75" stroke-width="0.3"/>
-<text x="113.95" y="48.40" font-size="3.0" text-anchor="start" fill="#0b7a75" font-weight="bold">Optional: outdoor DS18B20</text>
-<text x="113.95" y="52.20" font-size="3.0" text-anchor="start" fill="#0b7a75" font-weight="bold">probe, Ø 6.5 hole</text>
-<text x="113.95" y="55.80" font-size="2.7" text-anchor="start" fill="#0b7a75" font-weight="normal">keep it in the shade</text>
+<line x1="107.95" y1="40.00" x2="107.95" y2="253.00" stroke="#555" stroke-width="0.25"/>
+<line x1="57.95" y1="42.00" x2="57.95" y2="253.00" stroke="#777" stroke-width="0.3" stroke-dasharray="3,2"/>
+<line x1="157.95" y1="42.00" x2="157.95" y2="253.00" stroke="#777" stroke-width="0.3" stroke-dasharray="3,2"/>
+<text x="159.45" y="251.00" font-size="2.8" text-anchor="start" fill="#555" font-weight="normal">100 max</text>
+<text x="56.45" y="251.00" font-size="2.8" text-anchor="end" fill="#555" font-weight="normal">insert width</text>
+<circle cx="107.95" cy="108.00" r="45.00" fill="none" stroke="#888" stroke-width="0.3" stroke-dasharray="1.5,1.5"/>
+<circle cx="107.95" cy="108.00" r="41.50" fill="none" stroke="#111111" stroke-width="0.5"/>
+<line x1="101.95" y1="108.00" x2="113.95" y2="108.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="107.95" y1="102.00" x2="107.95" y2="114.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="87.95" y1="108.00" x2="127.95" y2="108.00" stroke="#111111" stroke-width="0.2"/>
+<circle cx="107.95" cy="108.00" r="0.60" fill="none" stroke="#111111" stroke-width="0.3"/>
+<text x="113.95" y="102.00" font-size="6" text-anchor="start" fill="#bbbbbb" font-weight="bold">INTAKE</text>
+<text x="113.95" y="116.60" font-size="3.6" text-anchor="start" fill="#333333" font-weight="bold">Ø 83 hole</text>
+<text x="113.95" y="121.60" font-size="3" text-anchor="start" fill="#666" font-weight="normal">top: outdoor air in</text>
+<circle cx="107.95" cy="204.00" r="45.00" fill="none" stroke="#888" stroke-width="0.3" stroke-dasharray="1.5,1.5"/>
+<circle cx="107.95" cy="204.00" r="41.50" fill="none" stroke="#111111" stroke-width="0.5"/>
+<line x1="101.95" y1="204.00" x2="113.95" y2="204.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="107.95" y1="198.00" x2="107.95" y2="210.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="87.95" y1="204.00" x2="127.95" y2="204.00" stroke="#111111" stroke-width="0.2"/>
+<circle cx="107.95" cy="204.00" r="0.60" fill="none" stroke="#111111" stroke-width="0.3"/>
+<text x="113.95" y="198.00" font-size="6" text-anchor="start" fill="#bbbbbb" font-weight="bold">EXHAUST</text>
+<text x="113.95" y="212.60" font-size="3.6" text-anchor="start" fill="#333333" font-weight="bold">Ø 83 hole</text>
+<text x="113.95" y="217.60" font-size="3" text-anchor="start" fill="#666" font-weight="normal">bottom: room air out</text>
+<text x="159.45" y="239.95" font-size="2.8" text-anchor="start" fill="#777" font-weight="normal">dashed circle: stop ring Ø 90</text>
+<text x="159.45" y="243.45" font-size="2.8" text-anchor="start" fill="#777" font-weight="normal">(the housing on the room face)</text>
+<line x1="115.95" y1="108.00" x2="171.95" y2="108.00" stroke="#b3261e" stroke-width="0.25" stroke-dasharray="1,1"/>
+<line x1="115.95" y1="204.00" x2="171.95" y2="204.00" stroke="#b3261e" stroke-width="0.25" stroke-dasharray="1,1"/>
+<line x1="169.95" y1="108.00" x2="169.95" y2="204.00" stroke="#b3261e" stroke-width="0.35"/>
+<polygon points="169.95,108.00 170.75,110.20 169.15,110.20" fill="#b3261e"/>
+<polygon points="169.95,204.00 169.15,201.80 170.75,201.80" fill="#b3261e"/>
+<text x="171.95" y="157.20" font-size="3.4" text-anchor="start" fill="#b3261e" font-weight="bold">96 between centres</text>
+<circle cx="107.95" cy="54.00" r="3.25" fill="none" stroke="#0b7a75" stroke-width="0.4" stroke-dasharray="1,0.8"/>
+<line x1="103.45" y1="54.00" x2="112.45" y2="54.00" stroke="#0b7a75" stroke-width="0.3"/>
+<line x1="107.95" y1="49.50" x2="107.95" y2="58.50" stroke="#0b7a75" stroke-width="0.3"/>
+<line x1="87.95" y1="54.00" x2="127.95" y2="54.00" stroke="#0b7a75" stroke-width="0.2"/>
+<circle cx="107.95" cy="54.00" r="0.60" fill="none" stroke="#0b7a75" stroke-width="0.3"/>
+<text x="113.95" y="50.80" font-size="3.0" text-anchor="start" fill="#0b7a75" font-weight="bold">Optional: outdoor DS18B20</text>
+<text x="113.95" y="58.60" font-size="3.0" text-anchor="start" fill="#0b7a75" font-weight="bold">probe, Ø 6.5 hole</text>
+<text x="113.95" y="62.20" font-size="2.7" text-anchor="start" fill="#0b7a75" font-weight="normal">keep it in the shade</text>
 <rect x="57.95" y="262" width="100" height="2.5" fill="#111"/>
 <line x1="57.95" y1="259.00" x2="57.95" y2="262.00" stroke="#111111" stroke-width="0.3"/>
 <line x1="67.95" y1="260.50" x2="67.95" y2="262.00" stroke="#111111" stroke-width="0.3"/>
@@ -54,18 +57,18 @@
 <line x1="147.95" y1="260.50" x2="147.95" y2="262.00" stroke="#111111" stroke-width="0.3"/>
 <line x1="157.95" y1="259.00" x2="157.95" y2="262.00" stroke="#111111" stroke-width="0.3"/>
 <text x="107.95" y="269.00" font-size="3.4" text-anchor="middle" fill="#111111" font-weight="bold">100 mm</text>
-<rect x="12" y="102.00" width="2.5" height="100" fill="#111"/>
-<line x1="14.50" y1="102.00" x2="17.50" y2="102.00" stroke="#111111" stroke-width="0.3"/>
-<line x1="14.50" y1="112.00" x2="16.00" y2="112.00" stroke="#111111" stroke-width="0.3"/>
-<line x1="14.50" y1="122.00" x2="16.00" y2="122.00" stroke="#111111" stroke-width="0.3"/>
-<line x1="14.50" y1="132.00" x2="16.00" y2="132.00" stroke="#111111" stroke-width="0.3"/>
-<line x1="14.50" y1="142.00" x2="16.00" y2="142.00" stroke="#111111" stroke-width="0.3"/>
-<line x1="14.50" y1="152.00" x2="17.50" y2="152.00" stroke="#111111" stroke-width="0.3"/>
-<line x1="14.50" y1="162.00" x2="16.00" y2="162.00" stroke="#111111" stroke-width="0.3"/>
-<line x1="14.50" y1="172.00" x2="16.00" y2="172.00" stroke="#111111" stroke-width="0.3"/>
-<line x1="14.50" y1="182.00" x2="16.00" y2="182.00" stroke="#111111" stroke-width="0.3"/>
-<line x1="14.50" y1="192.00" x2="16.00" y2="192.00" stroke="#111111" stroke-width="0.3"/>
-<line x1="14.50" y1="202.00" x2="17.50" y2="202.00" stroke="#111111" stroke-width="0.3"/>
-<text x="21.00" y="153.20" font-size="3.4" text-anchor="start" fill="#111111" font-weight="bold">100 mm</text>
+<rect x="12" y="106.00" width="2.5" height="100" fill="#111"/>
+<line x1="14.50" y1="106.00" x2="17.50" y2="106.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="14.50" y1="116.00" x2="16.00" y2="116.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="14.50" y1="126.00" x2="16.00" y2="126.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="14.50" y1="136.00" x2="16.00" y2="136.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="14.50" y1="146.00" x2="16.00" y2="146.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="14.50" y1="156.00" x2="17.50" y2="156.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="14.50" y1="166.00" x2="16.00" y2="166.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="14.50" y1="176.00" x2="16.00" y2="176.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="14.50" y1="186.00" x2="16.00" y2="186.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="14.50" y1="196.00" x2="16.00" y2="196.00" stroke="#111111" stroke-width="0.3"/>
+<line x1="14.50" y1="206.00" x2="17.50" y2="206.00" stroke="#111111" stroke-width="0.3"/>
+<text x="21.00" y="157.20" font-size="3.4" text-anchor="start" fill="#111111" font-weight="bold">100 mm</text>
 <text x="203.90" y="274.00" font-size="2.6" text-anchor="end" fill="#777" font-weight="normal">tools/foam_template_svg.py (hole 83, pitch 96, stop_od 90)</text>
 </svg>

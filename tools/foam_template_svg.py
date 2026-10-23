@@ -20,8 +20,9 @@ PITCH = 96.0                 # pitch: duct centres, vertically
 STOP = 90.0                  # stop_od: the stop ring resting on the room face
 GAP = 100.0                  # largest window gap the insert fills
 PROBE = 6.5                  # hole for a 6 mm waterproof DS18B20 probe
+ARM = 20.0                   # cross arms, long enough to show past the drill_guide (base 26 wide)
 PAGE = (215.9, 279.4)        # US Letter, mm
-CX, CY = PAGE[0] / 2, 152.0  # centre between the two holes
+CX, CY = PAGE[0] / 2, 156.0  # centre between the two holes
 C_CUT, C_DIM, C_TXT, C_OPT = "#111111", "#b3261e", "#333333", "#0b7a75"
 
 out = []
@@ -45,6 +46,7 @@ def circle(x, y, d, color=C_CUT, width=0.4, dash=None, fill="none"):
 
 def cross(x, y, size=6, color=C_CUT):
     line(x - size, y, x + size, y, color, 0.3); line(x, y - size, x, y + size, color, 0.3)
+    line(x - ARM, y, x + ARM, y, color, 0.2)          # long arm: the drill_guide's side notches sit on it
     circle(x, y, 1.2, color, 0.3)
 
 
@@ -59,13 +61,13 @@ text(12, 15, "Foam insert: drilling template, full size (mm)", 6, "start", weigh
 for i, s in enumerate([
         "Print at 100 % (Actual size, not Fit to page); both bars must measure 100 mm.",
         "Tape it on the foam, centred across the insert's width, INTAKE on top (it works from either face).",
-        "Mark each centre with an awl and drill a pilot hole right through.",
+        "Drill a pilot hole right through each centre: mark it with an awl, or set the drill_guide on the lines.",
         "Cut with a 3-1/4 in (83 mm) hole saw, halfway from each face, centred on the pilot hole."]):
     text(12, 23 + i * 5, s, 3.4, "start")
 
 # --- guides: centre line, the largest gap ----------------------------------------------------------------
-y_top, y_bot = CY - PITCH / 2 - STOP / 2 - 15, CY + PITCH / 2 + STOP / 2 + 4
-line(CX, y_top, CX, y_bot, "#777", 0.25, "6,2,1,2")
+y_top, y_bot = CY - PITCH / 2 - STOP / 2 - 9 - 14, CY + PITCH / 2 + STOP / 2 + 4
+line(CX, y_top, CX, y_bot, "#555", 0.25)   # solid: the drill_guide's end notches sit on it
 for sx in (-1, 1):
     line(CX + sx * GAP / 2, y_top + 2, CX + sx * GAP / 2, y_bot, "#777", 0.3, "3,2")
 text(CX + GAP / 2 + 1.5, y_bot - 2, f"{GAP:g} max", 2.8, "start", "#555")
@@ -77,9 +79,9 @@ for dy, name, flow in ((-1, "INTAKE", "top: outdoor air in"), (1, "EXHAUST", "bo
     circle(CX, y, STOP, "#888", 0.3, "1.5,1.5")          # the stop ring's footprint on the room face
     circle(CX, y, HOLE, C_CUT, 0.5)
     cross(CX, y)
-    text(CX, y - 12, name, 6, weight="bold", color="#bbbbbb")
-    text(CX, y + 16, f"Ø {HOLE:g} hole", 3.6, color=C_TXT, weight="bold")
-    text(CX, y + 21, flow, 3, color="#666")
+    text(CX + 6, y - 6, name, 6, "start", weight="bold", color="#bbbbbb")   # right of the centre line
+    text(CX + 6, y + 8.6, f"Ø {HOLE:g} hole", 3.6, "start", color=C_TXT, weight="bold")
+    text(CX + 6, y + 13.6, flow, 3, "start", color="#666")
 text(CX + GAP / 2 + 1.5, CY + PITCH / 2 + STOP / 2 * 0.71 + 4, "dashed circle: stop ring Ø 90", 2.8, "start", "#777")
 text(CX + GAP / 2 + 1.5, CY + PITCH / 2 + STOP / 2 * 0.71 + 7.5, "(the housing on the room face)", 2.8, "start", "#777")
 
@@ -95,9 +97,9 @@ text(x_d + 2, CY + 1.2, f"{PITCH:g} between centres", 3.4, "start", C_DIM, "bold
 yp = CY - PITCH / 2 - STOP / 2 - 9
 circle(CX, yp, PROBE, C_OPT, 0.4, "1,0.8")
 cross(CX, yp, 4.5, C_OPT)
-text(CX + 6, yp - 1.6, "Optional: outdoor DS18B20", 3.0, "start", C_OPT, "bold")   # kept inside the width guides
-text(CX + 6, yp + 2.2, f"probe, Ø {PROBE:g} hole", 3.0, "start", C_OPT, "bold")
-text(CX + 6, yp + 5.8, "keep it in the shade", 2.7, "start", C_OPT)
+text(CX + 6, yp - 3.2, "Optional: outdoor DS18B20", 3.0, "start", C_OPT, "bold")   # kept inside the width guides
+text(CX + 6, yp + 4.6, f"probe, Ø {PROBE:g} hole", 3.0, "start", C_OPT, "bold")
+text(CX + 6, yp + 8.2, "keep it in the shade", 2.7, "start", C_OPT)
 
 # --- scale check bars ---------------------------------------------------------------------------------
 y0 = 262                                                   # horizontal bar

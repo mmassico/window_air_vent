@@ -109,6 +109,7 @@ Two common boards are supported. The chip is centred on both. Board B is the one
 | Squeeze in the hole (with O-rings) | about 20% in an 83.3 hole | | 📏 test the fit |
 | Cold | nitrile is rated to −20 °C | | ✅ the grooves are in the room-side half of the foam, well above that |
 | Hole spacing in the foam | 96 vertically, centred in the gap | | ✅ |
+| Drill guide (`drill_guide`, optional) | two bushings 24 apart, 20 tall; bores `guide_d` [6.35, 6.5] + 0.2 (`guide_clear`); V-notches on the template's centre line and cross arms | 1/4 in bit (pilot holes), 6.5 mm bit (probe), 75 mm of flute or more | 📏 run each bit through its bushing once; the bit can tilt about 0.6° at most |
 
 ## Electronics box (`ebox`) and cables
 

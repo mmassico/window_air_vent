@@ -112,7 +112,7 @@ The split housing (`body_top` 127 cm³, `body_bottom` 136 cm³, `splice` 8 cm³)
 
 - Printed fully solid, 353 cm³ of PETG (1.27 g/cm³) weighs about 448 g.
 - Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 400–450 g, plus a little for the skirt or brim and purging.
-- The optional test prints add about 30 cm³ (37 g): `fittest` 12 cm³, `oring_test` 18 cm³.
+- The optional test prints add about 30 cm³ (37 g): `fittest` 12 cm³, `oring_test` 18 cm³. The optional `drill_guide` adds 9 cm³ (11 g).
 - Print time: very roughly 9–12 hours for the housing on a Bambu Lab P1 (0.2 mm layers; about 7–9 hours at 0.28 mm), and about 3–4 hours for all the other parts together. The slicer gives the exact figures.
 
 ### Slicer settings
@@ -128,6 +128,7 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 | `splice` | 5 | 40 % | Joins the two halves: nut pockets and countersunk screws |
 | `ebox` | 3 | 15–20 % | No real loads; the self-tapping holes get their own walls |
 | `fittest`, `oring_test` | 4 | 25 % | As the housing, so they test what the housing will be |
+| `drill_guide` | 4 | 40 % | Small; 4 walls make the bushings solid |
 | `louver_chassis` | 3 | 20 % | Light load |
 | `louver_blade` | 3 | 15 % | Thin and light; their pins come out solid anyway |
 | `louver_link`, `louver_retainer` | | 100 % | Small and thin |
@@ -249,6 +250,12 @@ The insert takes two 83 mm holes, 96 mm apart, intake on top. The housing's plai
 <p align="center">
   <a href="doc/foam_template.pdf"><img src="images/foam_template.png" alt="Preview of the drilling template: two 83 mm circles 96 mm apart, labelled intake and exhaust, with centre crosses, the stop ring outlines, a 100 mm width guide, an optional probe hole above the intake, and 100 mm scale bars" width="300"></a>
 </p>
+
+**Straight pilot holes (optional).** A pilot hole that leans sends the hole saw off its line on the far face. The printed `drill_guide` keeps the bit perpendicular: two 20 mm bushings, A for the hole saw's pilot holes (1/4 in bit) and B for the probe's hole (6.5 mm), set in `guide_d` to suit your bits. Lay it on the taped template: the notches at both ends on the vertical centre line, and the side notches of the bushing you use on that hole's cross line. Hold it down and drill straight through the paper and the foam; then move it to the next hole. The bit has to reach through 20 mm of bushing and 51 mm of foam, so use one with at least 75 mm of flute (a 6 in aircraft bit, for instance). Run each bit through its bushing once before the first hole, to size the bore.
+
+| Part | <div style="width:180px">Thumbnail</div> | Size (mm) | Time | Print orientation |
+|---|:---:|---|---|---|
+| `drill_guide` | <img src="images/part_drill_guide.png" width="180"> | 26 × 46 × 20 | about 20 min | Base on the bed, bushings up |
 
 A 3-1/4 in (83 mm) bi-metal hole saw cuts only 32 mm deep, less than the 51 mm foam. Two ways to get through:
 
