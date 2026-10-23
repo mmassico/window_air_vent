@@ -97,9 +97,9 @@ text(x_d + 2, CY + 1.2, f"{PITCH:g} between centres", 3.4, "start", C_DIM, "bold
 yp = CY - PITCH / 2 - STOP / 2 - 9
 circle(CX, yp, PROBE, C_OPT, 0.4, "1,0.8")
 cross(CX, yp, 4.5, C_OPT)
-text(CX + 6, yp - 3.2, "Optional: outdoor DS18B20", 3.0, "start", C_OPT, "bold")   # kept inside the width guides
-text(CX + 6, yp + 4.6, f"probe, Ø {PROBE:g} hole", 3.0, "start", C_OPT, "bold")
-text(CX + 6, yp + 8.2, "keep it in the shade", 2.7, "start", C_OPT)
+text(CX + 6, yp + 4.6, "Optional: outdoor DS18B20", 3.0, "start", C_OPT, "bold")   # kept inside the width guides
+text(CX + 6, yp - 6.8, f"probe, Ø {PROBE:g} hole", 3.0, "start", C_OPT, "bold")
+text(CX + 6, yp - 3.2, "keep it in the shade", 2.7, "start", C_OPT)
 
 # --- scale check bars ---------------------------------------------------------------------------------
 y0 = 262                                                   # horizontal bar
