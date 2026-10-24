@@ -203,10 +203,18 @@ The Freenove ESP32-S3-WROOM Lite, measured. Its two pin rows are 25.3 mm apart, 
 
 ### The TMC2209 module, a silent stepper motor driver
 
-A StepStick-format driver: 21 × 15 mm, two rows of 8 pins 12.7 mm apart (5 holes on the perfboard). The chip is on the underside; its heatsink (15 × 14.5 × 13 mm, fins along the pin rows) sticks onto the thermal pad on top. The side-view heights are assumed equal to the ESP32's until measured on the part.
+A StepStick-format driver, measured: 20.81 × 15.08 mm, two rows of 8 pins 12.7 mm apart (5 holes on the perfboard). The chip is on the underside; its heatsink (15 × 14.4 mm, fins along the pin rows) sticks onto the thermal pad on top, toward the DIR/GND end so it clears the potentiometer, and stands 14.70 mm from the board's underside.
 
 <p align="center">
   <img src="doc/tmc2209.svg" alt="TMC2209 module, dimensioned: PCB 15.08 x 20.81 mm, two rows of 8 pins 12.7 mm apart (EN, MS1, MS2, PDN, UART, CLK, STEP, DIR; VM, GND, M1B, M1A, M2A, M2B, VIO, GND), heatsink 14.4 x 15 mm outline; side view: 1.62 mm PCB on a 2.62 mm spacer, 5.8 mm pins, 13.08 mm heatsink" width="640">
+</p>
+
+### The SCD40 board, the CO₂ sensor
+
+The Sensirion SCD40 on a small 13.70 × 21.70 mm board, measured: 7.85 mm from its underside to the sensor's top, four pin holes 2.54 mm apart along the bottom edge (GND, VDD, SCL, SDA). It carries its own I²C pull-ups (R1, R2, 10 kΩ), so the controller needs none for it. On the controller PCB, J5 has the same pin order, so a straight 4-wire cable joins them. Keep the sensor's membrane uncovered (see the warning above).
+
+<p align="center">
+  <img src="doc/scd40.svg" alt="SCD40 module, dimensioned: board 13.70 x 21.70 x 1.62 mm, 7.85 mm overall height, the sensor about 10.1 mm square near the top, four pin holes 2.54 mm apart along the bottom edge labelled GND, VDD, SCL, SDA, pin 1 hole 2.63 mm from the left edge and 1.00 mm from the bottom edge" width="640">
 </p>
 
 ### The electronics box layout
@@ -334,9 +342,10 @@ About 34 cm³ (45 g) of PETG in all. Also needed: a strip of 1 mm felt or foam t
 ## Files
 
 ```
-doc/                        reference drawings: the motor, the AS5600, ESP32-S3 and TMC2209 boards, 
-                            the electronics box layout, the perfboard build plan (and PDF); the lip 
-                            foam and foam insert templates (PDF, to print at 100 %), the hole saw
+doc/                        reference drawings: the motor, the AS5600, ESP32-S3, TMC2209 and SCD40 
+                            boards, the electronics box layout, the perfboard build plan (and PDF); 
+                            the lip foam and foam insert templates (PDF, to print at 100 %), the 
+                            hole saw
 images/                     renders used in this README
 cad/window_vent.scad        parametric model (Customizer; part = "assembly" for the preview)
 cad/louvers.scad            optional adjustable louvers for the intake fan
@@ -349,6 +358,7 @@ tools/as5600_svg.py         draws doc/as5600.svg (the AS5600 board, dimensioned)
 tools/ebox_layout_svg.py    draws doc/ebox_layout.svg (the electronics box, to scale)
 tools/esp32_svg.py          draws doc/esp32_s3.svg (the ESP32-S3 board, dimensioned)
 tools/tmc2209_svg.py        draws doc/tmc2209.svg (the TMC2209 module, dimensioned)
+tools/scd40_svg.py          draws doc/scd40.svg (the SCD40 CO2 sensor board, dimensioned)
 tools/motor_svg.py          draws doc/motor_17hs08.svg (the stepper motor, dimensioned)
 tools/motor_mount_svg.py    draws doc/motor_mount.svg (section through a motor screw)
 tools/lip_templates_svg.py  draws doc/lip_templates.svg and .pdf (full-size foam templates) and 
