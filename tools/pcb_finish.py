@@ -90,12 +90,15 @@ pin_labels(106.8, 138.7, ["GND", "12V", "TCH", "PWM"])         # J3: fan 1 (2 mm
 pin_labels(118.6, 138.7, ["GND", "3V3", "SCL", "SDA"])         # J5: SCD40
 pin_labels(106.8, 146.05, ["GND", "12V", "TCH", "PWM"])        # J2: fan 0
 pin_labels(118.6, 146.05, ["1A", "1B", "2A", "2B"])            # J4: motor
-text("AS5600", 102.8, 135.3, 0.8, bold=True)
+text("AS5600", 102.8, 134.65, 0.8, bold=True)
+text("POS", 102.8, 135.95, 0.8)                                 # the position encoder
 fan1 = text("FAN1", 103.3, 140.7, 0.8, bold=True)
+poly([(102.75, 138.5), (103.85, 138.5), (103.3, 139.45)])       # fan 1: the exhaust, the bottom duct
 GAP = 106.8 - 1.27 - pcbnew.ToMM(fan1.GetBoundingBox().GetRight())     # FAN1 to its header's outline
 text("FAN0", 104.75, 148.1, 0.8, bold=True, angle=90)       # beside its header
-for name, y in (("SCD40", 140.7), ("MOTOR", 148.1)):          # the same gap after J5's and J4's outline
+for name, y in (("SCD40", 140.05), ("MOTOR", 148.1)):         # the same gap after J5's and J4's outline
     text(name, 118.6 + 3 * P + 1.27 + GAP, y, 0.8, bold=True, just="left")
+text("CO_{2}", 118.6 + 3 * P + 1.27 + GAP, 141.35, 0.8, just="left")   # with a subscript 2
 
 # resistors: standing ones above their pads, lying ones on their body
 text("R1-R4", 103.2, 142.9, 0.8)                                 # the standing ones, left to right
