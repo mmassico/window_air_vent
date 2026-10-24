@@ -3,9 +3,12 @@
 
 Usage: python tools/perfboard_svg.py   (run from the window-vent folder)
 The SVG (for the README) holds everything on one sheet; the PDF has three landscape Letter pages for the bench: the
-component side, the solder side and the wire list. Top panel: the component side, seen from above as in doc/ebox_layout.svg (the room at the bottom, the right wall on the
-right). Bottom panel: the solder side, the board turned over left to right, with the numbered wires of the table.
-Grid: 24 columns, A at the right wall's side, and 18 rows, 18 at the back (the model's pb_col(0) and pb_row(0)), as printed on the board.
+component side, the solder side and the wire list.
+Top panel: the component side, seen from above as in doc/ebox_layout.svg (the window side at the top, the room at the
+bottom, the right wall on the right). Bottom panel: the solder side, the board turned over left to right, with the
+numbered wires of the table.
+Grid: 24 columns, A at the right wall's side, and 18 rows, 18 at the back (the model's pb_col(0) and pb_row(0)), as
+printed on the board.
 Pins as in firmware/baremetal/Pins.h; connections as in firmware/images/wiring.svg.
 """
 import os, subprocess, tempfile
@@ -324,8 +327,8 @@ def table(x, y, first, last, size=11.5, rowh=18.5):
 
 TITLE = "Perfboard build plan (5 x 7 cm protoboard, 24 x 18 holes)"
 GRID = "Columns A to X from the right wall, rows 18 (back) to 1 (front), as printed on the board (A18 is its back right corner, seen from above)."
-TOP = "Component side, seen from above (the room at the bottom)"
-BOT = "Solder side: the board turned over left to right (A now on the left). Numbered wires as in the table."
+TOP = "Component side, seen from above: window (outdoor) side at the top, room (indoor) side at the bottom"
+BOT = "Solder side, turned over left to right: A on the left, window side still at the top"
 WIRE_NOTE = ["Thin insulated wire (wire-wrap or 26-30 AWG), except 22-24 AWG",
              "for the 12 V and GND around the driver (1-14) and the motor (58-61)."]
 NOTES = [   # paragraphs, wrapped to each page's width
