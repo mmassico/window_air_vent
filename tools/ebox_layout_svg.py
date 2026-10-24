@@ -21,7 +21,7 @@ PILLAR = (34.0, 21.0)        # back fixing pillars: x = +/- 34, y = 21 (8 x 8 ar
 CABLE_IN = (72.5, 88.5)      # cable entries at the top of both side walls (y range)
 ESP = (57.0, 28.5)           # Freenove ESP32-S3 Lite: overall length (with the antenna), width
 ESP_PCB = 50.0               # its PCB; the module's antenna sticks out 7 mm beyond it, over the middle 18.5 mm
-TMC = (21.0, 15.0)           # TMC2209 module (heatsink 15 x 14.5 on top, fins along the pin rows)
+TMC = (20.81, 15.08)         # TMC2209 module, measured (heatsink 15 x 14.4 on top, fins along the pin rows)
 PLUG = 20.0                  # USB-C plug housing, outside the wall
 PITCH = 2.54
 
@@ -122,7 +122,8 @@ tx1 = tx0 + TMC[0]
 ty0 = row(12) - 1.15                   # pin rows 12 and 17 (tmc_row), one free row behind the ESP32's front row
 ty1 = ty0 + TMC[1]
 rect(tx0, ty0, tx1, ty1, "#222222", "#000", 2, rx=2)
-rect((tx0 + tx1) / 2 - 7.5, (ty0 + ty1) / 2 - 7.25, (tx0 + tx1) / 2 + 7.5, (ty0 + ty1) / 2 + 7.25, "#2f5fd0", "#1b3a8a", 1, op=0.6)
+sg = (TMC[1] - 14.4) / 2                # heatsink 15 x 14.4: toward the DIR/GND end (left), the same gap as at its sides
+rect(tx1 - sg - 15, (ty0 + ty1) / 2 - 7.2, tx1 - sg, (ty0 + ty1) / 2 + 7.2, "#2f5fd0", "#1b3a8a", 1, op=0.6)
 for e in (row(12), row(17)):
     for i in range(8):
         cx, cy = P(col(4 + i), e)

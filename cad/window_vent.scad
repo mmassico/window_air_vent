@@ -139,10 +139,11 @@ esp_col   = 22;     // ESP32 soldered on the grid: its USB-end pins in column 22
                     //   standoff by 3.1 and the spacer clears the M2 screw head by 3.6. The plug enters the box
 esp_row   = 0;      // its back pin row in row 0; the front row is 10 holes on (25.4; the board's rows are 25.3 apart)
 esp_pcb   = [1.62, 2.78, 5.54];  // ESP32 PCB thickness, pin spacer, pin length below the spacer (measured)
-tmc_pcb   = [21, 15, 1.62];      // TMC2209 module (along x = along its pin rows, along y, thickness; see doc/tmc2209.svg)
-tmc_spacer = 2.78;  // its pin spacer (assumed as on the ESP32; to measure)
-tmc_pin   = 5.54;   // its pins below the spacer (likewise); 2 rows of 8, 12.7 apart
-tmc_sink  = [15, 14.5, 13];     // its heatsink, on top, fins along the pin rows
+tmc_pcb   = [20.81, 15.08, 1.62]; // TMC2209 module, measured (along x = along its pin rows, along y, thickness; see doc/tmc2209.svg)
+tmc_spacer = 2.62;  // its pin spacer, measured
+tmc_pin   = 5.8;    // its pins below the spacer, measured; 2 rows of 8, 12.7 apart
+tmc_sink  = [15, 14.4, 13.08]; // its heatsink, on top, fins along the pin rows; measured 15 x 14.4 x 13.2 with its thermal
+                    //   sticker, 14.70 from the PCB underside to its top once pressed on
 tmc_col   = 4;      // TMC2209 on the grid: its first pin in column 4 (room for the 12 V terminal by the right wall)
 tmc_row   = 12;     // its back pin row in row 12, the front one in row 17: one free row behind the ESP32's front row
 usb_dy    = 6;      // the USB-UART connector's offset from the board's centre line, toward the room (measured: 8.25 from the
@@ -729,7 +730,8 @@ module electronics(usb = esp_usb, plug = true) {
     tx0 = pb_col(tmc_col) - (tmc_pcb[0] - 7 * 2.54) / 2;    // TMC2209, front right, its pins on the grid (see doc/ebox_layout.svg)
     ty0 = pb_row(tmc_row) - (tmc_pcb[1] / 2 - 6.35);
     color([0.1, 0.1, 0.1]) translate([tx0, ty0, fl + tmc_z0]) cube(tmc_pcb);
-    color([0.2, 0.35, 0.8]) translate([tx0 + (tmc_pcb[0] - tmc_sink[0]) / 2, ty0 + (tmc_pcb[1] - tmc_sink[1]) / 2, fl + tmc_z0 + tmc_pcb[2]]) cube(tmc_sink);
+    sg = (tmc_pcb[1] - tmc_sink[1]) / 2;                    // heatsink: the same small gap at its sides and at the DIR/GND end,
+    color([0.2, 0.35, 0.8]) translate([tx0 + tmc_pcb[0] - tmc_sink[0] - sg, ty0 + sg, fl + tmc_z0 + tmc_pcb[2]]) cube(tmc_sink);   // (+x), clear of the potentiometer at the EN/VM end
     for (sy = [-1, 1]) {                                    // its pin rows: spacer, pins (into the headers or the perfboard), headers
         ry = ty0 + tmc_pcb[1] / 2 + sy * 6.35;
         color([0.25, 0.25, 0.25]) translate([tx0 + 0.4, ry - 1.25, fl + tmc_z0 - tmc_spacer]) cube([tmc_pcb[0] - 0.8, 2.5, tmc_spacer]);

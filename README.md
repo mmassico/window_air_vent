@@ -206,7 +206,7 @@ The Freenove ESP32-S3-WROOM Lite, measured. Its two pin rows are 25.3 mm apart, 
 A StepStick-format driver: 21 × 15 mm, two rows of 8 pins 12.7 mm apart (5 holes on the perfboard). The chip is on the underside; its heatsink (15 × 14.5 × 13 mm, fins along the pin rows) sticks onto the thermal pad on top. The side-view heights are assumed equal to the ESP32's until measured on the part.
 
 <p align="center">
-  <img src="doc/tmc2209.svg" alt="TMC2209 module, dimensioned: PCB 15 x 21 mm, two rows of 8 pins 12.7 mm apart (EN, MS1, MS2, PDN, UART, CLK, STEP, DIR; VM, GND, M1B, M1A, M2A, M2B, VIO, GND), heatsink 14.5 x 15 mm outline; side view: 1.62 mm PCB on a 2.78 mm spacer, 5.54 mm pins, 13 mm heatsink" width="640">
+  <img src="doc/tmc2209.svg" alt="TMC2209 module, dimensioned: PCB 15.08 x 20.81 mm, two rows of 8 pins 12.7 mm apart (EN, MS1, MS2, PDN, UART, CLK, STEP, DIR; VM, GND, M1B, M1A, M2A, M2B, VIO, GND), heatsink 14.4 x 15 mm outline; side view: 1.62 mm PCB on a 2.62 mm spacer, 5.8 mm pins, 13.08 mm heatsink" width="640">
 </p>
 
 ### The electronics box layout
