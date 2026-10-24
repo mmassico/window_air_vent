@@ -523,8 +523,8 @@
 <rect x="173.4" y="183.3" width="700.0" height="399.0" rx="6" fill="#3b6fb6" fill-opacity="0.3" stroke="#183a6b" stroke-width="2"/>
 <rect x="873.4" y="253.3" width="98.0" height="259.0" rx="2" fill="#2a2a2a" fill-opacity="0.4" stroke="#111" stroke-width="1.5"/>
 <rect x="837.8" y="210.6" width="190.5" height="344.3" rx="2" fill="none" fill-opacity="1" stroke="#b3261e" stroke-width="1.5" stroke-dasharray="6,4"/>
-<text x="925.2" y="376.8" font-size="12" text-anchor="middle" fill="#b3261e" font-weight="bold">antenna:</text>
-<text x="925.2" y="392.8" font-size="12" text-anchor="middle" fill="#b3261e" font-weight="bold">keep clear</text>
+<text x="925.2" y="376.8" font-size="12" text-anchor="middle" fill="#b3261e" font-weight="bold" stroke="#ffffff" stroke-opacity="0.6" stroke-width="3" stroke-linejoin="round" paint-order="stroke">antenna:</text>
+<text x="925.2" y="392.8" font-size="12" text-anchor="middle" fill="#b3261e" font-weight="bold" stroke="#ffffff" stroke-opacity="0.6" stroke-width="3" stroke-linejoin="round" paint-order="stroke">keep clear</text>
 <text x="523.4" y="368.6" font-size="17" text-anchor="middle" fill="#183a6b" font-weight="bold">ESP32-S3, soldered</text>
 <text x="523.4" y="387.6" font-size="13" text-anchor="middle" fill="#183a6b" font-weight="normal">USB end toward the left wall</text>
 <rect x="555.5" y="615.1" width="291.3" height="211.1" rx="4" fill="#222" fill-opacity="0.22" stroke="#000" stroke-width="2"/>
@@ -1651,13 +1651,13 @@
 <text x="583.8" y="1523.2" font-size="10" text-anchor="middle" fill="#000" font-weight="bold">60</text>
 <circle cx="569.6" cy="1547.6" r="10" fill="#ffffff" stroke="#bdbdbd" stroke-width="2"/>
 <text x="569.6" y="1551.6" font-size="10" text-anchor="middle" fill="#000" font-weight="bold">61</text>
-<text x="150.0" y="1712.0" font-size="12.5" text-anchor="start" fill="#333" font-weight="normal">Values: R1-R5 10k, R6 1k, R7 100k, R8 22k, R9 R10 4.7k (1/4 W); C1 100 uF 25 V. R1-R4, R9, R10 stand up; R5-R8 lie flat</text>
-<text x="150.0" y="1731.0" font-size="12.5" text-anchor="start" fill="#333" font-weight="normal">in row 7, so they pass under the edges of the ESP32 and the TMC2209 (2.6 mm up on their pin spacers).</text>
+<text x="150.0" y="1712.0" font-size="12.5" text-anchor="start" fill="#333" font-weight="normal">Values: R1-R5 10k, R6 1k, R7 100k, R8 22k, R9 R10 4.7k (1/4 W); C1 100 uF 25 V. R1-R4, R9, R10 stand up; R5-R8 lie flat in row</text>
+<text x="150.0" y="1731.0" font-size="12.5" text-anchor="start" fill="#333" font-weight="normal">7, so they pass under the edges of the ESP32 and the TMC2209 (2.6 mm up on their pin spacers).</text>
 <text x="150.0" y="1750.0" font-size="12.5" text-anchor="start" fill="#333" font-weight="normal">Headers: 1 x 4 and 1 x 3 male, 2.54 mm. The fan plugs (J2, J3) go on with their latch toward row 2; keep row 2 clear there.</text>
 <text x="150.0" y="1769.0" font-size="12.5" text-anchor="start" fill="#333" font-weight="normal">AS5600: tie its DIR pin to GND at the module. TMC2209: CLK and PDN stay free (wires 38-39 go to its UART pin; check with a meter</text>
 <text x="150.0" y="1788.0" font-size="12.5" text-anchor="start" fill="#333" font-weight="normal">that UART is PDN_UART on your module); DIAG (GPIO 13) is not on its pins, so it stays free too.</text>
-<text x="150.0" y="1807.0" font-size="12.5" text-anchor="start" fill="#333" font-weight="normal">Solder the parts first, then the ESP32 and the TMC2209: the wires under them must be in place before.</text>
-<text x="150.0" y="1826.0" font-size="12.5" text-anchor="start" fill="#333" font-weight="normal">Check each net with a meter before power; 12 V on J1 only with the motor plugged in.</text>
+<text x="150.0" y="1807.0" font-size="12.5" text-anchor="start" fill="#333" font-weight="normal">Solder the parts first, then the ESP32 and the TMC2209: the wires under them must be in place before. Check each net with a</text>
+<text x="150.0" y="1826.0" font-size="12.5" text-anchor="start" fill="#333" font-weight="normal">meter before power; 12 V on J1 only with the motor plugged in.</text>
 <text x="1175.0" y="130.0" font-size="17" text-anchor="start" fill="#111" font-weight="bold">Wires (solder side)</text>
 <text x="1175.0" y="150.0" font-size="12" text-anchor="start" fill="#333" font-weight="normal">Thin insulated wire (wire-wrap or 26-30 AWG), except 22-24 AWG</text>
 <text x="1175.0" y="166.0" font-size="12" text-anchor="start" fill="#333" font-weight="normal">for the 12 V and GND around the driver (1-14) and the motor (58-61).</text>

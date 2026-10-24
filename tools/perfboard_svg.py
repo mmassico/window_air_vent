@@ -176,8 +176,8 @@ def panel(ox, oy, under):
         rect_g(3 - pe - 7 / PITCH, 5 - 9.25 / PITCH, 3 - pe, 5 + 9.25 / PITCH, "#2a2a2a", "#111", 1.5, 2, 0.4)
         rect_g(3 - pe - 7 / PITCH - 1.6, 5 - 9.25 / PITCH - 1.2, 3 - pe + 1, 5 + 9.25 / PITCH + 1.2, "none", "#b3261e", 1.5, 2, 1, "6,4")
         x, y = G(1.2, 5)
-        text(x, y - 6, "antenna:", 12, color="#b3261e", weight="bold")
-        text(x, y + 10, "keep clear", 12, color="#b3261e", weight="bold")
+        text(x, y - 6, "antenna:", 12, color="#b3261e", weight="bold", halo=0.6)
+        text(x, y + 10, "keep clear", 12, color="#b3261e", weight="bold", halo=0.6)
         x, y = G(12.5, 4.6)
         text(x, y, "ESP32-S3, soldered", 17, color="#183a6b", weight="bold")
         text(x, y + 19, "USB end toward the left wall", 13, color="#183a6b")
@@ -328,20 +328,25 @@ TOP = "Component side, seen from above (the room at the bottom)"
 BOT = "Solder side: the board turned over left to right (A now on the left). Numbered wires as in the table."
 WIRE_NOTE = ["Thin insulated wire (wire-wrap or 26-30 AWG), except 22-24 AWG",
              "for the 12 V and GND around the driver (1-14) and the motor (58-61)."]
-NOTES = [
-    "Values: R1-R5 10k, R6 1k, R7 100k, R8 22k, R9 R10 4.7k (1/4 W); C1 100 uF 25 V. R1-R4, R9, R10 stand up; R5-R8 lie flat",
+NOTES = [   # paragraphs, wrapped to each page's width
+    "Values: R1-R5 10k, R6 1k, R7 100k, R8 22k, R9 R10 4.7k (1/4 W); C1 100 uF 25 V. R1-R4, R9, R10 stand up; R5-R8 lie flat "
     "in row 7, so they pass under the edges of the ESP32 and the TMC2209 (2.6 mm up on their pin spacers).",
     "Headers: 1 x 4 and 1 x 3 male, 2.54 mm. The fan plugs (J2, J3) go on with their latch toward row 2; keep row 2 clear there.",
-    "AS5600: tie its DIR pin to GND at the module. TMC2209: CLK and PDN stay free (wires 38-39 go to its UART pin; check with a meter",
-    "that UART is PDN_UART on your module); DIAG (GPIO 13) is not on its pins, so it stays free too.",
-    "Solder the parts first, then the ESP32 and the TMC2209: the wires under them must be in place before.",
+    "AS5600: tie its DIR pin to GND at the module. TMC2209: CLK and PDN stay free (wires 38-39 go to its UART pin; check with a "
+    "meter that UART is PDN_UART on your module); DIAG (GPIO 13) is not on its pins, so it stays free too.",
+    "Solder the parts first, then the ESP32 and the TMC2209: the wires under them must be in place before. "
     "Check each net with a meter before power; 12 V on J1 only with the motor plugged in.",
 ]
 
 
-def notes(x, y, size=12.5, step=19):
-    for i, n in enumerate(NOTES):
-        text(x, y + i * step, n, size, "start", color="#333")
+def notes(x, y, size=12.5, step=19, width=128):
+    """The notes from (x, y), wrapped at width characters; returns the last baseline."""
+    import textwrap
+    for par in NOTES:
+        for line in textwrap.wrap(par, width):
+            text(x, y, line, size, "start", color="#333")
+            y += step
+    return y - step
 
 
 def save(path, w, h):
@@ -378,8 +383,9 @@ tmp = tempfile.mkdtemp(prefix="wv_perf_")
 text(60, 58, TITLE, 26, "start", weight="bold")
 text(60, 88, GRID, 14.5, "start", color="#333")
 text(60, 128, "Page 1 of 3. " + TOP, 18, "start", weight="bold")
-panel(OXP, 225, False)
-notes(60, 945, 13.5, 20)
+panel(OXP, 205, False)
+last = notes(60, 922, 13.5, 20, 210)
+assert last <= PH - 40, f"page 1 notes run to {last}: past the printable area"
 pages.append(os.path.join(tmp, "p1.svg")); save(pages[-1], PW, PH)
 
 text(60, 58, TITLE, 26, "start", weight="bold")
