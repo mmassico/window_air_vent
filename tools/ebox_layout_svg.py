@@ -16,7 +16,7 @@ Y0, Y1 = 15.0, 91.4
 PB = (70.0, 50.0)            # perfboard
 PB_Y = 56.0                  # its centre (y)
 PB_HOLES = (66.0, 46.26)     # measured: Ø 2.3 holes, 63.70 and 43.96 between their facing edges
-GRID = (24, 18)              # pin holes along x (A to X) and y (1 to 18), 2.54 apart, centred
+GRID = (24, 18)              # pin holes along x (A to X) and y (18 at the back to 1), 2.54 apart, centred
 PILLAR = (34.0, 21.0)        # back fixing pillars: x = +/- 34, y = 21 (8 x 8 around)
 CABLE_IN = (72.5, 88.5)      # cable entries at the top of both side walls (y range)
 ESP = (57.0, 28.5)           # Freenove ESP32-S3 Lite: overall length (with the antenna), width

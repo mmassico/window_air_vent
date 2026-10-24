@@ -121,7 +121,8 @@ pb_size   = [70, 50];  // perfboard carrier (5 x 7 cm protoboard)
 pb_holes  = [66, 46.26]; // its corner hole spacing (measured: Ø 2.3 holes, for M2, about 2 mm from the edges)
 pb_t      = 1.51;   // its thickness (measured)
 pb_grid   = [24, 18]; // its pin holes, 2.54 apart and centred: 24 columns along x (labelled A to X), 18 rows along y
-                    //   (1 to 18). Indices below count from 0: column 0 at the right wall's side, row 0 at the back
+                    //   (18 at the back to 1 at the front, as printed). Indices below count from 0: column 0 (A) at
+                    //   the right wall's side, row 0 (18) at the back
 pb_y      = 56;     // perfboard centre (y)
 pb_stand  = 5;      // standoff height
 usb_port  = "diamond"; // [none, mark, diamond] the ESP32's USB-C cable (5 V power and console) through a side wall:

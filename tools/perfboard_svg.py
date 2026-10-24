@@ -5,7 +5,7 @@ Usage: python tools/perfboard_svg.py   (run from the window-vent folder)
 The SVG (for the README) holds everything on one sheet; the PDF has three landscape Letter pages for the bench: the
 component side, the solder side and the wire list. Top panel: the component side, seen from above as in doc/ebox_layout.svg (the room at the bottom, the right wall on the
 right). Bottom panel: the solder side, the board turned over left to right, with the numbered wires of the table.
-Grid: 24 columns, A at the right wall's side, and 18 rows, 1 at the back (the model's pb_col(0) and pb_row(0)).
+Grid: 24 columns, A at the right wall's side, and 18 rows, 18 at the back (the model's pb_col(0) and pb_row(0)), as printed on the board.
 Pins as in firmware/baremetal/Pins.h; connections as in firmware/images/wiring.svg.
 """
 import os, subprocess, tempfile
@@ -121,7 +121,7 @@ def text(x, y, s, size=13, anchor="middle", color="#111", weight="normal"):
 
 
 def hole_name(h):
-    return f"{LET[h[0]]}{h[1] + 1}"
+    return f"{LET[h[0]]}{NY - h[1]}"
 
 
 def panel(ox, oy, under):
@@ -147,8 +147,8 @@ def panel(ox, oy, under):
         text(x, yt + 50 * K + 17, LET[c], 12, color="#8a6d2a", weight="bold")
     for r in range(NY):
         _, y = G(0, r)
-        text(xl - 8, y + 4, str(r + 1), 12, "end", "#8a6d2a", "bold")
-        text(xl + 70 * K + 8, y + 4, str(r + 1), 12, "start", "#8a6d2a", "bold")
+        text(xl - 8, y + 4, str(NY - r), 12, "end", "#8a6d2a", "bold")
+        text(xl + 70 * K + 8, y + 4, str(NY - r), 12, "start", "#8a6d2a", "bold")
     for c in range(NX):
         for r in range(NY):
             x, y = G(c, r)
@@ -320,15 +320,15 @@ def table(x, y, first, last, size=11.5, rowh=18.5):
 
 
 TITLE = "Perfboard build plan (5 x 7 cm protoboard, 24 x 18 holes)"
-GRID = "Columns A to X from the right wall, rows 1 to 18 from the back (A1 is the board's back right corner, seen from above)."
+GRID = "Columns A to X from the right wall, rows 18 (back) to 1 (front), as printed on the board (A18 is its back right corner, seen from above)."
 TOP = "Component side, seen from above (the room at the bottom)"
 BOT = "Solder side: the board turned over left to right (A now on the left). Numbered wires as in the table."
 WIRE_NOTE = ["Thin insulated wire (wire-wrap or 26-30 AWG), except 22-24 AWG",
              "for the 12 V and GND around the driver (1-14) and the motor (58-61)."]
 NOTES = [
     "Values: R1-R5 10k, R6 1k, R7 100k, R8 22k, R9 R10 4.7k (1/4 W); C1 100 uF 25 V. R1-R4, R9, R10 stand up; R5-R8 lie flat",
-    "in row 12, so they pass under the edges of the ESP32 and the TMC2209 (2.6 mm up on their pin spacers).",
-    "Headers: 1 x 4 and 1 x 3 male, 2.54 mm. The fan plugs (J2, J3) go on with their latch toward row 17; keep row 17 clear there.",
+    "in row 7, so they pass under the edges of the ESP32 and the TMC2209 (2.6 mm up on their pin spacers).",
+    "Headers: 1 x 4 and 1 x 3 male, 2.54 mm. The fan plugs (J2, J3) go on with their latch toward row 2; keep row 2 clear there.",
     "AS5600: tie its DIR pin to GND at the module. TMC2209: CLK and PDN stay free (wires 38-39 go to its UART pin; check with a meter",
     "that UART is PDN_UART on your module); DIAG (GPIO 13) is not on its pins, so it stays free too.",
     "Solder the parts first, then the ESP32 and the TMC2209: the wires under them must be in place before.",
