@@ -225,6 +225,12 @@ The ESP32 runs an Arduino sketch (esp32 core 3.x, no other library). The first s
   <img src="firmware/images/wiring.svg" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209, stepper and two DS18B20 temperature sensors on the right, 12 V brick and 5 V USB-C adapter on top" width="100%">
 </p>
 
+**Building the perfboard.** The [build plan](doc/perfboard.svg) puts this wiring on the 5 × 7 cm protoboard: the ESP32-S3 and the TMC2209 on their grid positions in the box, the headers, resistors, capacitor and 12 V terminal around them, and 61 numbered wires on the underside, each listed with both of its holes. A [PDF version](doc/perfboard.pdf) splits it over three landscape Letter pages for the bench: the component side, the solder side and the wire list. Solder the parts and the wires that run under the modules first, then the two modules.
+
+<p align="center">
+  <a href="doc/perfboard.svg"><img src="doc/perfboard.svg" alt="Perfboard build plan: the component side seen from above with the ESP32-S3, the TMC2209, headers J1 to J8, resistors R1 to R10 and C1 on a 24 x 18 grid; the solder side with 61 numbered, colour-coded wires; and the wire list" width="100%"></a>
+</p>
+
 ### The encoder magnet
 
 The AS5600 measures the direction of the magnetic field across the shaft, so the magnet's north-south axis must lie **across** the shaft and turn with it.
@@ -322,8 +328,8 @@ About 34 cm³ (45 g) of PETG in all. Also needed: a strip of 1 mm felt or foam t
 
 ```
 doc/                        reference drawings: the motor, the AS5600, ESP32-S3 and TMC2209 boards, 
-                            the electronics box layout; the lip foam and foam insert templates (PDF, 
-                            to print at 100 %), the hole saw
+                            the electronics box layout, the perfboard build plan (and PDF); the lip 
+                            foam and foam insert templates (PDF, to print at 100 %), the hole saw
 images/                     renders used in this README
 cad/window_vent.scad        parametric model (Customizer; part = "assembly" for the preview)
 cad/louvers.scad            optional adjustable louvers for the intake fan
@@ -342,6 +348,8 @@ tools/foam_template_svg.py  draws doc/foam_template.svg and .pdf (drilling templ
                             insert) and its preview
 tools/holesaw_svg.py        draws doc/holesaw_83.svg (the 83 mm hole saw, and cutting the foam 
                             from both faces)
+tools/perfboard_svg.py      draws doc/perfboard.svg and .pdf (the perfboard build plan: both sides 
+                            and the wire list)
 tools/render_images.py      regenerates the images in images/ from the models
 firmware/baremetal/         Arduino sketch: serial commands to test each electronic part (not 
                             tested on hardware yet; see firmware/README.md)
