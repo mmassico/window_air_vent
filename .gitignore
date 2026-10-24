@@ -1,3 +1,13 @@
 __pycache__/
 ref_designs/
 build/
+# KiCad and Freerouting intermediate files (tools/pcb_*.py regenerate them)
+pcb/fab/
+pcb/*.dsn
+pcb/*.ses
+pcb/*.net
+pcb/*.rpt
+pcb/*.kicad_prl
+pcb/*-backups/
+pcb/fp-info-cache
+~*.lck

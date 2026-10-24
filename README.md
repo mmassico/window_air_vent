@@ -231,6 +231,13 @@ The ESP32 runs an Arduino sketch (esp32 core 3.x, no other library). The first s
   <a href="doc/perfboard.svg"><img src="doc/perfboard.svg" alt="Perfboard build plan: the component side seen from above with the ESP32-S3, the TMC2209, headers J1 to J8, resistors R1 to R10 and C1 on a 24 x 18 grid; the solder side with 61 numbered, colour-coded wires; and the wire list" width="100%"></a>
 </p>
 
+**Or a printed circuit board.** The same circuit also exists as a 2-layer PCB of the protoboard's size (70 × 50 mm, 1.6 mm) with the same four M2 holes, so it drops into the box in its place: the ESP32-S3 and the TMC2209 sit on exactly the same pins, and every connector keeps its function. It adds a ground plane on both layers, 0.8 mm tracks for 12 V and the motor, a 1N5822 against a reversed 12 V plug (a jumper on JP1 bypasses it), and test pads for GND, 3V3, VIN, 12 V and the TMC2209's DIAG. Five boards cost US$10 to 32 at PCBWay with shipping, depending on its speed: upload [the Gerber zip](pcb/window_vent_ctrl_v1.0_gerbers.zip) and keep the standard options (2 layers, FR-4, 1.6 mm, 1 oz, HASL lead-free). [The schematic](pcb/window_vent_ctrl_schematic.pdf) and the KiCad 10 project are in [pcb/](pcb); the scripts `tools/pcb_*.py` build all of it, Freerouting doing the routing.
+
+<p align="center">
+  <img src="pcb/view/render_top.png" alt="The controller PCB from above: the ESP32-S3 footprint across the back half with the antenna area clear on the right, the TMC2209 below it, the 12 V input with D1, JP1 and C1 at the bottom right, and the labelled connectors for the fans, motor, SCD40, AS5600 and both DS18B20 at the bottom left" width="49%">
+  <img src="pcb/view/render_bottom.png" alt="The controller PCB from below: the ground plane, the title WINDOW VENT CONTROLLER v1.0 and the legend for J7, J8 and C1" width="49%">
+</p>
+
 ### The encoder magnet
 
 The AS5600 measures the direction of the magnetic field across the shaft, so the magnet's north-south axis must lie **across** the shaft and turn with it.
@@ -334,6 +341,8 @@ images/                     renders used in this README
 cad/window_vent.scad        parametric model (Customizer; part = "assembly" for the preview)
 cad/louvers.scad            optional adjustable louvers for the intake fan
 stl/                        exported parts (default parameters)
+pcb/                        the controller PCB (KiCad 10): schematic and its PDF, board, Gerber zip 
+                            for ordering, renders
 tools/check.py              geometry checks (must print ALL CHECKS PASSED)
 tools/wiring_svg.py         draws firmware/images/wiring.svg (the wiring diagram)
 tools/as5600_svg.py         draws doc/as5600.svg (the AS5600 board, dimensioned)
@@ -350,6 +359,8 @@ tools/holesaw_svg.py        draws doc/holesaw_83.svg (the 83 mm hole saw, and cu
                             from both faces)
 tools/perfboard_svg.py      draws doc/perfboard.svg and .pdf (the perfboard build plan: both sides 
                             and the wire list)
+tools/pcb_*.py              build pcb/ with KiCad 10 and Freerouting: parts and nets (pcb_parts.py), 
+                            schematic, layout, routing, then labels and Gerbers (pcb_finish.py)
 tools/render_images.py      regenerates the images in images/ from the models
 firmware/baremetal/         Arduino sketch: serial commands to test each electronic part (not 
                             tested on hardware yet; see firmware/README.md)
