@@ -66,9 +66,8 @@ e_end = (50 - 19 * P) / 2
 module_fp("Freenove_ESP32S3_Lite", "Freenove ESP32-S3-WROOM Lite (FNK0099), soldered on its pins; antenna to the right",
           esp_pads, (-19 * P - e_end, 5 * P - 14.25, e_end, 5 * P + 14.25), (-19 * P, 0, (0, 10 * P)),
           f'(fp_rect (start {e_end:.2f} {5 * P - 9.25:.2f}) (end {e_end + 7:.2f} {5 * P + 9.25:.2f}) (stroke (width 0.12) (type dash)) (fill no) (layer "F.SilkS"))\n'
-          f'(fp_text user "ANTENNA" (at {e_end + 3.5:.2f} {5 * P:.2f} 90) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))\n'
-          f'(fp_text user "USB" (at {-19 * P - e_end + 2.2:.2f} {5 * P + 6:.2f} 90) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))',
-          silk_x=0.3)   # silk clear of the end pins' pads
+          f'(fp_text user "ANTENNA" (at {e_end + 3.5:.2f} {5 * P:.2f} 90) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))',
+          silk_x=0.3)   # silk clear of the end pins' pads; "USB-UART" is board text (tools/pcb_finish.py)
 # TMC2209: pins 1-8 EN ... DIR, pins 9-16 VM ... GND, 5 rows apart; EN/VM end on the right (toward the 12 V input)
 tmc_pads = [(str(i + 1), -i * P, 0.0) for i in range(8)] + [(str(9 + i), -i * P, 5 * P) for i in range(8)]
 t_end = (20.81 - 7 * P) / 2
