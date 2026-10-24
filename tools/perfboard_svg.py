@@ -115,9 +115,12 @@ WHAT.setdefault((23, 11), "tie point")
 out = []
 
 
-def text(x, y, s, size=13, anchor="middle", color="#111", weight="normal"):
+def text(x, y, s, size=13, anchor="middle", color="#111", weight="normal", halo=0):
+    """halo: opacity of a white outline behind the letters (0: none)"""
+    h = (f' stroke="#ffffff" stroke-opacity="{halo}" stroke-width="3" stroke-linejoin="round" paint-order="stroke"'
+         if halo else "")
     out.append(f'<text x="{x:.1f}" y="{y:.1f}" font-size="{size}" text-anchor="{anchor}" fill="{color}" '
-               f'font-weight="{weight}">{s}</text>')
+               f'font-weight="{weight}"{h}>{s}</text>')
 
 
 def hole_name(h):
@@ -189,12 +192,12 @@ def panel(ox, oy, under):
         for r, labs in ((0, ESP_L), (10, ESP_R)):
             x, y = G(3 + i, r)
             out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="6.5" fill="#f4d35e" stroke="#7a5c00" stroke-width="1.2"/>')
-            text(x, y + (-10 if r == 0 else 19), labs[i], 9.5, color="#183a6b", weight="bold")
+            text(x, y + (-10 if r == 0 else 19), labs[i], 9.5, color="#183a6b", weight="bold", halo=0.3)
     for i in range(8):
         for r, labs in ((12, TMC_S), (17, TMC_P)):
             x, y = G(4 + i, r)
             out.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="6.5" fill="#f4d35e" stroke="#7a5c00" stroke-width="1.2"/>')
-            text(x, y + (-10 if r == 12 else 19), labs[i], 9.5, color="#111", weight="bold")
+            text(x, y + (-10 if r == 12 else 19), labs[i], 9.5, color="#111", weight="bold", halo=0.6)
 
     if not under:
         # J1 screw terminal, C1, resistors, headers (top side only)
@@ -232,9 +235,9 @@ def panel(ox, oy, under):
                 x, y = G(c, r)
                 out.append(f'<rect x="{x - 4.5:.1f}" y="{y - 4.5:.1f}" width="9" height="9" fill="#e0b84a" stroke="#000"/>')
                 if vertical:
-                    text(x - 18, y + 4, lab, 9, "end", "#111", "bold")
+                    text(x - 18, y + 4, lab, 9.5, "end", "#111", "bold", 0.6)
                 else:
-                    text(x, y + (21 if r in (13, 17) else -11), lab, 9, color="#111", weight="bold")
+                    text(x, y + (21 if r in (13, 17) else -11), lab, 9.5, color="#111", weight="bold", halo=0.6)
             xa, ya = G((min(cs) + max(cs)) / 2, max(rs))
             if vertical:
                 xa, ya = G(cs[0], (min(rs) + max(rs)) / 2)
