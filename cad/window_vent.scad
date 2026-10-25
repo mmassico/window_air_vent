@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, assembly_noplug, body, disc, motor_plate, magnet_cap, ebox, fittest, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide]
+part  = "assembly"; // [assembly, assembly_noplug, body, disc, motor_plate, magnet_cap, ebox, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -77,6 +77,8 @@ fan_plate = 6;      // fan plate thickness; M3 nuts sit in pockets on its back
 /* [Shaft, motor and encoder] */
 shaft_d   = 5;      // steel rod, same as the NEMA 17 shaft
 shaft_clr = 0.4;    // clearance in the bearing holes
+fin_t     = 0.8;    // sacrificial X fin in the bearing holes, horizontal when printing (two 0.4 mm nozzle lines; 0 = none):
+                    //   it holds up the top of the hole instead of slicer supports; drill it out with the bit
 boss_h    = 4;      // bearing bosses on the duct walls
 nema      = 42.3;   // NEMA 17 frame
 nema_hole = 31;     // NEMA 17 screw spacing (M3)
@@ -117,6 +119,10 @@ ebox_w    = 80;     // box width (= fan width); the encoder plate widens to matc
 ebox_h    = 34;     // inside height under the encoder plate (soldered, the TMC2209's heatsink reaches 24.0; in female
                     // headers, 32.5)
 ebox_t    = 2.4;    // walls and floor
+eb_tab    = [3, 10, 8];  // back tabs (thickness, width, height above the encoder plate), flush with the back edge:
+                    //   up through notches in the plate, against the inner faces of the bay walls, as the motor plate's
+fan_rubber = [1, 13];  // the lower fan's corner rubber bumpers: notches in both top corners of the box's front cover
+                    //   (depth down from its top edge, length in from each side)
 pb_size   = [70, 50];  // perfboard carrier (5 x 7 cm protoboard)
 pb_holes  = [66, 46.26]; // its corner hole spacing (measured: Ø 2.3 holes, for M2, about 2 mm from the edges)
 pb_t      = 1.51;   // its thickness (measured)
@@ -184,6 +190,7 @@ z_cap1 = -(z_top + boss_h + 1 + cap_slide);   // magnet cap top (nominal; it can
 z_mag  = z_cap1 - cap_h + 0.2;             // magnet face (the magnet sits 0.2 deep in its pocket)
 z_ep1  = z_mag - enc_gap - enc_chip - enc_board - enc_standoff;  // encoder plate top
 z_ep0  = z_ep1 - 4;
+z_bb1  = r - 0.25 + wall + boss_h + 0.5;     // flat top of the outer bearing bosses, from the duct axis
 // The disc goes in edge-on, so it must clear the drip dam: that sets its size.
 disc_d = duct_id - 2 * (dam_h + 0.6);
 lip_w  = (duct_id - disc_d) / 2 + lip_ovl;   // lips reach in far enough to overlap the disc
@@ -195,8 +202,6 @@ x_br   = mplate / 2;                       // bracket walls: x from x_br - tower
 y_dam  = ys + (r - 0.4) + 1;               // drip dam face, just outside the disc swing
 y_sp0  = duct_len - fan_plate - splice_t;  // splice plate back face
 ebox_top    = -pitch / 2 - fan / 2;         // the box cover rises to the bottom of the lower fan
-ebox_back_x = ebox_w / 2 - 6;               // back fixing screws, outside the bay walls
-ebox_back_y = y_br + 6;
 ebox_screw_z = z_ep1 + 8;                   // front cover screws: in the bay, above the encoder plate
 // electronics heights, above the box's inner floor
 pb_top    = pb_stand + pb_t;                                                     // perfboard top
@@ -362,13 +367,23 @@ module motor_plate() {
     }
 }
 
+// the housing, with the sacrificial fins in its four bearing holes (each from the inner boss face to the outer boss top)
 module body() {
+    body_bored();
+    if (fin_t > 0) for (z = zc, s = [-1, 1])
+        translate([0, ys, z + (s > 0 ? boss_rc : -z_bb1)]) rotate([90, 0, 0])   // fin vertical when printing
+            shaft_fin(shaft_d + shaft_clr, z_bb1 - boss_rc, fin_t);
+}
+module body_bored() {
     difference() {
         union() {
             difference() {
                 union() {
                     for (z = zc) duct_outer(z);
                     translate([-fan / 2, duct_len - fan_plate, -pitch / 2 - fan / 2]) cube([fan, fan_plate, pitch + fan]);
+                    for (sx = [-1, 1])   // the fan plate reaches down behind the box cover's fan rubber notches, closing them
+                        translate([sx < 0 ? -fan / 2 : ebox_w / 2 - fan_rubber[1], duct_len - fan_plate, ebox_top - fan_rubber[0]])
+                            cube([fan_rubber[1] + fan / 2 - ebox_w / 2, fan_plate, fan_rubber[0] + eps]);
                     // motor bracket and frame
                     bracket(pitch / 2 + 25, z_mp0 + eps, z_top + boss_h, z_mp0);   // starts inside the bore (cut away below)
                     motor_frame();
@@ -403,10 +418,14 @@ module body() {
                     translate([dx * h / 2, ys + dy * h / 2, z_ep0 - 1]) cylinder(d = enc_slot, h = z_ep1 - z_ep0 + enc_standoff + 2, $fn = 24);
                 // wire window: a diamond under the chip (pointed up and down when printing)
                 translate([0, ys, z_ep0 - 1]) linear_extrude(z_ep1 - z_ep0 + 2) rotate(45) square(enc_win / sqrt(2), center = true);
-                // box fixing: cover screws into the front bosses (self-tapping M3), and two M3 from above at the back
+                // box fixing: cover screws into the front bosses (self-tapping M3); at the back, notches in the plate
+                // for the box's tabs, and an M3 clearance hole through each bay wall (nut on the inside)
                 for (sx = [-1, 1]) {
                     translate([sx * (x_br - tower_t / 2), duct_len + 1, ebox_screw_z]) rotate([90, 0, 0]) cylinder(d = 2.5, h = 9, $fn = 24);
-                    translate([sx * ebox_back_x, ebox_back_y, z_ep0 - 1]) cylinder(d = 3.4, h = z_ep1 - z_ep0 + 2, $fn = 24);
+                    translate([sx > 0 ? x_br - tower_t - eb_tab[0] - 0.4 : -(x_br - tower_t), y_br - 1, z_ep0 - 1])
+                        cube([eb_tab[0] + 0.4, eb_tab[1] + 1.4, z_ep1 - z_ep0 + 2]);
+                    translate([sx * (x_br - tower_t / 2) - tower_t, y_br + eb_tab[1] / 2, z_ep1 + eb_tab[2] / 2])
+                        rotate([0, 90, 0]) cylinder(d = 3.4, h = 2 * tower_t, $fn = 24);
                 }
                 // airflow arrows: intake (upper duct) toward the room, exhaust (lower duct) toward the foam,
                 // centred in the band between each diamond window and its duct
@@ -592,14 +611,21 @@ module ebox() {
                 }
                 translate([x0 + ebox_t, y0 + ebox_t, zb + ebox_t]) cube([ebox_w - 2 * ebox_t, duct_len - y0 - ebox_t, ebox_h + 1]);
             }
-            for (sx = [-1, 1])   // back corner pillars, floor to top, for the screws from above (no overhang when printing)
-                translate([sx * ebox_back_x - 4, y0 + ebox_t - eps, zb + ebox_t - eps]) cube([8, ebox_back_y - y0 + 4 - ebox_t, ebox_h + eps]);   // top flush with the plate
+            for (sx = [-1, 1]) mirror([sx < 0 ? 1 : 0, 0, 0]) {   // back tabs, each on a bracket from the side wall:
+                // a 45 deg ramp under it (no overhang when printing), then 3 mm straight up to the plate
+                tx = x_br - tower_t - 0.2 - eb_tab[0];   // the tab's inner face (0.2 from the bay wall)
+                xi = ebox_w / 2 - ebox_t;                 // the side wall's inner face
+                translate([tx, y0, z_ep0 - 3]) cube([eb_tab[0], eb_tab[1], 3 + z_ep1 - z_ep0 + eb_tab[2]]);
+                translate([0, y0 + eb_tab[1], 0]) rotate([90, 0, 0]) linear_extrude(eb_tab[1] - ebox_t + eps)
+                    polygon([[tx, z_ep0], [xi + eps, z_ep0], [xi + eps, z_ep0 - 3 - (xi - tx)], [tx, z_ep0 - 3]]);
+            }
             for (dx = [-1, 1], dy = [-1, 1])   // perfboard standoffs
                 translate([dx * pb_holes[0] / 2, pb_y + dy * pb_holes[1] / 2, zb + ebox_t - eps]) cylinder(d = 6, h = pb_stand + eps, $fn = 32);
         }
         for (sx = [-1, 1]) {
             translate([sx * (x_br - tower_t / 2), duct_len - 1, ebox_screw_z]) rotate([-90, 0, 0]) cylinder(d = 3.4, h = ebox_t + 2, $fn = 24);
-            translate([sx * ebox_back_x, ebox_back_y, z_ep0 - 9]) cylinder(d = 2.5, h = 10, $fn = 24);
+            translate([sx * (x_br - tower_t - 0.2 - eb_tab[0] / 2) - eb_tab[0], y0 + eb_tab[1] / 2, z_ep1 + eb_tab[2] / 2])   // tab screw
+                rotate([0, 90, 0]) cylinder(d = 3.4, h = 2 * eb_tab[0], $fn = 24);
         }
         for (dx = [-1, 1], dy = [-1, 1])
             translate([dx * pb_holes[0] / 2, pb_y + dy * pb_holes[1] / 2, zb + ebox_t]) cylinder(d = 1.8, h = pb_stand + 1, $fn = 16);
@@ -616,6 +642,9 @@ module ebox() {
                 for (r = [0, 90]) translate([sx * ebox_w / 2, usb_y, zb + ebox_t + usb_z]) rotate([r, 0, 0])
                     cube([1.2, 8, 1], center = true);   // 0.6 deep into the outer face
         }
+        for (sx = [-1, 1])   // clearance for the lower fan's corner rubber bumpers
+            translate([sx < 0 ? x0 - 1 : ebox_w / 2 - fan_rubber[1], duct_len - 1, ebox_top - fan_rubber[0]])
+                cube([fan_rubber[1] + 1, ebox_t + 2, fan_rubber[0] + 1]);
         for (sx = [-1, 1])   // cable entries (clear of the USB-C slot)
             translate([sx < 0 ? x0 - 1 : ebox_w / 2 - ebox_t - 1, duct_len - cable_in[0] - 0.5, z_ep0 - cable_in[1]]) cube([ebox_t + 2, cable_in[0], cable_in[1] + 1]);
     }
@@ -661,9 +690,48 @@ module fittest() {
         for (l = [["D", 8], ["E", 28.5], ["F", 44]])
             translate([l[1], wy + 0.6, 19]) rotate([90, 0, 0]) linear_extrude(1) fittest_letter(l[0]);
     }
+    if (fin_t > 0) translate([8, wy, 12]) shaft_fin(shaft_d + shaft_clr, mp_t, fin_t);   // in the shaft hole (D)
 }
 module fittest_letter(t) text(t, size = 4, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
 module fittest_letter_big(t) text(t, size = 8, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
+
+// fin_test: two horizontal shaft bearing holes, each held up by a sacrificial lattice fin (XXX) instead of slicer
+// supports; drill it out with the bit afterwards. Fin thickness: "1" = 0.45 (one 0.4 mm nozzle line), "2" = 0.8 (two).
+// Print without supports. About 10 min.
+module fin_test() {
+    L = 12; zc = 6; d = shaft_d + shaft_clr;
+    fins = [0.45, 0.8];
+    difference() {
+        cube([22, L, 12]);
+        for (i = [0, 1]) {
+            translate([6 + i * 10, -1, zc]) rotate([-90, 0, 0]) cylinder(d = d, h = L + 2, $fn = 32);
+            translate([6 + i * 10, L / 2, 12 - 0.6]) linear_extrude(1) fittest_letter(str(i + 1));
+        }
+    }
+    for (i = [0, 1]) translate([6 + i * 10, 0, zc]) shaft_fin(d, L, fins[i]);
+}
+// a vertical lattice fin through a hole's axis (along y from 0 to len, centred on z = 0): X struts from the bottom
+// of the bore to its top. The bore stays clear for margin at each end, so the drill bit enters the round hole and
+// sits square before it meets the fin. Whole X's fill the space between the margins, so every leg stands on the
+// bore's floor; they are at most d wide, so the struts are 45 deg or steeper (self-supporting).
+module shaft_fin(d, len, t, margin = 1.5, strut = 1.0) {
+    m = min(margin, len / 4);   // short holes: smaller margins
+    a = len - 2 * m;
+    n = ceil(a / d);
+    w = a / n;          // each X cell is w long, d high
+    z0 = -d / 2;
+    y0 = m;
+    intersection() {
+        translate([0, m, 0]) rotate([-90, 0, 0]) cylinder(d = d + 0.2, h = a, $fn = 32);   // 0.1 into the wall
+        rotate([90, 0, 90]) linear_extrude(t, center = true) {           // drawn in (y, z), extruded along x
+            for (k = [0 : n - 1], s = [0, 1])
+                hull() {
+                    translate([y0 + k * w, z0 + s * d]) circle(d = strut, $fn = 12);
+                    translate([y0 + (k + 1) * w, z0 + (1 - s) * d]) circle(d = strut, $fn = 12);
+                }
+        }
+    }
+}
 
 // oring_test: the stop flange (on the bed) and 15 mm of spigot with one O-ring groove,
 // exactly as on the housing. Push it, with an O-ring, into a hole in a foam scrap.
@@ -792,6 +860,7 @@ if (part == "motor_plate")    translate([0, 0, mplate_t]) rotate([180, 0, 0]) mo
 if (part == "magnet_cap")     magnet_cap();
 if (part == "ebox")           translate([0, 0, ebox_h + ebox_t - z_ep0]) ebox();   // floor on the bed
 if (part == "fittest")        fittest();
+if (part == "fin_test")       fin_test();
 if (part == "oring_test")     oring_test();
 if (part == "drill_guide")    drill_guide();
 if (part == "assembly_nofan") assembly_nofan();

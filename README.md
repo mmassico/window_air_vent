@@ -55,7 +55,7 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | `disc` | <img src="images/part_disc.png" width="180"> | 2 | Butterfly damper disc, clamped to the shaft by two M3 grub screws; the half engraved B has a 45° bevel on its rim | 67 × 67 × 14 | Plate on the bed, hub up |
 | `motor_plate` | <img src="images/part_motor_plate.png" width="180"> | 1 | The motor screws to it on the bench; it then sits on top of the housing: two screws in front of the motor, and two tabs at the back, down through the frame and screwed to the tower walls | 56 × 61 × 15 | Top face on the bed, tabs up |
 | `magnet_cap` | <img src="images/part_magnet_cap.png" width="180"> | 1 | Holds the encoder magnet on the bottom end of the shaft; one M3 grub screw, height adjustable ±1 mm | 14 × 14 × 12 | Bore down |
-| `ebox` | <img src="images/part_ebox.png" width="180"> | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay | 80 × 76 × 62 | Floor on the bed |
+| `ebox` | <img src="images/part_ebox.png" width="180"> | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay, and two back tabs screw to the bay walls | 80 × 76 × 64 | Floor on the bed |
 
 **For a 180 mm printer** (e.g. Bambu Lab A1 mini), print the housing in two halves instead of `body`. The cut runs midway between the two ducts, where only the fan plate joins them; a small splice plate behind the fan plate joins the halves again with four M3 screws, driven from the fan side in the band between the two fans. Each half prints like the full housing, in about half the time (roughly 5–6 h), so they can go on different days; use the same spool and profile for both.
 
@@ -85,9 +85,9 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | | Feature | Copied from | Pass if |
 |---|---|---|---|
 | A | M3 hole + nut pocket | fan plate | the nut drops in and stays; an M3 screw passes freely |
-| B | Ø 2.5 self-tapping pilot | box bosses and back pillars | an M3 screw cuts a firm thread without splitting the post |
+| B | Ø 2.5 self-tapping pilot | the box cover bosses | an M3 screw cuts a firm thread without splitting the post |
 | C | 5.6 mm ledge with a 45° underside (on the back of the plate) | conical lip B in each bore | the slope is smooth, not drooping or stringy |
-| D | Ø 5.4 shaft hole, horizontal | bearing holes in the duct walls | the 5 mm rod turns freely (if not, ream with a 5.5 mm drill) |
+| D | Ø 5.4 shaft hole, horizontal, with its sacrificial fin | bearing holes in the duct walls | the top of the hole stays round; after drilling the fin out (see below), the 5 mm rod turns freely |
 | E | AS5600 diagonal slot (3.5 wide) on a 2 mm standoff | encoder plate | an M3 screw passes at both ends of the slot |
 | F | M3 hole, horizontal | motor frame | an M3 screw passes freely |
 | G | M3 hole with a 90° countersink, opening on the bed | split housing joint (`body_top` and `body_bottom`) | an M3 flat-head screw sits flush or just below the surface |
@@ -121,12 +121,12 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 
 | Part | Wall loops | Sparse infill | Why |
 |---|---|---|---|
-| `body` (or `body_top` and `body_bottom`) | 4 | 25 % | Thin walls everywhere; the infill only reaches the thick zones (bosses, spigot roots, fan plate). The only part that may need supports, in its four shaft holes: print `fittest` without supports first and look at feature D (see below) |
+| `body` (or `body_top` and `body_bottom`) | 4 | 25 % | Thin walls everywhere; the infill only reaches the thick zones (bosses, spigot roots, fan plate). No supports: a sacrificial fin holds up the top of each of its four shaft holes (see below) |
 | `disc` | 5 | 40 % | The grub screws thread into the hub: 5 loops leave about 2 mm of solid plastic around each hole |
 | `motor_plate` | 5 | 40 % | Screw holes, bosses and tabs under clamping load |
 | `magnet_cap` | | 100 % | Tiny, with a grub screw in it: print it solid |
 | `splice` | 5 | 40 % | Joins the two halves: nut pockets and countersunk screws |
-| `ebox` | 3 | 15–20 % | No real loads; the self-tapping holes get their own walls |
+| `ebox` | 4 | 15–20 % | No real loads; a 4th wall (same print time) makes the walls around the screw holes stronger |
 | `fittest`, `oring_test` | 4 | 25 % | As the housing, so they test what the housing will be |
 | `drill_guide` | 4 | 40 % | Small; 4 walls make the bushings solid |
 | `louver_chassis` | 3 | 20 % | Light load |
@@ -135,7 +135,7 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 
 - **Infill pattern: gyroid.** Equally strong in every direction, and it prints smoothly in PETG.
 - **Top and bottom shell layers: 5.** Flat faces stay smooth and the infill doesn't show through.
-- **Supports: none.** Every part is designed to print without them. The slicer may still flag the housing's four shaft holes, which print horizontal: block supports there (paint them with the support blocker) and run a 5.5 mm drill through them by hand afterwards. Feature D of `fittest` is the same hole in the same orientation: if it comes out clean without supports, so will the housing.
+- **Supports: none.** Every part is designed to print without them. The housing's four shaft holes print horizontal, so each one carries a sacrificial fin: a thin lattice of X's (0.8 mm, two nozzle lines; `fin_t` in the model, 0 for none) standing on the bottom of the hole and holding up its top, with 1.5 mm clear at each end. After printing, drill the fins out by hand with a 5.4 mm bit (a #3 number drill is 5.41 mm; 5.5 mm also works): the bit enters the clear end first, sits square, and cuts the fin easily. Feature D of `fittest` is the same hole with the same fin, and `fin_test` is a 10-minute block with two of them.
 
 ## Hardware
 
@@ -154,7 +154,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | Flexible shaft coupler, 5–5 mm, 19 × 25 mm | 1 | | $13.49 (pack of 2) |
 | M3 × 35 screws + M3 nuts | 8 each | Fans | — |
 | M3 × 8 screws | 4 | Motor to motor plate, through the bosses under the plate. Not longer: the motor's holes are only 2.5 mm deep ([section](doc/motor_mount.svg)) | — |
-| M3 × 10 (or M3 × 12) screws + M3 nuts | 4 each | Motor plate: two through the frame in front of the motor, two through the tower walls and the plate's back tabs | — |
+| M3 × 10 (or M3 × 12) screws + M3 nuts | 6 each | Motor plate: two through the frame in front of the motor, two through the tower walls and the plate's back tabs. Electronics box: two through the bay walls and the box's back tabs | — |
 | M3 grub screws, 6 or 8 mm | 5 | Two per disc, 24 mm apart along the hub, so the disc can't rock on the shaft; one in the magnet cap. Self-tapping into the plastic | — |
 | O-rings, 74 × 3 mm, nitrile 70A | 4 | Optional, and not needed by default: the plain Ø 83.7 spigots are a snug fit in the hole (83.3 mm with the 3-1/4 in hole saw). For a hole that comes out loose, set `orings = true` before printing the housing: two grooves per spigot, sized for this O-ring (about 6% stretch, 20% squeeze in an 83.3 mm hole) | $12.79 (pack of 10) |
 | XPS foam board, 2 in (51 mm), 30 psi | 1 | Foam insert, e.g. Owens Corning FOAMULAR C-300 (2 × 24 × 96 in, R-10). The 30 psi grade over the 20 psi (wall) one: stiffer under the housing's weight, it doesn't creep around the spigots, and the hole saw cuts it cleaner. Many boards have shiplap (SL) edges, stepped to overlap on a wall: cut the insert from the middle of the board, or saw the step off any edge that meets the window frame | — |
@@ -164,7 +164,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | Female pin headers, 2.54 mm (optional) | to suit | Sockets for the ESP32 and the TMC2209 instead of soldering them, so they unplug for replacement (`esp_mount`, `tmc_mount`; the box has room for both) | |
 | M2 screws, about 6 mm | 4 | Perfboard onto the box standoffs (self-tapping) | |
 | M3 × 12 countersunk (flat head, ISO 10642 or DIN 965) screws + M3 nuts | 4 each | Split housing only: fan plate to the splice, heads flush in 90° countersinks | — |
-| M3 × 12 screws | 4 | Electronics box: two through the front cover, two from above through the encoder plate (self-tapping) | — |
+| M3 × 12 screws | 2 | Electronics box: through the front cover (self-tapping) | — |
 | Small tie wraps, 2.5–3.6 mm | 3+ | Cable anchors (three on each side; use one side) | |
 | 12 V power brick | 1 | Fans and motor, about 1 A. Only its wire enters the box, to a 2-pin screw terminal on the perfboard | — |
 | USB-C power adapter, 5 V (1 A or more), and a USB-C cable | 1 | Powers the ESP32 through its USB-UART connector, which also gives the console. The cable passes through a diamond opening in the box's left or right wall (`usb_port`: or only a cross to drill, or nothing; `usb_side`: left, right or both) | — |
@@ -294,14 +294,14 @@ Run the drill slowly. Hole saws often cut a little wider than labelled, so cut a
 0. Split housing only: press four M3 nuts into the splice's pockets. Stand the lower half upright, cut face up, hold the splice against the back of its fan plate, just above the duct, and fit the two lower countersunk M3 × 12 from the fan side. Lower the upper half onto it and fit the other two. Leave all four slightly loose until step 3.
 1. Line the lips inside the ducts with foam cut from the [templates](#cutting-the-lip-foam): a half-ring on each flat lip, an unrolled arc on each conical lip (B).
 2. Slide each disc edge-on into its duct from the fan end, hub toward the room, with the half engraved B on the side of the conical lip (the right side, seen from the room).
-3. Push the shaft down through the frame on top, both ducts and both disc hubs. Split housing: the shaft now lines up the two halves; tighten the four splice screws.
+3. Drill the fins out of the four shaft holes if not done yet (see [Printed parts](#printed-parts)). Push the shaft down through the frame on top, both ducts and both disc hubs. Split housing: the shaft now lines up the two halves; tighten the four splice screws.
 4. Turn both discs closed against the lips and tighten their grub screws (two per disc) through the duct openings.
 5. Screw the AS5600 board onto the four standoff pads, chip up, with its wires soldered into its holes and led inward under the board, then down through the diamond window under the chip. Glue the magnet into the cap and slide the cap onto the shaft's bottom end. Lay a 1 mm shim on the chip (a plastic card works), slide the cap down until the magnet rests on it, tighten the cap's grub screw, and remove the shim.
 6. On the bench, screw the motor to the motor plate (4 × M3 × 8 from below) and fit the coupler on the motor shaft.
 7. Lower the motor and plate onto the top of the housing, with the coupler through the big diamond and over the shaft end, and the plate's two back tabs down through the slots in the frame. In front of the motor, put an M3 × 10 down through the plate and the frame, with a nut underneath, reached from the tower's open front above the fan plate. At the back, put an M3 × 10 through each tower wall and its tab from outside, with a nut on the inside, reached from the tower's open back. Then tighten the coupler's lower screw through a side window.
 8. Fit the fans: the top one blowing into the room, the bottom one blowing toward the window. Arrows engraved on both sides of the housing (above the upper duct and below the lower one) show each duct's airflow; match the arrows on the fan frames to them.
 9. Electronics: solder the ESP32 and the TMC2209 onto the perfboard (or into female headers), following the [layout](#the-electronics-box-layout): the ESP32 across the back half with its USB-end pins one column in from the board's edge (clear of the corner standoff), the TMC2209 at the front right. Or turn the ESP32 180° in the same place, its USB end toward the right wall (view `ebox_elec_alt`): the box has a diamond on each side. Wire it (connect the 12 V brick's GND to the ESP32's GND), and screw it onto the four standoffs in the box (M2). Plug the USB-C cable in through the matching side wall. Bring the 12 V wire and the fan and motor cables down the right side, tie them to the three anchors behind the fans, and into the box through the notch at the top of its right wall. The AS5600 wires drop in through the window in the encoder plate.
-10. Fit the box under the housing: two M3 × 12 through the front cover into the bosses of the bottom bay, and two from above through the encoder plate (outside the bay walls) into the box's back tabs.
+10. Fit the box under the housing, its two back tabs up through the notches in the encoder plate: two M3 × 12 through the front cover into the bosses of the bottom bay, and at the back an M3 × 10 through each bay wall and its tab from outside, with a nut on the inside, reached from the bay's open back.
 11. Push the housing's spigots into the foam holes. If they're tight, sand the holes a little. (With `orings = true`, roll two O-rings onto each spigot first.)
 
 ## Optional: adjustable louvers for the intake fan
@@ -330,13 +330,14 @@ About 34 cm³ (45 g) of PETG in all. Also needed: a strip of 1 mm felt or foam t
 1. Stick the felt strip on the link bar's flat face (the face without holes).
 2. Push the link onto the six blades' offset pins.
 3. Slide the blades into the U-slots from the back of the frame: the link and its strip go on the side with the link pins, the collars on the other.
-4. Press a retaining comb into the back of each side wall.
+4. Press a retaining comb into the back of each side wall, the small ridge under each peg down, into the V-groove in the slot's floor: it keeps the pegs centred in the wall.
 5. Clip the frame onto the intake fan.
 
 **Tuning after a test print**, in `cad/louvers.scad`:
 - **`slot_w`:** the grip of the pins in their slots. Lower makes the blades stiffer.
 - **`clip_lip`, `clip_edge` and `clip_w`:** the clips. They're sized for the Noctua NF-A8 (a 7 mm corner flange, with the clips 8 mm in from the side edges so they clear the corner screws).
 - **`pad_t` and `pad_sq`:** the friction strip and how much it's squeezed.
+- **`comb_fit`:** the combs' pegs in their slots: the two end pegs fit tight (they hold the comb in), the middle ones looser so the comb goes in easily.
 
 
 ## Files

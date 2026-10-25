@@ -54,14 +54,15 @@ intersection() {
 """
 
 
-def render(out, src, camera, size, defs=(), ortho=False, viewall=False, text=None):
-    """Render src (a .scad path, or wrapper text) to out; returns the trimmed image."""
+def render(out, src, camera, size, defs=(), ortho=False, viewall=False, text=None, fins=False):
+    """Render src (a .scad path, or wrapper text) to out; returns the trimmed image.
+    Without fins, the shaft holes are shown drilled out (fin_t = 0), as installed; the part views keep them."""
     if text is not None:
         src = os.path.join(tmp, os.path.basename(out) + ".scad")
         with open(src, "w") as fh:
             fh.write(text)
     cmd = ["openscad", "-o", out, f"--imgsize={size[0]},{size[1]}", "--colorscheme=Tomorrow", f"--camera={camera}"]
-    cmd += sum([["-D", d] for d in defs], [])
+    cmd += sum([["-D", d] for d in list(defs) + ([] if fins else ["fin_t=0"])], [])
     if ortho:
         cmd.append("--projection=o")
     if viewall:
@@ -174,7 +175,7 @@ def parts():
             ("body_top", "0,63,40,55,0,25,560", (1300, 1300), False),
             ("body_bottom", "0,-58,40,55,0,25,560", (1300, 1300), False),
             ("splice", "0,0,3,50,0,20,150", (1000, 800), False)]:
-        save(render(t(f"p_{name}.png"), VENT, camera, size, [f'part="{name}"'], viewall=viewall), f"part_{name}.png")
+        save(render(t(f"p_{name}.png"), VENT, camera, size, [f'part="{name}"'], viewall=viewall, fins=True), f"part_{name}.png")
 
 def split_view():
     save(render(t("split.png"), VENT, "0,30,0,70,0,235,820", (1100, 1300), ['part="split_view"']), "split_view.png")

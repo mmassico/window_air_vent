@@ -54,6 +54,9 @@ arm      = 6.5;     // link pin offset from the pivot, toward the fan (the bar c
 /* [Retaining combs] */
 comb_t   = 2;       // spine thickness (y), in a rebate at the back of each side wall
 comb_clr = 0.3;     // pegs stop this far short of the pivot pins
+comb_fit = [0.05, 0.15];  // peg clearance in its slot (z): the two end pegs (tight: they hold the comb), the middle ones
+comb_key = [1, 0.5];      // guide ridge under each peg (base width, height: 45 deg faces), in a V-groove in the slot's
+                    //   floor (0.1 mm clearance all round): it keeps the pegs centred in the wall as the comb goes in
 
 /* [Link] */
 link_t   = 2.4;     // link bar thickness (x)
@@ -72,6 +75,7 @@ yp  = depth / 2;                              // pivot axis (y)
 zs  = [for (i = [0 : n_blades - 1]) (i - (n_blades - 1) / 2) * pitch];   // pivot heights
 x0  = -xi + 0.2 + collar[1];                  // blade end, plain side (the collar sits between it and the wall)
 xl  = xi - pad_t + pad_sq - link_t;           // link bar, inner face (its pad touches the wall)
+comb_peg = yp - pin_d / 2 - comb_clr;         // the comb's pegs reach this far (y)
 x1  = xl - gap;                               // blade end, link side
 
 assert(max(zs) + chord / 2 < fan_hole / 2 - tube_r, "outer blades would hit the corner tubes when turned");
@@ -95,9 +99,12 @@ module chassis() {
             translate([dx * fan_hole / 2, -1, dz * fan_hole / 2]) rotate([-90, 0, 0]) cylinder(d = head[0], h = head[1] + 1, $fn = 32);
         for (sx = [-1, 1])                     // rebates for the retaining combs, at the back of the side walls
             translate([sx > 0 ? xi - eps : -fan / 2 - 1, -1, zs[0] - pitch / 2]) cube([wall + 1 + eps, comb_t + 1, (n_blades) * pitch]);
-        for (z = zs, sx = [-1, 1])             // pivot slots, open toward the fan, through the side walls
+        for (z = zs, sx = [-1, 1]) {           // pivot slots, open toward the fan, through the side walls
             translate([sx > 0 ? xi - 1 : -fan / 2 - 1, 0, z]) rotate([0, 90, 0]) linear_extrude(wall + 2)
                 hull() { translate([0, yp]) circle(d = slot_w); translate([0, -1]) circle(d = slot_w); }
+            // the comb's guide groove in the slot floor, centred in the wall, 0.2 past the peg's end
+            translate([sx * (xi + wall / 2), -1, z - slot_w / 2]) comb_key_shape(comb_key[0] + 0.2, comb_key[1] + 0.1, 1 + comb_peg + 0.2);
+        }
     }
 }
 
@@ -138,13 +145,22 @@ module blade() {
 /* =================== RETAINING COMB =================== */
 // Modelled in place in the +x wall (mirror it for the other one). A spine in the wall's back rebate, and a peg
 // in each slot up to just short of the pivot pin. Prints flat, spine down.
+// Each peg has a guide ridge along its underside, in a V-groove in the slot's floor.
 module retainer() {
     zr = [zs[0] - pitch / 2 + 0.2, zs[n_blades - 1] + pitch / 2 - 0.2];
     translate([xi + 0.1, 0, 0]) {
         translate([0, 0, zr[0]]) cube([wall - 0.1, comb_t, zr[1] - zr[0]]);
-        for (z = zs) translate([0, 0, z - (slot_w - 0.05) / 2]) cube([wall - 0.1, yp - pin_d / 2 - comb_clr, slot_w - 0.05]);
+        for (i = [0 : n_blades - 1]) {
+            w = slot_w - comb_fit[i == 0 || i == n_blades - 1 ? 0 : 1];
+            translate([0, 0, zs[i] - w / 2]) {
+                cube([wall - 0.1, comb_peg, w]);
+                translate([wall / 2 - 0.1, 0, eps]) comb_key_shape(comb_key[0], comb_key[1] + eps, comb_peg);
+            }
+        }
     }
 }
+// a triangle (base width b, pointing down by h), along y from 0 to len, base centred on the origin
+module comb_key_shape(b, h, len) rotate([-90, 0, 0]) linear_extrude(len) polygon([[-b / 2, 0], [b / 2, 0], [0, h]]);
 
 /* =================== LINK =================== */
 // Prints flat. Modelled in place for the open position (blade angle 0).

@@ -17,7 +17,7 @@ PB = (70.0, 50.0)            # perfboard
 PB_Y = 56.0                  # its centre (y)
 PB_HOLES = (66.0, 46.26)     # measured: Ø 2.3 holes, 63.70 and 43.96 between their facing edges
 GRID = (24, 18)              # pin holes along x (A to X) and y (18 at the back to 1), 2.54 apart, centred
-PILLAR = (34.0, 21.0)        # back fixing pillars: x = +/- 34, y = 21 (8 x 8 around)
+TAB = (21.8, 3.0, 10.0)      # back tabs: inner face at x = +/- 21.8, 3 thick, 10 long from Y0; brackets out to the walls
 CABLE_IN = (72.5, 88.5)      # cable entries at the top of both side walls (y range)
 ESP = (57.0, 28.5)           # Freenove ESP32-S3 Lite: overall length (with the antenna), width
 ESP_PCB = 50.0               # its PCB; the module's antenna sticks out 7 mm beyond it, over the middle 18.5 mm
@@ -56,10 +56,9 @@ def ctext(cx, cy, s, size=14, color="#111", weight="normal"):
 xo = BOX_W / 2
 rect(-xo, Y0, xo, Y1, "#d9dde3", sw=2)                                   # walls
 rect(-xo + T, Y0 + T, xo - T, Y1 - T, "#f7f8fa", sw=1)                   # inside
-for sx in (-1, 1):                                                       # back pillars
-    rect(sx * PILLAR[0] - 4, Y0 + T, sx * PILLAR[0] + 4, PILLAR[1] + 4, "#c4c9d1", sw=1)
-    cx, cy = P(sx * PILLAR[0], PILLAR[1])
-    out.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{1.25 * K}" fill="#ffffff" stroke="#222"/>')
+for sx in (-1, 1):                                                       # back tabs on their brackets
+    rect(sx * TAB[0], Y0 + T, sx * (xo - T), Y0 + TAB[2], "#c4c9d1", sw=1)
+    rect(sx * TAB[0], Y0, sx * (TAB[0] + TAB[1]), Y0 + TAB[2], "#9aa3b0", sw=1)
     rect(sx * (xo - T / 2) - T / 2, CABLE_IN[0], sx * (xo - T / 2) + T / 2, CABLE_IN[1], "#ffffff", "#b3261e", 2)  # cable entries
 
 # --- perfboard ----------------------------------------------------------------------------------
@@ -148,7 +147,7 @@ block(tx1 + 14.5, ty0 + 5, 20, 7, "resistors", "#9e8a6a")
 # --- perfboard size: this one (70 x 50) and the largest that fits ----------------------------------
 C_DIM, C_MAX = "#b3261e", "#1f7a3a"
 MAX_X = 74.0                           # inside width 75.2, 0.6 clear each side
-MAX_Y = (PILLAR[1] + 4 + 0.5, Y1 - T - 0.5)   # from just in front of the back pillars to the front wall: 63
+MAX_Y = (Y0 + TAB[2] + 0.5, Y1 - T - 0.5)   # from just in front of the back brackets to the front wall: 63
 rect(-MAX_X / 2, MAX_Y[0], MAX_X / 2, MAX_Y[1], "none", C_MAX, 2)
 out[-1] = out[-1].replace("/>", ' stroke-dasharray="10,6"/>')
 
