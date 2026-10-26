@@ -4,7 +4,7 @@ A demand-controlled window ventilator for one room. Two 80 mm fans move air thro
 
 There is no heat recovery: every litre of air exhausted is lost heat. In exchange it is simple, cheap and automatic. See the estimates below.
 
-> **Status: early prototype, not built.** The geometry is checked in CAD (closed solids, the discs swing freely, the lips stop them). Nothing has been printed or tested yet.
+> **Status: prototype, mechanics printed.** Every printed part has been printed and test-fitted (housing, discs, motor plate, magnet cap, electronics box, louvers), and several were refined from those prints: the shaft holes' sacrificial fins, the box's back tabs, the louvers' snap-in combs. Still to come: the electronics (the perfboard build or the controller PCB, ordered) and the firmware on real hardware, then a first install in a window. The geometry is also checked in CAD (closed solids, the discs swing freely, the lips stop them).
 
 <p align="center">
   <img src="images/assembly_lbl.png?t=10" alt="Damper housing with two 80 mm fans, stepper motor on top, spigots in the foam insert, with labels: stepper motor, motor plate, motor tower, shaft coupler, intake and exhaust fans, damper discs, shaft, spigot, damper housing, electronics box, foam insert" width="680">
