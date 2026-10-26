@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, chassis, blade, link, retainer, peg_test2, peg_test2_view]
+part  = "assembly"; // [assembly, chassis, blade, link, link_nopad, retainer, peg_test2, peg_test2_view]
 angle = 30;         // [-45:5:45] blade angle in the assembly preview (positive: air deflected upward)
 
 /* [Frame] */
@@ -77,6 +77,8 @@ link_hole = 1.6;    // blind holes for the link pins, from the blade side (the p
 gap      = 0.5;     // running clearance
 pad_t    = 1;       // friction pad on the link bar's outer face (felt or foam tape)
 pad_sq   = 0.2;     // how much the pad is squeezed against the wall
+link_pad = true;    // true: the link with its felt strip; false: link_nopad, its bar thicker instead (no strip)
+nopad_clr = 0.2;    // link_nopad: its bar's clearance to the wall
 collar   = [5, 1];  // collar on each blade's pivot, plain side (diameter, thickness), 0.2 from the wall
 
 /* [Hidden] */
@@ -87,6 +89,7 @@ yp  = depth / 2;                              // pivot axis (y)
 zs  = [for (i = [0 : n_blades - 1]) (i - (n_blades - 1) / 2) * pitch];   // pivot heights
 x0  = -xi + 0.2 + collar[1];                  // blade end, plain side (the collar sits between it and the wall)
 xl  = xi - pad_t + pad_sq - link_t;           // link bar, inner face (its pad touches the wall)
+link_np_t = xi - nopad_clr - xl;              // link_nopad: its bar's thickness (it fills the pad's room)
 ya  = link_side == "front" ? arm : -arm;     // the link pins' offset from the pivot axis (y), installed
 comb_peg = yp - pin_d / 2 - comb_clr;         // the comb's pegs reach this far (y)
 x1  = xl - gap;                               // blade end, link side
@@ -212,19 +215,22 @@ module snap_channel(i, s) {
 /* =================== LINK =================== */
 // Prints flat. Modelled in place for the open position (blade angle 0). In front, it carries a tab in its middle,
 // reaching out of the frame's front at every angle (the bar draws back by arm * (1 - cos a) as the blades turn).
-module link() {
+// tb: the bar's thickness, link_t (with the felt strip) or link_np_t (link_nopad, no strip). The tab keeps link_t,
+// flush with the bar's outer face, so both lie on the bed when printing.
+module link(tb = link_t) {
     tab_l = depth + tab_out - (yp + arm * cos(45));   // the tab's reach, from the link pins' line
     y1 = yp + ya + tab_l;                              // its tip
+    xt = xl + tb - link_t;                             // the tab's inner face
     difference() {
         union() {
-            hull() for (z = [zs[0], zs[n_blades - 1]]) translate([xl, yp + ya, z]) rotate([0, 90, 0]) cylinder(d = link_w, h = link_t);
+            hull() for (z = [zs[0], zs[n_blades - 1]]) translate([xl, yp + ya, z]) rotate([0, 90, 0]) cylinder(d = link_w, h = tb);
             if (link_side == "front") {
-                translate([xl, 0, 0]) rotate([90, 0, 90]) linear_extrude(link_t) hull() {   // drawn in (y, z)
+                translate([xt, 0, 0]) rotate([90, 0, 90]) linear_extrude(link_t) hull() {   // drawn in (y, z)
                     translate([yp + ya, -tab_w / 2]) square([eps, tab_w]);
                     for (s = [-1, 1]) translate([y1 - 2, s * (tab_w / 2 - 2)]) circle(r = 2, $fn = 24);
                 }
                 for (i = [0 : rib[0] - 1])   // grip ribs along the tab, on the blade side (up when printing), clear of the blades
-                    translate([xl - rib[1], y1 - 5, (i - (rib[0] - 1) / 2) * 2.2 - 0.4]) cube([rib[1] + eps, 4, 0.8]);
+                    translate([xt - rib[1], y1 - 5, (i - (rib[0] - 1) / 2) * 2.2 - 0.4]) cube([rib[1] + eps, 4, 0.8]);
             }
         }
         for (z = zs) translate([xl - 1, yp + ya, z]) rotate([0, 90, 0]) cylinder(d = pin_d + 0.25, h = 1 + link_hole, $fn = 24);
@@ -238,14 +244,14 @@ module pad() hull() for (z = [zs[0], zs[n_blades - 1]]) translate([xl + link_t, 
 // The blade is modelled with its link pin toward the fan; in front, it goes in turned over (the same printed part).
 module blade_at(z, a) translate([0, yp, z]) rotate([a + (link_side == "front" ? 180 : 0), 0, 0]) blade();
 // the link follows the link pins: they turn about the pivot axis with the blades
-module link_at(a) translate([0, ya * cos(a) - ya, ya * sin(a)]) link();
+module link_at(a) translate([0, ya * cos(a) - ya, ya * sin(a)]) link(link_pad ? link_t : link_np_t);
 
 module assembly(a = angle) {
     color([0.85, 0.85, 0.88]) chassis();
     for (z = zs) color([0.55, 0.75, 0.95]) blade_at(z, a);
     color([0.95, 0.6, 0.25]) link_at(a);
     for (sx = [0, 1]) color([0.4, 0.75, 0.4]) mirror([sx, 0, 0]) retainer();
-    color([0.3, 0.3, 0.3]) translate([0, ya * cos(a) - ya, ya * sin(a)]) pad();
+    if (link_pad) color([0.3, 0.3, 0.3]) translate([0, ya * cos(a) - ya, ya * sin(a)]) pad();
     %translate([-fan / 2, -25, -fan / 2]) cube([fan, 25, fan]);   // the fan (ghost)
 }
 
@@ -253,6 +259,7 @@ if (part == "assembly") assembly();
 if (part == "chassis")  translate([0, 0, depth]) rotate([-90, 0, 0]) chassis();              // front face on the bed
 if (part == "blade")    translate([-x0 + pin_in + 3, 0, thick / 2]) blade();                  // flat, flattened pins down
 if (part == "link")     rotate([0, 90, 0]) translate([-(xl + link_t), 0, 0]) link();   // flat, holes up
+if (part == "link_nopad") rotate([0, 90, 0]) translate([-(xl + link_np_t), 0, 0]) link(link_np_t);   // the same, no felt
 if (part == "retainer") rotate([90, 0, 0]) translate([-xi, 0, 0]) retainer();   // x2, spine down, pegs up
 if (part == "peg_test2") peg_test2();
 if (part == "peg_test2_view") peg_test2_view();

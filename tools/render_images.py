@@ -99,21 +99,26 @@ def assembly():
     save(render(t("a.png"), VENT, "0,0,0,68,0,198,0", (1000, 1100), ['angle=30'], viewall=True), "assembly.png")
 
 
-# Labels for assembly_lbl: (side, label y, text, anchor x, anchor y). Anchors are pixels in the trimmed
-# 2x render of part "assembly_noplug" (813 x 1817); pick them again if the camera or the model's layout changes.
+# Labels for assembly_lbl: (side, text, anchor x, anchor y[, x]). Anchors are pixels in the trimmed 2x render of part
+# "assembly_noplug" (813 x 1817); pick them again if the camera or the model's layout changes. Each label sits level
+# with its anchor, so every leader line is horizontal (a slanted line looks dotted once the browser scales the image).
+# A hidden part's label gives a fifth value: from that x (where its line meets the part in front) to the anchor,
+# the line is dashed.
 ASM_LABELS = [
-    ("L", 130, "Stepper motor", 300, 140),
-    ("L", 350, "Shaft coupler", 360, 350),
-    ("L", 560, "Fan, intake", 60, 560),
-    ("L", 690, "Damper disc", 300, 680),
-    ("L", 800, "Shaft", 375, 800),
-    ("L", 1100, "Fan, exhaust", 70, 1100),
-    ("L", 1640, "Electronics box", 200, 1640),
-    ("R", 60, "Foam insert", 700, 80),
-    ("R", 215, "Motor plate", 545, 215),
-    ("R", 400, "Motor tower", 540, 400),
-    ("R", 700, "Spigot, in the foam", 660, 700),
-    ("R", 1200, "Damper housing", 540, 1200),
+    ("L", "Stepper motor", 300, 140),
+    ("L", "Shaft coupler", 360, 350),
+    ("L", "Fan, intake", 60, 560),
+    ("L", "Damper disc", 300, 680),
+    ("L", "Shaft", 375, 800),
+    ("L", "Fan, exhaust", 70, 1100),
+    ("L", "Electronics box", 200, 1640),
+    ("R", "Foam insert", 700, 80),
+    ("R", "Motor plate", 545, 215),
+    ("R", "Motor tower", 540, 400),
+    ("R", "Spigot, in the foam", 660, 700),
+    ("R", "Damper housing", 540, 1200),
+    ("R", "Position encoder, inside", 371, 1428, 514),   # hidden: the AS5600 under the shaft's end, in the bottom
+                                                          # bay; dashed from the lower fan's edge
 ]
 
 
@@ -125,8 +130,8 @@ def assembly_lbl():
     out.paste(im, (mw, pad))
     d = ImageDraw.Draw(out)
     ink, halo = (40, 40, 40), (255, 255, 255)
-    for side, ly, text, ax, ay in ASM_LABELS:
-        ly += pad
+    for side, text, ax, ay, *hid in ASM_LABELS:
+        ly = ay + pad
         w = d.textlength(text, font=f)
         if side == "L":
             tx, lx = 40, 40 + w + 10
@@ -135,8 +140,17 @@ def assembly_lbl():
             lx = tx - 10
         d.text((tx, ly), text, font=f, fill=ink, anchor="lm")
         a = (ax + mw, ay + pad)
-        for col, wid, r in ((halo, 6, 8), (ink, 2, 5)):
-            d.line([(lx, ly), a], fill=col, width=wid)
+        hx = hid[0] + mw if hid else a[0]        # the line is solid from the label to hx, then dashed to the anchor
+        sd = -1 if hx > a[0] else 1              # toward the anchor
+        for col, wid, e in ((halo, 6, 2 if hid else 0), (ink, 2, 0)):   # a dashed line's solid part: its halo
+            d.line([(lx, ly), (hx + sd * e, ly)], fill=col, width=wid)   # closes its end too
+        # then dashed: 8 px dashes, 10 px gaps, like the line
+        for col, wid, e in ((halo, 6, 2), (ink, 2, 0)):        # the halo runs 2 px past each end: white all round
+            for x in range(int(hx) + sd * 8, int(a[0]), sd * 18):
+                x2 = x + sd * 8
+                if (a[0] - x2) * sd > 6:                     # clear of the anchor's dot
+                    d.line([(x - sd * e, ly), (x2 + sd * e, ly)], fill=col, width=wid)
+        for col, r in ((halo, 8), (ink, 5)):
             d.ellipse([a[0] - r, a[1] - r, a[0] + r, a[1] + r], fill=col)
     save(out, "assembly_lbl.png")
 
@@ -185,7 +199,8 @@ def louvers():
     for name, camera, size, viewall in [
             ("chassis", "0,0,0,55,0,25,200", (1200, 1000), True),
             ("blade", "41,0,1,50,0,20,140", (1400, 700), False),
-            ("link", "0,0,0,55,0,25,200", (1200, 1000), True),
+            ("link", "0,0,0,55,0,205,200", (1200, 1000), True),
+            ("link_nopad", "0,0,0,55,0,205,200", (1200, 1000), True),
             ("retainer", "0,0,0,55,0,25,200", (1200, 1000), True)]:
         save(render(t(f"l_{name}.png"), LOUV, camera, size, [f'part="{name}"'], viewall=viewall), f"part_louver_{name}.png")
 

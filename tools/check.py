@@ -121,15 +121,15 @@ def check_vent():
 def check_louvers():
     print("8. Optional louvers (cad/louvers.scad): parts, and no collisions from -45 to 45 deg")
     LOUV = os.path.join(ROOT, "cad", "louvers.scad")
-    for p in ["chassis", "blade", "link", "retainer"]:
+    for p in ["chassis", "blade", "link", "link_nopad", "retainer"]:
         m = trimesh.load(openscad(os.path.join(tmp, f"louver_{p}.stl"), [f'part="{p}"'], LOUV))
         size = [round(float(v), 1) for v in m.extents]
         report(f"louver_{p}", m.is_watertight and len(m.split(only_watertight=False)) == 1 and max(size) <= SMALL_BED,
                f"size {size} mm, {m.volume/1000:.1f} cm3")
-    for a in [-45, 0, 45]:
-        w = os.path.join(tmp, f"louv_{a}.scad")
+    for pad, a in [(p_, a_) for p_ in (True, False) for a_ in (-45, 0, 45)]:
+        w = os.path.join(tmp, f"louv_{a}_{pad}.scad")
         with open(w, "w") as fh:
-            fh.write(f'include <{LOUV.replace(os.sep, "/")}>\npart = "none";\na = {a};\n'
+            fh.write(f'include <{LOUV.replace(os.sep, "/")}>\npart = "none";\na = {a};\nlink_pad = {str(pad).lower()};\n'
                      "module blades(a) for (z = zs) blade_at(z, a);\n"
                      "module combs() for (sx = [0, 1]) mirror([sx, 0, 0]) retainer();\n"
                      "union() {\n"
@@ -141,9 +141,9 @@ def check_louvers():
                      "  intersection() { chassis(); combs(); }\n"
                      "  for (i = [0 : n_blades - 2]) intersection() { blade_at(zs[i], a); blade_at(zs[i + 1], a); }\n"
                      "}\n")
-        f = openscad(os.path.join(tmp, f"louv_{a}.stl"), None, w)
+        f = openscad(os.path.join(tmp, f"louv_{a}_{pad}.stl"), None, w)
         v = 0.0 if f is None else abs(trimesh.load(f).volume)
-        report(f"louvers at {a:3d} deg (frame, blades, link, combs)", v < 1e-6, f"{v:.3f} mm3")
+        report(f"louvers at {a:3d} deg, {'felt link' if pad else 'link_nopad'} (frame, blades, link, combs)", v < 1e-6, f"{v:.3f} mm3")
 
 
 GROUPS = {"vent": check_vent, "louvers": check_louvers}
