@@ -313,31 +313,31 @@ In winter the incoming air is cold, and a jet straight off the fan can feel like
 </p>
 
 - **Clips, no screws.** Four hooks reach back over the fan's corner flanges and catch behind them. Recesses in the frame's corners fit over the fan's screw heads, so the fan keeps its normal screws. A firm pull takes the louvers off.
-- **The blades turn together.** Each of the six blades pivots on pins in U-slots in the side walls. On one side, a link bar joins an offset pin on every blade, so turning any blade turns them all, from −45° to +45°.
+- **The blades turn together.** Each of the six blades pivots on pins in U-slots in the side walls. On one side, a link bar joins an offset pin on every blade, so turning any blade turns them all, from −45° to +45°. The link runs along the room side of the blades, and a ribbed tab in its middle sticks out of the frame at every angle: push it up or down to set the angle. (Set `link_side = "back"` to hide the link between the blades and the fan instead, without the tab.)
 - **They hold their angle.** The pins fit snugly in their slots, and a strip of felt or foam tape on the link bar rubs on the side wall. The strip also damps vibration. On the other side, a collar on each blade's pivot bears on the wall.
-- **Nothing falls out.** The slots open toward the fan, so the blades drop in from behind. A retaining comb in each side wall then plugs the slots behind the pins.
+- **Nothing falls out.** The slots open toward the fan, so the blades drop in from behind. A retaining comb in each side wall then plugs the slots behind the pins; a snap arm at each end of the comb clicks it in place, and once the frame is on the fan, the fan's face holds the combs in too.
 
 | Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
 |---|:---:|---|---|---|---|
 | `louver_chassis` | <img src="images/part_louver_chassis.png" width="180"> | 1 | Frame: clips onto the fan's corner flanges (recesses clear its screw heads), U-slots for the blade pins in both side walls | 80 × 86 × 36 | Front face on the bed, clips up |
 | `louver_blade` | <img src="images/part_louver_blade.png" width="180"> | 6 | Blade with a pivot pin at each end, a collar on one side and an offset pin for the link on the other | 79 × 14 × 3.5 | Flat; its pins are flattened on the bed side |
-| `louver_link` | <img src="images/part_louver_link.png" width="180"> | 1 | Link bar joining the six offset pins, so the blades turn together; the felt strip goes on its flat face | 53 × 5 × 2.4 | Flat, holes up |
-| `louver_retainer` | <img src="images/part_louver_retainer.png" width="180"> | 2 | Retaining comb, one per side wall: plugs the slots behind the pins | 3 × 57 × 7.7 | Spine down, pegs up |
+| `louver_link` | <img src="images/part_louver_link.png" width="180"> | 1 | Link bar joining the six offset pins, so the blades turn together, with the tab that sets the angle; the felt strip goes on its flat face | 53 × 11 × 2.8 | Flat, holes and ribs up |
+| `louver_retainer` | <img src="images/part_louver_retainer.png" width="180"> | 2 | Retaining comb, one per side wall: plugs the slots behind the pins, with a snap arm at each end | 3 × 57 × 11 | Spine down, pegs up |
 
 About 34 cm³ (45 g) of PETG in all. Also needed: a strip of 1 mm felt or foam tape, about 5 × 52 mm, for the link bar.
 
 **Assembly:**
 1. Stick the felt strip on the link bar's flat face (the face without holes).
 2. Push the link onto the six blades' offset pins.
-3. Slide the blades into the U-slots from the back of the frame: the link and its strip go on the side with the link pins, the collars on the other.
-4. Press a retaining comb into the back of each side wall, the small ridge under each peg down, into the V-groove in the slot's floor: it keeps the pegs centred in the wall.
+3. Slide the blades into the U-slots from the back of the frame, their offset pins toward the room (the link at the front, its tab pointing out of the frame): the link and its strip go on the side with the link pins, the collars on the other.
+4. Press a retaining comb into the back of each side wall, the small round ridge under each peg down, into the groove in the slot's floor (it keeps the pegs centred in the wall), until both snap arms click. A firm pull takes it out again.
 5. Clip the frame onto the intake fan.
 
 **Tuning after a test print**, in `cad/louvers.scad`:
 - **`slot_w`:** the grip of the pins in their slots. Lower makes the blades stiffer.
 - **`clip_lip`, `clip_edge` and `clip_w`:** the clips. They're sized for the Noctua NF-A8 (a 7 mm corner flange, with the clips 8 mm in from the side edges so they clear the corner screws).
 - **`pad_t` and `pad_sq`:** the friction strip and how much it's squeezed.
-- **`comb_fit`:** the combs' pegs in their slots: the two end pegs fit tight (they hold the comb in), the middle ones looser so the comb goes in easily.
+- **`comb_fit`, `comb_key`, `key_shape`, `key_clr` and `snap_l`, `snap_t`, `snap_b`:** the combs' pegs in their slots, the guide ridge under each peg in its groove (half-round by default, or a V), and the snap arms. Print `peg_test2` first (about 25 min): a three-slot slice of the side wall, cut from the chassis itself, with a three-peg comb and its snap arms.
 
 
 ## Files
@@ -353,7 +353,7 @@ cad/louvers.scad            optional adjustable louvers for the intake fan
 stl/                        exported parts (default parameters)
 pcb/                        the controller PCB (KiCad 10): schematic and its PDF, board, Gerber zip 
                             for ordering, renders
-tools/check.py              geometry checks (must print ALL CHECKS PASSED)
+tools/check.py              geometry checks (must print ALL CHECKS PASSED); vent or louvers: just one
 tools/wiring_svg.py         draws firmware/images/wiring.svg (the wiring diagram)
 tools/as5600_svg.py         draws doc/as5600.svg (the AS5600 board, dimensioned)
 tools/ebox_layout_svg.py    draws doc/ebox_layout.svg (the electronics box, to scale)
