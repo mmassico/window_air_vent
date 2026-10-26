@@ -12,9 +12,11 @@
 //    turns them all. The pins' snug fit in the slots holds the angle.
 //  * Two retaining combs, one per side wall, plug the slots behind the
 //    pins, so the blades can't come out.
-//  * A strip of 1 mm felt or foam tape on the link bar's outer face rubs
-//    on the side wall: it damps vibration and adds friction. On the other
-//    side, a collar on each blade's pivot bears on the wall.
+//  * The link bar runs 0.2 mm from the side wall (link_nopad). Optionally,
+//    a thinner bar with a strip of 1 mm felt or foam tape on its outer face
+//    rubs on the wall instead, for vibration damping and friction
+//    (link_pad = true). On the other side, a collar on each blade's pivot
+//    bears on the wall.
 //
 //  Coordinates: x across (blade span), z up, y along the airflow
 //  (y = 0 on the fan face, y = depth on the room side).
@@ -77,7 +79,7 @@ link_hole = 1.6;    // blind holes for the link pins, from the blade side (the p
 gap      = 0.5;     // running clearance
 pad_t    = 1;       // friction pad on the link bar's outer face (felt or foam tape)
 pad_sq   = 0.2;     // how much the pad is squeezed against the wall
-link_pad = true;    // true: the link with its felt strip; false: link_nopad, its bar thicker instead (no strip)
+link_pad = false;   // false: link_nopad, its bar thick enough to need no strip (tested); true: the link with a felt strip
 nopad_clr = 0.2;    // link_nopad: its bar's clearance to the wall
 collar   = [5, 1];  // collar on each blade's pivot, plain side (diameter, thickness), 0.2 from the wall
 

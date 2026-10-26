@@ -56,6 +56,7 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | `motor_plate` | <img src="images/part_motor_plate.png" width="180"> | 1 | The motor screws to it on the bench; it then sits on top of the housing: two screws in front of the motor, and two tabs at the back, down through the frame and screwed to the tower walls | 56 × 61 × 15 | Top face on the bed, tabs up |
 | `magnet_cap` | <img src="images/part_magnet_cap.png" width="180"> | 1 | Holds the encoder magnet on the bottom end of the shaft; one M3 grub screw, height adjustable ±1 mm | 14 × 14 × 12 | Bore down |
 | `ebox` | <img src="images/part_ebox.png" width="180"> | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay, and two back tabs screw to the bay walls | 80 × 76 × 64 | Floor on the bed |
+| `tube_spacer` | <img src="images/part_tube_spacer.png" width="180"> | 1 | Flat "8" over both spigots, against the stop rings and squeezed by the foam: it holds the spigots' ends at their spacing, so foam holes slightly off 96 mm can't bend the ducts and bind the shaft. The vent sits 2.5 mm further out of the foam | 90 × 186 × 2.5 | Flat |
 
 **For a 180 mm printer** (e.g. Bambu Lab A1 mini), print the housing in two halves instead of `body`. The cut runs midway between the two ducts, where only the fan plate joins them; a small splice plate behind the fan plate joins the halves again with four M3 screws, driven from the fan side in the band between the two fans. Each half prints like the full housing, in about half the time (roughly 5–6 h), so they can go on different days; use the same spool and profile for both.
 
@@ -127,11 +128,12 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 | `magnet_cap` | | 100 % | Tiny, with a grub screw in it: print it solid |
 | `splice` | 5 | 40 % | Joins the two halves: nut pockets and countersunk screws |
 | `ebox` | 4 | 15–20 % | No real loads; a 4th wall (same print time) makes the walls around the screw holes stronger |
+| `tube_spacer` | | 100 % | Thin rings (3 mm wide, 2.5 mm thick) that must not stretch: print it solid |
 | `fittest`, `oring_test` | 4 | 25 % | As the housing, so they test what the housing will be |
 | `drill_guide` | 4 | 40 % | Small; 4 walls make the bushings solid |
 | `louver_chassis` | 3 | 20 % | Light load |
 | `louver_blade` | 3 | 15 % | Thin and light; their pins come out solid anyway |
-| `louver_link` (or `louver_link_nopad`), `louver_retainer` | | 100 % | Small and thin |
+| `louver_link_nopad` (or `louver_link`), `louver_retainer` | | 100 % | Small and thin |
 
 - **Infill pattern: gyroid.** Equally strong in every direction, and it prints smoothly in PETG.
 - **Top and bottom shell layers: 5.** Flat faces stay smooth and the infill doesn't show through.
@@ -314,23 +316,23 @@ In winter the incoming air is cold, and a jet straight off the fan can feel like
 
 - **Clips, no screws.** Four hooks reach back over the fan's corner flanges and catch behind them. Recesses in the frame's corners fit over the fan's screw heads, so the fan keeps its normal screws. A firm pull takes the louvers off.
 - **The blades turn together.** Each of the six blades pivots on pins in U-slots in the side walls. On one side, a link bar joins an offset pin on every blade, so turning any blade turns them all, from −45° to +45°. The link runs along the room side of the blades, and a ribbed tab in its middle sticks out of the frame at every angle: push it up or down to set the angle. (Set `link_side = "back"` to hide the link between the blades and the fan instead, without the tab.)
-- **They hold their angle.** The pins fit snugly in their slots, and a strip of felt or foam tape on the link bar rubs on the side wall. The strip also damps vibration. It's optional: `louver_link_nopad` has a thicker bar instead, 0.2 mm from the wall, and the pins alone hold the angle. On the other side, a collar on each blade's pivot bears on the wall.
+- **They hold their angle.** The pins fit snugly in their slots, and that alone holds the blades: the link bar runs 0.2 mm from the side wall. On the other side, a collar on each blade's pivot bears on the wall. (For more friction or vibration damping, `louver_link` has a thinner bar for a strip of felt or foam tape that rubs on the wall.)
 - **Nothing falls out.** The slots open toward the fan, so the blades drop in from behind. A retaining comb in each side wall then plugs the slots behind the pins; a snap arm at each end of the comb clicks it in place, and once the frame is on the fan, the fan's face holds the combs in too.
 
 | Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
 |---|:---:|---|---|---|---|
 | `louver_chassis` | <img src="images/part_louver_chassis.png" width="180"> | 1 | Frame: clips onto the fan's corner flanges (recesses clear its screw heads), U-slots for the blade pins in both side walls | 80 × 86 × 36 | Front face on the bed, clips up |
 | `louver_blade` | <img src="images/part_louver_blade.png" width="180"> | 6 | Blade with a pivot pin at each end, a collar on one side and an offset pin for the link on the other | 79 × 14 × 3.5 | Flat; its pins are flattened on the bed side |
-| `louver_link` | <img src="images/part_louver_link.png" width="180"> | 1 | Link bar joining the six offset pins, so the blades turn together, with the tab that sets the angle; the felt strip goes on its flat face | 53 × 11 × 2.8 | Flat, holes and ribs up |
-| `louver_link_nopad` | <img src="images/part_louver_link_nopad.png" width="180"> | (1) | Instead of `louver_link`, without the felt strip: the same link with its bar 3 mm thick (the tab stays 2.4) | 53 × 11 × 3 | Flat, holes and ribs up |
+| `louver_link_nopad` | <img src="images/part_louver_link_nopad.png" width="180"> | 1 | Link bar joining the six offset pins, so the blades turn together, with the tab that sets the angle; its bar is 3 mm thick (the tab 2.4) | 53 × 11 × 3 | Flat, holes and ribs up |
+| `louver_link` | <img src="images/part_louver_link.png" width="180"> | (1) | Optional, instead of `louver_link_nopad`: the same link with a thinner bar (2.4 mm) for a felt strip on its flat face | 53 × 11 × 2.8 | Flat, holes and ribs up |
 | `louver_retainer` | <img src="images/part_louver_retainer.png" width="180"> | 2 | Retaining comb, one per side wall: plugs the slots behind the pins, with a snap arm at each end | 3 × 57 × 11 | Spine down, pegs up |
 
-About 34 cm³ (45 g) of PETG in all. Also needed: a strip of 1 mm felt or foam tape, about 5 × 52 mm, for the link bar (not with `louver_link_nopad`).
+About 34 cm³ (45 g) of PETG in all. With the optional `louver_link`, also a strip of 1 mm felt or foam tape, about 5 × 52 mm.
 
 **Assembly:**
-1. Stick the felt strip on the link bar's flat face (the face without holes). With `louver_link_nopad`, skip this step.
+1. Only with the optional `louver_link`: stick the felt strip on the link bar's flat face (the face without holes).
 2. Push the link onto the six blades' offset pins.
-3. Slide the blades into the U-slots from the back of the frame, their offset pins toward the room (the link at the front, its tab pointing out of the frame): the link and its strip go on the side with the link pins, the collars on the other.
+3. Slide the blades into the U-slots from the back of the frame, their offset pins toward the room (the link at the front, its tab pointing out of the frame): the link goes on the side with the link pins, the collars on the other.
 4. Press a retaining comb into the back of each side wall, the small round ridge under each peg down, into the groove in the slot's floor (it keeps the pegs centred in the wall), until both snap arms click. A firm pull takes it out again.
 5. Clip the frame onto the intake fan.
 

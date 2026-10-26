@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, assembly_noplug, body, disc, motor_plate, magnet_cap, ebox, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide]
+part  = "assembly"; // [assembly, assembly_noplug, assembly_spc, body, disc, motor_plate, magnet_cap, ebox, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide, tube_spacer]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -45,6 +45,9 @@ oring_slope = true; // 45 deg groove wall on the spigot-tip side: the spigots pr
                     // otherwise be a flat overhang; floor depth (squeeze) and the other wall are unchanged
 stop_od   = 90;     // stop ring that rests on the room face of the foam
 stop_t    = 3;
+spacer   = [2.5, -0.05, 8];  // tube_spacer (optional): thickness, clearance on the spigots (negative: a press fit;
+                    //   0.2 and 0.05 were loose), width of the bridge between its two rings (it grips both spigots
+                    //   against the stop rings, so their ends can't spread)
 
 /* [Damper] */
 ys       = 43;      // shaft position, from the foam face
@@ -748,6 +751,21 @@ module oring_test() {
     }
 }
 
+// tube_spacer: the spigots' far ends are free (the ducts only join near the fan), so foam holes slightly off their
+// 96 mm spacing would bend the ducts as they go in, and the shaft would bind in its bearings. This flat "8" slides
+// over both spigots up to the stop rings and stays there, squeezed between them and the foam: two rings, as wide as
+// the stop rings so it hides behind them, joined by a short bridge, holding the spigots' ends at their spacing.
+// Modelled flat (z = 0 on the bed), the duct centres on the y axis.
+module tube_spacer() {
+    linear_extrude(spacer[0]) difference() {
+        union() {
+            for (z = zc) translate([0, z]) circle(d = stop_od, $fn = 180);
+            square([spacer[2], pitch - stop_od + 4], center = true);   // the bridge, 2 mm into each ring
+        }
+        for (z = zc) translate([0, z]) circle(d = sp_od + 2 * spacer[1], $fn = 180);
+    }
+}
+
 // drill_guide: two bushings on a small base, for perpendicular pilot holes in the foam insert. Lay it on the drilling
 // template: the notches at both ends on the vertical centre line, the active bushing's side notches on the hole's
 // cross arm; then drill through the paper. Printed base down, so the bores are vertical and round.
@@ -815,7 +833,8 @@ module electronics(usb = esp_usb, plug = true) {
     }
 }
 
-module assembly(plug = true) {   // plug: the ESP32's USB-C plug (off for the labelled README view)
+module assembly(plug = true, spc = false) {   // plug: the ESP32's USB-C plug (off for the labelled README view);
+                                             // spc: with the tube_spacer, the foam moved back by its thickness
     color([0.85, 0.85, 0.88]) body();
     for (z = zc) color([0.95, 0.6, 0.25]) disc_installed(z, angle);
     color([0.6, 0.6, 0.62]) translate([0, ys, z_cap1 - 4.6]) cylinder(d = shaft_d, h = 200);   // 200 mm rod, 4.6 mm into the cap
@@ -828,7 +847,8 @@ module assembly(plug = true) {   // plug: the ESP32's USB-C plug (off for the la
     color([0.2, 0.55, 0.3]) translate([-11.65, ys - 11.4, z_ep1 + enc_standoff]) cube([23.3, 22.8, enc_board]);   // AS5600 kit board
     for (z = zc) color([0.2, 0.2, 0.22]) translate([-fan / 2, duct_len, z - fan / 2])
         difference() { cube([fan, fan_t, fan]); translate([fan / 2, -1, fan / 2]) rotate([-90, 0, 0]) cylinder(d = 76, h = fan_t + 2); }
-    %translate([-50, -50, -pitch / 2 - 90]) cube([100, 50, pitch + 180]);   // foam insert (ghost)
+    if (spc) color([0.9, 0.3, 0.3]) rotate([90, 0, 0]) tube_spacer();   // against the stop rings
+    %translate([0, spc ? -spacer[0] : 0, 0]) translate([-50, -50, -pitch / 2 - 90]) cube([100, 50, pitch + 180]);   // foam insert (ghost)
 }
 
 module assembly_nofan() {
@@ -854,6 +874,7 @@ module assembly_nofan() {
 
 if (part == "assembly")       assembly();
 if (part == "assembly_noplug") assembly(plug = false);
+if (part == "assembly_spc")   assembly(spc = true);
 if (part == "body")           translate([0, 0, duct_len]) rotate([-90, 0, 0]) body();   // fan plate on the bed
 if (part == "disc")           disc();
 if (part == "motor_plate")    translate([0, 0, mplate_t]) rotate([180, 0, 0]) motor_plate();   // top face on the bed, tabs up
@@ -863,6 +884,7 @@ if (part == "fittest")        fittest();
 if (part == "fin_test")       fin_test();
 if (part == "oring_test")     oring_test();
 if (part == "drill_guide")    drill_guide();
+if (part == "tube_spacer")    tube_spacer();   // flat
 if (part == "assembly_nofan") assembly_nofan();
 if (part == "body_top")       translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(true);    // fan plate on the bed
 if (part == "body_bottom")    translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(false);   // fan plate on the bed
