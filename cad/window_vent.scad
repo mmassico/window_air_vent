@@ -59,7 +59,10 @@ hub_l    = 40;      // hub length along the shaft
 hub_h    = 14;      // hub height above the plate bottom
 grub_n   = 2;       // [1:1:3] M3 grub screws per disc (2 = no rocking on the shaft)
 grub_sp  = 24;      // spacing between them along the shaft
-gasket   = 1;       // foam tape thickness on the lips
+gasket   = 1;       // foam tape thickness on the lips (sets the lips' position in the housing)
+seat_rlf = 0.5;     // extra room for the foam taken off the disc's two seats, housing unchanged: the foam gap
+                    // becomes gasket + seat_rlf (1.5: 1.6 mm neoprene squeezed 0.1 mm; at 1.0 a finger could not
+                    // close it). Half A's face is lowered by it, half B's bevel set back by it (square to the slope)
 lip_ovl  = 2;       // lips overlap the disc edge by this much
 lip_t    = 2;       // lip thickness (along the flow)
 lip_gap  = 7;       // no lip within this distance of the shaft (clears the hub and the edge-on disc)
@@ -558,11 +561,16 @@ module disc() {
             circle(d = shaft_d + 0.2, $fn = 32);
             translate([0, (shaft_d + 0.2) / 2 * sqrt(2)]) square(0.01, center = true);
         }
-        // half B (x > 0 here, the half that closes against the conical lip B): 45 deg bevel on the bed-side rim
+        // half B (x > 0 here, the half that closes against the conical lip B): 45 deg bevel on the bed-side rim,
+        // set back seat_rlf square to the slope
+        bev = disc_bev + seat_rlf * sqrt(2);
         difference() {
-            translate([0, -disc_d, -1]) cube([disc_d, 2 * disc_d, disc_bev + 1]);
-            translate([0, 0, -1]) cylinder(r1 = disc_d / 2 - disc_bev - 1, r2 = disc_d / 2, h = disc_bev + 1);
+            translate([0, -disc_d, -1]) cube([disc_d, 2 * disc_d, bev + 1]);
+            translate([0, 0, -1]) cylinder(r1 = disc_d / 2 - bev - 1, r2 = disc_d / 2, h = bev + 1);
         }
+        // half A (x < 0): its top face, which closes against the flat lip A, lowered by seat_rlf beside the hub
+        if (seat_rlf > 0)
+            translate([-disc_d, -disc_d, disc_t - seat_rlf]) cube([disc_d - hub_w / 2, 2 * disc_d, seat_rlf + 1]);
         translate([20, 0, disc_t - 0.6]) linear_extrude(1) rotate(90) fittest_letter_big("B");   // marks half B
         for (k = [0 : grub_n - 1])   // M3 grub screws (self-tapping), spread along the hub
             translate([0, (k - (grub_n - 1) / 2) * (grub_n > 1 ? grub_sp / (grub_n - 1) : 0), hc]) cylinder(d = 2.5, h = hub_h, $fn = 24);
