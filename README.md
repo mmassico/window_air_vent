@@ -4,7 +4,7 @@ A demand-controlled window ventilator for one room. Two 80 mm fans move air thro
 
 There is no heat recovery: every litre of air exhausted is lost heat. In exchange it is simple, cheap and automatic. See the estimates below.
 
-> **Status: prototype, mechanics printed.** Every printed part has been printed and test-fitted (housing, discs, motor plate, magnet cap, electronics box, louvers), and several were refined from those prints: the shaft holes' sacrificial fins, the box's back tabs, the louvers' snap-in combs. Still to come: the electronics (the perfboard build or the controller PCB, ordered) and the firmware on real hardware, then a first install in a window. The geometry is also checked in CAD (closed solids, the discs swing freely, the lips stop them).
+> **Status: prototype, mechanics printed.** Every printed part has been printed and test-fitted (housing, discs, motor plate, magnet cap, electronics box, tube spacer, louvers), and several were refined from those prints: the shaft holes' sacrificial fins, the box's back tabs, the louvers' snap-in combs, and the discs' seats. The lip seals are installed and tested: with the 1.6 mm neoprene, the closed discs now press evenly on the foam all round, after two rounds of tuning the discs' seats (the housing stayed as printed). The foam-free `disc_nofoam` is checked in CAD but not printed yet. Still to come: the electronics (the perfboard build or the controller PCB, ordered) and the firmware on real hardware, then a first install in a window. The geometry is also checked in CAD (closed solids, the discs swing freely, the lips stop them).
 
 <p align="center">
   <img src="images/assembly_lbl.png?t=10" alt="Damper housing with two 80 mm fans, stepper motor on top, spigots in the foam insert, with labels: stepper motor, motor plate, motor tower, shaft coupler, intake and exhaust fans, damper discs, shaft, spigot, damper housing, electronics box, foam insert" width="680">
@@ -14,7 +14,7 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 
 - **Foam insert.** A block of 2 in (51 mm) XPS foam, 30 psi grade, fills the window gap (100 mm or less, so a child can't fit through). Two 83 mm holes (a 3-1/4 in hole saw, see [drilling](#drilling-the-foam-insert)), stacked vertically: intake on top, exhaust below. An insect screen covers the outdoor face.
 - **Damper housing.** It sits on the **room** face of the foam, so its moving parts stay warm and dry (no ice). Its two spigots fit snugly in the foam holes; two O-rings on each are optional, for a hole that comes out loose. The housing comes out in spring, and the foam insert stays reusable.
-- **Butterfly dampers.** One vertical 5 mm steel shaft runs through both ducts and carries a disc in each. A quarter turn opens or closes both. Each disc closes against two half-ring lips lined with thin foam, one on each side of the shaft. One lip is flat; the other is a 45° cone, and the half of the disc that closes against it (engraved B) has a matching 45° bevel, so neither prints as a flat overhang.
+- **Butterfly dampers.** One vertical 5 mm steel shaft runs through both ducts and carries a disc in each. A quarter turn opens or closes both. Each disc closes against two half-ring lips lined with thin foam (or bare, with [`disc_nofoam`](#without-lip-foam)), one on each side of the shaft. One lip is flat; the other is a 45° cone, and the half of the disc that closes against it (engraved B) has a matching 45° bevel, so neither prints as a flat overhang.
 - **Motor and encoder.** A NEMA 17 pancake stepper on top turns the shaft through a flexible coupler. A TMC2209 driver keeps it silent. The motor screws to a separate plate on the bench, and the plate then screws onto a frame on top of the housing from above. An AS5600 magnetic encoder at the bottom reads the absolute shaft angle, so the firmware always knows whether the dampers are really closed, with no homing and no limit switch.
 - **Fans.** Two 80 mm PWM fans screw onto the room end of the housing.
 - **Electronics box.** A tray under the housing holds a 5 × 7 cm perfboard with the ESP32 and the TMC2209 soldered on. The encoder plate is its lid, and its front wall rises to close the front of the bottom bay. The cables run down the right side (seen from the room), hidden behind the fans and held by three tie-wrap anchors on the back of the fan plate; the same anchors and a cable entry on the left side allow the mirror image. Power comes from two plug-in adapters: a 12 V brick for the fans and the motor, whose wire comes in with the other cables, and a 5 V USB-C adapter for the ESP32, whose cable passes through a diamond opening in the left wall. The [layout drawing](doc/ebox_layout.svg) shows where everything goes on the perfboard.
@@ -99,22 +99,23 @@ PETG. No support is needed anywhere: every face that looks down when printing (t
 
 ### Filament
 
-About **0.4–0.45 kg of PETG** for one unit (less than half a 1 kg spool), or roughly $11–16 at $25–35/kg.
+About **0.45–0.5 kg of PETG** for one unit (about half a 1 kg spool), or roughly $12–17 at $25–35/kg.
 
 | Part | Qty | Solid volume |
 |---|---|---|
-| `body` | 1 | 264 cm³ |
-| `disc` | 2 | 2 × 14 = 28 cm³ |
-| `motor_plate` | 1 | 12.5 cm³ |
+| `body` | 1 | 281 cm³ |
+| `disc` | 2 | 2 × 12.7 = 25 cm³ (`disc_nofoam`: 2 × 14.8) |
+| `motor_plate` | 1 | 12.6 cm³ |
 | `magnet_cap` | 1 | 1.6 cm³ |
 | `ebox` | 1 | 47 cm³ |
-| **Total** | | **≈ 353 cm³** |
+| `tube_spacer` | 1 | 4.5 cm³ |
+| **Total** | | **≈ 372 cm³** |
 
-The split housing (`body_top` 127 cm³, `body_bottom` 136 cm³, `splice` 8 cm³) adds about 7 cm³ (10 g).
+The split housing (`body_top` 136 cm³, `body_bottom` 145 cm³, `splice` 8 cm³) adds about 7 cm³ (9 g).
 
-- Printed fully solid, 353 cm³ of PETG (1.27 g/cm³) weighs about 448 g.
-- Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 400–450 g, plus a little for the skirt or brim and purging.
-- The optional test prints add about 30 cm³ (37 g): `fittest` 12 cm³, `oring_test` 18 cm³. The optional `drill_guide` adds 9 cm³ (11 g).
+- Printed fully solid, 372 cm³ of PETG (1.27 g/cm³) weighs about 472 g.
+- Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 430–470 g, plus a little for the skirt or brim and purging.
+- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g).
 - Print time: very roughly 9–12 hours for the housing on a Bambu Lab P1 (0.2 mm layers; about 7–9 hours at 0.28 mm), and about 3–4 hours for all the other parts together. The slicer gives the exact figures.
 
 ### Slicer settings
@@ -158,7 +159,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | M3 × 35 screws + M3 nuts | 8 each | Fans | — |
 | M3 × 8 screws | 4 | Motor to motor plate, through the bosses under the plate. Not longer: the motor's holes are only 2.5 mm deep ([section](doc/motor_mount.svg)) | — |
 | M3 × 10 (or M3 × 12) screws + M3 nuts | 6 each | Motor plate: two through the frame in front of the motor, two through the tower walls and the plate's back tabs. Electronics box: two through the bay walls and the box's back tabs | — |
-| M3 grub screws, 6 or 8 mm | 5 | Two per disc, 24 mm apart along the hub, so the disc can't rock on the shaft; one in the magnet cap. Self-tapping into the plastic | — |
+| M3 grub screws, 6 mm (and one 4–5 mm) | 5 | Two 6 mm per disc, 24 mm apart along the hub, so the disc can't rock on the shaft (flush with the hub); one 4–5 mm in the magnet cap (a 6 mm one would stick out 1.5 mm). Self-tapping into the plastic | — |
 | O-rings, 74 × 3 mm, nitrile 70A | 4 | Optional, and not needed by default: the plain Ø 83.7 spigots are a snug fit in the hole (83.3 mm with the 3-1/4 in hole saw). For a hole that comes out loose, set `orings = true` before printing the housing: two grooves per spigot, sized for this O-ring (about 6% stretch, 20% squeeze in an 83.3 mm hole) | $12.79 (pack of 10) |
 | XPS foam board, 2 in (51 mm), 30 psi | 1 | Foam insert, e.g. Owens Corning FOAMULAR C-300 (2 × 24 × 96 in, R-10). The 30 psi grade over the 20 psi (wall) one: stiffer under the housing's weight, it doesn't creep around the spigots, and the hole saw cuts it cleaner. Many boards have shiplap (SL) edges, stepped to overlap on a wall: cut the insert from the middle of the board, or saw the step off any edge that meets the window frame | — |
 | Closed-cell neoprene foam sheet, self-adhesive, 1/16 in (1.6 mm) | 1 | Lip seals, cut with the [templates](#cutting-the-lip-foam); not needed with `disc_nofoam` ([without lip foam](#without-lip-foam)). The model leaves a 1.5 mm gap, so the foam is only lightly squeezed: closed-cell neoprene is too stiff for more | |
@@ -323,7 +324,7 @@ Run the drill slowly. Hole saws often cut a little wider than labelled, so cut a
 8. Fit the fans: the top one blowing into the room, the bottom one blowing toward the window. Arrows engraved on both sides of the housing (above the upper duct and below the lower one) show each duct's airflow; match the arrows on the fan frames to them.
 9. Electronics: solder the ESP32 and the TMC2209 onto the perfboard (or into female headers), following the [layout](#the-electronics-box-layout): the ESP32 across the back half with its USB-end pins one column in from the board's edge (clear of the corner standoff), the TMC2209 at the front right. Or turn the ESP32 180° in the same place, its USB end toward the right wall (view `ebox_elec_alt`): the box has a diamond on each side. Wire it (connect the 12 V brick's GND to the ESP32's GND), and screw it onto the four standoffs in the box (M2). Plug the USB-C cable in through the matching side wall. Bring the 12 V wire and the fan and motor cables down the right side, tie them to the three anchors behind the fans, and into the box through the notch at the top of its right wall. The AS5600 wires drop in through the window in the encoder plate.
 10. Fit the box under the housing, its two back tabs up through the notches in the encoder plate: two M3 × 12 through the front cover into the bosses of the bottom bay, and at the back an M3 × 10 through each bay wall and its tab from outside, with a nut on the inside, reached from the bay's open back.
-11. Push the housing's spigots into the foam holes. If they're tight, sand the holes a little. (With `orings = true`, roll two O-rings onto each spigot first.)
+11. Slide the `tube_spacer` over both spigots, up against the stop rings. Then push the spigots into the foam holes: the spacer ends up squeezed between the stop rings and the foam. If they're tight, sand the holes a little. (With `orings = true`, roll two O-rings onto each spigot first.)
 
 ## Optional: adjustable louvers for the intake fan
 
@@ -346,7 +347,7 @@ In winter the incoming air is cold, and a jet straight off the fan can feel like
 | `louver_link` | <img src="images/part_louver_link.png" width="180"> | (1) | Optional, instead of `louver_link_nopad`: the same link with a thinner bar (2.4 mm) for a felt strip on its flat face | 53 × 11 × 2.8 | Flat, holes and ribs up |
 | `louver_retainer` | <img src="images/part_louver_retainer.png" width="180"> | 2 | Retaining comb, one per side wall: plugs the slots behind the pins, with a snap arm at each end | 3 × 57 × 11 | Spine down, pegs up |
 
-About 34 cm³ (45 g) of PETG in all. With the optional `louver_link`, also a strip of 1 mm felt or foam tape, about 5 × 52 mm.
+About 33 cm³ (42 g) of PETG in all. With the optional `louver_link`, also a strip of 1 mm felt or foam tape, about 5 × 52 mm.
 
 **Assembly:**
 1. Only with the optional `louver_link`: stick the felt strip on the link bar's flat face (the face without holes).
