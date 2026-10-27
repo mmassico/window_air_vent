@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, assembly_noplug, assembly_spc, body, disc, motor_plate, magnet_cap, ebox, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide, tube_spacer]
+part  = "assembly"; // [assembly, assembly_noplug, assembly_spc, body, disc, disc_nofoam, motor_plate, magnet_cap, ebox, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide, tube_spacer]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -60,9 +60,15 @@ hub_h    = 14;      // hub height above the plate bottom
 grub_n   = 2;       // [1:1:3] M3 grub screws per disc (2 = no rocking on the shaft)
 grub_sp  = 24;      // spacing between them along the shaft
 gasket   = 1;       // foam tape thickness on the lips (sets the lips' position in the housing)
-seat_rlf = 0.5;     // extra room for the foam taken off the disc's two seats, housing unchanged: the foam gap
-                    // becomes gasket + seat_rlf (1.5: 1.6 mm neoprene squeezed 0.1 mm; at 1.0 a finger could not
-                    // close it). Half A's face is lowered by it, half B's bevel set back by it (square to the slope)
+// The housing stays as printed (lips placed by gasket); each disc seat moves instead, by seat_rlf: [0] half A's face
+// (lowered when positive, raised when negative), [1] half B's bevel (set back square to the slope when positive,
+// brought forward when negative). The gap at a seat is then gasket + seat_rlf, less 0.1 on A and plus 0.07 on B: the
+// grub screws press the shaft into one side of its bore (0.2 larger), which moves the disc 0.1 toward lip A.
+lip_foam  = true;          // false: no lip foam, the disc closes on the bare lips (disc_nofoam)
+seat_foam = [0.6, 0.5];    // with 1.6 mm neoprene: gaps 1.5 (A, face at 2.4) and 1.57 (B), squeezed lightly
+                           // (at gasket = 1 with no relief, a finger could not close the disc)
+seat_bare = [-0.6, -0.8];  // without foam: gaps 0.3 (A, face at 3.6) and 0.27 (B). Smaller risks a binding disc
+seat_rlf  = lip_foam ? seat_foam : seat_bare;
 lip_ovl  = 2;       // lips overlap the disc edge by this much
 lip_t    = 2;       // lip thickness (along the flow)
 lip_gap  = 7;       // no lip within this distance of the shaft (clears the hub and the edge-on disc)
@@ -175,8 +181,9 @@ split_sz  = 4.5;    //   ... and z = +/- split_sz: in the band between the fans
 split_csk = 7;      // 90 deg countersinks for their heads, this wide at the fan face (M3 flat heads: 5.5-6.7); 45 deg walls print from the bed
 
 /* [Drill guide for the foam insert's pilot holes] */
-guide_d     = [6.35, 6.5]; // bits: A, the hole saw's pilot holes (1/4 in); B, the outdoor probe's hole. Set them to
-                           //   your bits; each bore gets guide_clear more, and the bit itself sizes it on the first pass
+guide_d     = [5.2, 6];   // bits: A, the hole saw's pilot holes (5.2: the saw's 5.8 pilot drill follows it); B, the
+                           //   outdoor probe's hole (6: snug on the 6 mm probe). Set them to your bits; each bore gets
+                           //   guide_clear more, and the bit itself sizes it on the first pass
 guide_clear = 0.2;
 guide_h     = 20;   // bushing height, base included: 20 mm and 0.2 clearance keep the bit within about 0.6 deg
 guide_pitch = 24;   // between the two bushings
@@ -546,12 +553,19 @@ module split_assembly() {
 }
 
 /* =================== DISC (print frame: plate on the bed, hub up, shaft along y) =================== */
-module disc() {
+module disc(s = seat_rlf) {
+    bev = disc_bev + s[1] * sqrt(2);   // half B's bevel, set back (or forward) s[1] square to the slope
+    assert(bev > 0 && bev < disc_t, "seat_rlf[1] out of range");
     difference() {
         intersection() {
             union() {
                 cylinder(d = disc_d, h = disc_t);
                 translate([-hub_w / 2, -hub_l / 2, 0]) cube([hub_w, hub_l, hub_h]);
+                if (s[0] < 0)   // half A (x < 0) thickened by -s[0]
+                    intersection() {
+                        cylinder(d = disc_d, h = disc_t - s[0]);
+                        translate([-disc_d, -disc_d, 0]) cube([disc_d, 2 * disc_d, disc_t - s[0]]);
+                    }
             }
             translate([0, 0, hc]) sphere(r = r - 0.4);   // stays inside the bore at every angle
         }
@@ -561,16 +575,14 @@ module disc() {
             circle(d = shaft_d + 0.2, $fn = 32);
             translate([0, (shaft_d + 0.2) / 2 * sqrt(2)]) square(0.01, center = true);
         }
-        // half B (x > 0 here, the half that closes against the conical lip B): 45 deg bevel on the bed-side rim,
-        // set back seat_rlf square to the slope
-        bev = disc_bev + seat_rlf * sqrt(2);
+        // half B (x > 0 here, the half that closes against the conical lip B): 45 deg bevel on the bed-side rim
         difference() {
             translate([0, -disc_d, -1]) cube([disc_d, 2 * disc_d, bev + 1]);
             translate([0, 0, -1]) cylinder(r1 = disc_d / 2 - bev - 1, r2 = disc_d / 2, h = bev + 1);
         }
-        // half A (x < 0): its top face, which closes against the flat lip A, lowered by seat_rlf beside the hub
-        if (seat_rlf > 0)
-            translate([-disc_d, -disc_d, disc_t - seat_rlf]) cube([disc_d - hub_w / 2, 2 * disc_d, seat_rlf + 1]);
+        // half A (x < 0): its top face, which closes against the flat lip A, lowered by s[0] beside the hub
+        if (s[0] > 0)
+            translate([-disc_d, -disc_d, disc_t - s[0]]) cube([disc_d - hub_w / 2, 2 * disc_d, s[0] + 1]);
         translate([20, 0, disc_t - 0.6]) linear_extrude(1) rotate(90) fittest_letter_big("B");   // marks half B
         for (k = [0 : grub_n - 1])   // M3 grub screws (self-tapping), spread along the hub
             translate([0, (k - (grub_n - 1) / 2) * (grub_n > 1 ? grub_sp / (grub_n - 1) : 0), hc]) cylinder(d = 2.5, h = hub_h, $fn = 24);
@@ -885,6 +897,7 @@ if (part == "assembly_noplug") assembly(plug = false);
 if (part == "assembly_spc")   assembly(spc = true);
 if (part == "body")           translate([0, 0, duct_len]) rotate([-90, 0, 0]) body();   // fan plate on the bed
 if (part == "disc")           disc();
+if (part == "disc_nofoam")    disc(seat_bare);   // for bare lips, no foam (same as lip_foam = false)
 if (part == "motor_plate")    translate([0, 0, mplate_t]) rotate([180, 0, 0]) motor_plate();   // top face on the bed, tabs up
 if (part == "magnet_cap")     magnet_cap();
 if (part == "ebox")           translate([0, 0, ebox_h + ebox_t - z_ep0]) ebox();   // floor on the bed

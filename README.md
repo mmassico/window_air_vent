@@ -19,7 +19,7 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 - **Fans.** Two 80 mm PWM fans screw onto the room end of the housing.
 - **Electronics box.** A tray under the housing holds a 5 × 7 cm perfboard with the ESP32 and the TMC2209 soldered on. The encoder plate is its lid, and its front wall rises to close the front of the bottom bay. The cables run down the right side (seen from the room), hidden behind the fans and held by three tie-wrap anchors on the back of the fan plate; the same anchors and a cable entry on the left side allow the mirror image. Power comes from two plug-in adapters: a 12 V brick for the fans and the motor, whose wire comes in with the other cables, and a 5 V USB-C adapter for the ESP32, whose cable passes through a diamond opening in the left wall. The [layout drawing](doc/ebox_layout.svg) shows where everything goes on the perfboard.
 - **Water stays out of the room.** A 3 mm drip dam across the lower part of each bore, just before the fan, stops droplets from running indoors. Around the bottom shaft hole in each duct, a 16 mm boss rises 3 mm above the floor, so water flows around it instead of down the shaft.
-- **How it seals.** The lips do the sealing, not the gap between the disc and the bore: the flat lip is 5.6 mm wide and overlaps the disc edge by 2 mm, and the conical lip meets the disc's bevelled rim over a band about 4 mm wide, with foam tape in between. The disc is 67 mm in a 74 mm bore so it can be slid in edge-on past the dam and the bosses. Around the shaft, where the lips must stop to clear the hub, a boss at the top and the one at the bottom close the gap. Their inner faces are curved, coaxial with the bore, so they follow the disc edge with an even gap of about 0.75 mm.
+- **How it seals.** The lips do the sealing, not the gap between the disc and the bore: the flat lip is 5.6 mm wide and overlaps the disc edge by 2 mm, and the conical lip meets the disc's bevelled rim over a band about 2.8 mm wide (the same 2 mm across the bore, along the 45° slope). Between them is 1.6 mm neoprene in a gap of about 1.5 mm, so it is only lightly squeezed: the disc's two seats are relieved for it (see [cutting the lip foam](#cutting-the-lip-foam)). The disc is 67 mm in a 74 mm bore so it can be slid in edge-on past the dam and the bosses. Around the shaft, where the lips must stop to clear the hub, a boss at the top and the one at the bottom close the gap. Their inner faces are curved, coaxial with the bore, so they follow the disc edge with an even gap of about 0.75 mm.
 
 <p align="center">
   <img src="images/damper_section.png" alt="Top-down section through the upper duct: disc closed against the two half-ring lips, at 45 degrees, and fully open" width="640">
@@ -52,7 +52,8 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
 |---|:---:|---|---|---|---|
 | `body` | <img src="images/part_body.png" width="180"> | 1 | Housing: two ducts with the damper lips, drip dams and shaft bosses, spigots for the foam, fan plate, motor frame and encoder plate | 90 × 241 × 114 | Fan plate on the bed, no supports |
-| `disc` | <img src="images/part_disc.png" width="180"> | 2 | Butterfly damper disc, clamped to the shaft by two M3 grub screws; the half engraved B has a 45° bevel on its rim | 67 × 67 × 14 | Plate on the bed, hub up |
+| `disc` | <img src="images/part_disc.png" width="180"> | 2 | Butterfly damper disc, clamped to the shaft by two M3 grub screws; the half engraved B has a 45° bevel on its rim. Its seats are relieved for the 1.6 mm lip foam | 67 × 67 × 14 | Plate on the bed, hub up |
+| `disc_nofoam` | <img src="images/part_disc_nofoam.png" width="180"> | (2) | Instead of `disc`, for lips [without foam](#without-lip-foam): half A is 3.6 mm thick and half B's bevel is smaller, so both seats close to 0.3 mm from the bare lips | 67 × 67 × 14 | Plate on the bed, hub up |
 | `motor_plate` | <img src="images/part_motor_plate.png" width="180"> | 1 | The motor screws to it on the bench; it then sits on top of the housing: two screws in front of the motor, and two tabs at the back, down through the frame and screwed to the tower walls | 56 × 61 × 15 | Top face on the bed, tabs up |
 | `magnet_cap` | <img src="images/part_magnet_cap.png" width="180"> | 1 | Holds the encoder magnet on the bottom end of the shaft; one M3 grub screw, height adjustable ±1 mm | 14 × 14 × 12 | Bore down |
 | `ebox` | <img src="images/part_ebox.png" width="180"> | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay, and two back tabs screw to the bay walls | 80 × 76 × 64 | Floor on the bed |
@@ -123,7 +124,7 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 | Part | Wall loops | Sparse infill | Why |
 |---|---|---|---|
 | `body` (or `body_top` and `body_bottom`) | 4 | 25 % | Thin walls everywhere; the infill only reaches the thick zones (bosses, spigot roots, fan plate). No supports: a sacrificial fin holds up the top of each of its four shaft holes (see below) |
-| `disc` | 5 | 40 % | The grub screws thread into the hub: 5 loops leave about 2 mm of solid plastic around each hole |
+| `disc` (or `disc_nofoam`) | 5 | 40 % | The grub screws thread into the hub: 5 loops leave about 2 mm of solid plastic around each hole |
 | `motor_plate` | 5 | 40 % | Screw holes, bosses and tabs under clamping load |
 | `magnet_cap` | | 100 % | Tiny, with a grub screw in it: print it solid |
 | `splice` | 5 | 40 % | Joins the two halves: nut pockets and countersunk screws |
@@ -160,7 +161,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | M3 grub screws, 6 or 8 mm | 5 | Two per disc, 24 mm apart along the hub, so the disc can't rock on the shaft; one in the magnet cap. Self-tapping into the plastic | — |
 | O-rings, 74 × 3 mm, nitrile 70A | 4 | Optional, and not needed by default: the plain Ø 83.7 spigots are a snug fit in the hole (83.3 mm with the 3-1/4 in hole saw). For a hole that comes out loose, set `orings = true` before printing the housing: two grooves per spigot, sized for this O-ring (about 6% stretch, 20% squeeze in an 83.3 mm hole) | $12.79 (pack of 10) |
 | XPS foam board, 2 in (51 mm), 30 psi | 1 | Foam insert, e.g. Owens Corning FOAMULAR C-300 (2 × 24 × 96 in, R-10). The 30 psi grade over the 20 psi (wall) one: stiffer under the housing's weight, it doesn't creep around the spigots, and the hole saw cuts it cleaner. Many boards have shiplap (SL) edges, stepped to overlap on a wall: cut the insert from the middle of the board, or saw the step off any edge that meets the window frame | — |
-| Closed-cell neoprene foam sheet, self-adhesive, 1/16 in (1.6 mm) | 1 | Lip seals, cut with the [templates](#cutting-the-lip-foam). The model leaves a 1.5 mm gap, so the foam is only lightly squeezed: closed-cell neoprene is too stiff for more | |
+| Closed-cell neoprene foam sheet, self-adhesive, 1/16 in (1.6 mm) | 1 | Lip seals, cut with the [templates](#cutting-the-lip-foam); not needed with `disc_nofoam` ([without lip foam](#without-lip-foam)). The model leaves a 1.5 mm gap, so the foam is only lightly squeezed: closed-cell neoprene is too stiff for more | |
 | Perfboard (protoboard), 5 × 7 cm, holes 66 × 46 mm | 1 | Carrier for the ESP32 and the TMC2209 in the electronics box | |
 | Resistors and capacitor for the perfboard | | 1 kΩ (TMC2209 UART), 10 kΩ × 5 (driver enable pull-up, two fan PWM pull-downs, two tach pull-ups), 100 kΩ + 22 kΩ (12 V sense), 4.7 kΩ (DS18B20 pull-up; × 2 with the optional indoor sensor), 100 µF ≥ 25 V electrolytic (TMC2209 motor supply). See [firmware/README.md](firmware/README.md) | — |
 | Female pin headers, 2.54 mm (optional) | to suit | Sockets for the ESP32 and the TMC2209 instead of soldering them, so they unplug for replacement (`esp_mount`, `tmc_mount`; the box has room for both) | |
@@ -264,7 +265,25 @@ Full-size templates for the foam on the four lips (two per duct). The flat lip t
   <a href="doc/lip_templates.pdf"><img src="images/lip_templates.png" alt="Preview of the lip templates page: two half-rings for the flat lips, two unrolled arcs for the conical lips, and 100 mm and 50 mm scale bars" width="300"></a>
 </p>
 
-The housing places the lips for a 1 mm gap (`gasket = 1`), but 1.6 mm neoprene squeezed that much is too stiff: even a finger can't close the disc on it, and light shows through. So the discs make the room instead (`seat_rlf = 0.5`): half A's face is 0.5 mm lower and half B's bevel is set back 0.5 mm, for a 1.5 mm gap with the housing unchanged. For a new housing, `gasket` alone can set the gap instead (with `seat_rlf = 0`).
+Cutting the foam neatly takes some care: a sharp blade and a steady hand, and a second try is not unusual. Tweezers help to lay the narrow strips on the lips inside the ducts. If that sounds like too much, see [without lip foam](#without-lip-foam) below.
+
+**How the gap is set.** The housing places the lips for a 1 mm gap (`gasket = 1`), but 1.6 mm neoprene squeezed that much is too stiff: even a finger can't close the disc on it, and light shows through. So the discs make the room instead, and the housing never changes. `seat_rlf` moves each of the disc's two seats: `[0]` lowers half A's face (or raises it, when negative), `[1]` sets half B's bevel back square to the slope (or forward). The gap at each seat is `gasket + seat_rlf`, less 0.1 mm on A and plus about 0.07 mm on B: the grub screws push the shaft into one side of its bore, which moves the disc 0.1 mm toward lip A. With foam, `seat_rlf = [0.6, 0.5]` gives gaps of about 1.5 mm on both seats, so the foam is only lightly squeezed (half A's face lands at 2.4 mm, a whole number of 0.2 mm layers).
+
+#### Without lip foam
+
+`disc_nofoam` closes on the bare lips instead, so there is nothing to cut or stick: print it instead of `disc` and skip the foam. In the model, `lip_foam = false` does the same (`seat_rlf = [-0.6, -0.8]`): half A is thickened to 3.6 mm and half B's bevel shrinks, leaving gaps of about 0.3 mm on both seats. The housing is the same either way, so you can switch later by printing the other discs.
+
+The trade-offs:
+
+- **It leaks more.** Plastic on plastic with a 0.3 mm gap seals far less well than foam: expect a slight draft, and light around the lips, when closed. For a vent that only needs to stop most of the airflow, that may be enough; in a cold climate, or on a windy side of the house, prefer the foam.
+- **It's noisier.** The disc closes on hard plastic with a small click, and nothing damps the fans' vibration at the lips.
+- **Closing is less forgiving.** The foam makes up for small print errors; bare lips don't. The motor stops on the plastic: the encoder (or StallGuard) sees it.
+
+To adjust (open `cad/window_vent.scad` in OpenSCAD, change `seat_bare`, export `part = "disc_nofoam"`):
+
+- **The disc jams before it closes, or rubs:** increase both values toward zero (`[-0.4, -0.6]` gives about 0.5 mm). Change them in steps of 0.2 mm on half A, so its face stays on a 0.2 mm layer.
+- **Too much light or draft:** make them more negative, 0.1 mm at a time (on B: `-0.9`), but below about 0.2 mm the disc risks binding on a slightly warped print. Print one disc and try it before printing the second.
+- **Check after any change:** `python tools/check.py vent` runs the swing, stop and fitting checks for both discs.
 
 ### Drilling the foam insert
 
@@ -274,7 +293,7 @@ The insert takes two 83 mm holes, 96 mm apart, intake on top. The housing's plai
   <a href="doc/foam_template.pdf"><img src="images/foam_template.png" alt="Preview of the drilling template: two 83 mm circles 96 mm apart, labelled intake and exhaust, with centre crosses, the stop ring outlines, a 100 mm width guide, an optional probe hole above the intake, and 100 mm scale bars" width="300"></a>
 </p>
 
-**Straight pilot holes (optional).** A pilot hole that leans sends the hole saw off its line on the far face. The printed `drill_guide` keeps the bit perpendicular: two 20 mm bushings, A for the hole saw's pilot holes (1/4 in bit) and B for the probe's hole (6.5 mm), set in `guide_d` to suit your bits. Lay it on the taped template: the notches at both ends on the vertical centre line, and the side notches of the bushing you use on that hole's cross line. Hold it down and drill straight through the paper and the foam; then move it to the next hole. The bit has to reach through 20 mm of bushing and 51 mm of foam, so use one with at least 75 mm of flute (a 6 in aircraft bit, for instance). Run each bit through its bushing once before the first hole, to size the bore.
+**Straight pilot holes (optional).** A pilot hole that leans sends the hole saw off its line on the far face. The printed `drill_guide` keeps the bit perpendicular: two 20 mm bushings, A for the hole saw's pilot holes (5.2 mm bit, or 13/64 in: slightly smaller than the saw's 5.8 mm pilot drill, which then follows the hole) and B for the probe's hole (6 mm, or 15/64 in: snug on the 6 mm probe), set in `guide_d` to suit your bits. Lay it on the taped template: the notches at both ends on the vertical centre line, and the side notches of the bushing you use on that hole's cross line. Hold it down and drill straight through the paper and the foam; then move it to the next hole. The bit has to reach through 20 mm of bushing and 51 mm of foam, so use one with at least 75 mm of flute (a 6 in aircraft bit, for instance). Run each bit through its bushing once before the first hole, to size the bore.
 
 | Part | <div style="width:180px">Thumbnail</div> | Size (mm) | Time | Print orientation |
 |---|:---:|---|---|---|
@@ -294,7 +313,7 @@ Run the drill slowly. Hole saws often cut a little wider than labelled, so cut a
 ## Assembly
 
 0. Split housing only: press four M3 nuts into the splice's pockets. Stand the lower half upright, cut face up, hold the splice against the back of its fan plate, just above the duct, and fit the two lower countersunk M3 × 12 from the fan side. Lower the upper half onto it and fit the other two. Leave all four slightly loose until step 3.
-1. Line the lips inside the ducts with foam cut from the [templates](#cutting-the-lip-foam): a half-ring on each flat lip, an unrolled arc on each conical lip (B).
+1. Line the lips inside the ducts with foam cut from the [templates](#cutting-the-lip-foam): a half-ring on each flat lip, an unrolled arc on each conical lip (B). With `disc_nofoam`, skip this step.
 2. Slide each disc edge-on into its duct from the fan end, hub toward the room, with the half engraved B on the side of the conical lip (the right side, seen from the room).
 3. Drill the fins out of the four shaft holes if not done yet (see [Printed parts](#printed-parts)). Push the shaft down through the frame on top, both ducts and both disc hubs. Split housing: the shaft now lines up the two halves; tighten the four splice screws.
 4. Turn both discs closed against the lips and tighten their grub screws (two per disc) through the duct openings.

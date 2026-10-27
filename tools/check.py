@@ -10,6 +10,7 @@ Checks
   2. The disc swings freely: no overlap with the housing from closed (0 deg) to open (90 deg).
   3. The lips stop the disc: turning it 3 deg past closed must hit them.
   4. The disc can be fitted: slid in edge-on from the fan end, it touches nothing.
+     Checks 2 to 4 run for both discs: for the lip foam (disc) and without it (disc_nofoam).
   5. The electronics box only touches the housing (zero-volume contact), and the boards fit inside it in
      both ESP32 layouts (its USB plug through the left or the right opening, the TMC2209's heatsink under the lid).
   6. Split housing (for 180 mm beds): the two halves are exactly the housing minus the four joint
@@ -24,7 +25,7 @@ warnings.filterwarnings('ignore')
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCAD = os.path.join(ROOT, "cad", "window_vent.scad")
-PARTS = ["body", "disc", "motor_plate", "magnet_cap", "ebox", "fittest", "fin_test", "oring_test", "drill_guide", "tube_spacer",
+PARTS = ["body", "disc", "disc_nofoam", "motor_plate", "magnet_cap", "ebox", "fittest", "fin_test", "oring_test", "drill_guide", "tube_spacer",
          "body_top", "body_bottom", "splice"]
 BED = 256.0                                      # Bambu Lab P1/X1/A1
 SMALL_BED = 180.0                                # Bambu Lab A1 mini
@@ -61,23 +62,27 @@ def check_vent():
         fh.write(f'include <{SCAD.replace(os.sep, "/")}>\npart = "none";\na = 0;\ndy = 0;\n'
                  'intersection() { body(); translate([0, dy, 0]) disc_installed(zc[0], a); }\n')
 
-    def overlap(a, dy=0):
-        f = openscad(os.path.join(tmp, f"ov_{a}_{dy}.stl"), [f"a={a}", f"dy={dy}"], wrap)
+    def overlap(a, dy=0, foam=True):
+        f = openscad(os.path.join(tmp, f"ov_{a}_{dy}_{foam}.stl"), [f"a={a}", f"dy={dy}", f"lip_foam={str(foam).lower()}"], wrap)
         return 0.0 if f is None else abs(trimesh.load(f).volume)
 
+    discs = ((True, "disc"), (False, "disc_nofoam"))
     print("2. Disc swings freely (overlap volume must be 0)")
-    for a in range(0, 91, 10):
-        v = overlap(a)
-        report(f"disc at {a:2d} deg", v < 1e-6, f"{v:.3f} mm3")
+    for foam, name in discs:
+        for a in range(0, 91, 10):
+            v = overlap(a, 0, foam)
+            report(f"{name} at {a:2d} deg", v < 1e-6, f"{v:.3f} mm3")
 
     print("3. Lips stop the disc")
-    v = overlap(-3)
-    report("disc 3 deg past closed hits the lips", v > 1.0, f"{v:.1f} mm3")
+    for foam, name in discs:
+        v = overlap(-3, 0, foam)
+        report(f"{name} 3 deg past closed hits the lips", v > 1.0, f"{v:.1f} mm3")
 
     print("4. Disc can be fitted (edge-on, slid in from the fan end; overlap must be 0)")
-    for dy in range(60, 0, -10):
-        v = overlap(90, dy)
-        report(f"disc {dy} mm short of its place", v < 1e-6, f"{v:.3f} mm3")
+    for foam, name in discs:
+        for dy in range(60, 0, -10):
+            v = overlap(90, dy, foam)
+            report(f"{name} {dy} mm short of its place", v < 1e-6, f"{v:.3f} mm3")
 
     print("5. Electronics box on the housing (overlap volume must be 0)")
     boxw = os.path.join(tmp, "box.scad")
