@@ -4,7 +4,7 @@ A demand-controlled window ventilator for one room. Two 80 mm fans move air thro
 
 There is no heat recovery: every litre of air exhausted is lost heat. In exchange it is simple, cheap and automatic. See the estimates below.
 
-> **Status: prototype, mechanics printed.** Every printed part has been printed and test-fitted (housing, discs, motor plate, magnet cap, electronics box, tube spacer, louvers), and several were refined from those prints: the shaft holes' sacrificial fins, the box's back tabs, the louvers' snap-in combs, and the discs' seats. The lip seals are installed and tested: with the 1.6 mm neoprene, the closed discs now press evenly on the foam all round, after two rounds of tuning the discs' seats (the housing stayed as printed). The foam-free `disc_nofoam` is checked in CAD but not printed yet. Since those prints, the shaft bosses' inner faces are flat, with matching flats on the discs, so the gap around the shaft is 0.2 mm at every angle (the curved faces left 0.3 to 0.75 mm); this housing is checked in CAD and not printed yet. Still to come: the electronics (the perfboard build or the controller PCB, ordered) and the firmware on real hardware, then a first install in a window. The geometry is also checked in CAD (closed solids, the discs swing freely, the lips stop them).
+> **Status: prototype, mechanics printed.** Every printed part has been printed and test-fitted (housing, discs, motor plate, magnet cap, electronics box, tube spacer, louvers), and several were refined from those prints: the shaft holes' sacrificial fins, the box's back tabs, the louvers' snap-in combs, and the discs' seats. The lip seals are installed and tested: with the 1.6 mm neoprene, the closed discs now press evenly on the foam all round, after two rounds of tuning the discs' seats (the housing stayed as printed). The housing was then reprinted with flat shaft bosses and the discs with matching flats: the gap at the bosses is gone (the first, curved bosses left 0.3 to 0.75 mm), and the reprinted electronics box fits too, its back tabs and the notches for the fan's rubber bumpers included. The shaft holes' sacrificial fins work as intended: no warping, and they drill out easily. The foam-free `disc_nofoam` and the lip foam cutting guides are checked in CAD but not tested yet. Still to come: the electronics (the perfboard build or the controller PCB, ordered) and the firmware on real hardware, then a first install in a window. The geometry is also checked in CAD (closed solids, the discs swing freely, the lips stop them).
 
 <p align="center">
   <img src="images/assembly_lbl.png?t=10" alt="Damper housing with two 80 mm fans, stepper motor on top, spigots in the foam insert, with labels: stepper motor, motor plate, motor tower, shaft coupler, intake and exhaust fans, damper discs, shaft, spigot, damper housing, electronics box, foam insert" width="680">
@@ -117,7 +117,7 @@ The split housing (`body_top` 136 cm³, `body_bottom` 145 cm³, `splice` 8 cm³)
 
 - Printed fully solid, 373 cm³ of PETG (1.27 g/cm³) weighs about 474 g.
 - Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 430–470 g, plus a little for the skirt or brim and purging.
-- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g).
+- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³.
 - Print time: very roughly 9–12 hours for the housing on a Bambu Lab P1 (0.2 mm layers; about 7–9 hours at 0.28 mm), and about 3–4 hours for all the other parts together. The slicer gives the exact figures.
 
 ### Slicer settings
@@ -135,13 +135,14 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 | `tube_spacer` | | 100 % | Thin rings (3 mm wide, 2.5 mm thick) that must not stretch: print it solid |
 | `fittest`, `oring_test` | 4 | 25 % | As the housing, so they test what the housing will be |
 | `drill_guide` | 4 | 40 % | Small; 4 walls make the bushings solid |
+| `foam_guide_a`, `foam_guide_b` | 4 | 40 % | Thin plate and rib: 4 walls print them solid, so they stay flat and stiff |
 | `louver_chassis` | 3 | 20 % | Light load |
 | `louver_blade` | 3 | 15 % | Thin and light; their pins come out solid anyway |
 | `louver_link_nopad` (or `louver_link`), `louver_retainer` | | 100 % | Small and thin |
 
 - **Infill pattern: gyroid.** Equally strong in every direction, and it prints smoothly in PETG.
 - **Top and bottom shell layers: 5.** Flat faces stay smooth and the infill doesn't show through.
-- **Supports: none.** Every part is designed to print without them. The housing's four shaft holes print horizontal, so each one carries a sacrificial fin: a thin lattice of X's (0.8 mm, two nozzle lines; `fin_t` in the model, 0 for none) standing on the bottom of the hole and holding up its top, with 1.5 mm clear at each end. After printing, drill the fins out by hand with a 5.4 mm bit (a #3 number drill is 5.41 mm; 5.5 mm also works): the bit enters the clear end first, sits square, and cuts the fin easily. Feature D of `fittest` is the same hole with the same fin, and `fin_test` is a 10-minute block with two of them.
+- **Supports: none.** Every part is designed to print without them. The housing's four shaft holes print horizontal, so each one carries a sacrificial fin: a thin lattice of X's (0.8 mm, two nozzle lines; `fin_t` in the model, 0 for none) standing on the bottom of the hole and holding up its top, with 1.5 mm clear at each end. After printing, drill the fins out by hand with a 5.2 mm bit (13/64 in, the one used on the housing; 5.4 or 5.5 mm also works): the bit enters the clear end first, sits square, and cuts the fin easily. Tested on the housing: the holes come out round, with no warping, and the 5 mm rod turns freely. Feature D of `fittest` is the same hole with the same fin, and `fin_test` is a 10-minute block with two of them.
 
 ## Hardware
 
@@ -267,6 +268,13 @@ Full-size templates for the foam on the four lips (two per duct). The flat lip t
 <p align="center">
   <a href="doc/lip_templates.pdf"><img src="images/lip_templates.png" alt="Preview of the lip templates page: two half-rings for the flat lips, two unrolled arcs for the conical lips, and 100 mm and 50 mm scale bars" width="300"></a>
 </p>
+
+**Cutting guides (optional).** Rigid printed copies of the two templates, `foam_guide_a` and `foam_guide_b`. The plate is the strip's exact outline: press it on the foam by its finger grip, which holds the sheet still, and run a craft knife along its edges, blade upright against the plate. The grip and the rib under it stay inside the edges, clear of the blade, and the rib stops short of the ends, so the knife can cut across them. Cut with the backing paper up (it slips less than the bare foam), in two or three light passes. Leave the slicer's elephant-foot compensation on: the blade runs against the plate's bottom edge.
+
+| Part | <div style="width:180px">Thumbnail</div> | Size (mm) | Time | Print orientation |
+|---|:---:|---|---|---|
+| `foam_guide_a` | <img src="images/part_foam_guide_a.png" width="180"> | 73 × 30 × 18 | about 15–20 min | Plate on the bed, grip up |
+| `foam_guide_b` | <img src="images/part_foam_guide_b.png" width="180"> | 87 × 27 × 18 | about 15–20 min | Plate on the bed, grip up |
 
 Cutting the foam neatly takes some care: a sharp blade and a steady hand, and a second try is not unusual. Tweezers help to lay the narrow strips on the lips inside the ducts. If that sounds like too much, see [without lip foam](#without-lip-foam) below.
 

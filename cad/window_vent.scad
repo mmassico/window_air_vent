@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, assembly_noplug, assembly_spc, body, disc, disc_nofoam, motor_plate, magnet_cap, ebox, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide, tube_spacer]
+part  = "assembly"; // [assembly, assembly_noplug, assembly_spc, body, disc, disc_nofoam, motor_plate, magnet_cap, ebox, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide, foam_guide_a, foam_guide_b, tube_spacer]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -195,6 +195,13 @@ guide_h     = 20;   // bushing height, base included: 20 mm and 0.2 clearance ke
 guide_pitch = 24;   // between the two bushings
 guide_base  = [26, 46, 4];   // base: width, length (along the bushings), thickness
 guide_notch = 2;    // depth of the 90 deg V-notches set on the template's lines
+
+/* [Cutting guides for the lip foam] */
+fg_t    = 3;          // plate: the foam strip's exact outline, this thick; the knife runs along its edges
+fg_rib  = [3, 6, 5];  // stiffening rib along the middle of the strip: width, height above the plate, and how far it
+                      //   stops short of each end (room for the knife across the ends)
+fg_grip = [4, 18, 25];  // finger grip in the middle of the rib: width, top height above the bed, radius of its arched top
+                      //   (sets its length: about 38 mm above the rib)
 
 /* [Hidden] */
 $fn = 96;
@@ -805,6 +812,41 @@ module tube_spacer() {
 // drill_guide: two bushings on a small base, for perpendicular pilot holes in the foam insert. Lay it on the drilling
 // template: the notches at both ends on the vertical centre line, the active bushing's side notches on the hole's
 // cross arm; then drill through the paper. Printed base down, so the bores are vertical and round.
+// foam_guide: a rigid copy of a lip foam template (tools/lip_templates_svg.py). Press it on the neoprene and cut
+// around it with a craft knife. The plate is the strip's outline; a rib along its middle stiffens it and rises in the
+// middle to a finger grip, inside both edges so the blade runs clear. Bisector along +y, the shaft axis along x.
+// A (b = false): the flat half-ring about the shaft axis. B: lip B's 45 deg cone unrolled about its apex, so radius
+// rho becomes rho * sqrt 2 and angle t becomes t / sqrt 2. Both stop where rho * cos t = lip_gap. Printed plate down.
+module foam_guide(b) {
+    k  = b ? sqrt(2) : 1;
+    ri = r - lip_w;
+    n  = 120; m = 20;
+    function p(rho, t) = rho * k * [sin(t / k), cos(t / k)];
+    function band(rad, w, f) = concat(   // a strip w wide along the arc of radius rad, from -f to f deg
+        [for (i = [0 : n]) (rad + w / 2) * [sin(-f + 2 * f * i / n), cos(-f + 2 * f * i / n)]],
+        [for (i = [0 : n]) (rad - w / 2) * [sin(f - 2 * f * i / n), cos(f - 2 * f * i / n)]]);
+    a_o = acos(lip_gap / r);
+    a_i = acos(lip_gap / ri);
+    outline = concat(
+        [for (i = [0 : n]) p(r, -a_o + 2 * a_o * i / n)],
+        [for (i = [1 : m - 1]) let(rho = r - lip_w * i / m) p(rho, acos(lip_gap / rho))],
+        [for (i = [0 : n]) p(ri, a_i - 2 * a_i * i / n)],
+        [for (i = [1 : m - 1]) let(rho = ri + lip_w * i / m) p(rho, -acos(lip_gap / rho))]);
+    s  = (r - lip_w / 2) * k;                                                   // the strip's centre line, in the plane
+    fe = acos(lip_gap / (r - lip_w / 2)) / k - fg_rib[2] / s * 180 / PI;        // the rib's half-angle
+    fl = fe + fg_rib[2] / 2 / s * 180 / PI;                                     // the letter, past the rib's end
+    difference() {
+        linear_extrude(fg_t) polygon(outline);
+        translate((s - 0.3) * [sin(fl), cos(fl), 0] + [0, 0, fg_t - 0.6]) rotate(-fl) linear_extrude(1)
+            text(b ? "B" : "A", size = 3.5, font = "Liberation Sans:style=Bold", halign = "center", valign = "center");
+    }
+    linear_extrude(fg_t + fg_rib[1]) polygon(band(s, fg_rib[0], fe));
+    intersection() {
+        linear_extrude(fg_grip[1]) polygon(band(s, fg_grip[0], fe));
+        translate([0, 0, fg_grip[1] - fg_grip[2]]) rotate([-90, 0, 0]) cylinder(r = fg_grip[2], h = 2 * s, $fn = 120);
+    }
+}
+
 module drill_guide() {
     od = max(guide_d) + guide_clear + 8;                  // bushing: 4 mm walls
     w = guide_base[0]; l = guide_base[1]; t = guide_base[2];
@@ -921,6 +963,8 @@ if (part == "fittest")        fittest();
 if (part == "fin_test")       fin_test();
 if (part == "oring_test")     oring_test();
 if (part == "drill_guide")    drill_guide();
+if (part == "foam_guide_a")   foam_guide(false);   // plate on the bed
+if (part == "foam_guide_b")   foam_guide(true);
 if (part == "tube_spacer")    tube_spacer();   // flat
 if (part == "assembly_nofan") assembly_nofan();
 if (part == "body_top")       translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(true);    // fan plate on the bed
