@@ -78,7 +78,13 @@ dam_h    = 3;       // drip dam near the fan end, on the lower part of each bore
 dam_ang  = 60;      // the dam covers +/- this angle from the bottom of the bore
 sboss_d  = 16;      // bosses around both shaft holes inside each duct: at the bottom, water flows around it
                     // instead of down the shaft; at both ends, they close the gap the lips leave around the shaft
-sboss_clr = 0.3;    // their inner face is curved, coaxial with the bore, this far outside the disc's sweep
+flat_boss = true;   // the bosses' inner faces are flat, square to the shaft, and the disc's two shaft ends are cut to
+                    // matching flats. A flat end turning about the shaft stays in its plane, so the gap is fboss_clr
+                    // at every angle. false: the first design (v1), curved faces coaxial with the bore (0.75 mm gap
+                    // closed, 0.3 at worst). Housing and discs must match: print discs with false for a v1 housing
+fboss_clr = 0.2;    // flat_boss: gap between each disc flat and its boss face (0.4 in all along the shaft: centre the
+                    // disc with 0.2 mm shims before tightening its grub screws)
+sboss_clr = 0.3;    // flat_boss = false: the curved face sits this far outside the disc's sweep
 
 /* [Fans] */
 fan       = 80;     // fan frame size
@@ -210,6 +216,11 @@ lip_w  = (duct_id - disc_d) / 2 + lip_ovl;   // lips reach in far enough to over
 // The plate is hc off the shaft, so while it turns its edge reaches this far from the bore axis.
 r_sweep = sqrt(pow(disc_d / 2, 2) + pow(hc, 2));
 boss_rc = r_sweep + sboss_clr;               // curved inner face of the shaft bosses
+// flat_boss: the disc's flats, from its centre along the shaft; at this distance the circular rim is lip_gap + 0.5
+// from the shaft, so the flat spans the whole gap between the lip ends. The boss faces sit fboss_clr beyond it.
+disc_flat = sqrt(pow(disc_d / 2, 2) - pow(lip_gap + 0.5, 2));
+boss_flat = disc_flat + fboss_clr;
+boss_in   = flat_boss ? boss_flat : boss_rc;   // where the bearing holes start (the bosses' inner faces, at the shaft)
 y_br   = ys - mplate / 2;                  // bracket walls start here (they run to the fan plate)
 x_br   = mplate / 2;                       // bracket walls: x from x_br - tower_t to x_br, under the frame corners
 y_dam  = ys + (r - 0.4) + 1;               // drip dam face, just outside the disc swing
@@ -384,8 +395,8 @@ module motor_plate() {
 module body() {
     body_bored();
     if (fin_t > 0) for (z = zc, s = [-1, 1])
-        translate([0, ys, z + (s > 0 ? boss_rc : -z_bb1)]) rotate([90, 0, 0])   // fin vertical when printing
-            shaft_fin(shaft_d + shaft_clr, z_bb1 - boss_rc, fin_t);
+        translate([0, ys, z + (s > 0 ? boss_in : -z_bb1)]) rotate([90, 0, 0])   // fin vertical when printing
+            shaft_fin(shaft_d + shaft_clr, z_bb1 - boss_in, fin_t);
 }
 module body_bored() {
     difference() {
@@ -476,7 +487,10 @@ module body_bored() {
                     }
                     difference() {
                         ycyl(ys - sboss_d, ys + sboss_d, duct_id + 1, z);
-                        ycyl(ys - sboss_d - 1, ys + sboss_d + 1, 2 * boss_rc, z, undef);
+                        if (flat_boss)   // flat faces square to the shaft, boss_flat from the bore axis
+                            translate([-r - 1, ys - sboss_d - 1, z - boss_flat]) cube([2 * r + 2, 2 * sboss_d + 2, 2 * boss_flat]);
+                        else
+                            ycyl(ys - sboss_d - 1, ys + sboss_d + 1, 2 * boss_rc, z, undef);
                     }
                 }
             }
@@ -583,6 +597,8 @@ module disc(s = seat_rlf) {
         // half A (x < 0): its top face, which closes against the flat lip A, lowered by s[0] beside the hub
         if (s[0] > 0)
             translate([-disc_d, -disc_d, disc_t - s[0]]) cube([disc_d - hub_w / 2, 2 * disc_d, s[0] + 1]);
+        if (flat_boss)   // the two shaft ends cut flat, square to the shaft, disc_flat from the centre
+            for (s = [-1, 1]) translate([-disc_d, s > 0 ? disc_flat : -disc_flat - disc_d, -1]) cube([2 * disc_d, disc_d, hub_h + 2]);
         translate([20, 0, disc_t - 0.6]) linear_extrude(1) rotate(90) fittest_letter_big("B");   // marks half B
         for (k = [0 : grub_n - 1])   // M3 grub screws (self-tapping), spread along the hub
             translate([0, (k - (grub_n - 1) / 2) * (grub_n > 1 ? grub_sp / (grub_n - 1) : 0), hc]) cylinder(d = 2.5, h = hub_h, $fn = 24);

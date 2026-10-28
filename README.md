@@ -4,7 +4,7 @@ A demand-controlled window ventilator for one room. Two 80 mm fans move air thro
 
 There is no heat recovery: every litre of air exhausted is lost heat. In exchange it is simple, cheap and automatic. See the estimates below.
 
-> **Status: prototype, mechanics printed.** Every printed part has been printed and test-fitted (housing, discs, motor plate, magnet cap, electronics box, tube spacer, louvers), and several were refined from those prints: the shaft holes' sacrificial fins, the box's back tabs, the louvers' snap-in combs, and the discs' seats. The lip seals are installed and tested: with the 1.6 mm neoprene, the closed discs now press evenly on the foam all round, after two rounds of tuning the discs' seats (the housing stayed as printed). The foam-free `disc_nofoam` is checked in CAD but not printed yet. Still to come: the electronics (the perfboard build or the controller PCB, ordered) and the firmware on real hardware, then a first install in a window. The geometry is also checked in CAD (closed solids, the discs swing freely, the lips stop them).
+> **Status: prototype, mechanics printed.** Every printed part has been printed and test-fitted (housing, discs, motor plate, magnet cap, electronics box, tube spacer, louvers), and several were refined from those prints: the shaft holes' sacrificial fins, the box's back tabs, the louvers' snap-in combs, and the discs' seats. The lip seals are installed and tested: with the 1.6 mm neoprene, the closed discs now press evenly on the foam all round, after two rounds of tuning the discs' seats (the housing stayed as printed). The foam-free `disc_nofoam` is checked in CAD but not printed yet. Since those prints, the shaft bosses' inner faces are flat, with matching flats on the discs, so the gap around the shaft is 0.2 mm at every angle (the curved faces left 0.3 to 0.75 mm); this housing is checked in CAD and not printed yet. Still to come: the electronics (the perfboard build or the controller PCB, ordered) and the firmware on real hardware, then a first install in a window. The geometry is also checked in CAD (closed solids, the discs swing freely, the lips stop them).
 
 <p align="center">
   <img src="images/assembly_lbl.png?t=10" alt="Damper housing with two 80 mm fans, stepper motor on top, spigots in the foam insert, with labels: stepper motor, motor plate, motor tower, shaft coupler, intake and exhaust fans, damper discs, shaft, spigot, damper housing, electronics box, foam insert" width="680">
@@ -19,7 +19,7 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 - **Fans.** Two 80 mm PWM fans screw onto the room end of the housing.
 - **Electronics box.** A tray under the housing holds a 5 × 7 cm perfboard with the ESP32 and the TMC2209 soldered on. The encoder plate is its lid, and its front wall rises to close the front of the bottom bay. The cables run down the right side (seen from the room), hidden behind the fans and held by three tie-wrap anchors on the back of the fan plate; the same anchors and a cable entry on the left side allow the mirror image. Power comes from two plug-in adapters: a 12 V brick for the fans and the motor, whose wire comes in with the other cables, and a 5 V USB-C adapter for the ESP32, whose cable passes through a diamond opening in the left wall. The [layout drawing](doc/ebox_layout.svg) shows where everything goes on the perfboard.
 - **Water stays out of the room.** A 3 mm drip dam across the lower part of each bore, just before the fan, stops droplets from running indoors. Around the bottom shaft hole in each duct, a 16 mm boss rises 3 mm above the floor, so water flows around it instead of down the shaft.
-- **How it seals.** The lips do the sealing, not the gap between the disc and the bore: the flat lip is 5.6 mm wide and overlaps the disc edge by 2 mm, and the conical lip meets the disc's bevelled rim over a band about 2.8 mm wide (the same 2 mm across the bore, along the 45° slope). Between them is 1.6 mm neoprene in a gap of about 1.5 mm, so it is only lightly squeezed: the disc's two seats are relieved for it (see [cutting the lip foam](#cutting-the-lip-foam)). The disc is 67 mm in a 74 mm bore so it can be slid in edge-on past the dam and the bosses. Around the shaft, where the lips must stop to clear the hub, a boss at the top and the one at the bottom close the gap. Their inner faces are curved, coaxial with the bore, so they follow the disc edge with an even gap of about 0.75 mm.
+- **How it seals.** The lips do the sealing, not the gap between the disc and the bore: the flat lip is 5.6 mm wide and overlaps the disc edge by 2 mm, and the conical lip meets the disc's bevelled rim over a band about 2.8 mm wide (the same 2 mm across the bore, along the 45° slope). Between them is 1.6 mm neoprene in a gap of about 1.5 mm, so it is only lightly squeezed: the disc's two seats are relieved for it (see [cutting the lip foam](#cutting-the-lip-foam)). The disc is 67 mm in a 74 mm bore so it can be slid in edge-on past the dam and the bosses. Around the shaft, where the lips must stop to clear the hub, a boss at the top and the one at the bottom close the gap. Their inner faces are flat, square to the shaft, and the disc's two shaft ends are cut to matching flats: a flat end turning about the shaft stays in its own plane, so the gap is 0.2 mm at every angle.
 
 <p align="center">
   <img src="images/damper_section.png" alt="Top-down section through the upper duct: disc closed against the two half-ring lips, at 45 degrees, and fully open" width="640">
@@ -30,7 +30,7 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 </p>
 
 <p align="center">
-  <img src="images/damper_closed_view.png" alt="Looking along the duct at the closed disc: curved shaft bosses at the top and bottom follow the disc edge, and the lip behind the disc covers the rest of the gap" width="360">
+  <img src="images/damper_closed_view.png" alt="Looking along the duct at the closed disc: flat shaft bosses at the top and bottom face the disc's two flats, and the lip behind the disc covers the rest of the gap" width="360">
 </p>
 
 <p align="center">
@@ -52,12 +52,14 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
 |---|:---:|---|---|---|---|
 | `body` | <img src="images/part_body.png" width="180"> | 1 | Housing: two ducts with the damper lips, drip dams and shaft bosses, spigots for the foam, fan plate, motor frame and encoder plate | 90 × 241 × 114 | Fan plate on the bed, no supports |
-| `disc` | <img src="images/part_disc.png" width="180"> | 2 | Butterfly damper disc, clamped to the shaft by two M3 grub screws; the half engraved B has a 45° bevel on its rim. Its seats are relieved for the 1.6 mm lip foam | 67 × 67 × 14 | Plate on the bed, hub up |
-| `disc_nofoam` | <img src="images/part_disc_nofoam.png" width="180"> | (2) | Instead of `disc`, for lips [without foam](#without-lip-foam): half A is 3.6 mm thick and half B's bevel is smaller, so both seats close to 0.3 mm from the bare lips | 67 × 67 × 14 | Plate on the bed, hub up |
+| `disc` | <img src="images/part_disc.png" width="180"> | 2 | Butterfly damper disc, clamped to the shaft by two M3 grub screws; the half engraved B has a 45° bevel on its rim. Its seats are relieved for the 1.6 mm lip foam, and its two shaft ends are cut flat to face the bosses | 67 × 65 × 14 | Plate on the bed, hub up |
+| `disc_nofoam` | <img src="images/part_disc_nofoam.png" width="180"> | (2) | Instead of `disc`, for lips [without foam](#without-lip-foam): half A is 3.6 mm thick and half B's bevel is smaller, so both seats close to 0.3 mm from the bare lips | 67 × 65 × 14 | Plate on the bed, hub up |
 | `motor_plate` | <img src="images/part_motor_plate.png" width="180"> | 1 | The motor screws to it on the bench; it then sits on top of the housing: two screws in front of the motor, and two tabs at the back, down through the frame and screwed to the tower walls | 56 × 61 × 15 | Top face on the bed, tabs up |
 | `magnet_cap` | <img src="images/part_magnet_cap.png" width="180"> | 1 | Holds the encoder magnet on the bottom end of the shaft; one M3 grub screw, height adjustable ±1 mm | 14 × 14 × 12 | Bore down |
 | `ebox` | <img src="images/part_ebox.png" width="180"> | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay, and two back tabs screw to the bay walls | 80 × 76 × 64 | Floor on the bed |
 | `tube_spacer` | <img src="images/part_tube_spacer.png" width="180"> | 1 | Flat "8" over both spigots, against the stop rings and squeezed by the foam: it holds the spigots' ends at their spacing, so foam holes slightly off 96 mm can't bend the ducts and bind the shaft. The vent sits 2.5 mm further out of the foam | 90 × 186 × 2.5 | Flat |
+
+**Housing and discs must match.** The housing's shaft bosses have flat inner faces, and the discs have matching flats. A housing printed before this change (curved boss faces) needs the earlier discs: set `flat_boss = false` in `cad/window_vent.scad` and export `disc` (or `disc_nofoam`). A disc with flats leaves a 1.6 mm gap at a curved boss, and a disc without them won't turn between flat bosses.
 
 **For a 180 mm printer** (e.g. Bambu Lab A1 mini), print the housing in two halves instead of `body`. The cut runs midway between the two ducts, where only the fan plate joins them; a small splice plate behind the fan plate joins the halves again with four M3 screws, driven from the fan side in the band between the two fans. Each half prints like the full housing, in about half the time (roughly 5–6 h), so they can go on different days; use the same spool and profile for both.
 
@@ -103,17 +105,17 @@ About **0.45–0.5 kg of PETG** for one unit (about half a 1 kg spool), or rough
 
 | Part | Qty | Solid volume |
 |---|---|---|
-| `body` | 1 | 281 cm³ |
-| `disc` | 2 | 2 × 12.7 = 25 cm³ (`disc_nofoam`: 2 × 14.8) |
+| `body` | 1 | 282 cm³ |
+| `disc` | 2 | 2 × 12.7 = 25 cm³ (`disc_nofoam`: 2 × 14.7) |
 | `motor_plate` | 1 | 12.6 cm³ |
 | `magnet_cap` | 1 | 1.6 cm³ |
 | `ebox` | 1 | 47 cm³ |
 | `tube_spacer` | 1 | 4.5 cm³ |
-| **Total** | | **≈ 372 cm³** |
+| **Total** | | **≈ 373 cm³** |
 
 The split housing (`body_top` 136 cm³, `body_bottom` 145 cm³, `splice` 8 cm³) adds about 7 cm³ (9 g).
 
-- Printed fully solid, 372 cm³ of PETG (1.27 g/cm³) weighs about 472 g.
+- Printed fully solid, 373 cm³ of PETG (1.27 g/cm³) weighs about 474 g.
 - Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 430–470 g, plus a little for the skirt or brim and purging.
 - The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g).
 - Print time: very roughly 9–12 hours for the housing on a Bambu Lab P1 (0.2 mm layers; about 7–9 hours at 0.28 mm), and about 3–4 hours for all the other parts together. The slicer gives the exact figures.
@@ -317,7 +319,7 @@ Run the drill slowly. Hole saws often cut a little wider than labelled, so cut a
 1. Line the lips inside the ducts with foam cut from the [templates](#cutting-the-lip-foam): a half-ring on each flat lip, an unrolled arc on each conical lip (B). With `disc_nofoam`, skip this step.
 2. Slide each disc edge-on into its duct from the fan end, hub toward the room, with the half engraved B on the side of the conical lip (the right side, seen from the room).
 3. Drill the fins out of the four shaft holes if not done yet (see [Printed parts](#printed-parts)). Push the shaft down through the frame on top, both ducts and both disc hubs. Split housing: the shaft now lines up the two halves; tighten the four splice screws.
-4. Turn both discs closed against the lips and tighten their grub screws (two per disc) through the duct openings.
+4. Turn both discs closed against the lips. Centre each disc between its two bosses: slip a 0.2 mm shim (a feeler gauge, or two layers of printer paper) between each flat and its boss, then tighten the grub screws (two per disc) through the duct openings and pull the shims out.
 5. Screw the AS5600 board onto the four standoff pads, chip up, with its wires soldered into its holes and led inward under the board, then down through the diamond window under the chip. Glue the magnet into the cap and slide the cap onto the shaft's bottom end. Lay a 1 mm shim on the chip (a plastic card works), slide the cap down until the magnet rests on it, tighten the cap's grub screw, and remove the shim.
 6. On the bench, screw the motor to the motor plate (4 × M3 × 8 from below) and fit the coupler on the motor shaft.
 7. Lower the motor and plate onto the top of the housing, with the coupler through the big diamond and over the shaft end, and the plate's two back tabs down through the slots in the frame. In front of the motor, put an M3 × 10 down through the plate and the frame, with a nut underneath, reached from the tower's open front above the fan plate. At the back, put an M3 × 10 through each tower wall and its tab from outside, with a nut on the inside, reached from the tower's open back. Then tighten the coupler's lower screw through a side window.
