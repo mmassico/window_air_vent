@@ -1,7 +1,7 @@
 // Pin assignment for the Freenove ESP32-S3-WROOM Lite board (FNK0099).
 //
-// Avoided: strapping pins (0, 3, 45, 46), native USB (19, 20), octal PSRAM (35, 36, 37)
-// and the console UART (43 TX, 44 RX, through the board's CH343 USB-UART port).
+// Avoided: strapping pins (0, 3, 45, 46; 3 only carries the microphone in audio mode), native USB (19, 20),
+// octal PSRAM (35, 36, 37) and the console UART (43 TX, 44 RX, through the board's CH343 USB-UART port).
 #pragma once
 
 // Console: UART0 on GPIO 43/44 (the USB-UART connector, "onboard code uploader"), 115200 baud.
@@ -49,7 +49,20 @@
 // power), 4.7 k pull-up to 3.3 V per pin at the ESP32 end. Read with the 'temp' command (Ds18b20.cpp).
 #define PIN_TEMP_OUT    14      // outdoor: waterproof probe through the foam insert, near the intake, in the shade
 #define PIN_TEMP_IN     21      // indoor, optional (the SCD40 also reads room temperature): on an inside wall at
-                                // about 1.2-1.5 m, away from the window and heaters
+                                // about 1.2-1.5 m, away from the window and heaters; not in audio mode (below)
+
+// Audio mode (optional): an analog microphone module (MAX9814: 3V3, OUT, GND) on the indoor DS18B20's header (J7)
+// instead of the probe, to measure the outdoor sound level. That header's line is GPIO 21, which has no ADC, so a wire
+// on the PCB joins GPIO 21 to GPIO 3 (ADC1 channel 2, the only free ADC1 pin). GPIO 3 is a strapping pin, but only for
+// the JTAG source, and only if an eFuse says so: the mic's bias at reset is harmless. Leave out J7's 4.7 k pull-up
+// (R9): it would pull the mic's output toward 3.3 V. The firmware leaves GPIO 21 disconnected (input off, no pulls),
+// and the indoor DS18B20 is unavailable. 1 = audio mode, 0 = indoor DS18B20 on GPIO 21.
+#ifndef AUDIO_MODE                      // (or -DAUDIO_MODE=1 on the compiler's command line)
+#define AUDIO_MODE      0
+#endif
+#define PIN_MIC         3
+#define PIN_MIC_LINK    21      // wired to PIN_MIC, kept high impedance
+#define MIC_CAL_DB      0.0f    // dB SPL = dBFS + this ('sound cal' measures it); 0 = uncalibrated, levels in dBFS
 
 // On-board indicators.
 #define PIN_LED         2       // blue LED, used as a heartbeat

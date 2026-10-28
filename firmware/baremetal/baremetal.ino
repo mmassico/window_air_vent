@@ -1,7 +1,8 @@
 // Window vent: bare-metal hardware validation.
 //
 // A serial command interpreter to check each part on its own: I2C buses, SCD40 CO2 sensor, AS5600 encoder,
-// TMC2209 driver and stepper, fans, 12 V supply, DS18B20 temperature sensors. No WiFi, no control loop.
+// TMC2209 driver and stepper, fans, 12 V supply, DS18B20 temperature sensors, and in audio mode (AUDIO_MODE in
+// Pins.h) a microphone's sound level. No WiFi, no control loop.
 //
 // Status: compiles, NOT TESTED ON HARDWARE YET.
 //
@@ -16,8 +17,9 @@
 #include "Tmc2209.h"
 #include "Fans.h"
 #include "Ds18b20.h"
+#include "Sound.h"
 
-#define FW_NAME          "window-vent baremetal 1.1"
+#define FW_NAME          "window-vent baremetal 1.2"
 #define STEPS_PER_REV    200        // full steps per motor turn (1.8 deg)
 #define DEF_MICROSTEPS   16
 #define DEF_RUN_MA       500
@@ -27,7 +29,14 @@
 static TwoWire*  s_i2c[2] = { &Wire, &Wire1 };
 static uint16_t s_encZero;          // raw AS5600 value taken as 0 deg ('enc zero')
 static bool     s_tmcOk;
-static const struct { const char* name; uint8_t pin; } s_temp[2] = { { "outdoor", PIN_TEMP_OUT }, { "indoor", PIN_TEMP_IN } };
+#if AUDIO_MODE                      // GPIO 21 carries the microphone: no indoor probe
+#define TEMP_COUNT 1
+static const struct { const char* name; uint8_t pin; } s_temp[TEMP_COUNT] = { { "outdoor", PIN_TEMP_OUT } };
+static float    s_micCal = MIC_CAL_DB;  // dB SPL = dBFS + s_micCal; 0 = uncalibrated
+#else
+#define TEMP_COUNT 2
+static const struct { const char* name; uint8_t pin; } s_temp[TEMP_COUNT] = { { "outdoor", PIN_TEMP_OUT }, { "indoor", PIN_TEMP_IN } };
+#endif
 
 static const char* HELP =
     "General\r\n"
@@ -64,9 +73,19 @@ static const char* HELP =
     "Fans (0 = intake, 1 = exhaust)\r\n"
     "  fan                          duty and speed of both fans\r\n"
     "  fan <0|1|all> <duty%>        set the PWM duty\r\n"
+#if AUDIO_MODE
+    "Temperature (DS18B20: outdoor on GPIO 14; audio mode, so no indoor probe)\r\n"
+    "  temp                         read it (a conversion takes 0.75 s)\r\n"
+    "  temp rom                     its 64-bit ROM code (family 28)\r\n"
+    "Sound (microphone on GPIO 3, wired to GPIO 21)\r\n"
+    "  sound                        one 0.25 s reading: level, DC bias, peak to peak, clipping\r\n"
+    "  sound mon [ms]               level every ms (default 500) and its 10 s average, until a key is pressed\r\n"
+    "  sound cal <dB>               take the level heard now as <dB> SPL (read on a sound meter app)\r\n"
+#else
     "Temperature (DS18B20: outdoor on GPIO 14, indoor on GPIO 21, optional)\r\n"
     "  temp                         read both (a conversion takes 0.75 s)\r\n"
     "  temp rom                     their 64-bit ROM codes (family 28)\r\n"
+#endif
     "Numbers: 42, 0x2A, 2Ah, 0b101010 or 101010b.";
 
 // ------------------------------------------------------------------------------------------------
@@ -130,9 +149,13 @@ static void cmdInfo()
     Serial.printf("Supply:  %.2f V\r\n", readSupply());
     Serial.printf("SCD40:   %s (bus 0, 0x62)\r\n", i2cPresent(Wire, SCD40_ADDR) ? "answers" : "absent");
     Serial.printf("AS5600:  %s (bus 1, 0x36)\r\n", i2cPresent(Wire1, AS5600_ADDR) ? "answers" : "absent");
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < TEMP_COUNT; i++)
         Serial.printf("DS18B20: %s %s (GPIO %d)\r\n", s_temp[i].name, Ds18b20Present(s_temp[i].pin) ? "answers" : "absent",
                       s_temp[i].pin);
+#if AUDIO_MODE
+    Serial.printf("Mic:     GPIO %d (wired to GPIO %d), DC %d mV (a MAX9814 at rest: about 1250)\r\n", PIN_MIC, PIN_MIC_LINK,
+                  (int)analogReadMilliVolts(PIN_MIC));
+#endif
     uint32_t ioin;
     if (Tmc2209Read(TMC_IOIN, &ioin))
         Serial.printf("TMC2209: answers, version 0x%02lX (expected 0x21)", (unsigned long)(ioin >> 24));
@@ -468,7 +491,7 @@ static void cmdTemp(int argc, char* argv[])
 {
     if (argc > 1 && strcmp(argv[1], "rom") == 0)
     {
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < TEMP_COUNT; i++)
         {
             uint8_t rom[8];
             Serial.printf("%-7s (GPIO %2d): ", s_temp[i].name, s_temp[i].pin);
@@ -477,16 +500,16 @@ static void cmdTemp(int argc, char* argv[])
                               rom[1], rom[0] == 0x28 ? "" : " (not a DS18B20?)");
             else
                 Serial.print("no answer, or bad CRC");
-            if (i == 0)
+            if (i + 1 < TEMP_COUNT)
                 Serial.print("\r\n");
         }
         return;
     }
     bool started[2];
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < TEMP_COUNT; i++)
         started[i] = Ds18b20Start(s_temp[i].pin);
     delay(800);
-    for (int i = 0; i < 2; i++)
+    for (int i = 0; i < TEMP_COUNT; i++)
     {
         float         t;
         Ds18b20Status st = started[i] ? Ds18b20Read(s_temp[i].pin, &t) : DS18B20_ABSENT;
@@ -495,10 +518,105 @@ static void cmdTemp(int argc, char* argv[])
             Serial.printf("%6.2f C", t);
         else
             Serial.print(Ds18b20Text(st));
-        if (i == 0)
+        if (i + 1 < TEMP_COUNT)
             Serial.print("\r\n");
     }
 }
+
+#if AUDIO_MODE
+// Sound level as text: dB SPL once calibrated ('sound cal'), dBFS before.
+static void printLevel(float dbfs)
+{
+    if (s_micCal != 0)
+        Serial.printf("%5.1f dB SPL", dbfs + s_micCal);
+    else
+        Serial.printf("%5.1f dBFS", dbfs);
+}
+
+static void printSoundDetail(const SoundReading& r)
+{
+    Serial.printf("DC %d mV, peak to peak %d counts, %.0f samples/s", r.dcMv, r.p2p, r.rateHz);
+    if (r.clipped)
+        Serial.print(", CLIPPING: lower the module's gain");
+    else if (r.dcMv < 300 || r.dcMv > 2800)
+        Serial.print(", no bias: check the module's power and the GPIO 21 - GPIO 3 wire");
+}
+
+// Energy average of rms over 'ms' of back-to-back 125 ms bursts (or fewer, if a key is pressed).
+static bool soundAverage(uint32_t ms, SoundReading* last, float* rms)
+{
+    float    energy = 0;
+    int      n = 0;
+    uint32_t t0 = millis();
+    do
+    {
+        if (!SoundMeasure(min((uint32_t)125, ms), last))
+            return false;
+        energy += last->rms * last->rms;
+        n++;
+    } while (millis() - t0 < ms && !Serial.available());
+    *rms = sqrtf(energy / n);
+    return true;
+}
+
+static void cmdSound(int argc, char* argv[])
+{
+    const char*  sub = argc > 1 ? argv[1] : "";
+    SoundReading r;
+
+    if (argc == 1)
+    {
+        if (!SoundMeasure(250, &r)) { Serial.print("ERR"); return; }
+        Serial.print("Level ");
+        printLevel(r.dbfs);
+        Serial.print(", ");
+        printSoundDetail(r);
+    }
+    else if (strcmp(sub, "mon") == 0)
+    {
+        long  ms = 500;
+        float rms, avgEnergy = -1, peak = -120;
+        if (argc > 2 && !ConArgInt(argc, argv, 2, &ms))
+            return;
+        ms = constrain(ms, 125L, 10000L);
+        Serial.print("Level, its 10 s average and the loudest so far. Press any key to stop.\r\n");
+        while (!ConKeyHit())
+        {
+            if (!soundAverage(ms, &r, &rms)) { Serial.print("ERR"); return; }
+            float e = rms * rms;
+            float k = 1.0f - expf(-ms / 10000.0f);          // 10 s time constant
+            avgEnergy = avgEnergy < 0 ? e : avgEnergy + (e - avgEnergy) * k;
+            float db = SoundDb(rms);
+            peak = max(peak, db);
+            printLevel(db);
+            Serial.print(" | avg ");
+            printLevel(SoundDb(sqrtf(avgEnergy)));
+            Serial.print(" | max ");
+            printLevel(peak);
+            Serial.print(" | ");
+            int bar = constrain((int)((db + 70.0f) / 2.0f), 0, 35);   // -70 to 0 dBFS, 2 dB per mark
+            for (int i = 0; i < 35; i++)
+                Serial.print(i < bar ? '#' : '.');
+            Serial.print(r.clipped ? " CLIP\r\n" : "\r\n");
+        }
+        Serial.print("Stopped.");
+    }
+    else if (strcmp(sub, "cal") == 0)
+    {
+        long  spl;
+        float rms;
+        if (!ConArgInt(argc, argv, 2, &spl))
+            return;
+        Serial.print("Measuring 2 s...");
+        if (!soundAverage(2000, &r, &rms)) { Serial.print(" ERR"); return; }
+        s_micCal = spl - SoundDb(rms);
+        Serial.printf(" %.1f dBFS = %ld dB SPL: offset %+.1f dB. To keep it, set MIC_CAL_DB to %.1f in Pins.h.",
+                      SoundDb(rms), spl, s_micCal, s_micCal);
+    }
+    else
+        Serial.print("Usage: sound [mon [ms]|cal <dB>]");
+}
+#endif
 
 static void cmdMon(int argc, char* argv[])
 {
@@ -532,9 +650,9 @@ static void cmdMon(int argc, char* argv[])
             Serial.print("enc ---                   | ");
         if (!tempBusy || millis() - tempStart >= 800)   // DS18B20: read the last conversion, start the next
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < TEMP_COUNT; i++)
                 haveTemp[i] = tempBusy && Ds18b20Read(s_temp[i].pin, &temp[i]) == DS18B20_OK;
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < TEMP_COUNT; i++)
                 Ds18b20Start(s_temp[i].pin);
             tempStart = millis();
             tempBusy = true;
@@ -543,10 +661,20 @@ static void cmdMon(int argc, char* argv[])
             Serial.printf("out %5.1f ", temp[0]);
         else
             Serial.print("out   --- ");
+#if AUDIO_MODE
+        Serial.print("C | snd ");
+        SoundReading snd;
+        if (SoundMeasure(100, &snd))
+            printLevel(snd.dbfs);
+        else
+            Serial.print("---");
+        Serial.print(" | ");
+#else
         if (haveTemp[1])
             Serial.printf("in %5.1f C | ", temp[1]);
         else
             Serial.print("in   --- C | ");
+#endif
         Serial.printf("fans %4d %4d rpm | ", FansRpm(0), FansRpm(1));
         if (Tmc2209Read(TMC_SG_RESULT, &sg))
             Serial.printf("SG %3lu DIAG %d | ", (unsigned long)sg, digitalRead(PIN_TMC_DIAG));
@@ -582,6 +710,9 @@ static void handleCommand(int argc, char* argv[])
     else if (strcmp(c, "tmc") == 0) cmdTmc(argc, argv);
     else if (strcmp(c, "fan") == 0) cmdFan(argc, argv);
     else if (strcmp(c, "temp") == 0) cmdTemp(argc, argv);
+#if AUDIO_MODE
+    else if (strcmp(c, "sound") == 0) cmdSound(argc, argv);
+#endif
     else Serial.printf("Unknown command '%s', type 'help'.", c);
 }
 
@@ -603,8 +734,12 @@ void setup()
 
     FansBegin();
     Ds18b20Begin(PIN_TEMP_OUT);
-    Ds18b20Begin(PIN_TEMP_IN);
     analogReadResolution(12);
+#if AUDIO_MODE
+    SoundBegin(PIN_MIC, PIN_MIC_LINK);
+#else
+    Ds18b20Begin(PIN_TEMP_IN);
+#endif
 
     Serial.begin(CONSOLE_BAUD);
     Serial1.begin(TMC_UART_BAUD, SERIAL_8N1, PIN_TMC_RX, PIN_TMC_TX);

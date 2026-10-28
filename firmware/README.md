@@ -62,9 +62,12 @@ The table below gives the same connections, pin by pin.
 | | DQ | GPIO 14 | 4.7 kΩ to 3V3 |
 | **DS18B20, indoor** (optional: the SCD40 also reads the room's temperature) | VDD, GND | 3V3, GND | |
 | | DQ | GPIO 21 | 4.7 kΩ to 3V3 |
+| **Microphone, audio mode** (optional, instead of the indoor DS18B20: a MAX9814 module) | VDD, GND | 3V3, GND | On the indoor probe's header |
+| | OUT | GPIO 21, wired to GPIO 3 | No pull-up: leave the indoor probe's 4.7 kΩ out |
 
 - **On the board itself:** the blue LED (GPIO 2) blinks as a heartbeat, and the RGB LED is on GPIO 48 (`led` command).
 - **Temperature sensors:** read with the `temp` command; the sketch drives the 1-Wire bus itself (`Ds18b20.cpp`), so no library is needed. The outdoor probe goes near the intake, away from the exhaust outlet and out of the sun.
+- **Audio mode (optional):** an analog microphone measures the outdoor sound level, for instance to close the damper when it's too loud outside. It takes the indoor DS18B20's header, so it replaces that probe. That header's line, GPIO 21, has no ADC, so a short wire on the PCB (or the perfboard) joins GPIO 21 to GPIO 3, the only free pin on ADC1. ADC2 can't be used while Wi-Fi runs. Leave out that header's 4.7 kΩ pull-up: it would pull the microphone's output toward 3.3 V. Then set `AUDIO_MODE` to 1 in `Pins.h`. The firmware leaves GPIO 21 disconnected (input off, no pull-up or pull-down), reads the microphone on GPIO 3, and drops the indoor probe. GPIO 3 is a strapping pin, but only for the JTAG source, and only when an eFuse selects it, so the microphone's bias at reset does no harm. The MAX9814's output rests at about 1.25 V and swings up to 2 V peak to peak, inside the ADC's 0–3.1 V range.
 - **Kept free for later:** GPIO 38, 39, 40, for the INMP441 microphone (I²S).
 - **Power:** two adapters. A 12 V brick feeds VM, the fans and the 12 V sense; a 5 V USB-C adapter powers the ESP32 through its USB-UART connector (the board makes the 3V3 for the sensors and the TMC2209 logic). Join the brick's GND and the ESP32's GND on the perfboard. The [layout drawing](../doc/ebox_layout.svg) shows where the parts go in the box.
 - **Driving the fan PWM directly:** the 3.3 V PWM output drives the Noctua PWM input as is (Noctua accepts a 3.3 V signal). If you ever add an inverting transistor, set `FAN_PWM_INVERT` to 1.
@@ -100,7 +103,14 @@ Each step only needs the parts before it. Each line shows a command, then what y
    - `temp`: both temperatures after a 0.75 s conversion. Warm the probe in your hand and the next reading rises.
    - `temp rom`: each probe's ROM code; family `28` is a genuine DS18B20 type.
    - "absent" means no presence pulse: check the three wires and the 4.7 kΩ pull-up. "CRC error" usually means a weak or missing pull-up, or a long cable.
-7. **Everything at once.** `mon 1000` prints one line per second with every reading, until a key is pressed.
+7. **Microphone (audio mode only).**
+   - `info`: the microphone's DC level is about 1250 mV with a MAX9814. Near 0 or 3300 mV means no bias: check its power and the GPIO 21 to GPIO 3 wire.
+   - `sound`: one 0.25 s reading. It gives the level in dBFS (0 dB is a sine filling the ADC's whole range), the DC bias, the peak-to-peak swing and the achieved sample rate (8000 samples/s aimed). Clap: the level jumps.
+   - "CLIPPING" means the signal reaches the ADC's limits: lower the module's gain (MAX9814: GAIN pin to VDD for 40 dB, to GND for 50 dB, open for 60 dB).
+   - `sound mon` prints the level every 0.5 s, with a 10 s average, the loudest so far and a bar graph.
+   - To read dB SPL instead of dBFS, play a steady noise, read it on a phone sound meter app, and type `sound cal <dB>` with that value. The offset lasts until a reboot; to keep it, copy the printed value into `MIC_CAL_DB` in `Pins.h`.
+   - The level is measured in short bursts of one-shot reads, after a 150 Hz high-pass filter that cuts wind rumble and the fans' hum. The 12 V sense also reads ADC1 one-shot, and the core's continuous (DMA) mode can't share a unit with it. For a sound level, that's enough.
+8. **Everything at once.** `mon 1000` prints one line per second with every reading, until a key is pressed. In audio mode, the indoor temperature's place shows the sound level.
 
 Note any number that looks wrong: the magnet status, the AGC, the SG values while turning freely and against the lips, and the fan speeds at 30% and 100%. They become the settings of the final firmware.
 
@@ -118,6 +128,7 @@ Type `help` on the console for the full list. In brief:
 | Driver registers | `tmc init`, `tmc status`, `tmc rd <reg>`, `tmc wr <reg> <value>` |
 | Fans | `fan`, `fan <0\|1\|all> <duty%>` |
 | Temperature | `temp`, `temp rom` |
+| Sound (audio mode) | `sound`, `sound mon [ms]`, `sound cal <dB>` |
 
 Numbers can be written as `42`, `0x2A`, `2Ah`, `0b101010` or `101010b`. A long move or `mon` stops when any key is pressed.
 
