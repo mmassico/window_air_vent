@@ -13,7 +13,7 @@ TMC_P = ["VM", "GND", "M1B", "M1A", "M2A", "M2B", "VIO", "GND"]
 ESP_GPIO = {
     "4": "FAN0_PWM", "5": "FAN1_PWM", "6": "ENC_SDA", "7": "ENC_SCL", "15": "FAN0_TACH", "16": "FAN1_TACH",
     "17": "TMC_TX", "18": "TMC_UART", "8": "SCD_SDA", "9": "SCD_SCL", "10": "TMC_EN", "11": "TMC_STEP",
-    "12": "TMC_DIR", "13": "TMC_DIAG", "14": "DQ_OUT", "1": "V12_SENSE", "21": "DQ_IN",
+    "12": "TMC_DIR", "13": "TMC_DIAG", "14": "DQ_OUT", "1": "V12_SENSE", "21": "DQ_IN", "3": "MIC",
 }
 
 
@@ -47,6 +47,9 @@ PARTS = [
     ("U2", "window_vent:TMC2209_Module", "TMC2209 module", "window_vent:TMC2209_StepStick", TMC_NETS, ""),
     ("J1", "Connector_Generic:Conn_01x02", "12V IN", hdr(2), {"1": "VIN", "2": "GND"}, ""),
     ("JP1", "Jumper:Jumper_2_Open", "D1 bypass", hdr(2), {"1": "VIN", "2": "+12V"}, ""),
+    # audio mode: a microphone on J7 instead of the indoor probe; GPIO 21 has no ADC, so JP2 joins it to GPIO 3 (ADC1)
+    ("JP2", "Jumper:SolderJumper_2_Open", "AUDIO", "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
+     {"1": "DQ_IN", "2": "MIC"}, ""),
     ("D1", "Device:D_Schottky", "1N5822", "Diode_THT:D_DO-201AD_P5.08mm_Vertical_AnodeUp", {"1": "+12V", "2": "VIN"}, ""),
     ("C1", "Device:C_Polarized", "220uF 50V", "Capacitor_THT:CP_Radial_D10.0mm_P5.00mm", {"1": "+12V", "2": "GND"}, ""),
     ("R1", "Device:R", "10k", R_UP, {"1": "FAN0_TACH", "2": "+3V3"}, ""),

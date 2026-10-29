@@ -115,7 +115,10 @@ PLACE = {
     "R9": (102.1, 106.1, 270), "R10": (105.2, 106.1, 270),
     # test pads clear of the USB-C cable's path (y 116.6 to 127.6 beside the ESP32), so they can be probed with it on
     "TP1": (101.9, 114.0, 0), "TP2": (105.1, 114.0, 0), "TP5": (102.6, 130.6, 0),
+    # audio-mode solder jumper (GPIO 21 to GPIO 3), on the back under the ESP32, between its two pins
+    "JP2": (117.0, 124.0, 0),
 }
+BOTTOM = {"JP2"}                            # parts on the back (B.Cu)
 
 board = pcbnew.BOARD()
 board.SetCopperLayerCount(2)
@@ -170,6 +173,8 @@ for ref, lib_id, value, fp_id, pins, desc in PARTS:
     fp.SetPosition(pcbnew.VECTOR2I(mm(x), mm(y)))
     fp.SetOrientationDegrees(rot)
     board.Add(fp)
+    if ref in BOTTOM:
+        fp.Flip(fp.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT)
     fp.Reference().SetTextAngleDegrees(0)     # references read left to right; the values stay on the fab layer
     fp.Value().SetVisible(False)
     for pad in fp.Pads():

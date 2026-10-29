@@ -295,8 +295,8 @@ text(EX0 + 10, y3 + 5, "GPIO 3  mic (audio)", 14)
 dot(920, 1166, C_AUD)
 line([(920, 1166), (920, yl), (615, yl), (615, y3), (EX0, y3)], C_AUD)
 out[-1] = out[-1].replace('stroke-linecap="round"/>', 'stroke-linecap="round" stroke-dasharray="9,6"/>')
-text(770, yl + 20, "audio mode only: a wire from GPIO 21 to GPIO 3", 12.5, "middle", color=C_AUD, italic=True)
-text(770, yl + 37, "(GPIO 21 has no ADC)", 12.5, "middle", color=C_AUD, italic=True)
+text(770, yl + 20, "audio mode only: GPIO 21 to GPIO 3 (no ADC on 21):", 12.5, "middle", color=C_AUD, italic=True)
+text(770, yl + 37, "a wire, or JP2 on PCB v1.1", 12.5, "middle", color=C_AUD, italic=True)
 
 # ---------------------------------------------------------------------------------------------
 # Top: the two power adapters (12 V brick, 5 V USB-C)
@@ -319,7 +319,7 @@ notes = [
     "SCD40 and AS5600 modules usually carry their own I2C pull-ups; on a long SCD40 cable, 4.7 k to 3V3 at the ESP32 end helps.",
     "DS18B20: three wires each (no parasite power), one 4.7 k pull-up per sensor at the ESP32 end. The indoor one (dashed) is optional.",
     "Audio mode (dashed, AUDIO_MODE 1 in Pins.h): the MAX9814 takes the indoor probe's header, without its 4.7 k pull-up,"
-    " and a wire joins GPIO 21 to GPIO 3.",
+    " and GPIO 21 is joined to GPIO 3 (a wire, or JP2 on PCB v1.1).",
 ]
 for i, n in enumerate(notes):
     text(60, 1355 + i * 24, n, 14, color="#333")

@@ -64,6 +64,30 @@ for i, (x0, y0, x1, y1) in enumerate(((100, 100, 170, 100 + E), (100, 150 - E, 1
     for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)):
         o.Append(mm(x), mm(y))
     board.Add(k)
+# no vias under the silkscreen labels: their boxes as tools/pcb_finish.py last placed them (it adds them after the
+# routing, at fixed positions; after moving a label, run route and finish twice)
+for z in [z for z in board.Zones() if z.GetIsRuleArea() and z.GetZoneName().startswith("silk")]:
+    board.Remove(z)
+silk = []
+if os.path.exists(os.path.join(PCB, "build", NAME + "_finished.kicad_pcb")):
+    done = pcbnew.LoadBoard(os.path.join(PCB, "build", NAME + "_finished.kicad_pcb"))
+    for d in done.GetDrawings():
+        if d.GetLayer() in (pcbnew.F_SilkS, pcbnew.B_SilkS):
+            bb = d.GetBoundingBox()
+            silk.append(tuple(pcbnew.ToMM(v) for v in (bb.GetLeft(), bb.GetTop(), bb.GetRight(), bb.GetBottom())))
+print(len(silk), "silkscreen items kept clear of vias")
+for i, (x0, y0, x1, y1) in enumerate(silk):
+    x0, y0, x1, y1 = x0 - 0.1, y0 - 0.1, x1 + 0.1, y1 + 0.1
+    k = pcbnew.ZONE(board)
+    k.SetIsRuleArea(True)
+    k.SetDoNotAllowTracks(False); k.SetDoNotAllowVias(True); k.SetDoNotAllowPads(False)
+    k.SetDoNotAllowZoneFills(False); k.SetDoNotAllowFootprints(False)
+    k.SetLayerSet(pcbnew.LSET.AllCuMask())
+    k.SetZoneName(f"silk {i + 1}")
+    o = k.Outline(); o.NewOutline()
+    for x, y in ((x0, y0), (x1, y0), (x1, y1), (x0, y1)):
+        o.Append(mm(x), mm(y))
+    board.Add(k)
 dsn, ses = os.path.join(PCB, NAME + ".dsn"), os.path.join(PCB, NAME + ".ses")
 if os.path.exists(ses):
     os.remove(ses)

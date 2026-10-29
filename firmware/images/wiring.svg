@@ -268,8 +268,8 @@
 <text x="650" y="1105" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GPIO 3  mic (audio)</text>
 <circle cx="920" cy="1166" r="4.5" fill="#a0287a"/>
 <polyline points="920,1166 920,1232 615,1232 615,1100 640,1100" fill="none" stroke="#a0287a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="9,6"/>
-<text x="770" y="1252" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#a0287a" font-style="italic">audio mode only: a wire from GPIO 21 to GPIO 3</text>
-<text x="770" y="1269" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#a0287a" font-style="italic">(GPIO 21 has no ADC)</text>
+<text x="770" y="1252" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#a0287a" font-style="italic">audio mode only: GPIO 21 to GPIO 3 (no ADC on 21):</text>
+<text x="770" y="1269" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#a0287a" font-style="italic">a wire, or JP2 on PCB v1.1</text>
 <rect x="1150" y="10" width="200" height="110" rx="8" fill="#f4f6f8" stroke="#222" stroke-width="2"/>
 <text x="1250.0" y="32" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">12 V power brick</text>
 <text x="1250.0" y="50" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">fans and motor</text>
@@ -290,6 +290,6 @@
 <text x="60" y="1379" font-size="14" text-anchor="start" font-weight="normal" fill="#333">Two adapters: 12 V for the fans and motor, 5 V over USB-C for the ESP32 (which makes the 3V3). Join their GNDs on the perfboard.</text>
 <text x="60" y="1403" font-size="14" text-anchor="start" font-weight="normal" fill="#333">SCD40 and AS5600 modules usually carry their own I2C pull-ups; on a long SCD40 cable, 4.7 k to 3V3 at the ESP32 end helps.</text>
 <text x="60" y="1427" font-size="14" text-anchor="start" font-weight="normal" fill="#333">DS18B20: three wires each (no parasite power), one 4.7 k pull-up per sensor at the ESP32 end. The indoor one (dashed) is optional.</text>
-<text x="60" y="1451" font-size="14" text-anchor="start" font-weight="normal" fill="#333">Audio mode (dashed, AUDIO_MODE 1 in Pins.h): the MAX9814 takes the indoor probe's header, without its 4.7 k pull-up, and a wire joins GPIO 21 to GPIO 3.</text>
+<text x="60" y="1451" font-size="14" text-anchor="start" font-weight="normal" fill="#333">Audio mode (dashed, AUDIO_MODE 1 in Pins.h): the MAX9814 takes the indoor probe's header, without its 4.7 k pull-up, and GPIO 21 is joined to GPIO 3 (a wire, or JP2 on PCB v1.1).</text>
 <text x="60" y="34" font-size="24" text-anchor="start" font-weight="bold" fill="#111">Window vent: wiring</text>
 </svg>

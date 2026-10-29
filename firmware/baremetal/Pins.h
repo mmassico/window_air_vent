@@ -52,11 +52,12 @@
                                 // about 1.2-1.5 m, away from the window and heaters; not in audio mode (below)
 
 // Audio mode (optional): an analog microphone module (MAX9814: 3V3, OUT, GND) on the indoor DS18B20's header (J7)
-// instead of the probe, to measure the outdoor sound level. That header's line is GPIO 21, which has no ADC, so a wire
-// on the PCB joins GPIO 21 to GPIO 3 (ADC1 channel 2, the only free ADC1 pin). GPIO 3 is a strapping pin, but only for
-// the JTAG source, and only if an eFuse says so: the mic's bias at reset is harmless. Leave out J7's 4.7 k pull-up
-// (R9): it would pull the mic's output toward 3.3 V. The firmware leaves GPIO 21 disconnected (input off, no pulls),
-// and the indoor DS18B20 is unavailable. 1 = audio mode, 0 = indoor DS18B20 on GPIO 21.
+// instead of the probe, to measure the outdoor sound level. That header's line is GPIO 21, which has no ADC, so it is
+// joined to GPIO 3 (ADC1 channel 2, the only free ADC1 pin): bridge solder jumper JP2 on PCB v1.1, solder a wire on
+// v1.0. GPIO 3 is a strapping pin, but only for the JTAG source, and only if an eFuse says so: the mic's bias at reset
+// is harmless. Leave out J7's 4.7 k pull-up (R9): it would pull the mic's output toward 3.3 V. The firmware leaves
+// GPIO 21 disconnected (input off, no pulls), and the indoor DS18B20 is unavailable. With JP2 open, GPIO 3 is
+// unconnected. 1 = audio mode, 0 = indoor DS18B20 on GPIO 21.
 #ifndef AUDIO_MODE                      // (or -DAUDIO_MODE=1 on the compiler's command line)
 #define AUDIO_MODE      0
 #endif

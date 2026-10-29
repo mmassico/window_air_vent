@@ -13,7 +13,7 @@ PCB = os.path.join(ROOT, "pcb")
 NAME = "window_vent_ctrl"
 BOARD = os.path.join(PCB, NAME + ".kicad_pcb")
 CLI = r"C:\Program Files\KiCad\10.0\bin\kicad-cli.exe"
-REV = "v1.0"
+REV = "v1.1"
 mm = pcbnew.FromMM
 
 board = pcbnew.LoadBoard(os.path.join(PCB, "build", NAME + "_routed.kicad_pcb"))   # as routed, before any label
@@ -166,10 +166,14 @@ text("this PCB", 135.0, 117.0, 1.0, pcbnew.B_SilkS)
 text("outdoor (top edge)", 135.0, 112.9, 0.8, pcbnew.B_SilkS)
 text("indoor (bottom edge)", 135.0, 121.1, 0.8, pcbnew.B_SilkS)
 text("github.com/mmassico/window_air_vent", 135.0, 124.2, 1.0, pcbnew.B_SilkS)
+# JP2, the audio-mode solder jumper (GPIO 21 to GPIO 3): its name and use on its right, seen from the back
+text("JP2 AUDIO", 110.7, 123.35, 0.8, pcbnew.B_SilkS, bold=True)
+text("GPIO21-GPIO3", 110.7, 124.65, 0.8, pcbnew.B_SilkS)
 
 board.GetDesignSettings().m_MinResolvedSpokes = 1
 pcbnew.ZONE_FILLER(board).Fill(board.Zones())
 pcbnew.SaveBoard(BOARD, board)
+pcbnew.SaveBoard(os.path.join(PCB, "build", NAME + "_finished.kicad_pcb"), board)   # tools/pcb_route.py reads the labels
 print("wrote", BOARD)
 # C1's "+" was nudged on purpose: don't report it as differing from the library
 import json
