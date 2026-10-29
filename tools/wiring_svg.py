@@ -288,7 +288,7 @@ dot(1120, 1166, C_AUD)
 for y, pin, net in ((yv, "VDD", "3V3"), (yg, "GND", "GND")):
     text(TX1 - 10, y + 5, pin, 14, "end")
     lead_tag(TX1, y, net, "right", 30)
-text(TX0 + 10, MY0 + 108, "GAIN and A/R open (60 dB)", 12.5, color="#444")
+text(TX0 + 10, MY0 + 108, "GAIN to VDD (40 dB), A/R open", 12.5, color="#444")
 
 y3, yl = 1100, 1232
 text(EX0 + 10, y3 + 5, "GPIO 3  mic (audio)", 14)

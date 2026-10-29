@@ -264,7 +264,7 @@
 <polyline points="1350,1303 1380,1303" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
 <rect x="1380" y="1292.0" width="39" height="22" rx="11" fill="#333333"/>
 <text x="1399.5" y="1308.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
-<text x="1160" y="1333" font-size="12.5" text-anchor="start" font-weight="normal" fill="#444">GAIN and A/R open (60 dB)</text>
+<text x="1160" y="1333" font-size="12.5" text-anchor="start" font-weight="normal" fill="#444">GAIN to VDD (40 dB), A/R open</text>
 <text x="650" y="1105" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GPIO 3  mic (audio)</text>
 <circle cx="920" cy="1166" r="4.5" fill="#a0287a"/>
 <polyline points="920,1166 920,1232 615,1232 615,1100 640,1100" fill="none" stroke="#a0287a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="9,6"/>
