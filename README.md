@@ -253,6 +253,25 @@ The ESP32 runs an Arduino sketch (esp32 core 3.x, no other library). The first s
   <img src="pcb/view/render_bottom.png" alt="The controller PCB from below: the ground plane, the title WINDOW VENT CONTROLLER v1.1, the orientation sketch and the audio-mode solder jumper JP2" width="49%">
 </p>
 
+<details open>
+<summary><b>PCB bill of materials</b></summary>
+
+| Ref | Qty | Value | Part / note |
+|---|---|---|---|
+| U1 | 1 | Freenove ESP32-S3 Lite (FNK0099) | see [Hardware](#hardware) |
+| U2 | 1 | TMC2209 module | see [Hardware](#hardware) |
+| D1 | 1 | 1N5822 | Schottky, 3 A 40 V, DO-201AD, standing |
+| C1 | 1 | 220 µF 50 V | electrolytic, 10 mm, 5 mm pitch |
+| R1–R4 | 4 | 10 kΩ | 1/4 W, standing |
+| R5–R8 | 4 | 10 kΩ, 1 kΩ, 100 kΩ, 22 kΩ | 1/4 W, lying flat, component side: body 2.5 mm (max), otherwise: solder side |
+| R9, R10 | 2 | 4.7 kΩ | standing; leave R9 out in audio mode (or without the indoor probe) |
+| J1, JP1 | 2 | 2-pin header | plus a jumper shunt for JP1 |
+| J2–J6 | 5 | 4-pin header | 2.54 mm male |
+| J7, J8 | 2 | 3-pin header | 2.54 mm male |
+| JP2 | | | solder jumper |
+
+</details>
+
 ### The encoder magnet
 
 The AS5600 measures the direction of the magnetic field across the shaft, so the magnet's north-south axis must lie **across** the shaft and turn with it.
