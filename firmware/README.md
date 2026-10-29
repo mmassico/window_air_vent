@@ -34,7 +34,7 @@ arduino-cli compile --fqbn "esp32:esp32:esp32s3:FlashSize=16M,PSRAM=opi,Partitio
 
 Every pin is defined in [`baremetal/Pins.h`](baremetal/Pins.h). "3V3" and "GND" are the ESP32 board's pins. Every ground is common.
 
-<img src="images/wiring.svg" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209, stepper and two DS18B20 temperature sensors on the right, 12 V brick and 5 V USB-C adapter on top" width="100%">
+<img src="images/wiring.svg" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209, stepper, two DS18B20 temperature sensors and the optional MAX9814 microphone (audio mode, with its GPIO 21 to GPIO 3 wire) on the right, 12 V brick and 5 V USB-C adapter on top" width="100%">
 
 The table below gives the same connections, pin by pin.
 

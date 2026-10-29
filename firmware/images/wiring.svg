@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="1370" viewBox="0 0 1640 1370" font-family="Segoe UI, Helvetica, Arial, sans-serif">
-<rect width="1640" height="1370" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1640" height="1480" viewBox="0 0 1640 1480" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="1640" height="1480" fill="#ffffff"/>
 <rect x="640" y="150" width="260" height="1050" rx="8" fill="#e8eef7" stroke="#222" stroke-width="2"/>
 <text x="770.0" y="172" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">ESP32-S3</text>
 <text x="770.0" y="190" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">Freenove WROOM Lite (FNK0099)</text>
@@ -228,18 +228,18 @@
 <polyline points="1350,1068 1380,1068" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
 <rect x="1380" y="1057.0" width="39" height="22" rx="11" fill="#333333"/>
 <text x="1399.5" y="1073.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
-<rect x="1150" y="1100" width="200" height="90" rx="8" fill="#f4f6f8" stroke="#222" stroke-width="2" stroke-dasharray="3,4"/>
+<rect x="1150" y="1100" width="200" height="90" rx="8" fill="#f4f6f8" stroke="#222" stroke-width="2" stroke-dasharray="8,5"/>
 <text x="1250.0" y="1122" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">DS18B20 (indoor)</text>
 <text x="1250.0" y="1140" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">optional (SCD40 reads it too)</text>
 <text x="1160" y="1171" font-size="14" text-anchor="start" font-weight="normal" fill="#111">DQ</text>
 <text x="890" y="1171" font-size="14" text-anchor="end" font-weight="normal" fill="#111">GPIO 21  1-Wire indoor</text>
 <polyline points="900,1166 1150,1166" fill="none" stroke="#0b7a75" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-<circle cx="1060" cy="1166" r="4.5" fill="#0b7a75"/>
-<polyline points="1060,1166 1060,1154" fill="none" stroke="#0b7a75" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-<polyline points="1060,1110 1067,1113.6666666666667 1053,1121.0 1067,1128.3333333333333 1053,1135.6666666666667 1067,1143.0 1053,1150.3333333333333 1060,1154" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-<text x="1072" y="1137.0" font-size="13" text-anchor="start" font-weight="normal" fill="#222">4.7 k</text>
-<rect x="1040.5" y="1088" width="39" height="22" rx="11" fill="#d17a00"/>
-<text x="1060.0" y="1104" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">3V3</text>
+<circle cx="1020" cy="1166" r="4.5" fill="#0b7a75"/>
+<polyline points="1020,1166 1020,1154" fill="none" stroke="#0b7a75" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="1020,1110 1027,1113.6666666666667 1013,1121.0 1027,1128.3333333333333 1013,1135.6666666666667 1027,1143.0 1013,1150.3333333333333 1020,1154" fill="none" stroke="#111" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1032" y="1137.0" font-size="13" text-anchor="start" font-weight="normal" fill="#222">4.7 k</text>
+<rect x="1000.5" y="1088" width="39" height="22" rx="11" fill="#d17a00"/>
+<text x="1020.0" y="1104" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">3V3</text>
 <text x="1340" y="1159" font-size="14" text-anchor="end" font-weight="normal" fill="#111">VDD</text>
 <polyline points="1350,1154 1380,1154" fill="none" stroke="#d17a00" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
 <rect x="1380" y="1143.0" width="39" height="22" rx="11" fill="#d17a00"/>
@@ -248,6 +248,28 @@
 <polyline points="1350,1178 1380,1178" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
 <rect x="1380" y="1167.0" width="39" height="22" rx="11" fill="#333333"/>
 <text x="1399.5" y="1183.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="1020" y="1190" font-size="11.5" text-anchor="middle" font-weight="normal" fill="#a0287a" font-style="italic">left out in audio mode</text>
+<rect x="1150" y="1225" width="200" height="90" rx="8" fill="#f4f6f8" stroke="#222" stroke-width="2" stroke-dasharray="8,5"/>
+<text x="1250.0" y="1247" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">MAX9814 (audio mode)</text>
+<text x="1250.0" y="1265" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">microphone, optional</text>
+<text x="1250.0" y="1212.5" font-size="13" text-anchor="middle" font-weight="bold" fill="#444" font-style="italic">or</text>
+<text x="1160" y="1296" font-size="14" text-anchor="start" font-weight="normal" fill="#111">OUT</text>
+<polyline points="1150,1291 1120,1291 1120,1166" fill="none" stroke="#a0287a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+<circle cx="1120" cy="1166" r="4.5" fill="#a0287a"/>
+<text x="1340" y="1284" font-size="14" text-anchor="end" font-weight="normal" fill="#111">VDD</text>
+<polyline points="1350,1279 1380,1279" fill="none" stroke="#d17a00" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1380" y="1268.0" width="39" height="22" rx="11" fill="#d17a00"/>
+<text x="1399.5" y="1284.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">3V3</text>
+<text x="1340" y="1308" font-size="14" text-anchor="end" font-weight="normal" fill="#111">GND</text>
+<polyline points="1350,1303 1380,1303" fill="none" stroke="#333333" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="1380" y="1292.0" width="39" height="22" rx="11" fill="#333333"/>
+<text x="1399.5" y="1308.0" font-size="13" text-anchor="middle" font-weight="bold" fill="#fff">GND</text>
+<text x="1160" y="1333" font-size="12.5" text-anchor="start" font-weight="normal" fill="#444">GAIN and A/R open (60 dB)</text>
+<text x="650" y="1105" font-size="14" text-anchor="start" font-weight="normal" fill="#111">GPIO 3  mic (audio)</text>
+<circle cx="920" cy="1166" r="4.5" fill="#a0287a"/>
+<polyline points="920,1166 920,1232 615,1232 615,1100 640,1100" fill="none" stroke="#a0287a" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="9,6"/>
+<text x="770" y="1252" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#a0287a" font-style="italic">audio mode only: a wire from GPIO 21 to GPIO 3</text>
+<text x="770" y="1269" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#a0287a" font-style="italic">(GPIO 21 has no ADC)</text>
 <rect x="1150" y="10" width="200" height="110" rx="8" fill="#f4f6f8" stroke="#222" stroke-width="2"/>
 <text x="1250.0" y="32" font-size="16" text-anchor="middle" font-weight="bold" fill="#111">12 V power brick</text>
 <text x="1250.0" y="50" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">fans and motor</text>
@@ -264,10 +286,10 @@
 <text x="1010.0" y="50" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#444">5 V, 1 A or more</text>
 <polyline points="930,70 700,70 700,150" fill="none" stroke="#1f5fbf" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
 <text x="815" y="62" font-size="12.5" text-anchor="middle" font-weight="normal" fill="#1f5fbf">USB-C cable to the USB-UART connector</text>
-<text x="60" y="1245" font-size="14" text-anchor="start" font-weight="normal" fill="#333">Coloured tags with the same name are the same net: every GND is common, and 3V3 comes from the board's 3V3 pin.</text>
-<text x="60" y="1269" font-size="14" text-anchor="start" font-weight="normal" fill="#333">Two adapters: 12 V for the fans and motor, 5 V over USB-C for the ESP32 (which makes the 3V3). Join their GNDs on the perfboard.</text>
-<text x="60" y="1293" font-size="14" text-anchor="start" font-weight="normal" fill="#333">SCD40 and AS5600 modules usually carry their own I2C pull-ups; on a long SCD40 cable, 4.7 k to 3V3 at the ESP32 end helps.</text>
-<text x="60" y="1317" font-size="14" text-anchor="start" font-weight="normal" fill="#333">DS18B20: three wires each (no parasite power), one 4.7 k pull-up per sensor at the ESP32 end. The indoor one (dotted) is optional.</text>
-<text x="60" y="1341" font-size="14" text-anchor="start" font-weight="normal" fill="#333">Pins as in firmware/baremetal/Pins.h. GPIO 38, 39, 40 stay free for the INMP441 microphone.</text>
+<text x="60" y="1355" font-size="14" text-anchor="start" font-weight="normal" fill="#333">Coloured tags with the same name are the same net: every GND is common, and 3V3 comes from the board's 3V3 pin.</text>
+<text x="60" y="1379" font-size="14" text-anchor="start" font-weight="normal" fill="#333">Two adapters: 12 V for the fans and motor, 5 V over USB-C for the ESP32 (which makes the 3V3). Join their GNDs on the perfboard.</text>
+<text x="60" y="1403" font-size="14" text-anchor="start" font-weight="normal" fill="#333">SCD40 and AS5600 modules usually carry their own I2C pull-ups; on a long SCD40 cable, 4.7 k to 3V3 at the ESP32 end helps.</text>
+<text x="60" y="1427" font-size="14" text-anchor="start" font-weight="normal" fill="#333">DS18B20: three wires each (no parasite power), one 4.7 k pull-up per sensor at the ESP32 end. The indoor one (dashed) is optional.</text>
+<text x="60" y="1451" font-size="14" text-anchor="start" font-weight="normal" fill="#333">Audio mode (dashed, AUDIO_MODE 1 in Pins.h): the MAX9814 takes the indoor probe's header, without its 4.7 k pull-up, and a wire joins GPIO 21 to GPIO 3.</text>
 <text x="60" y="34" font-size="24" text-anchor="start" font-weight="bold" fill="#111">Window vent: wiring</text>
 </svg>

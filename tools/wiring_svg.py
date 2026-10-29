@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Draw firmware/images/wiring.svg: how the peripherals connect to the ESP32-S3 board.
 
-Usage: python tools/wiring_svg.py   (run from the window-vent folder)
+Usage: python tools/wiring_svg.py [out.svg]   (run from the window-vent folder)
 Pins follow firmware/baremetal/Pins.h; keep both in step.
 """
 import os
+import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-OUT = os.path.join(ROOT, "firmware", "images", "wiring.svg")
-W, H = 1640, 1370
+OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "firmware", "images", "wiring.svg")
+W, H = 1640, 1480
 
 C_I2C = "#1b7f3b"
 C_MOT = "#6a3fb5"
@@ -16,6 +17,7 @@ C_FAN = "#c25e00"
 C_SNS = "#b3261e"
 C_PWR = "#1f5fbf"
 C_TMP = "#0b7a75"
+C_AUD = "#a0287a"
 NET = {"12V": "#b3261e", "3V3": "#d17a00", "5V": "#1f5fbf", "GND": "#333333"}
 
 out = []
@@ -265,12 +267,36 @@ def ds18b20(y0, where, sub, gpio, xpu, optional=False):
     for y, pin, net in ((yv, "VDD", "3V3"), (yg, "GND", "GND")):
         text(TX1 - 10, y + 5, pin, 14, "end")
         lead_tag(TX1, y, net, "right", 30)
-    if optional:   # dotted outline for its box
-        out[start] = out[start].replace('stroke-width="2"/>', 'stroke-width="2" stroke-dasharray="3,4"/>')
+    if optional:   # dashed outline for its box
+        out[start] = out[start].replace('stroke-width="2"/>', 'stroke-width="2" stroke-dasharray="8,5"/>')
 
 
 ds18b20(990, "outdoor", "waterproof probe", 14, 1000)
-ds18b20(1100, "indoor", "optional (SCD40 reads it too)", 21, 1060, optional=True)
+ds18b20(1100, "indoor", "optional (SCD40 reads it too)", 21, 1020, optional=True)
+text(1020, 1190, "left out in audio mode", 11.5, "middle", color=C_AUD, italic=True)
+
+# Audio mode (optional): a MAX9814 microphone on the indoor probe's header instead of the probe. GPIO 21 has no
+# ADC, so a wire joins it to GPIO 3 (ADC1), under the board here.
+MY0 = 1225
+box(TX0, MY0, TX1, MY0 + 90, "MAX9814 (audio mode)", "microphone, optional")
+out[-3] = out[-3].replace('stroke-width="2"/>', 'stroke-width="2" stroke-dasharray="8,5"/>')
+text((TX0 + TX1) / 2, (1190 + MY0) / 2 + 5, "or", 13, "middle", "bold", "#444", italic=True)
+yo, yv, yg = MY0 + 66, MY0 + 54, MY0 + 78
+text(TX0 + 10, yo + 5, "OUT", 14)
+line([(TX0, yo), (1120, yo), (1120, 1166)], C_AUD)
+dot(1120, 1166, C_AUD)
+for y, pin, net in ((yv, "VDD", "3V3"), (yg, "GND", "GND")):
+    text(TX1 - 10, y + 5, pin, 14, "end")
+    lead_tag(TX1, y, net, "right", 30)
+text(TX0 + 10, MY0 + 108, "GAIN and A/R open (60 dB)", 12.5, color="#444")
+
+y3, yl = 1100, 1232
+text(EX0 + 10, y3 + 5, "GPIO 3  mic (audio)", 14)
+dot(920, 1166, C_AUD)
+line([(920, 1166), (920, yl), (615, yl), (615, y3), (EX0, y3)], C_AUD)
+out[-1] = out[-1].replace('stroke-linecap="round"/>', 'stroke-linecap="round" stroke-dasharray="9,6"/>')
+text(770, yl + 20, "audio mode only: a wire from GPIO 21 to GPIO 3", 12.5, "middle", color=C_AUD, italic=True)
+text(770, yl + 37, "(GPIO 21 has no ADC)", 12.5, "middle", color=C_AUD, italic=True)
 
 # ---------------------------------------------------------------------------------------------
 # Top: the two power adapters (12 V brick, 5 V USB-C)
@@ -291,11 +317,12 @@ notes = [
     "Coloured tags with the same name are the same net: every GND is common, and 3V3 comes from the board's 3V3 pin.",
     "Two adapters: 12 V for the fans and motor, 5 V over USB-C for the ESP32 (which makes the 3V3). Join their GNDs on the perfboard.",
     "SCD40 and AS5600 modules usually carry their own I2C pull-ups; on a long SCD40 cable, 4.7 k to 3V3 at the ESP32 end helps.",
-    "DS18B20: three wires each (no parasite power), one 4.7 k pull-up per sensor at the ESP32 end. The indoor one (dotted) is optional.",
-    "Pins as in firmware/baremetal/Pins.h. GPIO 38, 39, 40 stay free for the INMP441 microphone.",
+    "DS18B20: three wires each (no parasite power), one 4.7 k pull-up per sensor at the ESP32 end. The indoor one (dashed) is optional.",
+    "Audio mode (dashed, AUDIO_MODE 1 in Pins.h): the MAX9814 takes the indoor probe's header, without its 4.7 k pull-up,"
+    " and a wire joins GPIO 21 to GPIO 3.",
 ]
 for i, n in enumerate(notes):
-    text(60, 1245 + i * 24, n, 14, color="#333")
+    text(60, 1355 + i * 24, n, 14, color="#333")
 
 text(60, 34, "Window vent: wiring", 24, weight="bold")
 
