@@ -2,7 +2,6 @@
 
 #define OUTDOOR_CO2   420.0f        // ppm
 #define CO2_PER_HEAD  0.015f        // m3/h exhaled, a sleeping adult
-#define LEAK_ACH      0.1f          // air changes per hour through the building's own leaks
 #define AIR_WEIGHT    0.25f         // share of the room's heat in its air (walls and furniture hold the rest)
 #define HEAT_RATE     0.5f          // C per hour the heating can add
 #define DAMPER_DEG_S  90.0f
@@ -23,6 +22,7 @@ void SimBegin()
     g_sim.occupants = 1;
     g_sim.volume    = 30;
     g_sim.flowMax   = 30;
+    g_sim.leakAch   = 0.1f;         // a fairly tight closed room
     g_sim.speed     = 1;
     g_sim.heatSetC  = 21;
 }
@@ -43,7 +43,7 @@ void SimStep(float dt, float targetDeg, float intakePct, float exhaustPct)
     float h      = dt * g_sim.speed / 3600.0f;
     float open   = constrain(g_sim.angle / (g_set.openDeg ? g_set.openDeg : 90), 0.0f, 1.0f);
     float flow   = g_sim.flowMax * min(intakePct, exhaustPct) / 100.0f * open;     // m3/h, balanced part
-    float ach    = flow / g_sim.volume + LEAK_ACH;                                  // air changes per hour
+    float ach    = flow / g_sim.volume + g_sim.leakAch;                             // air changes per hour
     g_sim.co2   += h * (g_sim.occupants * CO2_PER_HEAD * 1e6f / g_sim.volume - ach * (g_sim.co2 - OUTDOOR_CO2));
     g_sim.co2    = max(g_sim.co2, OUTDOOR_CO2);
     float heat   = g_sim.tin < g_sim.heatSetC ? min(HEAT_RATE, (g_sim.heatSetC - g_sim.tin) * 2) : 0;
@@ -66,6 +66,7 @@ void SimToJson(JsonObject o)
     o["rh"] = roundf(g_sim.rh);       o["tout"] = roundf(g_sim.tout * 10) / 10;
     o["snd"] = roundf(g_sim.snd);
     o["occupants"] = g_sim.occupants; o["volume"] = g_sim.volume;  o["flowMax"] = g_sim.flowMax;
+    o["leakAch"] = roundf(g_sim.leakAch * 10) / 10;
     o["speed"] = g_sim.speed;         o["heatSetC"] = g_sim.heatSetC;
 }
 
@@ -87,6 +88,7 @@ void SimFromJson(JsonObjectConst o)
     num(o, "occupants", &g_sim.occupants, 0, 8);
     num(o, "volume", &g_sim.volume, 5, 500);
     num(o, "flowMax", &g_sim.flowMax, 1, 200);
+    num(o, "leakAch", &g_sim.leakAch, 0, 10);
     num(o, "speed", &g_sim.speed, 1, 600);
     num(o, "heatSetC", &g_sim.heatSetC, 5, 30);
 }

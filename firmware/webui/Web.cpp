@@ -137,7 +137,7 @@ static esp_err_t onHistory(httpd_req_t* req)
     HistHeader h;
     h.count    = HistCount();
     h.interval = HIST_INTERVAL_S;
-    h.ageMs    = HistAgeMs();
+    h.clock    = (uint32_t)HistClock();
     h.recSize  = sizeof(HistRec);
     cors(req);
     httpd_resp_set_type(req, "application/octet-stream");

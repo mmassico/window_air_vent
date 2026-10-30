@@ -283,7 +283,10 @@ function initCurve() {
 // Charts (uPlot): history from /api/history, then a point per live state
 // ------------------------------------------------------------------------------------------------
 
+// D.t holds the vent's history clock (seconds): real time, or model time while the simulation runs faster. The graphs
+// draw each point at "now" minus its age on that clock, so at x1 they show the real time of day.
 const D = { t: [], co2: [], fan: [], tin: [], tout: [], rh: [], snd: [] };
+let clockNow = 0;
 const charts = [];
 let rangeH = 6;
 try { rangeH = +(localStorage.getItem('rangeH') || 6); } catch (e) { /* private mode */ }
@@ -355,9 +358,10 @@ function rebuildCharts() {
 function redrawCharts() {
   if (!charts.length || $('tab-dash').hidden) return;
   const now = Date.now() / 1000;
-  charts[0].setData([D.t, D.co2, D.fan], false);
-  charts[1].setData([D.t, D.tin, D.tout, D.rh], false);
-  if (!$('chartSnd').hidden) charts[2].setData([D.t, D.snd], false);
+  const x = D.t.map((c) => now - (clockNow - c));
+  charts[0].setData([x, D.co2, D.fan], false);
+  charts[1].setData([x, D.tin, D.tout, D.rh], false);
+  if (!$('chartSnd').hidden) charts[2].setData([x, D.snd], false);
   for (const u of charts) if (!u.root.parentElement.hidden) u.setScale('x', { min: now - rangeH * 3600, max: now });
 }
 
@@ -374,13 +378,13 @@ async function loadHistory() {
     const r = await fetch(API + '/api/history');
     const buf = await r.arrayBuffer();
     const v = new DataView(buf);
-    const count = v.getUint32(0, true), interval = v.getUint32(4, true), age = v.getUint32(8, true), size = v.getUint32(12, true);
-    const now = Date.now() / 1000 - age / 1000;
+    const count = v.getUint32(0, true), size = v.getUint32(12, true);
+    clockNow = Math.max(clockNow, v.getUint32(8, true));
     const val = (o, k) => { const x = v.getInt16(o, true); return x === -32768 ? null : x / k; };
     for (const k in D) D[k].length = 0;
     for (let i = 0; i < count; i++) {
       const o = 16 + i * size;
-      pushPoint(now - (count - 1 - i) * interval, val(o, 1), v.getUint8(o + 10), val(o + 2, 10), val(o + 4, 10), val(o + 6, 10), val(o + 8, 10));
+      pushPoint(v.getUint32(o, true), val(o + 4, 1), v.getUint8(o + 14), val(o + 6, 10), val(o + 8, 10), val(o + 10, 10), val(o + 12, 10));
     }
     redrawCharts();
   } catch (e) {
@@ -423,7 +427,6 @@ function uptime(s) {
   return (d ? d + ' d ' : '') + h + ' h ' + String(m).padStart(2, '0') + ' min';
 }
 
-let lastPoint = 0;
 function onState(s) {
   S = s;
   $('simBadge').hidden = !s.sim.on;
@@ -522,11 +525,13 @@ function onState(s) {
     $('manPct').setValue(settings.mode.manualPct);
   }
 
-  // charts: a point per state, every second
-  const t = Date.now() / 1000;
-  if (t - lastPoint >= 1) {
-    lastPoint = t;
-    pushPoint(t, s.in.co2, s.out.fan, s.in.tin, s.in.tout, s.in.rh, s.in.snd);
+  // charts: a point per state, on the history clock
+  if (s.clock < clockNow - 5) {               // the vent restarted: its clock began again
+    clockNow = s.clock;
+    loadHistory();
+  } else if (s.clock > clockNow || !D.t.length) {
+    clockNow = s.clock;
+    pushPoint(s.clock, s.in.co2, s.out.fan, s.in.tin, s.in.tout, s.in.rh, s.in.snd);
     redrawCharts();
   }
   if (!$('tab-settings').hidden && curveDrag < 0) drawCurve();

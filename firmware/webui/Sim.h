@@ -15,6 +15,7 @@ struct SimState
     int   occupants;
     float volume;                   // m3
     float flowMax;                  // m3/h per fan at 100 %
+    float leakAch;                  // natural air changes per hour (leaks, an open door, the house's stack effect)
     float speed;                    // model time per real second
     float heatSetC;                 // the room's heating keeps it near this (when it's colder outside)
     float angle;                    // damper, degrees

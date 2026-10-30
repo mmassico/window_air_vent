@@ -131,6 +131,7 @@ static void broadcast()
 
     doc["type"]   = "state";
     doc["uptime"] = millis() / 1000;
+    doc["clock"]  = roundf(HistClock() * 10) / 10;     // the history clock (model time while simulating faster)
     char tm[24];
     if (NetTimeText(tm, sizeof(tm)))
         doc["time"] = tm;
@@ -309,11 +310,12 @@ void loop()
         else
             s_in = s_hwIn;
         s_in.minuteOfDay = NetMinuteOfDay();
-        ControlStep(s_in, g_sim.on && g_sim.model ? dt * g_sim.speed : dt, &s_out);
+        float dtModel = g_sim.on && g_sim.model ? dt * g_sim.speed : dt;   // the control and the history follow model time
+        ControlStep(s_in, dtModel, &s_out);
         if (g_sim.on)
         {
             HwSetFans(0, 0);        // the real fans stay off while simulating
-            HistAdd(s_in, s_out.fanPct, g_sim.angle);
+            HistAdd(s_in, s_out.fanPct, g_sim.angle, dtModel);
         }
         else
         {
@@ -321,7 +323,7 @@ void loop()
             HwSetDamper(s_out.open ? g_set.openDeg : 0);
             HwStatus hw;
             HwStatusGet(&hw);
-            HistAdd(s_in, s_out.fanPct, hw.enc ? max(0.0f, hw.angle) : 0);
+            HistAdd(s_in, s_out.fanPct, hw.enc ? max(0.0f, hw.angle) : 0, dtModel);
         }
         broadcast();
     }
