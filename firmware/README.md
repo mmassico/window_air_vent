@@ -10,7 +10,8 @@ Two stages:
 ## Board and tools
 
 - **Board:** Freenove ESP32-S3-WROOM Lite (FNK0099): 16 MB flash, 8 MB octal PSRAM, and two USB-C connectors: **USB-UART** (the onboard code uploader, a CH343 USB-serial chip wired to the ESP32's UART0) and **USB-OTG** (the ESP32-S3's own USB, host or device). Dimensions and pinout: [doc/esp32_s3.svg](../doc/esp32_s3.svg).
-- **Software:** Arduino IDE 2.x with the **esp32 by Espressif Systems** core, version 3.x (tested to compile with 3.3.12). No other library is needed.
+- **Software:** Arduino IDE 2.x with the **esp32 by Espressif Systems** core, version 3.x (tested to compile with 3.3.12).
+- **Library:** the project's own `WindowVent` (in `libs/`): the pin map and the drivers. In the Arduino IDE, copy `libs/WindowVent` into the `libraries` folder of the sketchbook (Documents > Arduino > libraries on Windows), or link it there, so the IDE finds it.
 - **Arduino IDE settings (Tools menu):**
 
 | Setting | Value |
@@ -24,15 +25,15 @@ Two stages:
 
 Plug the cable into the **USB-UART** connector (silkscreen: onboard code uploader); it is used both to flash and for the console. Windows lists it as "USB-SERIAL CH343 (COMx)" under "Ports (COM & LPT)"; if it doesn't appear, install the CH343 driver from Freenove's package. Leave the TX/RX header pins (GPIO 43/44) unconnected. For the console, use the Serial Monitor at 115200 baud, or a terminal such as PuTTY; the up and down arrows then recall earlier commands.
 
-The same build from the command line:
+The same build from the command line, run from the `firmware` folder (`--libraries libs` points arduino-cli at the shared library):
 
 ```
-arduino-cli compile --fqbn "esp32:esp32:esp32s3:FlashSize=16M,PSRAM=opi,PartitionScheme=app3M_fat9M_16MB" firmware/baremetal
+arduino-cli compile --fqbn "esp32:esp32:esp32s3:FlashSize=16M,PSRAM=opi,PartitionScheme=app3M_fat9M_16MB" --libraries libs baremetal
 ```
 
 ## Wiring
 
-Every pin is defined in [`baremetal/Pins.h`](baremetal/Pins.h). "3V3" and "GND" are the ESP32 board's pins. Every ground is common.
+Every pin is defined in [`libs/WindowVent/src/Pins.h`](libs/WindowVent/src/Pins.h). "3V3" and "GND" are the ESP32 board's pins. Every ground is common.
 
 <img src="images/wiring.svg" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209, stepper, two DS18B20 temperature sensors and the optional MAX9814 microphone (audio mode, with its GPIO 21 to GPIO 3 wire) on the right, 12 V brick and 5 V USB-C adapter on top" width="100%">
 

@@ -1,6 +1,6 @@
 """Parts and nets of the controller PCB (pcb/window_vent_ctrl), shared by tools/pcb_schematic.py and tools/pcb_layout.py.
 
-The circuit is the one in firmware/images/wiring.svg and doc/perfboard.svg; pins as in firmware/baremetal/Pins.h.
+The circuit is the one in firmware/images/wiring.svg and doc/perfboard.svg; pins as in firmware/libs/WindowVent/src/Pins.h.
 Each part: reference, lib_id (KiCad symbol), value, footprint, {pin number: net}. Pins left out are not connected.
 """
 

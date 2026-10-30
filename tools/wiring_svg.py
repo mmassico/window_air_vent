@@ -2,7 +2,7 @@
 """Draw firmware/images/wiring.svg: how the peripherals connect to the ESP32-S3 board.
 
 Usage: python tools/wiring_svg.py [out.svg]   (run from the window-vent folder)
-Pins follow firmware/baremetal/Pins.h; keep both in step.
+Pins follow firmware/libs/WindowVent/src/Pins.h; keep both in step.
 """
 import os
 import sys

@@ -155,7 +155,7 @@ SECTIONS = [  # title, (x, y)
     ("Mounting holes (M2)", (233.68, 200.66)),
 ]
 NOTES = [
-    "Nets with the same label are connected. Pins as in firmware/baremetal/Pins.h.",
+    "Nets with the same label are connected. Pins as in firmware/libs/WindowVent/src/Pins.h.",
     "U1 pins 1-20 are its left header (3V3 ... 5V) and 21-40 its right header (TX ... GND), top to bottom as on the board.",
     "U2: MS1 = MS2 = GND (UART address 0); CLK and PDN free. DIAG is not on this module's pins: GPIO 13 goes to TP5.",
     "R6 1k: single-wire UART, TX through 1k and RX straight onto PDN_UART. R5 holds the driver off (EN high) while the ESP32 boots.",

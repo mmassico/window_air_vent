@@ -9,7 +9,7 @@ bottom, the right wall on the right). Bottom panel: the solder side, the board t
 numbered wires of the table.
 Grid: 24 columns, A at the right wall's side, and 18 rows, 18 at the back (the model's pb_col(0) and pb_row(0)), as
 printed on the board.
-Pins as in firmware/baremetal/Pins.h; connections as in firmware/images/wiring.svg.
+Pins as in firmware/libs/WindowVent/src/Pins.h; connections as in firmware/images/wiring.svg.
 """
 import os, subprocess, tempfile
 
