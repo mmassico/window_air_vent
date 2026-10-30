@@ -152,6 +152,10 @@ The ESP32 runs the ventilation on its own and serves a web page on the home netw
 
 **First start: Wi-Fi.** With no network saved, the vent opens its own Wi-Fi network, **WindowVent-setup** (no password). Join it with a phone: the setup page opens by itself (or go to http://192.168.4.1). Pick the home network, type its password, and the vent joins it; the setup network closes two minutes later. Then open **http://window-vent.local**, or the address the router gives it (the serial console prints it, and so does `info`). The ESP32-S3 has 2.4 GHz Wi-Fi only. If it can't join the saved network, the setup network opens again (after 20 s at start-up, or 5 min after losing the network), and the vent keeps trying to join meanwhile. On the serial console, `wifi <ssid> <password>` does the same (for a network name without spaces), and `wifi forget` erases it.
 
+<img src="images/webui-dashboard.png" alt="The dashboard in the dark theme, in simulation: Auto mode, a CO2 gauge at 815 ppm, tiles for the indoor and outdoor temperatures, humidity, damper, fans and outdoor sound, and six hours of graphs where the damper opens near 860 ppm, the fans run at full with two occupants, then everything closes once CO2 falls below 800 ppm" width="100%">
+
+*The dashboard, in simulation: a staged evening with one, two, then no occupants.*
+
 **The page**, in four tabs:
 - **Dashboard:** the mode (Auto, Manual, Off, Boost), a CO₂ gauge with the target range, the indoor and outdoor temperatures, humidity (with its comfort range and the dew point), the damper's position, the fans, the outdoor sound in audio mode, a line saying why the vent does what it does, and graphs over 1, 6 or 24 hours (a point every 10 s, kept in PSRAM).
 - **Settings:** the CO₂ curve (drag its points), the damper's opening and closing levels, the absolute maximum and the target range; temperature, quiet hours, outdoor noise, fans, boost, the damper motor, network and time; then the page's theme and colours. The Save button stores the settings on the vent (NVS). The theme stays with each browser; the colours can be saved on the vent and loaded in another browser.
