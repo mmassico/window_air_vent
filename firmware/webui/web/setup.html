@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Window Vent: Wi-Fi setup</title>
+<style>
+:root { --bg:#0b1117; --card:#151f29; --card2:#1b2733; --line:#243342; --text:#e6edf3; --muted:#8b9bab; --accent:#14b8a6; --bad:#ef4444; }
+@media (prefers-color-scheme: light) { :root { --bg:#f4f6f8; --card:#fff; --card2:#f3f6f9; --line:#dde4ea; --text:#12202c; --muted:#5d6e7e; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+main { max-width: 440px; margin: 0 auto; padding: 28px 16px; }
+h1 { font-size: 21px; margin: 0 0 4px; }
+p { color: var(--muted); margin: 0 0 18px; font-size: 14px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+.nets { list-style: none; margin: 0; padding: 0; max-height: 300px; overflow: auto; }
+.nets li { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 10px; cursor: pointer; }
+.nets li:hover { background: var(--card2); }
+.nets li.on { background: var(--accent); color: #fff; }
+.nets small { opacity: .75; }
+label { display: block; font-size: 13px; color: var(--muted); margin: 10px 0 4px; }
+input { width: 100%; background: var(--card2); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font: inherit; }
+button { font: inherit; font-weight: 600; border-radius: 10px; padding: 10px 16px; cursor: pointer; border: 1px solid var(--line); background: transparent; color: var(--text); }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; width: 100%; margin-top: 16px; }
+.row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.msg { font-size: 14px; margin-top: 12px; }
+.err { color: var(--bad); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Wi-Fi setup</h1>
+  <p>Pick your home network and type its password. The vent then joins it, and its page is at
+    <b>http://window-vent.local</b> (or at the address your router gives it).</p>
+  <div class="card">
+    <div class="row"><b>Networks</b><button id="scan">Scan again</button></div>
+    <ul class="nets" id="nets"><li>Scanning...</li></ul>
+  </div>
+  <div class="card">
+    <label for="ssid">Network name</label>
+    <input id="ssid" autocomplete="off" autocapitalize="none" spellcheck="false">
+    <label for="pass">Password</label>
+    <input id="pass" type="password" autocomplete="off">
+    <button class="primary" id="save">Join</button>
+    <div class="msg" id="msg"></div>
+  </div>
+</main>
+<script>
+'use strict';
+const $ = (id) => document.getElementById(id);
+const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+async function scan() {
+  $('nets').innerHTML = '<li>Scanning...</li>';
+  for (let i = 0; i < 20; i++) {
+    try {
+      const r = await (await fetch('/api/scan')).json();
+      if (!r.busy) { show(r.nets); return; }
+    } catch (e) { /* retry */ }
+    await new Promise((ok) => setTimeout(ok, 1000));
+  }
+  $('nets').innerHTML = '<li>No answer; try again.</li>';
+}
+
+function show(nets) {
+  const seen = new Set();
+  nets = nets.filter((n) => n.ssid && !seen.has(n.ssid) && seen.add(n.ssid)).sort((a, b) => b.rssi - a.rssi);
+  if (!nets.length) { $('nets').innerHTML = '<li>No network found.</li>'; return; }
+  $('nets').innerHTML = nets.map((n) => `<li data-ssid="${esc(n.ssid)}"><span>${esc(n.ssid)}</span><small>${n.lock ? 'locked, ' : ''}${n.rssi} dBm</small></li>`).join('');
+  $('nets').querySelectorAll('li').forEach((li) => (li.onclick = () => {
+    $('nets').querySelectorAll('li').forEach((x) => x.classList.toggle('on', x === li));
+    $('ssid').value = li.dataset.ssid;
+    $('pass').focus();
+  }));
+}
+
+$('scan').onclick = scan;
+$('save').onclick = async () => {
+  const ssid = $('ssid').value.trim();
+  if (!ssid) { $('msg').innerHTML = '<span class="err">Type or pick a network name.</span>'; return; }
+  try {
+    const r = await fetch('/api/wifi', { method: 'POST', body: JSON.stringify({ ssid, pass: $('pass').value }) });
+    if (!r.ok) throw new Error();
+    $('msg').innerHTML = 'Saved. The vent is joining <b>' + esc(ssid) + '</b>. Put this device back on your home network, then open '
+      + '<a href="http://window-vent.local/">http://window-vent.local</a>. This setup network closes two minutes after it joins.';
+  } catch (e) {
+    $('msg').innerHTML = '<span class="err">No answer from the vent.</span>';
+  }
+};
+scan();
+</script>
+</body>
+</html>

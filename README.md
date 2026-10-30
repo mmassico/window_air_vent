@@ -234,7 +234,7 @@ The box seen from above, to scale, with the room at the bottom. The ESP32 lies a
 
 ### Firmware
 
-The ESP32 runs an Arduino sketch (esp32 core 3.x, no other library). The first stage, [`firmware/baremetal/`](firmware/baremetal), is a serial command console that tests each electronic part on its own: fans, motor and driver, encoder, CO₂ sensor, temperature probes and the 12 V supply, and optionally a microphone's sound level (audio mode). It compiles cleanly but has not run on hardware yet. The CO₂ control with its own web page on the home network comes next. [firmware/README.md](firmware/README.md) has the board settings, the [wiring diagram](firmware/images/wiring.svg), a part-by-part bring-up and the command list.
+The ESP32 runs Arduino sketches (esp32 core 3.x). The first, [`firmware/baremetal/`](firmware/baremetal), is a serial command console that tests each electronic part on its own: fans, motor and driver, encoder, CO₂ sensor, temperature probes and the 12 V supply, and optionally a microphone's sound level (audio mode). The second, [`firmware/webui/`](firmware/webui), is the application: the CO₂ control, with its own web page on the home network for the live readings, graphs, settings and manual control, and a simulation that stands in for the sensors until they're connected. Both compile cleanly, and the web application runs on the bare ESP32 board in simulation, but neither has run with the parts yet. [firmware/README.md](firmware/README.md) has the board settings, the [wiring diagram](firmware/images/wiring.svg), a part-by-part bring-up, the command list and the web application.
 
 <p align="center">
   <img src="firmware/images/wiring.svg?ver=2" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209, stepper, two DS18B20 temperature sensors and the optional MAX9814 microphone (audio mode, with its GPIO 21 to GPIO 3 wire) on the right, 12 V brick and 5 V USB-C adapter on top" width="100%">
@@ -425,8 +425,12 @@ tools/perfboard_svg.py      draws doc/perfboard.svg and .pdf (the perfboard buil
 tools/pcb_*.py              build pcb/ with KiCad 10 and Freerouting: parts and nets (pcb_parts.py), 
                             schematic, layout, routing, then labels and Gerbers (pcb_finish.py)
 tools/render_images.py      regenerates the images in images/ from the models
+tools/webui_pack.py         packs firmware/webui/web/ (the web page) into the sketch, gzipped
 firmware/baremetal/         Arduino sketch: serial commands to test each electronic part (not 
                             tested on hardware yet; see firmware/README.md)
+firmware/webui/             Arduino sketch: the application, CO2 control and its web page on the
+                            home network (runs in simulation without the sensors)
+firmware/libs/WindowVent/   the pin map and the drivers both sketches use
 PRINT_CHECKLIST.md          every printed/bought part interface to verify before printing
 ```
 

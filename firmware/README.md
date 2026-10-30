@@ -1,17 +1,18 @@
 # Firmware
 
-> **Not tested on hardware yet.** The bare-metal sketch compiles without warnings (Arduino core esp32 3.3.12), but it has not run on a board or with any of the parts. The pin assignment, the wiring table and the driver code may still change after the first bench tests.
+> **Not tested with the parts yet.** Both sketches compile without warnings (Arduino core esp32 3.3.12). The web application runs on a bare ESP32-S3 board, in simulation; neither sketch has run with the sensors, the motor or the fans yet. The pin assignment, the wiring table and the driver code may still change after the first bench tests.
 
-Two stages:
+Two sketches and the library they share:
 
-1. **`baremetal/`** (this stage): a serial command console to check every electronic part on its own, with no Wi-Fi and no control logic.
-2. **The standalone application** (planned): CO₂ control running on the ESP32, with a web page served by the ESP32 itself on the home network (LAN) for status, settings and manual control.
+1. **`baremetal/`**: a serial command console to check every electronic part on its own, with no Wi-Fi and no control logic.
+2. **`webui/`**: the standalone application. The CO₂ control runs on the ESP32, with its own web page on the home network (LAN) for status, graphs, settings and manual control. With no sensors connected, a simulation stands in for them. See [The web application](#the-web-application-webui).
+3. **`libs/WindowVent/`**: the pin map (`Pins.h`) and the drivers both sketches use (SCD40, AS5600, TMC2209, fans, DS18B20, microphone, serial console).
 
 ## Board and tools
 
 - **Board:** Freenove ESP32-S3-WROOM Lite (FNK0099): 16 MB flash, 8 MB octal PSRAM, and two USB-C connectors: **USB-UART** (the onboard code uploader, a CH343 USB-serial chip wired to the ESP32's UART0) and **USB-OTG** (the ESP32-S3's own USB, host or device). Dimensions and pinout: [doc/esp32_s3.svg](../doc/esp32_s3.svg).
 - **Software:** Arduino IDE 2.x with the **esp32 by Espressif Systems** core, version 3.x (tested to compile with 3.3.12).
-- **Library:** the project's own `WindowVent` (in `libs/`): the pin map and the drivers. In the Arduino IDE, copy `libs/WindowVent` into the `libraries` folder of the sketchbook (Documents > Arduino > libraries on Windows), or link it there, so the IDE finds it.
+- **Libraries:** the project's own `WindowVent` (in `libs/`), for both sketches; and for `webui/`, **ArduinoJson** 7.x by Benoit Blanchon (Library Manager). In the Arduino IDE, copy `libs/WindowVent` into the `libraries` folder of the sketchbook (Documents > Arduino > libraries on Windows), or link it there, so the IDE finds it.
 - **Arduino IDE settings (Tools menu):**
 
 | Setting | Value |
@@ -25,15 +26,17 @@ Two stages:
 
 Plug the cable into the **USB-UART** connector (silkscreen: onboard code uploader); it is used both to flash and for the console. Windows lists it as "USB-SERIAL CH343 (COMx)" under "Ports (COM & LPT)"; if it doesn't appear, install the CH343 driver from Freenove's package. Leave the TX/RX header pins (GPIO 43/44) unconnected. For the console, use the Serial Monitor at 115200 baud, or a terminal such as PuTTY; the up and down arrows then recall earlier commands.
 
-The same build from the command line, run from the `firmware` folder (`--libraries libs` points arduino-cli at the shared library):
+The same builds from the command line, run from the `firmware` folder (`--libraries libs` points arduino-cli at the shared library; `-u -p COM3` also flashes the board on COM3):
 
 ```
+arduino-cli lib install ArduinoJson
 arduino-cli compile --fqbn "esp32:esp32:esp32s3:FlashSize=16M,PSRAM=opi,PartitionScheme=app3M_fat9M_16MB" --libraries libs baremetal
+arduino-cli compile --fqbn "esp32:esp32:esp32s3:FlashSize=16M,PSRAM=opi,PartitionScheme=app3M_fat9M_16MB" --libraries libs webui -u -p COM3
 ```
 
 ## Wiring
 
-Every pin is defined in [`libs/WindowVent/src/Pins.h`](libs/WindowVent/src/Pins.h). "3V3" and "GND" are the ESP32 board's pins. Every ground is common.
+Every pin is defined in [`libs/WindowVent/src/Pins.h`](libs/WindowVent/src/Pins.h), for both sketches. "3V3" and "GND" are the ESP32 board's pins. Every ground is common.
 
 <img src="images/wiring.svg" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209, stepper, two DS18B20 temperature sensors and the optional MAX9814 microphone (audio mode, with its GPIO 21 to GPIO 3 wire) on the right, 12 V brick and 5 V USB-C adapter on top" width="100%">
 
@@ -142,6 +145,26 @@ The settings applied at boot are in `baremetal.ino`:
 - 800 microsteps/s, which is a quarter turn per second.
 
 The current calculation assumes 0.11 Ω sense resistors (`TMC_RSENSE` in `Pins.h`), the usual value on StepStick-style modules.
+
+## The web application (`webui/`)
+
+The ESP32 runs the ventilation on its own and serves a web page on the home network: no cloud, no app.
+
+**First start: Wi-Fi.** With no network saved, the vent opens its own Wi-Fi network, **WindowVent-setup** (no password). Join it with a phone: the setup page opens by itself (or go to http://192.168.4.1). Pick the home network, type its password, and the vent joins it; the setup network closes two minutes later. Then open **http://window-vent.local**, or the address the router gives it (the serial console prints it, and so does `info`). The ESP32-S3 has 2.4 GHz Wi-Fi only. If it can't join the saved network, the setup network opens again (after 20 s at start-up, or 5 min after losing the network), and the vent keeps trying to join meanwhile. On the serial console, `wifi <ssid> <password>` does the same (for a network name without spaces), and `wifi forget` erases it.
+
+**The page**, in four tabs:
+- **Dashboard:** the mode (Auto, Manual, Off, Boost), a CO₂ gauge with the target range, the indoor and outdoor temperatures, humidity (with its comfort range and the dew point), the damper's position, the fans, the outdoor sound in audio mode, a line saying why the vent does what it does, and graphs over 1, 6 or 24 hours (a point every 10 s, kept in PSRAM).
+- **Settings:** the CO₂ curve (drag its points), the damper's opening and closing levels, the absolute maximum and the target range; temperature, quiet hours, outdoor noise, fans, boost, the damper motor, network and time; then the page's theme and colours. The Save button stores the settings on the vent (NVS). The theme stays with each browser; the colours can be saved on the vent and loaded in another browser.
+- **System:** the Wi-Fi network, the firmware, the local time (NTP), restart.
+- **Developer** (the wrench): the simulation, the control outputs, which parts answer, the encoder zero, and the log.
+
+**How it decides (Auto).** Every second, the CO₂ curve gives a fan speed. The damper opens above the opening level and closes below the closing level (the gap between them keeps it from hunting), each state held a minimum time. Caps then lower the speed: cold outside (linear between two outdoor temperatures), a room below its comfort range, warmer air outside, quiet hours, outdoor noise. A cap of 0 % closes the damper, and the dashboard says which limit did. A warm room with cooler air outside gets free cooling. Above the absolute maximum, ventilation goes full whatever the caps. The fans ramp at 5 % per second, and the balance setting trims intake against exhaust. Without a CO₂ reading, the fans run at 30 %. The details are at the top of [`webui/Control.h`](webui/Control.h).
+
+**Simulation.** At start-up, the simulation stays on unless the SCD40 answers within 8 s; the Developer tab switches it either way. It stands in for the sensors, the fans and the damper, and the real fans and motor stay still meanwhile. **Manual values**: a slider per reading. **Room model**: occupants breathe CO₂ into a room, the ventilation carries it out and moves the room toward the outdoor temperature, and time can run up to 300 times faster.
+
+**Editing the page.** Its sources are in `webui/web/` (`index.html`, `app.css`, `app.js`, `setup.html`, and uPlot for the graphs, MIT licence, in `web/vendor/`). After a change, run `python tools/webui_pack.py` from the `window-vent` folder: it inlines and gzips them into `webui/WebPage.h` and `webui/SetupPage.h`; then build and flash. To try a change without flashing, serve the folder from the PC (`python -m http.server` in `webui/web`) and open `http://localhost:8000/?host=<the vent's address>`: the page then talks to the vent.
+
+**Interface.** On port 80: `GET` and `POST /api/settings` (any subset, saved at once), `GET /api/history` (binary, see [`webui/History.h`](webui/History.h)), `POST /api/cmd` (a command, as on the WebSocket), `GET /api/scan` and `POST /api/wifi`, `GET` and `POST /api/ui` (the shared colours), and `/ws`, a WebSocket that sends the whole state every second and takes commands such as `{"cmd":"mode","mode":"boost"}`. The list is at the top of [`webui/Web.h`](webui/Web.h).
 
 ## License
 

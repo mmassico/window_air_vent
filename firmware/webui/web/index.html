@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<title>Window Vent</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%2314b8a6'/%3E%3Cg transform='translate%2816 16%29' fill='%23fff'%3E%3Cpath d='M1.2 -1.6C0.6 -5 1.6 -9.6 5.6 -10.6C8.9 -11.4 10.4 -8.2 8.4 -5.6C6.8 -3.5 4 -1.8 1.2 -1.6Z' transform='rotate%280%29'/%3E%3Cpath d='M1.2 -1.6C0.6 -5 1.6 -9.6 5.6 -10.6C8.9 -11.4 10.4 -8.2 8.4 -5.6C6.8 -3.5 4 -1.8 1.2 -1.6Z' transform='rotate%2890%29'/%3E%3Cpath d='M1.2 -1.6C0.6 -5 1.6 -9.6 5.6 -10.6C8.9 -11.4 10.4 -8.2 8.4 -5.6C6.8 -3.5 4 -1.8 1.2 -1.6Z' transform='rotate%28180%29'/%3E%3Cpath d='M1.2 -1.6C0.6 -5 1.6 -9.6 5.6 -10.6C8.9 -11.4 10.4 -8.2 8.4 -5.6C6.8 -3.5 4 -1.8 1.2 -1.6Z' transform='rotate%28270%29'/%3E%3Ccircle r='2.4'/%3E%3C/g%3E%3Ccircle cx='16' cy='16' r='1.1' fill='%2314b8a6'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="vendor/uPlot.min.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <svg viewBox="0 0 32 32" class="logo" aria-hidden="true"><circle class="lg-bg" cx="16" cy="16" r="15"/><g transform="translate(16 16)" fill="#fff"><path d="M1.2 -1.6C0.6 -5 1.6 -9.6 5.6 -10.6C8.9 -11.4 10.4 -8.2 8.4 -5.6C6.8 -3.5 4 -1.8 1.2 -1.6Z" transform="rotate(0)"/><path d="M1.2 -1.6C0.6 -5 1.6 -9.6 5.6 -10.6C8.9 -11.4 10.4 -8.2 8.4 -5.6C6.8 -3.5 4 -1.8 1.2 -1.6Z" transform="rotate(90)"/><path d="M1.2 -1.6C0.6 -5 1.6 -9.6 5.6 -10.6C8.9 -11.4 10.4 -8.2 8.4 -5.6C6.8 -3.5 4 -1.8 1.2 -1.6Z" transform="rotate(180)"/><path d="M1.2 -1.6C0.6 -5 1.6 -9.6 5.6 -10.6C8.9 -11.4 10.4 -8.2 8.4 -5.6C6.8 -3.5 4 -1.8 1.2 -1.6Z" transform="rotate(270)"/><circle r="2.4"/></g><circle class="lg-bg" cx="16" cy="16" r="1.1"/></svg>
+    <span>Window Vent</span>
+  </div>
+  <div class="status">
+    <span id="simBadge" class="badge warn" title="Simulation" hidden>Sim</span>
+    <span id="conn" class="badge">Connecting</span>
+    <span id="clock" class="badge clock" title="Local time (NTP)" hidden></span>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <a href="#dash" data-tab="dash">Dashboard</a>
+  <a href="#settings" data-tab="settings">Settings</a>
+  <a href="#system" data-tab="system">System</a>
+  <a href="#dev" data-tab="dev" class="icontab" title="Developer" aria-label="Developer"><svg class="tabicon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.6 17.2a1.6 1.6 0 0 0 0 2.3l.9.9a1.6 1.6 0 0 0 2.3 0l5.7-5.7a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></a>
+</nav>
+
+<main>
+<!-- ================================ Dashboard ================================ -->
+<section id="tab-dash" class="tab">
+  <div class="seg" id="modeSeg">
+    <button data-mode="auto">Auto</button>
+    <button data-mode="manual">Manual</button>
+    <button data-mode="off">Off</button>
+    <button data-mode="boost">Boost<span id="boostLeft"></span></button>
+  </div>
+
+  <div class="grid hero">
+    <div class="card co2card">
+      <div class="gauge">
+        <svg viewBox="0 0 200 120" aria-hidden="true">
+          <path class="g-track" d="M20 110 A80 80 0 0 1 180 110"/>
+          <path id="gBand" class="g-band" d=""/>
+          <path id="gArc" class="g-arc" d=""/>
+          <circle id="gDot" class="g-dot" r="6" cx="20" cy="110"/>
+        </svg>
+        <div class="g-text">
+          <div id="co2" class="big">--</div>
+          <div class="muted">ppm CO&#8322;</div>
+        </div>
+      </div>
+      <div id="co2Label" class="pill">--</div>
+      <p id="reason" class="reason"></p>
+      <div id="limits" class="chips"></div>
+    </div>
+
+    <div class="tiles">
+      <div class="card tile">
+        <div class="t-head">Indoor</div>
+        <div class="t-val"><span id="tin">--</span><small>&deg;C</small></div>
+        <div class="t-sub" id="tinSub">&nbsp;</div>
+        <div class="lvlbar" id="tinBar"><b id="tinMark"></b></div>
+        <div id="rhInline" class="inline2" hidden>
+          <div class="t-sub">RH <span id="rhIn">--</span> %, <span id="rhInWord" class="rhword"></span></div>
+          <div class="lvlbar rh" title="Dry below 30 %, comfortable to 60 %, humid above"><b id="rhInMark"></b></div>
+        </div>
+      </div>
+      <div class="card tile" id="rhTile">
+        <div class="t-head">Indoor humidity</div>
+        <div class="t-val"><span id="rh">--</span><small>%</small></div>
+        <div class="t-sub"><span id="rhWord" class="rhword"></span><span id="rhDew"></span></div>
+        <div class="lvlbar rh" title="Dry below 30 %, comfortable to 60 %, humid above"><b id="rhMark"></b></div>
+      </div>
+      <div class="card tile">
+        <div class="t-head">Outdoor</div>
+        <div class="t-val"><span id="tout">--</span><small>&deg;C</small></div>
+        <div class="t-sub" id="toutSub">&nbsp;</div>
+      </div>
+      <div class="card tile">
+        <div class="t-head">Damper</div>
+        <div class="damper">
+          <svg viewBox="-30 -30 60 60" aria-hidden="true">
+            <circle class="d-bore" r="27"/>
+            <g id="dDisc"><rect class="d-disc" x="-24" y="-3" width="48" height="6" rx="3"/><circle class="d-shaft" r="3.5"/></g>
+          </svg>
+          <div>
+            <div class="t-val sm" id="dState">--</div>
+            <div class="t-sub" id="dAngle">--</div>
+          </div>
+        </div>
+      </div>
+      <div class="card tile">
+        <div class="t-head">Fans</div>
+        <div class="t-val"><span id="fan">--</span><small>%</small></div>
+        <div class="t-sub"><span id="rpm0">--</span> / <span id="rpm1">--</span> rpm</div>
+        <div class="bar"><i id="fanBar"></i></div>
+      </div>
+      <div class="card tile" id="sndTile" hidden>
+        <div class="t-head">Outdoor sound</div>
+        <div class="t-val vrow"><span><span id="snd">--</span><small>dB</small></span><span id="sndChip" class="chip loud" hidden>Loud outside</span></div>
+        <div class="t-sub" id="sndSub">&nbsp;</div>
+        <div class="lvlbar" id="sndBar" title="30 to 100 dB"><b id="sndMark"></b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="manualCard" hidden>
+    <h3>Manual control</h3>
+    <div class="row">
+      <label class="switch"><input type="checkbox" id="manOpen"><span></span> Damper open</label>
+    </div>
+    <div class="field" id="manPct" data-min="0" data-max="100" data-step="1" data-unit="%" data-label="Fans"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <h3>History</h3>
+      <div class="seg small" id="rangeSeg">
+        <button data-h="1">1 h</button><button data-h="6">6 h</button><button data-h="24">24 h</button>
+      </div>
+    </div>
+    <div id="chartCo2" class="chart"></div>
+    <div id="chartTemp" class="chart"></div>
+    <div id="chartSnd" class="chart" hidden></div>
+  </div>
+</section>
+
+<!-- ================================ Settings ================================ -->
+<section id="tab-settings" class="tab" hidden>
+  <div class="card">
+    <h3>CO&#8322; &rarr; ventilation</h3>
+    <p class="muted">Drag the points: fan speed for each CO&#8322; level. The damper opens at the <b>open</b> line and closes
+      at the <b>close</b> line; above the <b>maximum</b>, ventilation goes full whatever the other limits.</p>
+    <svg id="curve" class="curve"></svg>
+    <div class="fields">
+      <div class="field" data-key="co2.openPpm" data-min="400" data-max="2000" data-step="10" data-unit="ppm" data-label="Damper opens at"></div>
+      <div class="field" data-key="co2.closePpm" data-min="400" data-max="2000" data-step="10" data-unit="ppm" data-label="Damper closes at"></div>
+      <div class="field" data-key="co2.maxPpm" data-min="800" data-max="3000" data-step="50" data-unit="ppm" data-label="Absolute maximum"></div>
+      <div class="field" data-key="co2.targetLo" data-min="400" data-max="1500" data-step="10" data-unit="ppm" data-label="Target range, low"></div>
+      <div class="field" data-key="co2.targetHi" data-min="400" data-max="2000" data-step="10" data-unit="ppm" data-label="Target range, high"></div>
+      <div class="field" data-key="co2.minFanPct" data-min="0" data-max="60" data-step="1" data-unit="%" data-label="Fan floor while open"></div>
+      <div class="field" data-key="co2.minOpenS" data-min="0" data-max="1800" data-step="30" data-unit="s" data-label="Minimum time open"></div>
+      <div class="field" data-key="co2.minClosedS" data-min="0" data-max="1800" data-step="30" data-unit="s" data-label="Minimum time closed"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Temperature</h3><label class="switch"><input type="checkbox" data-key="temp.enabled"><span></span></label></div>
+    <p class="muted">Cold outside, the fans are capped (linear between the two points) so the room doesn't get chilled.
+      A warm room with cooler air outside gets free cooling; warmer air outside caps the fans.</p>
+    <div class="fields">
+      <div class="field" data-key="temp.tinMin" data-min="10" data-max="28" data-step="0.5" data-unit="&deg;C" data-label="Comfort, minimum"></div>
+      <div class="field" data-key="temp.tinMax" data-min="16" data-max="32" data-step="0.5" data-unit="&deg;C" data-label="Comfort, maximum"></div>
+      <div class="field" data-key="temp.coldT0" data-min="-40" data-max="20" data-step="1" data-unit="&deg;C" data-label="Cold point: outdoor"></div>
+      <div class="field" data-key="temp.coldPct0" data-min="0" data-max="100" data-step="5" data-unit="%" data-label="Cold point: fan cap"></div>
+      <div class="field" data-key="temp.coldT1" data-min="-30" data-max="30" data-step="1" data-unit="&deg;C" data-label="Mild point: outdoor"></div>
+      <div class="field" data-key="temp.coldPct1" data-min="0" data-max="100" data-step="5" data-unit="%" data-label="Mild point: fan cap"></div>
+      <div class="field" data-key="temp.closeBelowC" data-min="-50" data-max="10" data-step="1" data-unit="&deg;C" data-label="Close below (outdoor)"></div>
+      <div class="field" data-key="temp.coolDeltaC" data-min="0.5" data-max="10" data-step="0.5" data-unit="&deg;C" data-label="Free cooling: outside cooler by"></div>
+      <div class="field" data-key="temp.coolPct" data-min="0" data-max="100" data-step="5" data-unit="%" data-label="Free cooling: fans at least"></div>
+      <div class="field" data-key="temp.hotPct" data-min="0" data-max="100" data-step="5" data-unit="%" data-label="Warmer outside: fan cap"></div>
+    </div>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <div class="card-head"><h3>Quiet hours</h3><label class="switch"><input type="checkbox" data-key="quiet.enabled"><span></span></label></div>
+      <div class="fields one">
+        <label class="tfield">Start <input type="time" data-key="quiet.start" data-time></label>
+        <label class="tfield">End <input type="time" data-key="quiet.end" data-time></label>
+        <div class="field" data-key="quiet.pct" data-min="0" data-max="100" data-step="5" data-unit="%" data-label="Fan cap"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Outdoor noise</h3><label class="switch"><input type="checkbox" data-key="noise.enabled"><span></span></label></div>
+      <div class="fields one">
+        <div class="field" data-key="noise.db" data-min="30" data-max="110" data-step="1" data-unit="dB" data-label="Too loud above"></div>
+        <div class="field" data-key="noise.pct" data-min="0" data-max="100" data-step="5" data-unit="%" data-label="Fan cap (0: close)"></div>
+        <div class="field" data-key="noise.holdS" data-min="0" data-max="1800" data-step="30" data-unit="s" data-label="Hold after the last loud reading"></div>
+        <div class="field" data-key="noise.micCal" data-min="-20" data-max="150" data-step="0.5" data-unit="dB" data-label="Microphone calibration (dBFS to dB SPL)"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid two">
+    <div class="card">
+      <h3>Fans and boost</h3>
+      <div class="fields one">
+        <div class="field" data-key="fans.balance" data-min="-20" data-max="20" data-step="1" data-unit="%" data-label="Balance (intake minus exhaust)"></div>
+        <div class="field" data-key="fans.minDuty" data-min="0" data-max="60" data-step="1" data-unit="%" data-label="PWM duty at 1 %"></div>
+        <div class="field" data-key="mode.boostMin" data-min="5" data-max="240" data-step="5" data-unit="min" data-label="Boost duration"></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Damper motor</h3>
+      <div class="fields one">
+        <div class="field" data-key="damper.openDeg" data-min="30" data-max="120" data-step="1" data-unit="&deg;" data-label="Open angle"></div>
+        <div class="field" data-key="damper.motorSpeed" data-min="100" data-max="3200" data-step="100" data-unit="&micro;steps/s" data-label="Speed"></div>
+        <label class="switch"><input type="checkbox" id="motorRev"><span></span> Motor turns the other way</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Network and time</h3>
+    <div class="fields">
+      <label class="tfield">Host name (.local) <input type="text" data-key="net.host" maxlength="23"></label>
+      <label class="tfield">Time zone (POSIX) <input type="text" data-key="net.tz" maxlength="47"></label>
+    </div>
+    <p class="muted">Changes to the host name and time zone apply at the next restart.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><h3>Display</h3>
+      <div class="seg small" id="themeSeg"><button data-theme="auto">Auto</button><button data-theme="light">Light</button><button data-theme="dark">Dark</button></div>
+    </div>
+    <p class="muted">Auto follows this device's own setting. The theme and the colours below are kept by this browser only, not by the vent.</p>
+    <div class="palette" id="palette"></div>
+    <div class="row">
+      <button class="ghost" id="saveColours">Save colours to the vent</button>
+      <button class="ghost" id="loadColours">Load colours from the vent</button>
+      <button class="ghost" id="resetColours">Reset colours</button>
+    </div>
+    <p class="muted">Saved on the vent, the colours can be loaded in any other browser (a phone, a PC).</p>
+  </div>
+
+  <div class="savebar" id="saveBar" hidden>
+    <span>Unsaved changes</span>
+    <button class="ghost" id="revertBtn">Revert</button>
+    <button class="primary" id="saveBtn">Save</button>
+  </div>
+</section>
+
+<!-- ================================ Developer ================================ -->
+<section id="tab-dev" class="tab" hidden>
+  <div class="grid two">
+    <div class="card">
+      <div class="card-head"><h3>Simulation</h3><label class="switch"><input type="checkbox" id="simOn"><span></span></label></div>
+      <p class="muted">Stands in for the sensors, the fans and the damper; the real fans and motor stay still meanwhile.</p>
+      <div class="seg small" id="simModeSeg"><button data-model="1">Room model</button><button data-model="0">Manual values</button></div>
+      <div class="fields one" id="simFields">
+        <div class="field sim" data-sim="co2" data-min="400" data-max="2500" data-step="10" data-unit="ppm" data-label="CO&#8322;" data-manual></div>
+        <div class="field sim" data-sim="tin" data-min="10" data-max="35" data-step="0.1" data-unit="&deg;C" data-label="Indoor" data-manual></div>
+        <div class="field sim" data-sim="tout" data-min="-35" data-max="40" data-step="0.5" data-unit="&deg;C" data-label="Outdoor"></div>
+        <div class="field sim" data-sim="rh" data-min="0" data-max="100" data-step="1" data-unit="%" data-label="Humidity"></div>
+        <div class="field sim" data-sim="snd" data-min="20" data-max="100" data-step="1" data-unit="dB" data-label="Outdoor sound"></div>
+        <div class="field sim" data-sim="occupants" data-min="0" data-max="6" data-step="1" data-unit="" data-label="Occupants" data-model></div>
+        <div class="field sim" data-sim="volume" data-min="10" data-max="150" data-step="5" data-unit="m&sup3;" data-label="Room volume" data-model></div>
+        <div class="field sim" data-sim="flowMax" data-min="5" data-max="80" data-step="1" data-unit="m&sup3;/h" data-label="Flow per fan at 100 %" data-model></div>
+        <div class="field sim" data-sim="heatSetC" data-min="10" data-max="25" data-step="0.5" data-unit="&deg;C" data-label="Heating set point" data-model></div>
+      </div>
+      <div class="row" id="simSpeedRow"><span class="muted">Time</span>
+        <div class="seg small" id="simSpeedSeg"><button data-speed="1">&times;1</button><button data-speed="10">&times;10</button><button data-speed="60">&times;60</button><button data-speed="300">&times;300</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Control outputs</h3>
+      <dl class="kv" id="outKv"></dl>
+      <h3>Hardware</h3>
+      <div class="chips" id="hwChips"></div>
+      <dl class="kv" id="hwKv"></dl>
+      <div class="row"><button class="ghost" id="encZeroBtn">Damper is closed: set encoder zero</button></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Log</h3>
+    <pre id="log" class="log"></pre>
+  </div>
+</section>
+
+<!-- ================================ System ================================ -->
+<section id="tab-system" class="tab" hidden>
+  <div class="grid two">
+    <div class="card">
+      <h3>Wi-Fi</h3>
+      <dl class="kv" id="netKv"></dl>
+      <div class="row">
+        <a class="button ghost" href="/setup" id="setupLink">Change network</a>
+        <button class="ghost danger" id="forgetBtn">Forget network</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Device</h3>
+      <dl class="kv" id="sysKv"></dl>
+      <div class="row"><button class="ghost danger" id="rebootBtn">Restart</button></div>
+    </div>
+  </div>
+</section>
+</main>
+
+<div id="toast" class="toast" hidden></div>
+<script src="vendor/uPlot.iife.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
