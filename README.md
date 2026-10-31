@@ -431,6 +431,8 @@ firmware/baremetal/         Arduino sketch: serial commands to test each electro
 firmware/webui/             Arduino sketch: the application, CO2 control and its web page on the
                             home network (runs in simulation without the sensors)
 firmware/libs/WindowVent/   the pin map and the drivers both sketches use
+window_insert/              the foam insert's printed edge caps, fitted to the window's measured
+                            profiles (see window_insert/README.md)
 PRINT_CHECKLIST.md          every printed/bought part interface to verify before printing
 ```
 
