@@ -46,16 +46,29 @@ All dimensions are in mm. Positions across the foam's thickness, called *u* in t
 - **Latch zone:** the window latch on the side frame needs 40 mm across, 80 mm of height and 40 mm into the opening, starting at u = 18.20, 495 mm above the rail tips. The foam gets a notch there (37 × 7.2 × 80 mm), and the side cap's room-side lip and base stop around it. The air seal (tongue and outdoor lip) runs past it unbroken.
 - **Soft foam strip:** at the back of the side frame's channel, around the centre rail's end: 7.0 wide, 19.0 high, 4.0 deep. The side cap's tongue is notched to clear it.
 
-## Test prints
+## Printed parts
 
-Fit the profiles first, then the corners. Print in PETG: PLA turns brittle in the cold.
+So far, test pieces: fit the profiles first, then the corners. Print in PETG: PLA turns brittle in the cold. Nothing needs supports, and the STLs in [`stl/`](stl) are exported in their print orientation, with the default parameters.
 
-| Part | Size (mm) | What it checks |
-|---|---|---|
-| `slices` (or `slice_top`, `slice_bottom`, `slice_side`, `slice_sash`) | four slices 5 thick, on one plate about 110 × 100 | Each cap's cross-section against the window. The tab at the end of each slice is exactly as wide as the foam, an engraved line marks where the foam starts, and "OUT" marks the outdoor half. A cross-lap slot in each tab keys a top or bottom slice to a side or sash slice in a corner: if the pair won't sit in the corner, the two profiles disagree on the foam's position |
-| `corners` (or `corner_top`, `corner_bottom`, `corner_side_top`, `corner_side_bottom`, `corner_sash_top`, `corner_sash_bottom`) | six pieces, 40 to 55 tall | The real cap ends where they meet. One top and one bottom piece serve both corners: turn them end for end for the sash's corners. Print two of each to try all four corners at once |
+**Profile slices.** Each slice is a cap's cross-section, 5 mm thick. The tab at its end is exactly as wide as the foam: its edges show where the foam's faces are, an engraved line marks where the foam starts, and "OUT" marks the outdoor half. A cross-lap slot in each tab keys a top or bottom slice to a side or sash slice in a corner (slide them together until both slots bottom out): if the pair won't sit in the corner, the two profiles disagree on the foam's position. `slices` puts all four on one plate, about 110 × 93.
 
-Everything prints standing, its cross-section on the bed, with no supports. The STLs in [`stl/`](stl) are exported in that orientation, with the default parameters.
+| Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
+|---|:---:|---|---|---|---|
+| `slice_top` | <img src="images/part_slice_top.png" width="180"> | 1 | Top cap's profile: slots for the top frame's centre rib and room-side rib | 50.8 × 31.6 × 5 | Flat, engraved face up |
+| `slice_bottom` | <img src="images/part_slice_bottom.png" width="180"> | 1 | Bottom cap's profile: slots for the bottom track's centre rail and room-side rail | 50.8 × 31.6 × 5 | Flat, engraved face up |
+| `slice_side` | <img src="images/part_slice_side.png" width="180"> | 1 | Side cap's profile: the tongue into the side frame's sash channel | 50.8 × 41.8 × 5 | Flat, engraved face up |
+| `slice_sash` | <img src="images/part_slice_sash.png" width="180"> | 1 | Sash cap's profile: the channel that takes the sash's end, with the tongue in its groove | 50.8 × 42.3 × 5 | Flat, engraved face up |
+
+**Corner pieces.** The real cap ends, 40 mm past the cap they butt against, to try in the four corners. `corners` puts all six on one plate, about 149 × 126.
+
+| Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
+|---|:---:|---|---|---|---|
+| `corner_top` | <img src="images/part_corner_top.png" width="180"> | 2 | Top cap's end, with its lips. One piece serves both top corners: turn it end for end for the sash's corner. Print two to try both at once | 56 × 22 × 40 | Standing, cross-section on the bed |
+| `corner_bottom` | <img src="images/part_corner_bottom.png" width="180"> | 2 | Bottom cap's end, the same way | 56 × 24.5 × 40 | Standing, cross-section on the bed |
+| `corner_side_top` | <img src="images/part_corner_side_top.png" width="180"> | 1 | Side cap's top end, under the top cap's lips; its tongue goes on to the ceiling, notched for the centre rib | 23.2 × 56 × 51.5 | Cut end on the bed, tongue up |
+| `corner_side_bottom` | <img src="images/part_corner_side_bottom.png" width="180"> | 1 | Side cap's bottom end; its tongue goes on to the floor, notched for the centre rail and the soft foam strip | 23.2 × 56 × 54 | Cut end on the bed, tongue up |
+| `corner_sash_top` | <img src="images/part_corner_sash_top.png" width="180"> | 1 | Sash cap's top end: the channel for the sash and the groove tongue | 23.7 × 56 × 39.5 | Cut end on the bed |
+| `corner_sash_bottom` | <img src="images/part_corner_sash_bottom.png" width="180"> | 1 | Sash cap's bottom end | 23.7 × 56 × 39.5 | Cut end on the bed |
 
 ## Files
 
@@ -65,8 +78,10 @@ cad/window_caps.scad          parametric model of the caps and their test pieces
 stl/                          the test pieces, exported (default parameters)
 doc/window_top_view.svg       the window's profiles at mid-height, seen from above, to scale
 doc/window_side_view.svg      the window's profiles across the foam, at the side frame, to scale
+images/                       part thumbnails used in this README
 tools/window_profiles_svg.py  draws both drawings from the measurements in it (the same values as
                               in cad/window_caps.scad)
+tools/render_images.py        regenerates the thumbnails in images/ from the model
 ```
 
 To export a part from the command line:
