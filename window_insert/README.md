@@ -33,7 +33,7 @@ The sash can't reach its latch with the insert in, so a stop behind it in its tr
 
 ## The window's measurements
 
-All in mm. u runs across the foam's thickness from its centre, the centre of the side frame's 25.90 sash channel. Both drawings are to scale; the side view breaks the foam's height twice.
+All dimensions are in mm. Positions across the foam's thickness, called *u* in the drawings and the model, are measured from the foam's centre, which is also the centre of the side frame's 25.90 sash channel. Outdoor positions are negative. Both drawings are to scale; the side view breaks the foam's height twice.
 
 <p align="center">
   <img src="doc/window_top_view.svg" alt="Top view at mid-height, to scale: the sash's 25.80 end with a 7.50 deep groove, 7.90 wide at the mouth and 7.50 at the bottom, thin for 17.10 from its end; the foam, 50.8 thick and 100 wide, 3 mm from the sash and from the side frame; the side frame's 25.90 by 10.70 sash channel with a 4.0 by 7.0 soft foam strip at its back; the window latch zone, 40 by 40, starting 5.25 past the channel toward the room" width="760">
