@@ -79,10 +79,14 @@ bot_ribs = [[-3.55, 2.15, 11.00], [12.95, 19.85, 11.00]];  // [u from, u to, hei
 side_ch  = [25.90, 10.70];  // side frame's sash channel: width (centred), depth
 strip    = [-4.20, 2.80, 19.0, 4.0];   // soft foam strip around the centre rail's end, at the back of the channel:
                     //   u from, u to, height, depth from the back wall
+floor_strip = 2.5;  // the tongue stops this much higher, over another soft strip on the channel's floor
+                    //   (1.7 thick, 4.0 deep from the back wall, across the channel)
 sash_t   = 25.80;   // sash thickness at its end (centred)
 sash_in  = 10.70;   // how far the sash goes into its cap (17.10 max: there the sash widens)
 groove   = [7.90, 7.50, 7.50];   // sash end groove: width at the mouth, width at the bottom, depth
 groove_key = true;  // tongue in the sash's end groove (one more seal line)
+screw    = [3.70, 12];   // screw heads in the groove at the sash's top and bottom: height above the groove's bottom,
+                         //   length of the tongue's relief from each of its ends
 
 /* [Key] */
 key_at   = 25;      // key position from the window's reference surface (clear of the deepest cap)
@@ -217,7 +221,7 @@ module side_cap() {
     tw = side_ch[0] / 2 - clr;
     td = side_ch[1] - clr_d;
     difference() {   // tongue, floor to ceiling in the channel
-        translate([-td, -tw, clr_d]) cube([td + eps, 2 * tw, H - 2 * clr_d]);
+        translate([-td, -tw, clr_d + floor_strip]) cube([td + eps, 2 * tw, H - 2 * clr_d - floor_strip]);
         r = top_ribs[0];
         translate([-td - 1, r[0] - clr, H - r[2] - clr_d]) cube([td + 2, r[1] - r[0] + 2 * clr, r[2] + clr_d + 1]);
         b = bot_ribs[0];
@@ -230,13 +234,31 @@ module sash_cap() {
     upright_body(xs - base, xs - base - lip_d);
     z0 = zb + cap_gap;
     h  = zt - zb - 2 * cap_gap;
-    for (s = [-1, 1])   // the channel's walls, along the sash's faces
-        translate([xs - eps, s < 0 ? -ow : sash_t / 2 + clr, z0]) cube([sash_in + eps, ow - sash_t / 2 - clr, h]);
+    wi = sash_t / 2 + clr;   // the walls' inner face (|u|)
+    for (s = [-1, 1]) {   // the channel's walls, along the sash's faces
+        translate([xs - eps, s < 0 ? -ow : wi, z0]) cube([sash_in + eps, ow - wi, h]);
+        // past the sash's end face they go on to the ceiling and the floor, notched for the ribs and rails beside
+        // the sash (a notch runs to the sash's face when it would leave a sliver thinner than 1.5 mm)
+        difference() {
+            translate([xs, s < 0 ? -ow : wi, clr_d]) cube([sash_in, ow - wi, H - 2 * clr_d]);
+            for (k = [[top_ribs, H, -1], [bot_ribs, 0, 1]], r = k[0])
+                let(a = r[0] - clr, b = r[1] + clr)
+                if (s * b > wi && s * a < ow)
+                    let(lo = s > 0 && a - wi < 1.5 ? wi - 1 : a,
+                        hi = s < 0 && -wi - b < 1.5 ? -wi + 1 : b,
+                        d  = r[2] + clr_d)
+                    translate([xs - 1, lo, k[2] > 0 ? -1 : H - d]) cube([sash_in + 2, hi - lo, d + 1]);
+        }
+    }
     if (groove_key) {   // tongue in the groove, tapered like it
         m = groove[0] / 2 - clr;
         b = groove[1] / 2 - clr;
         d = groove[2] - clr_d;
-        translate([xs, 0, z0]) linear_extrude(h) polygon([[-eps, -m], [-eps, m], [d, b], [d, -b]]);
+        difference() {
+            translate([xs, 0, z0]) linear_extrude(h) polygon([[-eps, -m], [-eps, m], [d, b], [d, -b]]);
+            for (zr = [z0 - 1, z0 + h - screw[1]])   // shallower over the screw heads near its ends
+                translate([xs + groove[2] - screw[0] - clr_d, -groove[0], zr]) cube([screw[0] + 1, 2 * groove[0], screw[1] + 1]);
+        }
     }
 }
 

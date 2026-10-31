@@ -20,6 +20,10 @@ SASH_T, SASH_THIN = 25.80, 17.10            # sash thickness at its end, and how
 GROOVE = (7.90, 7.50, 7.50)                 # sash end groove: width at the mouth, at the bottom, depth
 CH_W, CH_D = 25.90, 10.70                   # side frame's sash channel
 STRIP = (-4.20, 2.80, 19.0, 4.0)            # soft foam strip at the back of the channel: u from, u to, height, depth
+FLOOR_STRIP = 1.7                           # another soft strip on the channel's floor, across it, 4.0 deep from the
+                                            #   back wall (as STRIP): its thickness
+SCREW = (3.70, 12.0)                        # screw heads in the sash's groove, near its top and bottom ends only:
+                                            #   height above the groove's bottom, extent from the end
 TOP_RIBS = [(-39.85, -34.55, 8.50), (-3.55, 2.15, 8.50), (14.45, 18.20, 7.40)]     # u from, u to, depth
 BOT_RIBS = [(-39.50, -33.80, 18.40), (-3.55, 2.15, 11.00), (12.95, 19.85, 11.00)]  # u from, u to, height
 TIP = 1060.0                                # centre rib tip to centre rail tip
@@ -142,7 +146,7 @@ def fmt(v):
 def top_view():
     xs = BASE + FOAM_W + BASE                   # the sash's end face
     X0, Y0 = 1180, 470                          # canvas position of x = 0, u = 0
-    s = Svg(1720, 1090)
+    s = Svg(1720, 1112)
 
     def P(x, u):
         return X0 - x * K, Y0 + u * K
@@ -170,6 +174,7 @@ def top_view():
     s.zigzag_v(P(sl, 0)[0], P(0, -st)[1] - 12, P(0, st)[1] + 12)
     for f in (-st, st):
         s.line(*P(xs + SASH_THIN, f - 2), *P(xs + SASH_THIN, f + 2), "#555", 1.5)
+    s.rect(*P(xs + gd - SCREW[0], -gb), *P(xs + gd, gb), "none", "#555", 1.5, "4,3")   # screw head, not in this plane
 
     # labels
     s.text(*P(BASE + FOAM_W / 2, -15), "XPS foam", 17, weight="bold")
@@ -237,11 +242,13 @@ def top_view():
 
     s.text(40, 44, "TOP VIEW: section through the window at mid-height, seen from above (mm)", 22, "start",
            weight="bold")
-    s.text(40, s.h - 50, f"To scale: {K} px per mm in both directions. u = 0 on the foam's centre, the centre of "
+    s.text(40, s.h - 72, f"To scale: {K} px per mm in both directions. u = 0 on the foam's centre, the centre of "
            "the side frame's 25.90 channel. The caps' 3 mm bases set the sash 106 from the side frame.", 14,
            "start", "#333")
-    s.text(40, s.h - 28, "The latch zone spans 80 mm of height (see the side view); the soft foam strip is only at "
-           "the floor, 19 high.", 14, "start", "#333")
+    s.text(40, s.h - 50, "The latch zone spans 80 mm of height (see the side view); the soft foam strip is only at "
+           "the floor, 19 high; another, 1.7 thick, lies across the channel's floor, also 4.0 deep.", 14, "start", "#333")
+    s.text(40, s.h - 28, f"Dashed in the sash's groove: the screw heads, {fmt(SCREW[0])} high, only within "
+           f"{SCREW[1]:.0f} of the sash's top and bottom.", 14, "start", "#333")
     s.save(OUT_TOP)
 
 
@@ -278,6 +285,7 @@ def side_view():
     for a, b, d in TOP_RIBS:
         box(a, b, H - d, H + 0.1, C_FRAME)
     box(UL, UR, -10, 0, C_FRAME)
+    box(-CH_W / 2, CH_W / 2, 0, FLOOR_STRIP, C_STRIP)   # on the channel's floor at its back, under the rails
     box(STRIP[0], STRIP[1], 0, STRIP[2], C_STRIP)
     for a, b, h in BOT_RIBS:
         box(a, b, -0.1, h, C_FRAME)
@@ -310,10 +318,14 @@ def side_view():
     s.text(U(UL) - 10, Z(560), "&#8592; Outdoor", 22, "end", "#d8312b", "bold")
     s.text(U(UR) + 150, Z(560), "Room &#8594;", 22, "start", "#1f5fbf", "bold")
     s.text(U(0), Z(-10) + 84, "foam centre", 13, color="#555")
-    lx, ly = U(STRIP[0]), Z(CAP_BOT - 3)            # its visible part, under the foam
-    s.line(lx, ly, U(UL) - 8, Z(36), "#8a6a00", 1)
+    lx, ly = U(-3.0), Z(CAP_BOT - 1.75)             # its visible part, under the foam and above the rail
+    s.path(f"M{U(UL) - 8:.1f},{Z(36):.1f} L{lx:.1f},{Z(36):.1f} L{lx:.1f},{ly:.1f}", "#8a6a00", 1)
     s.text(U(UL) - 12, Z(36) - 4, "Soft foam strip around the rail", 13, "end", "#8a6a00")
     s.text(U(UL) - 12, Z(36) + 12, "(only at the side frame, 4 deep)", 13, "end", "#8a6a00")
+    lx, ly = U(-9.0), Z(FLOOR_STRIP / 2)            # across the channel
+    s.path(f"M{U(UL) - 8:.1f},{Z(36) + 40:.1f} L{lx:.1f},{Z(36) + 40:.1f} L{lx:.1f},{ly:.1f}", "#8a6a00", 1)
+    s.text(U(UL) - 12, Z(36) + 44, "Soft foam strip on the channel's floor", 13, "end", "#8a6a00")
+    s.text(U(UL) - 12, Z(36) + 60, f"({FLOOR_STRIP} thick, {STRIP[3]:.1f} deep, at the side frame)", 13, "end", "#8a6a00")
 
     # dimensions: top frame (chain above, depths beside)
     pts = [TOP_RIBS[0][0], TOP_RIBS[0][1], TOP_RIBS[1][0], TOP_RIBS[1][1], TOP_RIBS[2][0], TOP_RIBS[2][1]]
@@ -334,7 +346,7 @@ def side_view():
     for a, b in zip(pts, pts[1:]):
         s.hdim(U(a), U(b), yc, fmt(b - a), [(U(a), Z(-10)), (U(b), Z(-10))])
     s.vdim(Z(0), Z(BOT_RIBS[0][2]), U(BOT_RIBS[0][1] + 3), fmt(BOT_RIBS[0][2]), [(U(BOT_RIBS[0][1]), Z(BOT_RIBS[0][2]))])
-    s.vdim(Z(0), Z(STRIP[2]), U(STRIP[0] - 3), f"{STRIP[2]:.1f}", [(U(STRIP[0]), Z(STRIP[2]))], text_side=-1)
+    s.vdim(Z(0), Z(STRIP[2]), U(-CH_W / 2 - 3), f"{STRIP[2]:.1f}", [(U(STRIP[0]), Z(STRIP[2]))], text_side=-1)
     s.vdim(Z(0), Z(BOT_RIBS[1][2]), U(BOT_RIBS[1][1] + 3), fmt(BOT_RIBS[1][2]), [(U(STRIP[1]), Z(BOT_RIBS[1][2]))])
     s.vdim(Z(0), Z(BOT_RIBS[2][2]), U(BOT_RIBS[2][1] + 3), fmt(BOT_RIBS[2][2]), [(U(BOT_RIBS[2][1]), Z(BOT_RIBS[2][2]))])
     yb = Z(CAP_BOT) - 66

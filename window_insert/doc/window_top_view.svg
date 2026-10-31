@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1720" height="1090" viewBox="0 0 1720 1090" font-family="Segoe UI, Helvetica, Arial, sans-serif">
-<rect width="1720" height="1090" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1720" height="1112" viewBox="0 0 1720 1112" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="1720" height="1112" fill="#ffffff"/>
 <line x1="178.3" y1="470.0" x2="1404.0" y2="470.0" stroke="#777" stroke-width="1" stroke-dasharray="14,4,3,4"/>
 <polygon points="1180.0,176.0 1180.0,379.4 1254.9,379.4 1254.9,560.6 1180.0,560.6 1180.0,932.0 1404.0,932.0 1404.0,176.0" fill="#c4c4c4" stroke="#555555" stroke-width="1.5"/>
 <path d="M1404.0,164.0 L1404.0,544.0 L1411.0,550.0 L1397.0,558.0 L1404.0,564.0 L1404.0,944.0" fill="none" stroke="#111" stroke-width="1.5"/>
@@ -10,6 +10,7 @@
 <path d="M220.3,367.7 L220.3,460.0 L227.3,466.0 L213.3,474.0 L220.3,480.0 L220.3,572.3" fill="none" stroke="#111" stroke-width="1.5"/>
 <line x1="318.3" y1="365.7" x2="318.3" y2="393.7" stroke="#555" stroke-width="1.5"/>
 <line x1="318.3" y1="546.3" x2="318.3" y2="574.3" stroke="#555" stroke-width="1.5"/>
+<rect x="385.5" y="443.8" width="25.9" height="52.5" fill="none" stroke="#555" stroke-width="1.5" stroke-dasharray="4,3"/>
 <text x="809.0" y="365.0" font-size="17" text-anchor="middle" fill="#111" font-weight="bold">XPS foam</text>
 <text x="218.3" y="295.7" font-size="16" text-anchor="start" fill="#111" font-weight="bold">Sliding sash (its end)</text>
 <text x="206.3" y="604.3" font-size="13" text-anchor="start" fill="#555" font-weight="normal">past 17.10 the sash widens (not drawn)</text>
@@ -115,5 +116,6 @@
 <text x="1040.0" y="893.4" font-size="14" text-anchor="middle" fill="#b3261e" font-weight="normal">40.0</text>
 <text x="40.0" y="44.0" font-size="22" text-anchor="start" fill="#111" font-weight="bold">TOP VIEW: section through the window at mid-height, seen from above (mm)</text>
 <text x="40.0" y="1040.0" font-size="14" text-anchor="start" fill="#333" font-weight="normal">To scale: 7 px per mm in both directions. u = 0 on the foam's centre, the centre of the side frame's 25.90 channel. The caps' 3 mm bases set the sash 106 from the side frame.</text>
-<text x="40.0" y="1062.0" font-size="14" text-anchor="start" fill="#333" font-weight="normal">The latch zone spans 80 mm of height (see the side view); the soft foam strip is only at the floor, 19 high.</text>
+<text x="40.0" y="1062.0" font-size="14" text-anchor="start" fill="#333" font-weight="normal">The latch zone spans 80 mm of height (see the side view); the soft foam strip is only at the floor, 19 high; another, 1.7 thick, lies across the channel's floor, also 4.0 deep.</text>
+<text x="40.0" y="1084.0" font-size="14" text-anchor="start" fill="#333" font-weight="normal">Dashed in the sash's groove: the screw heads, 3.70 high, only within 12 of the sash's top and bottom.</text>
 </svg>
