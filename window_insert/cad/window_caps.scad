@@ -52,7 +52,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part = "joint_tests";   // [cap_top, cap_bottom, side_0, side_1, side_2, side_3, side_4, sash_0, sash_1, sash_2, sash_3, sash_4, joiner_side, joiner_sash, joiners, joint_tests, joint_side_lower, joint_side_upper, joint_sash_lower, joint_sash_upper, joint_view, assembly_view, corners, corner_top, corner_bottom, corner_side_top, corner_side_bottom, corner_sash_top, corner_sash_bottom, corners_view, slices, slice_top, slice_bottom, slice_side, slice_sash, slice_pair_view]
+part = "joint_tests";   // [cap_top, cap_bottom, side_0, side_1, side_2, side_3, side_4, sash_0, sash_1, sash_2, sash_3, sash_4, joiner_side, joiner_sash, joiners, joint_tests, joint_side_lower, joint_side_upper, joint_sash_lower, joint_sash_upper, joint_view, assembly_view, corners, corner_top, corner_bottom, corner_side_top, corner_side_bottom, corner_sash_top, corner_sash_bottom, latch_slice, corners_view, slices, slice_top, slice_bottom, slice_side, slice_sash, slice_pair_view]
 
 /* [Fit] */
 clr      = 0.3;     // clearance per side on the window's ribs, channel and sash
@@ -72,6 +72,7 @@ foam_w   = 112;     // foam width, side frame to sash: 96 uncovered between the 
 lip_d    = 8;       // how far the lips reach onto the foam's faces
 lip_t    = 4.8;     // lip thickness
 corner_l = 40;      // corner test pieces: length past the cap they butt against
+latch_t  = 3;       // latch test slice: thickness
 
 /* [Joints] */
 splits   = [216, 432, 648, 864];  // heights of the joints between the side and sash caps' segments: 5 segments,
@@ -265,8 +266,15 @@ module side_cap() {
                 translate([-side_ch[1] - 1, strip[0] - clr, -1]) cube([strip[3] + clr + 1, strip[1] - strip[0] + 2 * clr, strip[2] + clr_d + 1]);
             }
         }
-        // the latch zone: the room-side lip and that part of the base stop around it (the tongue is clear of it)
-        translate([-1, latch[0] - clr, lz - clr]) cube([latch[3] + 1, ow, latch[2] + 2 * clr]);
+        // the latch zone: the room-side lip and that part of the base stop around it (the tongue is clear of it). Its
+        // top rises at 45 degrees toward the room, and over the lip toward the foam too, so the base and the lip
+        // above it print standing without an overhang; its bottom mirrors it
+        let(u0 = latch[0] - clr, u1 = ow + 1, z0 = lz - clr, z1 = lz + latch[2] + clr, xl = base + lip_d + 1) {
+            translate([-1, u0, z0]) cube([latch[3] + 1, ow, latch[2] + 2 * clr]);
+            hull() { bx(-1, base, u0, u0 + eps, z0, z1); bx(-1, base, u1 - eps, u1, z0 - (u1 - u0), z1 + u1 - u0); }
+            hull() for (x = [base, xl], u = [u0, u1])
+                let(d = (u - u0) + (x - base)) bx(x - eps, x + eps, u - eps, u + eps, z0 - d, z1 + d);
+        }
     }
 }
 
@@ -527,6 +535,11 @@ module corner_side_bottom() upright_bottom(false);
 module corner_sash_top()    translate([-xs, 0, 0]) upright_top(true);
 module corner_sash_bottom() translate([-xs, 0, 0]) upright_bottom(true);
 
+// latch test: a latch_t thick slice of the side cap at the latch zone's mid-height, flat on the bed (the room side
+// of its base and its room-side lip stop there, to clear the latch)
+module latch_slice() let(zm = bot_ribs[0][2] + latch[1] + latch[2] / 2)
+    translate([0, 0, -zm]) intersection() { side_cap(); bx(-50, 50, -50, 50, zm, zm + latch_t); }
+
 // all six on one plate (print two top and two bottom pieces to try all four corners at once)
 module corners() {
     translate([0, 0, 0])     corner_top();
@@ -569,6 +582,7 @@ if (part == "corner_side_top")    corner_side_top();
 if (part == "corner_side_bottom") corner_side_bottom();
 if (part == "corner_sash_top")    corner_sash_top();
 if (part == "corner_sash_bottom") corner_sash_bottom();
+if (part == "latch_slice")        latch_slice();
 if (part == "corners_view")       corners_view();
 if (part == "slices")             slices();
 if (part == "slice_top")          slice("top");

@@ -92,6 +92,12 @@ Test pieces first: the profiles, then the corners, then a joint. Print in PETG: 
 | `corner_sash_top` | <img src="images/part_corner_sash_top.png" width="180"> | 1 | Sash cap's top end: the channel for the sash and the groove tongue, shallower over the screw head; the channel's walls go on to the ceiling, the room-side one notched for the room-side rib | 21.7 × 60.8 × 51.5 | Cut end on the bed, walls up |
 | `corner_sash_bottom` | <img src="images/part_corner_sash_bottom.png" width="180"> | 1 | Sash cap's bottom end, the groove tongue shallower over the screw head; the channel's walls go on to the floor, the room-side one notched for the room-side rail | 21.7 × 60.8 × 54 | Cut end on the bed, walls up |
 
+**Latch test.** A 3 mm slice of the side cap at the latch zone's mid-height, printed flat: the tongue, the base and the outdoor lip, the room side cut away from u = 17.9. Press its tongue into the side frame's channel and slide it to the latch: the latch must clear the cut edge, rather than reprinting `side_2` to find out.
+
+| Part | Image | Qty | Description | Size (mm) | Print orientation |
+|---|---|---|---|---|---|
+| `latch_slice` | <img src="images/part_latch_slice.png" width="180"> | 1 | Side cap's section through the latch zone | 21.2 × 48.3 × 3 | Flat |
+
 **Joint test.** Both ends of the second joint (432 mm above the floor) in the side and sash caps, 24 mm each, with their joiners. Push a joiner into the lower end until it clicks, then push the upper end onto it. The upper ends print standing on their socket end, the lower ends with it on top: the real segments have both. `joint_tests` puts all of them on one plate, about 156 × 61.
 
 | Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
