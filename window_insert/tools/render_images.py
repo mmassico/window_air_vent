@@ -4,7 +4,8 @@
 Requires: openscad (2021.01+) on PATH, python3 with Pillow.
 Usage:    python tools/render_images.py   (run from the window_insert folder)
 
-Each image is an OpenSCAD preview (Tomorrow colour scheme) of a part in its print orientation, trimmed to its content.
+Each image is an OpenSCAD preview (Tomorrow colour scheme) of a part in its print orientation, or of the assembly,
+trimmed to its content.
 """
 import os, subprocess, tempfile
 from PIL import Image, ImageChops
@@ -58,3 +59,11 @@ if __name__ == "__main__":
             ("joiner_side", "0,0,0,45,0,30,0", (1000, 800), True),
             ("joiner_sash", "0,0,0,45,0,30,0", (1000, 800), True)]:
         save(render(os.path.join(tmp, f"{name}.png"), camera, size, [f'part="{name}"'], viewall), f"part_{name}.png")
+
+    # the assembly in the window (the window and the foam as ghosts): all of it, seen from the room, then three corners
+    for name, camera, size in [
+            ("assembly", "59,0,540,72,0,205,3000", (600, 1500)),
+            ("assembly_side_bottom", "0,0,22,68,0,250,230", (900, 800)),
+            ("assembly_side_top", "0,0,1058,108,0,250,230", (900, 800)),
+            ("assembly_sash_bottom", "118,0,22,68,0,70,200", (900, 800))]:
+        save(render(os.path.join(tmp, f"{name}.png"), camera, size, ['part="assembly_view"'], False), f"{name}.png")

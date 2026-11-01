@@ -2,7 +2,22 @@
 
 The foam insert that fills the window gap under the [window vent](../README.md), and the printed caps on its four edges that fit it to the window's profiles. The foam itself stays a plain rectangle: the caps carry every rib, rail and groove of the frame and the sash, so no complex shape is ever cut in foam.
 
-It is measured on one horizontal sliding window: the sash opens about 10 cm, and the insert fills that gap from the floor of the track to its ceiling. Another window needs its own measurements, but the same approach.
+It is measured on one horizontal sliding window: the sash opens about 12 cm, and the insert fills that gap from the floor of the track to its ceiling. Another window needs its own measurements, but the same approach.
+
+<table>
+<tr>
+<td rowspan="3" align="center" valign="top"><img src="images/assembly.png" height="820" alt="The whole insert in the window, seen from the room, with the window and the foam drawn transparent"><br><sub>The insert in the window, seen from the room. The window and the foam are drawn transparent.</sub></td>
+<td align="center"><img src="images/assembly_side_top.png" width="340" alt="The top corner at the side frame, seen from below: the top cap's slots over the ribs and the side cap's tongue notched for the centre rib"><br><sub>Top corner at the side frame, from below: the top cap's slots over the ribs, and the side cap's tongue notched for the centre rib.</sub></td>
+</tr>
+<tr>
+<td align="center"><img src="images/assembly_side_bottom.png" width="340" alt="The bottom corner at the side frame: the side cap's tongue stands on three legs, around the centre rail and the soft foam strip"><br><sub>Bottom corner at the side frame: the tongue's legs straddle the centre rail and the soft foam strip.</sub></td>
+</tr>
+<tr>
+<td align="center"><img src="images/assembly_sash_bottom.png" width="340" alt="The bottom corner at the sash: the sash cap's walls run down to the floor beside the sash, past the bottom cap's end"><br><sub>Bottom corner at the sash: the sash cap's walls run down to the floor beside the sash.</sub></td>
+</tr>
+</table>
+
+Side cap in blue, sash cap in green, top cap in orange, bottom cap in yellow. The side and sash caps' segments alternate between a light and a dark shade. In OpenSCAD: `part = "assembly_view"`, and `explode = 50` to spread the pieces apart.
 
 > **Status: fit tests.** The profile slices and the corner pieces are printed and fit the window, after a few corrections: the top frame's room-side rib sits 1.5 mm further toward the room than the bottom one, the sash's groove has screw heads near its ends, and a soft strip lies on the side frame channel's floor. The full-length caps are modelled; a joint between two segments is the next test. The model assumes foam exactly 2 in thick: measure the real foam and set `foam_t` before printing the full caps.
 
@@ -130,7 +145,7 @@ stl/                          the test pieces, exported (default parameters)
 doc/window_top_view.svg       the window's profiles at mid-height, seen from above, to scale
 doc/window_side_view.svg      the window's profiles across the foam, at the side frame, to scale
 doc/insert_width.svg          the widths across the window: caps, lips, uncovered foam, vent chassis
-images/                       part thumbnails used in this README
+images/                       part thumbnails and assembly views used in this README
 tools/window_profiles_svg.py  draws the drawings in doc/ from the measurements in it (the same
                               values as in cad/window_caps.scad)
 tools/render_images.py        regenerates the thumbnails in images/ from the model
