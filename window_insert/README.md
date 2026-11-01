@@ -4,18 +4,13 @@ The foam insert that fills the window gap under the [window vent](../README.md),
 
 It is measured on one horizontal sliding window: the sash opens about 12 cm, and the insert fills that gap from the floor of the track to its ceiling. Another window needs its own measurements, but the same approach.
 
-<table>
-<tr>
-<td rowspan="3" align="center" valign="top"><img src="images/assembly.png" height="820" alt="The whole insert in the window, seen from the room, with the window and the foam drawn transparent"><br><sub>The insert in the window, seen from the room. The window and the foam are drawn transparent.</sub></td>
-<td align="center"><img src="images/assembly_side_top.png" width="340" alt="The top corner at the side frame, seen from below: the top cap's slots over the ribs and the side cap's tongue notched for the centre rib"><br><sub>Top corner at the side frame, from below: the top cap's slots over the ribs, and the side cap's tongue notched for the centre rib.</sub></td>
-</tr>
-<tr>
-<td align="center"><img src="images/assembly_side_bottom.png" width="340" alt="The bottom corner at the side frame: the side cap's tongue stands on three legs, around the centre rail and the soft foam strip"><br><sub>Bottom corner at the side frame: the tongue's legs straddle the centre rail and the soft foam strip.</sub></td>
-</tr>
-<tr>
-<td align="center"><img src="images/assembly_sash_bottom.png" width="340" alt="The bottom corner at the sash: the sash cap's walls run down to the floor beside the sash, past the bottom cap's end"><br><sub>Bottom corner at the sash: the sash cap's walls run down to the floor beside the sash.</sub></td>
-</tr>
-</table>
+<p align="center"><img src="images/assembly.png" width="600" alt="Left: the whole insert in the window, seen from the room, with the window and the foam drawn transparent. Right: three corners, numbered 1 to 3"></p>
+
+The insert in the window, seen from the room, with the window and the foam drawn transparent. On the right:
+
+1. Top corner at the side frame, from below: the top cap's slots over the ribs, and the side cap's tongue notched for the centre rib.
+2. Bottom corner at the side frame: the tongue's legs straddle the centre rail and the soft foam strip.
+3. Bottom corner at the sash: the sash cap's walls run down to the floor beside the sash.
 
 Side cap in blue, sash cap in green, top cap in orange, bottom cap in yellow. The side and sash caps' segments alternate between a light and a dark shade. In OpenSCAD: `part = "assembly_view"`, and `explode = 50` to spread the pieces apart.
 

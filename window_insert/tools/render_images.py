@@ -8,7 +8,7 @@ Each image is an OpenSCAD preview (Tomorrow colour scheme) of a part in its prin
 trimmed to its content.
 """
 import os, subprocess, tempfile
-from PIL import Image, ImageChops
+from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CAPS = os.path.join(ROOT, "cad", "window_caps.scad")
@@ -32,6 +32,27 @@ def trim(im, pad=20):
     bg = Image.new("RGB", im.size, im.getpixel((2, 2)))
     b = ImageChops.difference(im, bg).convert("L").point(lambda v: 255 if v > 12 else 0).getbbox()
     return im.crop((max(b[0] - pad, 0), max(b[1] - pad, 0), min(b[2] + pad, im.width), min(b[3] + pad, im.height)))
+
+
+def compose(views, gap=24, right_w=600):
+    """The first view on the left, the others stacked on its right and numbered from 1, all as tall as each other."""
+    side = [v.resize((right_w, round(v.height * right_w / v.width)), Image.LANCZOS) for v in views[1:]]
+    h = sum(v.height for v in side) + gap * (len(side) - 1)
+    main = views[0].resize((round(views[0].width * h / views[0].height), h), Image.LANCZOS)
+    out = Image.new("RGB", (main.width + gap + right_w, h), views[0].getpixel((2, 2)))
+    out.paste(main, (0, 0))
+    draw = ImageDraw.Draw(out)
+    try:
+        font = ImageFont.truetype("arialbd.ttf", 30)
+    except OSError:
+        font = ImageFont.load_default(size=30)
+    x, y = main.width + gap, 0
+    for i, v in enumerate(side, 1):
+        out.paste(v, (x, y))
+        draw.ellipse((x + 10, y + 10, x + 56, y + 56), fill="#333333")
+        draw.text((x + 33, y + 33), str(i), fill="white", font=font, anchor="mm")
+        y += v.height + gap
+    return out
 
 
 def save(im, name):
@@ -61,10 +82,12 @@ if __name__ == "__main__":
             ("joiner_sash", "0,0,0,45,0,30,0", (1000, 800), True)]:
         save(render(os.path.join(tmp, f"{name}.png"), camera, size, [f'part="{name}"'], viewall), f"part_{name}.png")
 
-    # the assembly in the window (the window and the foam as ghosts): all of it, seen from the room, then three corners
-    for name, camera, size in [
-            ("assembly", "59,0,540,72,0,205,3000", (600, 1500)),
-            ("assembly_side_bottom", "0,0,22,68,0,250,230", (900, 800)),
-            ("assembly_side_top", "0,0,1058,108,0,250,230", (900, 800)),
-            ("assembly_sash_bottom", "118,0,22,68,0,70,200", (900, 800))]:
-        save(render(os.path.join(tmp, f"{name}.png"), camera, size, ['part="assembly_view"'], False), f"{name}.png")
+    # the assembly in the window (the window and the foam as ghosts): all of it, seen from the room, then three corners,
+    # composed into one image (a README table would stripe its rows)
+    views = [render(os.path.join(tmp, f"{name}.png"), camera, size, ['part="assembly_view"'], False)
+             for name, camera, size in [
+                 ("assembly", "59,0,540,72,0,205,3000", (600, 1500)),
+                 ("assembly_side_top", "0,0,1058,108,0,250,265", (900, 800)),
+                 ("assembly_side_bottom", "0,0,22,68,0,250,265", (900, 800)),
+                 ("assembly_sash_bottom", "118,0,30,68,0,70,320", (900, 800))]]
+    save(compose(views), "assembly.png")
