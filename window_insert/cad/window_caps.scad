@@ -175,7 +175,7 @@ module slice(kind) {
     tb = kind == "top" || kind == "bottom";
     name = kind == "top" ? "TOP" : kind == "bottom" ? "BOT" : kind == "side" ? "SIDE" : "SASH";
     difference() {
-        linear_extrude(slice_t) profile(kind);
+        linear_extrude(slice_t, convexity = 10) profile(kind);
         // key slot: from the outdoor edge on the top and bottom slices, from the room edge on the side and sash ones
         translate([tb ? -w / 2 - 1 : 0, key_at - key_w / 2, -1]) cube([w / 2 + 1, key_w, slice_t + 2]);
         // foam line: an engraved line across, and a notch in each edge
@@ -236,8 +236,8 @@ module cap_section(kind) {
 module at_top(x0 = 0)    multmatrix([[0, 0, 1, x0], [1, 0, 0, 0], [0, -1, 0, H], [0, 0, 0, 1]]) children();
 module at_bottom(x0 = 0) multmatrix([[0, 0, 1, x0], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1]]) children();
 
-module top_cap(x0 = 0, x1 = xs)    at_top(x0) linear_extrude(x1 - x0) cap_section("top");
-module bottom_cap(x0 = 0, x1 = xs) at_bottom(x0) linear_extrude(x1 - x0) cap_section("bottom");
+module top_cap(x0 = 0, x1 = xs)    at_top(x0) linear_extrude(x1 - x0, convexity = 10) cap_section("top");
+module bottom_cap(x0 = 0, x1 = xs) at_bottom(x0) linear_extrude(x1 - x0, convexity = 10) cap_section("bottom");
 
 // the side and sash caps' bodies and lips, between the top and bottom caps (and under their lips)
 // (the base is the foam's width at its ends, where those lips straddle it, and the lips' width between them)
@@ -338,7 +338,7 @@ module tag(s, p, a, b) let(n = cross(a, b))
 // The top and bottom caps, whole, standing on their end at the side frame; the label is on the back's outdoor half,
 // between the lips' edge and the centre rib
 module cap_tb(kind, s) difference() {
-    linear_extrude(xs) cap_section(kind);
+    linear_extrude(xs, convexity = 10) cap_section(kind);
     tag(s, [-(ow + 3.55 + clr) / 2, 0, xs / 2], [0, 0, 1], [-1, 0, 0]);
 }
 module cap_top()    cap_tb("top", "T");
@@ -514,8 +514,8 @@ module assembly_view() {
 /* =================== CORNER TEST PIECES =================== */
 // The real cap ends, in their print orientation (all print standing, cross-section on the bed). One top piece and
 // one bottom piece serve both corners: turn them end for end for the sash corners.
-module corner_top()    linear_extrude(corner_l) cap_section("top");
-module corner_bottom() linear_extrude(corner_l) cap_section("bottom");
+module corner_top()    linear_extrude(corner_l, convexity = 10) cap_section("top");
+module corner_bottom() linear_extrude(corner_l, convexity = 10) cap_section("bottom");
 
 // upright ends: top ends stand on their cut face, bottom ends are turned over onto it
 module upright_top(sash) {

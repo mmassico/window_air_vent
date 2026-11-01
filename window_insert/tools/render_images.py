@@ -79,7 +79,12 @@ if __name__ == "__main__":
             ("joint_sash_lower", "-1.2,0,10,55,0,155,200", (1000, 900), False),
             ("joint_sash_upper", "-1.2,0,10,235,0,25,200", (1000, 900), False),
             ("joiner_side", "0,0,0,45,0,30,0", (1000, 800), True),
-            ("joiner_sash", "0,0,0,45,0,30,0", (1000, 800), True)]:
+            ("joiner_sash", "0,0,0,45,0,30,0", (1000, 800), True),
+            ("cap_top", "0,0,0,55,0,25,0", (800, 1100), True),
+            ("cap_bottom", "0,0,0,55,0,25,0", (800, 1100), True),
+            ("side_0", "0,0,107,65,0,25,900", (700, 1400), False),
+            ("sash_0", "0,0,108,65,0,25,900", (700, 1400), False),
+            ("joiners", "0,0,0,45,0,30,0", (1000, 800), True)]:
         save(render(os.path.join(tmp, f"{name}.png"), camera, size, [f'part="{name}"'], viewall), f"part_{name}.png")
 
     # the assembly in the window (the window and the foam as ghosts): all of it, seen from the room, then three corners,

@@ -14,7 +14,7 @@ The insert in the window, seen from the room, with the window and the foam drawn
 
 Side cap in blue, sash cap in green, top cap in orange, bottom cap in yellow. The side and sash caps' segments alternate between a light and a dark shade. In OpenSCAD: `part = "assembly_view"`, and `explode = 50` to spread the pieces apart.
 
-> **Status: fit tests.** The profile slices and the corner pieces are printed and fit the window, after a few corrections: the top frame's room-side rib sits 1.5 mm further toward the room than the bottom one, the sash's groove has screw heads near its ends, and a soft strip lies on the side frame channel's floor. The full-length caps are modelled; a joint between two segments is the next test. The model assumes foam exactly 2 in thick: measure the real foam and set `foam_t` before printing the full caps.
+> **Status: ready to print.** The profile slices, the corner pieces, a joint and the latch slice are printed and fit the window, after a few corrections: the top frame's room-side rib sits 1.5 mm further toward the room than the bottom one, the sash's groove has screw heads near its ends, and a soft strip lies on the side frame channel's floor. The full caps are exported for the measured foam; printing them is next.
 
 ## How it works
 
@@ -63,9 +63,40 @@ All dimensions are in mm. Positions across the foam's thickness, called *u* in t
 - **Soft foam strips:** at the back of the side frame's channel, around the centre rail's end: 7.0 wide, 19.0 high, 4.0 deep. The side cap's tongue is notched to clear it. Another strip lies across the channel's floor, also 4.0 deep from the back wall, 1.7 thick: the tongue stops 3.0 mm above the floor, 1.3 mm over it.
 - **Screw heads:** in the sash's groove, near its top and bottom ends, standing 3.70 above the groove's bottom. The groove tongue is cut down to 3.3 deep over its last 12 mm at each end.
 
-## Printed parts
+## Parts
 
-Test pieces first: the profiles, then the corners, then a joint. Print in PETG: PLA turns brittle in the cold. Nothing needs supports, and the STLs in [`stl/`](stl) are exported in their print orientation, with the default parameters.
+### To print
+
+Print in PETG: PLA turns brittle in the cold. Nothing needs supports, and the STLs in [`stl/`](stl) are exported in their print orientation, with the default parameters (see [Slicer settings](#slicer-settings)).
+
+The caps are exported for 2 in foam (50.8 mm). The boards measured 49.9 to 51 mm, and the lips leave 51.2 mm, so the foam slides in. Each cap has its label engraved on its back (the face against the window, on its outdoor half): F for the side frame's cap, W for the window sash's. The segments' labels read upward as installed.
+
+| Part | <div style="width:180px">Thumbnail</div> | Label | Qty | Description | Size (mm) | Print orientation |
+|---|:---:|---|---|---|---|---|
+| `cap_top` | <img src="images/part_cap_top.png" height="200"> | T | 1 | Top cap, whole | 60.8 × 20 × 118 | Standing on its end |
+| `cap_bottom` | <img src="images/part_cap_bottom.png" height="200"> | B | 1 | Bottom cap, whole | 60.8 × 22.5 × 118 | Standing on its end |
+| `side_0` to `side_4` | <img src="images/part_side_0.png" height="200"> | F0 to F4 | 1 each | Side cap's segments, numbered from 0 at the floor. `side_2` has the relief around the window latch. Shown: `side_0`, turned over | 21.2 × 60.8 × 213 to 216 | Standing; `side_0` turned over, on its upper end |
+| `sash_0` to `sash_4` | <img src="images/part_sash_0.png" height="200"> | W0 to W4 | 1 each | Sash cap's segments, numbered from 0 at the floor. Shown: `sash_0`, turned over | 21.7 × 60.8 × 215 to 216 | Standing; `sash_0` turned over, on its upper end |
+| `joiners` | <img src="images/part_joiners.png" width="180"> | | 1 plate | All the joiners: 4 for the side cap, 8 for the sash cap | 134 × 56 plate | Flat, bumps up |
+
+**Plates.** Slicer estimates (Bambu Studio, the settings below), not measured prints:
+
+- The twelve caps fit on one plate: about 22 h 40 and 924 g of PETG.
+- Or print `cap_top` and `cap_bottom` on a plate of their own, to try them on the foam first; the ten segments then take about 820 g.
+- The joiners print on their own plate, with 4 walls and 40 % infill.
+
+### To buy
+
+| Item | Qty | Use |
+|---|---|---|
+| XPS foam board, 2 in (51 mm), 30 psi | 1 strip, 112 × about 1050 mm | The insert itself. A 24 × 48 in board is enough: cut the strip along its 48 in side. Notch it at the latch (37 × 7.2 × 80 mm, see [the latch zone](#the-windows-measurements)). The [main parts list](../README.md#hardware) has the grade and why |
+| Thin foam tape (weatherstrip) | About 1 m | In the top frame's channel (2 or 3 mm), and in the 0.5 mm gaps where the caps' ends meet |
+| Tape that peels off cleanly | About 2.5 m | Over the joint between the lips and the foam on the room side, for drafts |
+| PETG filament | About 0.95 kg | The caps (924 g) and the joiners |
+
+### Test pieces
+
+Optional now: they checked the model against the window before the full caps. Print them in this order: the profiles, then the corners, then the latch slice and a joint.
 
 **Profile slices.** Each slice is a cap's cross-section, 5 mm thick. The tab at its end is exactly as wide as the foam: its edges show where the foam's faces are, an engraved line marks where the foam starts, and "OUT" marks the outdoor half. A cross-lap slot in each tab keys a top or bottom slice to a side or sash slice in a corner (slide them together until both slots bottom out): if the pair won't sit in the corner, the two profiles disagree on the foam's position. `slices` puts all four on one plate, about 110 × 93.
 
@@ -104,16 +135,6 @@ Test pieces first: the profiles, then the corners, then a joint. Print in PETG: 
 | `joiner_side` | <img src="images/part_joiner_side.png" width="180"> | 1 | Joins two side cap segments. A bump near each end clicks into the window in a socket's tab: its steep face holds, its ramp leads in | 32 × 21.9 × 8.4 | Flat, bumps up |
 | `joiner_sash` | <img src="images/part_joiner_sash.png" width="180"> | 2 | Joins two sash cap segments, one in each wall | 32 × 13.8 × 10.9 | Flat, bumps up |
 
-**Full caps.** In the model, not exported yet: they wait for the joint test and for the real foam's thickness. Each one has its label engraved on its back (the face against the window, on its outdoor half): F for the side frame's cap, W for the window sash's. The segments' labels read upward as installed.
-
-| Part | Label | Qty | Description | Size (mm) | Print orientation |
-|---|---|---|---|---|---|
-| `cap_top` | T | 1 | Top cap, whole | 60.8 × 20 × 118 | Standing on its end |
-| `cap_bottom` | B | 1 | Bottom cap, whole | 60.8 × 22.5 × 118 | Standing on its end |
-| `side_0` to `side_4` | F0 to F4 | 1 each | Side cap's segments, numbered from 0 at the floor. `side_2` has the relief around the window latch | 21.2 × 60.8 × 213 to 216 | Standing; `side_0` turned over, on its upper end |
-| `sash_0` to `sash_4` | W0 to W4 | 1 each | Sash cap's segments, numbered from 0 at the floor | 21.7 × 60.8 × 215 to 216 | Standing; `sash_0` turned over, on its upper end |
-| `joiners` | | 1 plate | All the joiners: 4 for the side cap, 8 for the sash cap | 134 × 56 plate | Flat, bumps up |
-
 ## Slicer settings
 
 For a 0.4 mm nozzle. The caps print standing, the joiners flat.
@@ -142,7 +163,7 @@ For a 0.4 mm nozzle. The caps print standing, the joiners flat.
 ```
 cad/window_caps.scad          parametric model of the caps and their test pieces (Customizer;
                               part = "assembly_view" for all of it, explode = 50 to spread it apart)
-stl/                          the test pieces, exported (default parameters)
+stl/                          the test pieces and the full caps, exported (default parameters)
 doc/window_top_view.svg       the window's profiles at mid-height, seen from above, to scale
 doc/window_side_view.svg      the window's profiles across the foam, at the side frame, to scale
 doc/insert_width.svg          the widths across the window: caps, lips, uncovered foam, vent chassis
