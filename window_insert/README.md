@@ -98,6 +98,29 @@ Test pieces first: the profiles, then the corners, then a joint. Print in PETG: 
 | `sash_0` to `sash_4` | 1 each | Sash cap's segments, numbered from 0 at the floor | 21.7 × 60.8 × 215 to 216 | Standing; `sash_0` turned over, on its upper end |
 | `joiners` | 1 plate | All the joiners: 4 for the side cap, 8 for the sash cap | 131 × 56 plate | Flat, bumps up |
 
+## Slicer settings
+
+For a 0.4 mm nozzle. The caps print standing, the joiners flat.
+
+| Setting | Caps and test pieces | Joiners | Why |
+|---|---|---|---|
+| Material | PETG | PETG | PLA turns brittle in the cold |
+| Layer height | 0.2 mm | 0.2 mm | |
+| Walls (perimeters) | 3 | 4 | The snap tab's 1.6 mm wall is then solid |
+| Top and bottom layers | 4 | 4 | |
+| Infill | Gyroid, 10 to 15 % | Gyroid, 40 % | See below |
+| Supports | None | None | Every overhang is 45° or less: diamond windows, gabled socket ends |
+| Brim | 5 mm | None | A segment is 216 mm tall on a 21 × 61 mm footprint: the brim keeps it from tipping or lifting |
+| Elephant's foot compensation | 0.2 mm, if the slicer has it | | The sockets' mouths are chamfered too |
+
+**Infill.** The caps insulate with the air trapped in their infill, and only the plastic that bridges the cold and warm faces conducts heat. So density matters more than pattern: keep it low, and keep the walls to 3.
+
+- Printed standing, the infill's channels run along the cap, not across it: heat crosses them and never runs along them.
+- Cells a few millimetres wide (10 to 15 %) are too narrow for the air inside to circulate (convection needs gaps of 10 to 15 mm), so the trapped air insulates like closed cells.
+- Gyroid has no straight bridge from one face to the other. Grid and rectilinear patterns do, and plain honeycomb doubles its walls, which adds plastic. 3D honeycomb was considered, but its cells aren't closed either, and it's more complicated.
+- To close the channels completely, most slicers can add a solid infill layer every 20 to 30 mm ("solid infill every n layers"). It isn't needed, for the reason above.
+- In perspective: the window's aluminium frame and sash conduct about 800 times better than PETG. Sealing the joints with tape matters more than the infill.
+
 ## Files
 
 ```
