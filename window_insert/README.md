@@ -103,15 +103,15 @@ Test pieces first: the profiles, then the corners, then a joint. Print in PETG: 
 | `joiner_side` | <img src="images/part_joiner_side.png" width="180"> | 1 | Joins two side cap segments. A bump near each end clicks into the window in a socket's tab: its steep face holds, its ramp leads in | 32 × 21.9 × 8.4 | Flat, bumps up |
 | `joiner_sash` | <img src="images/part_joiner_sash.png" width="180"> | 2 | Joins two sash cap segments, one in each wall | 32 × 13.8 × 10.9 | Flat, bumps up |
 
-**Full caps.** In the model, not exported yet: they wait for the joint test and for the real foam's thickness.
+**Full caps.** In the model, not exported yet: they wait for the joint test and for the real foam's thickness. Each one has its label engraved on its back (the face against the window, on its outdoor half): F for the side frame's cap, W for the window sash's. The segments' labels read upward as installed.
 
-| Part | Qty | Description | Size (mm) | Print orientation |
-|---|---|---|---|---|
-| `cap_top` | 1 | Top cap, whole | 60.8 × 20 × 118 | Standing on its end |
-| `cap_bottom` | 1 | Bottom cap, whole | 60.8 × 22.5 × 118 | Standing on its end |
-| `side_0` to `side_4` | 1 each | Side cap's segments, numbered from 0 at the floor. `side_2` has the relief around the window latch | 21.2 × 60.8 × 213 to 216 | Standing; `side_0` turned over, on its upper end |
-| `sash_0` to `sash_4` | 1 each | Sash cap's segments, numbered from 0 at the floor | 21.7 × 60.8 × 215 to 216 | Standing; `sash_0` turned over, on its upper end |
-| `joiners` | 1 plate | All the joiners: 4 for the side cap, 8 for the sash cap | 134 × 56 plate | Flat, bumps up |
+| Part | Label | Qty | Description | Size (mm) | Print orientation |
+|---|---|---|---|---|---|
+| `cap_top` | T | 1 | Top cap, whole | 60.8 × 20 × 118 | Standing on its end |
+| `cap_bottom` | B | 1 | Bottom cap, whole | 60.8 × 22.5 × 118 | Standing on its end |
+| `side_0` to `side_4` | F0 to F4 | 1 each | Side cap's segments, numbered from 0 at the floor. `side_2` has the relief around the window latch | 21.2 × 60.8 × 213 to 216 | Standing; `side_0` turned over, on its upper end |
+| `sash_0` to `sash_4` | W0 to W4 | 1 each | Sash cap's segments, numbered from 0 at the floor | 21.7 × 60.8 × 215 to 216 | Standing; `sash_0` turned over, on its upper end |
+| `joiners` | | 1 plate | All the joiners: 4 for the side cap, 8 for the sash cap | 134 × 56 plate | Flat, bumps up |
 
 ## Slicer settings
 

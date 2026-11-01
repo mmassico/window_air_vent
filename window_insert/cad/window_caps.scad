@@ -92,6 +92,12 @@ j_ch     = 0.6;     // chamfer at the socket's mouth (lead-in, and room for the 
 joint_l  = 24;      // joint test pieces: length of each segment end (past the deepest socket's roof)
 explode  = 0;       // assembly_view: gap between the pieces along the height (0: assembled)
 
+/* [Labels] */
+// each full cap is engraved on its back (the face against the window): T and B for the top and bottom caps, F0 to
+// F4 for the side cap's segments (the side frame), W0 to W4 for the sash cap's (the window's sash)
+tag_h    = 6;       // letter height
+tag_d    = 0.6;     // depth
+
 /* [Window (measured)] */
 H        = 1079.5;  // ceiling to floor: 1060.0 from the centre rib's tip to the centre rail's tip, + 8.50 + 11.00
 // u positions are measured from the foam's centre: the centre of the 25.90 sash channel. The first rib of each
@@ -225,13 +231,12 @@ module cap_section(kind) {
     for (s = [-1, 1]) translate([s < 0 ? -ow : fw, t - eps]) square([lip_t, lip_d + eps]);
 }
 
-module top_cap(x0 = 0, x1 = xs) {
-    multmatrix([[0, 0, 1, x0], [1, 0, 0, 0], [0, -1, 0, H], [0, 0, 0, 1]]) linear_extrude(x1 - x0) cap_section("top");
-}
+// a top or bottom cap's own coordinates (its section extruded along z from x0) placed in the window
+module at_top(x0 = 0)    multmatrix([[0, 0, 1, x0], [1, 0, 0, 0], [0, -1, 0, H], [0, 0, 0, 1]]) children();
+module at_bottom(x0 = 0) multmatrix([[0, 0, 1, x0], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1]]) children();
 
-module bottom_cap(x0 = 0, x1 = xs) {
-    multmatrix([[0, 0, 1, x0], [1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 0, 1]]) linear_extrude(x1 - x0) cap_section("bottom");
-}
+module top_cap(x0 = 0, x1 = xs)    at_top(x0) linear_extrude(x1 - x0) cap_section("top");
+module bottom_cap(x0 = 0, x1 = xs) at_bottom(x0) linear_extrude(x1 - x0) cap_section("bottom");
 
 // the side and sash caps' bodies and lips, between the top and bottom caps (and under their lips)
 // (the base is the foam's width at its ends, where those lips straddle it, and the lips' width between them)
@@ -317,9 +322,19 @@ module window_ghost() {
 }
 
 /* =================== FULL CAPS AND JOINTS =================== */
-// The top and bottom caps, whole, standing on their end at the side frame
-module cap_top()    linear_extrude(xs) cap_section("top");
-module cap_bottom() linear_extrude(xs) cap_section("bottom");
+// text s engraved into a face at p: reading along a, the letters' tops toward b (the face's outward normal is a x b)
+module tag(s, p, a, b) let(n = cross(a, b))
+    multmatrix([[a[0], b[0], n[0], p[0]], [a[1], b[1], n[1], p[1]], [a[2], b[2], n[2], p[2]], [0, 0, 0, 1]])
+        translate([0, 0, -tag_d]) linear_extrude(tag_d + 1) label(s, tag_h);
+
+// The top and bottom caps, whole, standing on their end at the side frame; the label is on the back's outdoor half,
+// between the lips' edge and the centre rib
+module cap_tb(kind, s) difference() {
+    linear_extrude(xs) cap_section(kind);
+    tag(s, [-(ow + 3.55 + clr) / 2, 0, xs / 2], [0, 0, 1], [-1, 0, 0]);
+}
+module cap_top()    cap_tb("top", "T");
+module cap_bottom() cap_tb("bottom", "B");
 
 module bx(x0, x1, y0, y1, z0, z1) translate([min(x0, x1), min(y0, y1), min(z0, z1)]) cube([abs(x1 - x0), abs(y1 - y0), abs(z1 - z0)]);
 
@@ -400,16 +415,21 @@ module joiner_print(kind) {
 
 module upright_cap(kind) if (kind == "side") side_cap(); else sash_cap();
 
-// segment i of an upright cap (0 at the floor), with a socket in each end that meets another segment
+// segment i of an upright cap (0 at the floor), with a socket in each end that meets another segment, and its label
+// at mid-height, reading upward, on the back's outdoor half: the side cap's beside the tongue, the sash cap's
+// between the groove's tongue and the wall
 function seg_lo(i) = i == 0 ? -1 : splits[i - 1];
 function seg_hi(i) = i == len(splits) ? H + 1 : splits[i];
 module segment(kind, i) {
+    zm = (max(seg_lo(i), 0) + min(seg_hi(i), H)) / 2;
     difference() {
         intersection() { upright_cap(kind); bx(-50, xs + 50, -50, 50, seg_lo(i), seg_hi(i)); }
         for (r = socks(kind)) {
             if (i > 0) socket(r, seg_lo(i), 1);
             if (i < len(splits)) socket(r, seg_hi(i), -1, i > 0);   // on top as it prints, except segment 0's
         }
+        if (kind == "side") tag(str("F", i), [0, -(side_ch[0] / 2 - clr + ow) / 2, zm], [0, 0, 1], [0, 1, 0]);
+        else tag(str("W", i), [xs, -(groove[0] / 2 - clr + sash_t / 2 + clr) / 2, zm], [0, 0, 1], [0, -1, 0]);
     }
 }
 
@@ -468,8 +488,8 @@ module joint_view() {
 module assembly_view() {
     n = len(splits);
     e = explode;
-    color([0.9, 0.75, 0.3]) bottom_cap();
-    color([0.95, 0.6, 0.25]) translate([0, 0, (n + 2) * e]) top_cap();
+    color([0.9, 0.75, 0.3]) render() at_bottom() cap_bottom();   // the printed caps, with their labels
+    color([0.95, 0.6, 0.25]) translate([0, 0, (n + 2) * e]) render() at_top() cap_top();
     // segments alternate between a lighter and a darker shade (render(): a clean preview of their sockets)
     for (i = [0 : n]) translate([0, 0, (i + 1) * e]) {
         color(i % 2 == 0 ? [0.4, 0.6, 0.9] : [0.22, 0.38, 0.7]) render() segment("side", i);
