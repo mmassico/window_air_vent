@@ -12,9 +12,12 @@ import os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_TOP = os.path.join(ROOT, "doc", "window_top_view.svg")
 OUT_SIDE = os.path.join(ROOT, "doc", "window_side_view.svg")
+OUT_WIDTH = os.path.join(ROOT, "doc", "insert_width.svg")
 
 # Measurements
-FOAM_T, FOAM_W = 50.8, 100.0
+FOAM_T, FOAM_W = 50.8, 112.0
+LIP_D, LIP_T, FOAM_CLR = 8.0, 4.8, 0.2       # the caps' lips: reach onto the foam, thickness; clearance to the foam
+CHASSIS_W = 90.0                            # the vent's chassis, on the foam's room face (at least)
 BASE = 3.0                                  # cap base at each edge of the foam (side frame and sash)
 SASH_T, SASH_THIN = 25.80, 17.10            # sash thickness at its end, and how far from its end it stays that thin
 GROOVE = (7.90, 7.50, 7.50)                 # sash end groove: width at the mouth, at the bottom, depth
@@ -145,8 +148,8 @@ def fmt(v):
 # x across the window: 0 on the side frame's face, positive toward the sash (drawn to the left); u downward (room)
 def top_view():
     xs = BASE + FOAM_W + BASE                   # the sash's end face
-    X0, Y0 = 1180, 470                          # canvas position of x = 0, u = 0
-    s = Svg(1720, 1112)
+    X0, Y0 = 1292, 470                          # canvas position of x = 0, u = 0
+    s = Svg(1832, 1112)
 
     def P(x, u):
         return X0 - x * K, Y0 + u * K
@@ -215,7 +218,7 @@ def top_view():
     s.hdim(P(xs, 0)[0], P(BASE + FOAM_W, 0)[0], yd, f"{BASE:.0f} cap", [(P(xs, 0)[0], P(0, -st)[1])],
            text_side=-1)
     s.hdim(P(BASE, 0)[0], P(0, 0)[0], yd, f"{BASE:.0f} cap", [(P(0, 0)[0], P(0, -42)[1])])
-    x = P(BASE + 62, 0)[0]
+    x = P(BASE + FOAM_W / 2 + 14, 0)[0]
     s.vdim(P(0, -FOAM_T / 2)[1], P(0, FOAM_T / 2)[1], x, f"{FOAM_T} (2 in)")
 
     # dimensions: side frame
@@ -243,7 +246,7 @@ def top_view():
     s.text(40, 44, "TOP VIEW: section through the window at mid-height, seen from above (mm)", 22, "start",
            weight="bold")
     s.text(40, s.h - 72, f"To scale: {K} px per mm in both directions. u = 0 on the foam's centre, the centre of "
-           "the side frame's 25.90 channel. The caps' 3 mm bases set the sash 106 from the side frame.", 14,
+           f"the side frame's 25.90 channel. The caps' 3 mm bases set the sash {xs:g} from the side frame.", 14,
            "start", "#333")
     s.text(40, s.h - 50, "The latch zone spans 80 mm of height (see the side view); the soft foam strip is only at "
            "the floor, 19 high; another, 1.7 thick, lies across the channel's floor, also 4.0 deep.", 14, "start", "#333")
@@ -381,5 +384,92 @@ def side_view():
     s.save(OUT_SIDE)
 
 
+
+# ================================ INSERT WIDTH ================================
+# the same top view, simplified: the caps' sections and the vent's chassis, with the chain of widths across
+def width_view():
+    xs = BASE + FOAM_W + BASE                   # the sash's end face
+    X0, Y0 = 1290, 400                          # canvas position of x = 0, u = 0
+    s = Svg(1560, 1010)
+    C_SIDE, C_SASH, C_VENT = "#8fb3e8", "#9bd4a9", "#5b5b5b"
+
+    def P(x, u):
+        return X0 - x * K, Y0 + u * K
+
+    def box(x1, u1, x2, u2, fill, **k):
+        s.rect(*P(x1, u1), *P(x2, u2), fill, **k)
+
+    fw, ow = FOAM_T / 2 + FOAM_CLR, FOAM_T / 2 + FOAM_CLR + LIP_T
+    sl = xs + SASH_THIN + 14                    # where the sash is cut off
+    fr = -30                                    # where the side frame is cut off
+    st = SASH_T / 2
+    tw, td = CH_W / 2 - 0.3, CH_D - 0.5         # the side cap's tongue
+
+    # window: side frame with its channel (right), the sash's end (left)
+    s.poly([P(0, -42), P(0, -CH_W / 2), P(-CH_D, -CH_W / 2), P(-CH_D, CH_W / 2), P(0, CH_W / 2), P(0, 42),
+            P(fr, 42), P(fr, -42)], C_FRAME)
+    s.zigzag_v(P(fr, 0)[0], P(0, -42)[1] - 12, P(0, 42)[1] + 12)
+    s.poly([P(xs, -st), P(sl, -st), P(sl, st), P(xs, st)], C_FRAME)
+    s.zigzag_v(P(sl, 0)[0], P(0, -st)[1] - 12, P(0, st)[1] + 12)
+
+    # foam, then the caps: side cap (tongue, base, lips), sash cap (base, lips, walls along the sash)
+    box(BASE, -FOAM_T / 2, BASE + FOAM_W, FOAM_T / 2, C_FOAM)
+    box(-td, -tw, 0, tw, C_SIDE)
+    box(0, -ow, BASE, ow, C_SIDE)
+    box(xs - BASE, -ow, xs, ow, C_SASH)
+    for a, b in ((-ow, -fw), (fw, ow)):
+        box(BASE, a, BASE + LIP_D, b, C_SIDE)
+        box(xs - BASE - LIP_D, a, xs - BASE, b, C_SASH)
+    for a, b in ((-ow, -st - 0.3), (st + 0.3, ow)):
+        box(xs, a, xs + 10.7, b, C_SASH)
+
+    # the vent's chassis on the room face, centred between the lips
+    xc = BASE + FOAM_W / 2
+    v0, v1 = xc - CHASSIS_W / 2, xc + CHASSIS_W / 2
+    box(v0, FOAM_T / 2, v1, FOAM_T / 2 + 22, "#f2f2f2", stroke=C_VENT, width=1.5, dash="7,4")
+
+    # labels
+    s.text(*P(xc, -6), "XPS foam", 17, weight="bold")
+    s.text(*P(xc, FOAM_T / 2 + 14), f"Vent chassis (at least {CHASSIS_W:g} wide)", 15, color=C_VENT, weight="bold")
+    s.text(*P(xc, -41), "&#8593; Outdoor", 20, color="#d8312b", weight="bold")
+    s.text(P(sl, 0)[0] + 4, P(0, -st)[1] - 14, "Sash", 15, "start", weight="bold")
+    s.text(P(fr / 2, 0)[0], P(0, -42)[1] - 14, "Side frame", 15, weight="bold")
+    for x, name in ((BASE / 2, "Side cap"), (xs - BASE / 2, "Sash cap")):   # in their bases
+        s.text(P(x, 0)[0] + 5, P(x, 0)[1], name, 14, weight="bold", rotate=-90)
+    s.text(*P(xs + 22, FOAM_T / 2 + 14), "&#8595; Room", 20, color="#1f5fbf", weight="bold")
+
+    # dimensions, room side: the chain across, the chassis' margins, the total
+    yl = P(0, ow)[1]
+    chain = [0, BASE, BASE + LIP_D, xs - BASE - LIP_D, xs - BASE, xs]
+    names = [f"{BASE:g} base", f"{LIP_D:g} lip", f"{FOAM_W - 2 * LIP_D:g} uncovered foam", f"{LIP_D:g} lip",
+             f"{BASE:g} base"]
+    yc = P(0, FOAM_T / 2 + 36)[1]
+    for (a, b), name, side in zip(zip(chain, chain[1:]), names, (1, 1, 1, -1, -1)):
+        s.hdim(P(b, 0)[0], P(a, 0)[0], yc, name, [(P(a, 0)[0], yl), (P(b, 0)[0], yl)], text_side=side)
+    ym = P(0, FOAM_T / 2 + 28)[1]
+    s.hdim(P(v0, 0)[0], P(BASE + LIP_D, 0)[0], ym, fmt((FOAM_W - 2 * LIP_D - CHASSIS_W) / 2).rstrip("0").rstrip("."),
+           [(P(v0, 0)[0], P(0, FOAM_T / 2 + 22)[1])], text_side=1)
+    s.hdim(P(xs - BASE - LIP_D, 0)[0], P(v1, 0)[0], ym, fmt((FOAM_W - 2 * LIP_D - CHASSIS_W) / 2).rstrip("0").rstrip("."),
+           [(P(v1, 0)[0], P(0, FOAM_T / 2 + 22)[1])], text_side=-1)
+    yt = P(0, FOAM_T / 2 + 48)[1]
+    s.hdim(P(xs, 0)[0], P(0, 0)[0], yt, f"{xs:g} side frame to sash (the top and bottom caps' length)",
+           [(P(xs, 0)[0], yc + 6), (P(0, 0)[0], yc + 6)])
+
+    # dimensions, outdoor side: the foam's width
+    yf = P(0, -FOAM_T / 2 - 10)[1]
+    s.hdim(P(BASE + FOAM_W, 0)[0], P(BASE, 0)[0], yf, f"{FOAM_W:g} foam",
+           [(P(BASE + FOAM_W, 0)[0], P(0, -ow)[1]), (P(BASE, 0)[0], P(0, -ow)[1])])
+
+    s.text(40, 40, "INSERT WIDTH: the foam and its caps across the window, seen from above (mm)", 22, "start",
+           weight="bold")
+    s.text(40, s.h - 50, f"To scale: {K} px per mm. Section at mid-height, room at the bottom. The lips are "
+           f"{LIP_T:g} thick, with {FOAM_CLR:g} clearance to the foam; the top and bottom caps' lips reach", 14,
+           "start", "#333")
+    s.text(40, s.h - 28, f"{LIP_D:g} onto the foam the same way. The vent's chassis fits between the lips with "
+           f"{(FOAM_W - 2 * LIP_D - CHASSIS_W) / 2:g} to spare on each side.", 14, "start", "#333")
+    s.save(OUT_WIDTH)
+
+
 top_view()
 side_view()
+width_view()

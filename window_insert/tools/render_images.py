@@ -50,5 +50,11 @@ if __name__ == "__main__":
             ("corner_side_top", "1.4,0,25,55,0,25,280", (1000, 1100), False),
             ("corner_side_bottom", "1.4,0,27,55,0,25,280", (1000, 1100), False),
             ("corner_sash_top", "-1.2,0,20,55,0,25,250", (1000, 1000), False),
-            ("corner_sash_bottom", "-1.2,0,20,55,0,25,250", (1000, 1000), False)]:
+            ("corner_sash_bottom", "-1.2,0,20,55,0,25,250", (1000, 1000), False),
+            ("joint_side_lower", "1.4,0,10,55,0,25,200", (1000, 900), False),
+            ("joint_side_upper", "1.4,0,10,235,0,205,200", (1000, 900), False),
+            ("joint_sash_lower", "-1.2,0,10,55,0,155,200", (1000, 900), False),
+            ("joint_sash_upper", "-1.2,0,10,235,0,25,200", (1000, 900), False),
+            ("joiner_side", "0,0,0,45,0,30,0", (1000, 800), True),
+            ("joiner_sash", "0,0,0,45,0,30,0", (1000, 800), True)]:
         save(render(os.path.join(tmp, f"{name}.png"), camera, size, [f'part="{name}"'], viewall), f"part_{name}.png")
