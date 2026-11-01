@@ -30,7 +30,7 @@ Side cap in blue, sash cap in green, top cap in orange, bottom cap in yellow. Th
 - **Lips:** every cap has a lip on each face of the foam, 8 mm deep and 4.8 mm thick. They keep the foam from falling indoor or outdoor, and leave 96 mm of foam uncovered across the window, so the vent's chassis (at least 90 mm wide) fits between them with 3 mm to spare on each side. For security, the sash stays open only 118 mm, close to the 100 mm opening that building codes commonly use as a limit, and the thick lips make the insert sturdier. The top and bottom caps' lips run their full length and straddle the ends of the side and sash caps, which aligns the corners.
 - **Gaps:** 0.5 mm where a cap's end meets another cap, for foam tape. 0.3 mm per side on the window's ribs and channels, 0.5 mm at the bottom of a slot.
 
-The side and sash caps run nearly the full height, so they print in five segments of about 215 mm each, joined at 216, 432, 648 and 864 mm above the floor. Each segment has a socket in each end that meets another one: in the tongue for the side cap, in each wall for the sash cap. A separate joiner, printed flat, fills the two sockets of a joint. A bump near each of its ends clicks into a window in a tab of the socket's wall (two slits make the tab), so the segments snap together without glue. The window and the bump are diamonds: their 45° edges print standing without an overhang, and a pull on the joint wedges the bump's V into the window's V, which centres it rather than pushing the tab out. Each socket's closed end is a 45° gable for the same reason, so a socket printed opening down needs no bridge. The side cap's tabs are on the tongue's back face, hidden in the channel; the sash cap's are on the walls' free ends.
+The side and sash caps run nearly the full height, so they print in five segments of about 215 mm each, joined at 216, 432, 648 and 864 mm above the floor. Each segment has a socket in each end that meets another one: in the tongue for the side cap, in each wall for the sash cap. A separate joiner, printed flat, fills the two sockets of a joint. A bump near each of its ends clicks into a window in a tab of the socket's wall (two slits make the tab), so the segments snap together without glue. The window and the bump are diamonds: their 45° edges print standing without an overhang, and a pull on the joint wedges the bump's V into the window's V, which centres it rather than pushing the tab out. Each socket's closed end is a 45° gable for the same reason, so a socket printed opening down needs no bridge. A socket printed opening up has a flat bottom instead, at the same depth: a firmer stop for the joiner. The side cap's tabs are on the tongue's back face, hidden in the channel; the sash cap's are on the walls' free ends.
 
 The caps print in one piece across their section, with low infill: the trapped air insulates, and only thin walls bridge the cold and warm faces.
 
@@ -92,7 +92,7 @@ Test pieces first: the profiles, then the corners, then a joint. Print in PETG: 
 | `corner_sash_top` | <img src="images/part_corner_sash_top.png" width="180"> | 1 | Sash cap's top end: the channel for the sash and the groove tongue, shallower over the screw head; the channel's walls go on to the ceiling, the room-side one notched for the room-side rib | 21.7 × 60.8 × 51.5 | Cut end on the bed, walls up |
 | `corner_sash_bottom` | <img src="images/part_corner_sash_bottom.png" width="180"> | 1 | Sash cap's bottom end, the groove tongue shallower over the screw head; the channel's walls go on to the floor, the room-side one notched for the room-side rail | 21.7 × 60.8 × 54 | Cut end on the bed, walls up |
 
-**Joint test.** Both ends of the second joint (432 mm above the floor) in the side and sash caps, 24 mm each, with their joiners. Push a joiner into the lower end until it clicks, then push the upper end onto it. The upper ends print standing on their socket end, the lower ends with it on top: the real segments have both. `joint_tests` puts all of them on one plate, about 155 × 61.
+**Joint test.** Both ends of the second joint (432 mm above the floor) in the side and sash caps, 24 mm each, with their joiners. Push a joiner into the lower end until it clicks, then push the upper end onto it. The upper ends print standing on their socket end, the lower ends with it on top: the real segments have both. `joint_tests` puts all of them on one plate, about 156 × 61.
 
 | Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
 |---|:---:|---|---|---|---|
@@ -100,8 +100,8 @@ Test pieces first: the profiles, then the corners, then a joint. Print in PETG: 
 | `joint_side_upper` | <img src="images/part_joint_side_upper.png" width="180"> | 1 | Side cap above a joint (seen from below) | 21.2 × 60.8 × 24 | Standing on its socket end |
 | `joint_sash_lower` | <img src="images/part_joint_sash_lower.png" width="180"> | 1 | Sash cap below a joint: a socket in each wall, the snap tab on the wall's free end | 21.7 × 60.8 × 24 | Standing, sockets up |
 | `joint_sash_upper` | <img src="images/part_joint_sash_upper.png" width="180"> | 1 | Sash cap above a joint (seen from below) | 21.7 × 60.8 × 24 | Standing on its socket end |
-| `joiner_side` | <img src="images/part_joiner_side.png" width="180"> | 1 | Joins two side cap segments. A bump near each end clicks into the window in a socket's tab: its steep face holds, its ramp leads in | 29 × 21.7 × 7.8 | Flat, bumps up |
-| `joiner_sash` | <img src="images/part_joiner_sash.png" width="180"> | 2 | Joins two sash cap segments, one in each wall | 29 × 13.6 × 10.3 | Flat, bumps up |
+| `joiner_side` | <img src="images/part_joiner_side.png" width="180"> | 1 | Joins two side cap segments. A bump near each end clicks into the window in a socket's tab: its steep face holds, its ramp leads in | 32 × 21.9 × 8.4 | Flat, bumps up |
+| `joiner_sash` | <img src="images/part_joiner_sash.png" width="180"> | 2 | Joins two sash cap segments, one in each wall | 32 × 13.8 × 10.9 | Flat, bumps up |
 
 **Full caps.** In the model, not exported yet: they wait for the joint test and for the real foam's thickness.
 
@@ -111,7 +111,7 @@ Test pieces first: the profiles, then the corners, then a joint. Print in PETG: 
 | `cap_bottom` | 1 | Bottom cap, whole | 60.8 × 22.5 × 118 | Standing on its end |
 | `side_0` to `side_4` | 1 each | Side cap's segments, numbered from 0 at the floor. `side_2` has the relief around the window latch | 21.2 × 60.8 × 213 to 216 | Standing; `side_0` turned over, on its upper end |
 | `sash_0` to `sash_4` | 1 each | Sash cap's segments, numbered from 0 at the floor | 21.7 × 60.8 × 215 to 216 | Standing; `sash_0` turned over, on its upper end |
-| `joiners` | 1 plate | All the joiners: 4 for the side cap, 8 for the sash cap | 131 × 56 plate | Flat, bumps up |
+| `joiners` | 1 plate | All the joiners: 4 for the side cap, 8 for the sash cap | 134 × 56 plate | Flat, bumps up |
 
 ## Slicer settings
 

@@ -78,12 +78,16 @@ splits   = [216, 432, 648, 864];  // heights of the joints between the side and 
                                   //   numbered 0 to 4 from the floor, each under 256 mm in its print orientation
 j_d      = 15;      // socket depth into each segment's end (to the eaves of its roof, see socket())
 j_wall   = 1.6;     // socket wall on the snap tab's face: the tab's thickness
-j_clr    = 0.2;     // clearance per side around the joiner (and 0.5 at each of its ends)
+j_clr    = 0.1;     // clearance per side around the joiner
 j_tab    = [8, 12]; // snap tab: width, length from the segment's end
 j_slit   = 0.8;     // slit on each side of the tab
 j_win    = [6, 4];  // window in the tab, a diamond (45 degree edges: no bridge when printed standing): width and
                     //   height, distance of its near corner from the segment's end
-j_bump   = 0.6;     // bump on the joiner (the tab flexes j_bump - j_clr as it snaps over)
+j_bump   = 1.0;     // bump on the joiner (the tab flexes j_bump - j_clr as it snaps over)
+j_catch  = 0.2;     // axial play between the bump's catch and the window's: how far each side of a joint opens when
+                    //   pulled
+j_end    = 0.1;     // play between each end of the joiner and its socket's roof (keep it under j_catch: a joiner
+                    //   pushed to the bottom of one socket must still let the other one's tab snap in)
 j_ch     = 0.6;     // chamfer at the socket's mouth (lead-in, and room for the elephant's foot)
 joint_l  = 24;      // joint test pieces: length of each segment end (past the deepest socket's roof)
 explode  = 0;       // assembly_view: gap between the pieces along the height (0: assembled)
@@ -334,19 +338,24 @@ module diamond(xa, xb, uc, dc, a, zs, h)
 
 wa = j_win[0] / 2;      // the window's half-diagonal
 wc = j_win[1] + wa;     // its centre's distance from the segment's end
-ba = wa - 0.45;         // the bump's half-diagonal: 0.3 mm inside the window's edges
+ba = wa - 0.15;         // the bump's half-diagonal: 0.1 mm inside the window's side edges
+bc = j_win[1] + j_catch + ba;   // the bump's centre: its catch (the V toward the joint) j_catch from the window's
+jc = 1;                 // the joiner's end chamfer, 45 degrees
+j_stop = j_d + j_clr + jc;      // how deep the joiner's end can go: its chamfers bear on a gable's slopes there, and
+                                //   a flat-bottomed socket ends there
 
 // a socket, cut into a segment from its end at height zs (h = 1: upward into it, -1: downward), with the snap tab
-// (two slits through the wall) and the window in the tab
-module socket(r, zs, h) {
+// (two slits through the wall) and the window in the tab. flat: it prints opening up, so its closed end is flat (a
+// firmer stop for the joiner); otherwise a gable
+module socket(r, zs, h, flat = false) {
     x0 = r[0]; x1 = r[1]; u0 = r[2]; u1 = r[3];
     uc = (u0 + u1) / 2;
     xo = r[4] < 0 ? [x0 - j_wall - 1, x0 + eps] : [x1 - eps, x1 + j_wall + 1];   // through the tab's wall
-    bx(x0, x1, u0, u1, zs - h, zs + h * j_d);
-    // its closed end, a 45 degree gable across its narrower side: no bridge when it prints opening down
+    bx(x0, x1, u0, u1, zs - h, zs + h * (flat ? j_stop : j_d));
+    // the gable: 45 degrees across its narrower side, no bridge when it prints opening down
     xr = x1 - x0 <= u1 - u0;   // the ridge runs along u
     rise = (xr ? x1 - x0 : u1 - u0) / 2;
-    hull() {
+    if (!flat) hull() {
         bx(x0, x1, u0, u1, zs + h * (j_d - eps), zs + h * j_d);
         if (xr) bx((x0 + x1) / 2 - eps, (x0 + x1) / 2 + eps, u0, u1, zs + h * j_d, zs + h * (j_d + rise));
         else    bx(x0, x1, (u0 + u1) / 2 - eps, (u0 + u1) / 2 + eps, zs + h * j_d, zs + h * (j_d + rise));
@@ -357,19 +366,27 @@ module socket(r, zs, h) {
 }
 
 // the joiner in its sockets, centred on the joint at height zs: a diamond bump near each end, full height on its
-// half toward the joint (its catch: the two edges of the V) and ramped down on the other half
+// half toward the joint (its catch: the two edges of the V) and ramped down on the other half. Its ends' 45 degree
+// chamfers bear on the sockets' gables (or its ends on a flat bottom), j_end short of them: that sets how deep it can
+// go. The long edges of its back, on the bed, are chamfered too (elephant's foot).
 module joiner(r, zs) {
     x0 = r[0] + j_clr; x1 = r[1] - j_clr; u0 = r[2] + j_clr; u1 = r[3] - j_clr; f = r[4];
-    L  = j_d - 0.5;
-    c  = 0.5;   // end chamfer
+    c  = jc;
+    k  = 0.4;   // the back's chamfer
+    L  = j_stop - j_end;
     uc = (u0 + u1) / 2;
-    xf = f < 0 ? x0 : x1;
-    hull() { bx(x0, x1, u0, u1, zs - L + c, zs + L - c); bx(x0 + c, x1 - c, u0 + c, u1 - c, zs - L, zs + L); }
+    xf = f < 0 ? x0 : x1;   // the tab's face, bumps out
+    xb = f < 0 ? x1 : x0;   // the back
+    hull() {
+        bx(xf, xb + f * k, u0, u1, zs - L + c, zs + L - c);
+        bx(xf, xb, u0 + k, u1 - k, zs - L + c, zs + L - c);
+        bx(x0 + c, x1 - c, u0 + c, u1 - c, zs - L, zs + L);
+    }
     for (h = [-1, 1]) intersection() {
-        diamond(xf - f * c, xf + f * j_bump, uc, wc, ba, zs, h);
+        diamond(xf - f * 0.5, xf + f * j_bump, uc, bc, ba, zs, h);
         hull() {
-            bx(xf - f * c, xf + f * j_bump, uc - wa, uc + wa, zs + h * (wc - wa), zs + h * wc);
-            bx(xf - f * c, xf, uc - wa, uc + wa, zs + h * (wc + ba - eps), zs + h * (wc + ba));
+            bx(xf - f * 0.5, xf + f * j_bump, uc - wa, uc + wa, zs + h * (bc - wa), zs + h * bc);
+            bx(xf - f * 0.5, xf, uc - wa, uc + wa, zs + h * (bc + ba - eps), zs + h * (bc + ba));
         }
     }
 }
@@ -391,7 +408,7 @@ module segment(kind, i) {
         intersection() { upright_cap(kind); bx(-50, xs + 50, -50, 50, seg_lo(i), seg_hi(i)); }
         for (r = socks(kind)) {
             if (i > 0) socket(r, seg_lo(i), 1);
-            if (i < len(splits)) socket(r, seg_hi(i), -1);
+            if (i < len(splits)) socket(r, seg_hi(i), -1, i > 0);   // on top as it prints, except segment 0's
         }
     }
 }
@@ -408,7 +425,7 @@ module joint_piece(kind, upper) {
     zs = splits[1];
     translate([kind == "sash" ? -xs : 0, 0, upper ? -zs : -(zs - joint_l)]) difference() {
         intersection() { upright_cap(kind); bx(-50, xs + 50, -50, 50, upper ? zs : zs - joint_l, upper ? zs + joint_l : zs); }
-        for (r = socks(kind)) socket(r, zs, upper ? 1 : -1);
+        for (r = socks(kind)) socket(r, zs, upper ? 1 : -1, !upper);
     }
 }
 
@@ -435,7 +452,7 @@ module joint_view() {
         color(kind == "side" ? [0.4, 0.6, 0.9] : [0.5, 0.8, 0.6]) {
             difference() {
                 intersection() { upright_cap(kind); bx(-50, xs + 50, -50, 50, zs - joint_l, zs); }
-                for (r = socks(kind)) socket(r, zs, -1);
+                for (r = socks(kind)) socket(r, zs, -1, true);
             }
             translate([0, 0, 2 * j_d + 10]) difference() {
                 intersection() { upright_cap(kind); bx(-50, xs + 50, -50, 50, zs, zs + joint_l); }
