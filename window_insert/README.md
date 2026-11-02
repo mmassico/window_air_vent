@@ -12,7 +12,7 @@ The insert in the window, seen from the room, with the window and the foam drawn
 2. Bottom corner at the side frame: the tongue's legs straddle the centre rail and the soft foam strip.
 3. Bottom corner at the sash: the sash cap's walls run down to the floor beside the sash.
 
-Side cap in blue, sash cap in green, top cap in orange, bottom cap in yellow. The side and sash caps' segments alternate between a light and a dark shade. In OpenSCAD: `part = "assembly_view"`, and `explode = 50` to spread the pieces apart.
+Side cap in blue, sash cap in green, top cap in orange, bottom cap in yellow. The side and sash caps' pieces alternate between a light and a dark shade. In OpenSCAD: `part = "assembly_view"`, and `explode = 50` to spread the pieces apart.
 
 > **Status: ready to print.** The profile slices, the corner pieces, a joint and the latch slice are printed and fit the window, after a few corrections: the top frame's room-side rib sits 1.5 mm further toward the room than the bottom one, the sash's groove has screw heads near its ends, and a soft strip lies on the side frame channel's floor. The full caps are exported for the measured foam; printing them is next.
 
@@ -25,7 +25,7 @@ Side cap in blue, sash cap in green, top cap in orange, bottom cap in yellow. Th
 - **Lips:** every cap has a lip on each face of the foam, 8 mm deep and 4.8 mm thick. They keep the foam from falling indoor or outdoor, and leave 96 mm of foam uncovered across the window, so the vent's chassis (at least 90 mm wide) fits between them with 3 mm to spare on each side. For security, the sash stays open only 118 mm, close to the 100 mm opening that building codes commonly use as a limit, and the thick lips make the insert sturdier. The top and bottom caps' lips run their full length and straddle the ends of the side and sash caps, which aligns the corners.
 - **Gaps:** 0.5 mm where a cap's end meets another cap, for foam tape. 0.3 mm per side on the window's ribs and channels, 0.5 mm at the bottom of a slot.
 
-The side and sash caps run nearly the full height, so they print in five segments of about 215 mm each, joined at 216, 432, 648 and 864 mm above the floor. Each segment has a socket in each end that meets another one: in the tongue for the side cap, in each wall for the sash cap. A separate joiner, printed flat, fills the two sockets of a joint. A bump near each of its ends clicks into a window in a tab of the socket's wall (two slits make the tab), so the segments snap together without glue. The window and the bump are diamonds: their 45° edges print standing without an overhang, and a pull on the joint wedges the bump's V into the window's V, which centres it rather than pushing the tab out. Each socket's closed end is a 45° gable for the same reason, so a socket printed opening down needs no bridge. A socket printed opening up has a flat bottom instead, at the same depth: a firmer stop for the joiner. The side cap's tabs are on the tongue's back face, hidden in the channel; the sash cap's are on the walls' free ends. There the tab takes nearly all of the socket's outer wall, which would let the joint rock in the tab's direction, so the sash cap's sockets go 25 mm deep instead of 15: its joiners reach well past the tabs, into rigid walls.
+The side and sash caps run nearly the full height, so they print in pieces about 108 mm tall: five segments joined at 216, 432, 648 and 864 mm above the floor, each in two halves, a and b, joined at its middle (108, 324, 540, 756 and 972 mm). Whole segments, 215 mm tall, were knocked off the bed near their top as they printed standing; `halves = false` still exports them, and they fit the halves. Each piece has a socket in each end that meets another one: in the tongue for the side cap, in each wall for the sash cap. A separate joiner, printed flat, fills the two sockets of a joint. A bump near each of its ends clicks into a window in a tab of the socket's wall (two slits make the tab), so the pieces snap together without glue. The window and the bump are diamonds: their 45° edges print standing without an overhang, and a pull on the joint wedges the bump's V into the window's V, which centres it rather than pushing the tab out. Each socket's closed end is a 45° gable for the same reason, so a socket printed opening down needs no bridge. A socket printed opening up has a flat bottom instead, at the same depth: a firmer stop for the joiner. The side cap's tabs are on the tongue's back face, hidden in the channel; the sash cap's are on the walls' free ends. There the tab takes nearly all of the socket's outer wall, which would let the joint rock in the tab's direction, so the sash cap's sockets go 25 mm deep instead of 15: its joiners reach well past the tabs, into rigid walls.
 
 The caps print in one piece across their section, with low infill: the trapped air insulates, and only thin walls bridge the cold and warm faces.
 
@@ -34,10 +34,10 @@ The caps print in one piece across their section, with low infill: the trapped a
 Like a drawer. Nothing is glued, so it all comes out again in spring.
 
 1. Open the sash wider than usual, about 20 to 25 cm.
-2. Snap the side cap's segments together on a table, then push the whole cap into the side frame's channel.
+2. Snap the side cap's pieces together on a table, then push the whole cap into the side frame's channel.
 3. Set the bottom cap on its rails, a little away from the side frame, and slide it along them against the side cap. Do the same with the top cap on its ribs, holding it up.
 4. Slide the foam in sideways, between the top and bottom caps' lips, until its edge seats in the side cap. It now holds the top cap up.
-5. Put the sash cap, its segments snapped together, on the foam's other edge.
+5. Put the sash cap, its pieces snapped together, on the foam's other edge.
 6. Close the sash against it: it clamps everything across the window.
 7. Tape over the joint between the lips and the foam on the room side, for drafts.
 
@@ -69,20 +69,21 @@ All dimensions are in mm. Positions across the foam's thickness, called *u* in t
 
 Print in PETG: PLA turns brittle in the cold. Nothing needs supports, and the STLs in [`stl/`](stl) are exported in their print orientation, with the default parameters (see [Slicer settings](#slicer-settings)).
 
-The caps are exported for 2 in foam (50.8 mm). The boards measured 49.9 to 51 mm, and the lips leave 51.2 mm, so the foam slides in. Each cap has its label engraved on its back (the face against the window, on its outdoor half): F for the side frame's cap, W for the window sash's. The segments' labels read upward as installed.
+The caps are exported for 2 in foam (50.8 mm). The boards measured 49.9 to 51 mm, and the lips leave 51.2 mm, so the foam slides in. Each cap has its label engraved on its back (the face against the window, on its outdoor half): F for the side frame's cap, W for the window sash's. The pieces' labels read upward as installed.
 
 | Part | <div style="width:180px">Thumbnail</div> | Label | Qty | Description | Size (mm) | Print orientation |
 |---|:---:|---|---|---|---|---|
 | `cap_top` | <img src="images/part_cap_top.png" height="200"> | T | 1 | Top cap, whole | 60.8 × 20 × 118 | Standing on its end |
 | `cap_bottom` | <img src="images/part_cap_bottom.png" height="200"> | B | 1 | Bottom cap, whole | 60.8 × 22.5 × 118 | Standing on its end |
-| `side_0` to `side_4` | <img src="images/part_side_0.png" height="200"> | F0 to F4 | 1 each | Side cap's segments, numbered from 0 at the floor. `side_2` has the relief around the window latch. Shown: `side_0`, turned over | 21.2 × 60.8 × 213 to 216 | Standing; `side_0` turned over, on its upper end |
-| `sash_0` to `sash_4` | <img src="images/part_sash_0.png" height="200"> | W0 to W4 | 1 each | Sash cap's segments, numbered from 0 at the floor. Shown: `sash_0`, turned over | 21.7 × 60.8 × 215 to 216 | Standing; `sash_0` turned over, on its upper end |
-| `joiners` | <img src="images/part_joiners.png" width="180"> | | 1 plate | All the joiners: 4 for the side cap, 8 for the sash cap | 134 × 88 plate | Flat, bumps up |
+| `side_0a` to `side_4b` | <img src="images/part_side_0a.png" height="200"> | F0a to F4b | 1 each | Side cap's pieces, from `side_0a` at the floor: `side_0a`, `side_0b`, `side_1a` and so on. `side_2a` and `side_2b` have the relief around the window latch. Shown: `side_0a`, turned over | 21.2 × 60.8 × 105 to 108 | Standing; `side_0a` and `side_2b` turned over, on their upper end |
+| `sash_0a` to `sash_4b` | <img src="images/part_sash_0a.png" height="200"> | W0a to W4b | 1 each | Sash cap's pieces, from `sash_0a` at the floor. Shown: `sash_0a`, turned over | 21.7 × 60.8 × 107 to 108 | Standing; `sash_0a` turned over, on its upper end |
+| `joiners` | <img src="images/part_joiners.png" width="180"> | | 1 plate | All the joiners: 9 for the side cap, 18 for the sash cap | 168 × 146 plate | Flat, bumps up |
 
 **Plates.** Slicer estimates (Bambu Studio, the settings below), not measured prints:
 
-- The twelve caps fit on one plate: about 22 h 40 and 924 g of PETG.
-- Or print `cap_top` and `cap_bottom` on a plate of their own, to try them on the foam first; the ten segments then take about 820 g.
+- The two caps and the ten whole segments, on one plate, came to about 22 h 40 and 924 g of PETG; the halves weigh about the same as the segments (about 820 g for all twenty).
+- The twenty halves, with the 20 mm brim and 15 mm between parts, need two plates.
+- `side_2b` prints turned over, on its 648 mm end: its lower end is in the latch relief, which would leave it standing on a smaller face. The relief's slopes are 45° both ways, so it needs no supports.
 - The joiners print on their own plate, with 4 walls and 40 % infill.
 
 ### To buy
@@ -118,7 +119,7 @@ Optional now: they checked the model against the window before the full caps. Pr
 | `corner_sash_top` | <img src="images/part_corner_sash_top.png" width="180"> | 1 | Sash cap's top end: the channel for the sash and the groove tongue, shallower over the screw head; the channel's walls go on to the ceiling, the room-side one notched for the room-side rib | 21.7 × 60.8 × 51.5 | Cut end on the bed, walls up |
 | `corner_sash_bottom` | <img src="images/part_corner_sash_bottom.png" width="180"> | 1 | Sash cap's bottom end, the groove tongue shallower over the screw head; the channel's walls go on to the floor, the room-side one notched for the room-side rail | 21.7 × 60.8 × 54 | Cut end on the bed, walls up |
 
-**Latch test.** A 3 mm slice of the side cap at the latch zone's mid-height, printed flat: the tongue, the base and the outdoor lip, the room side cut away from u = 17.9. Press its tongue into the side frame's channel and slide it to the latch: the latch must clear the cut edge, rather than reprinting `side_2` to find out.
+**Latch test.** A 3 mm slice of the side cap at the latch zone's mid-height, printed flat: the tongue, the base and the outdoor lip, the room side cut away from u = 17.9. Press its tongue into the side frame's channel and slide it to the latch: the latch must clear the cut edge, rather than reprinting `side_2a` and `side_2b` to find out.
 
 | Part | Image | Qty | Description | Size (mm) | Print orientation |
 |---|---|---|---|---|---|
@@ -132,8 +133,8 @@ Optional now: they checked the model against the window before the full caps. Pr
 | `joint_side_upper` | <img src="images/part_joint_side_upper.png" width="180"> | 1 | Side cap above a joint (seen from below) | 21.2 × 60.8 × 24 | Standing on its socket end |
 | `joint_sash_lower` | <img src="images/part_joint_sash_lower.png" width="180"> | 1 | Sash cap below a joint: a socket in each wall, the snap tab on the wall's free end | 21.7 × 60.8 × 35 | Standing, sockets up |
 | `joint_sash_upper` | <img src="images/part_joint_sash_upper.png" width="180"> | 1 | Sash cap above a joint (seen from below) | 21.7 × 60.8 × 35 | Standing on its socket end |
-| `joiner_side` | <img src="images/part_joiner_side.png" width="180"> | 1 | Joins two side cap segments. A bump near each end clicks into the window in a socket's tab: its steep face holds, its ramp leads in | 32 × 21.9 × 8.4 | Flat, bumps up |
-| `joiner_sash` | <img src="images/part_joiner_sash.png" width="180"> | 2 | Joins two sash cap segments, one in each wall | 52 × 13.8 × 10.9 | Flat, bumps up |
+| `joiner_side` | <img src="images/part_joiner_side.png" width="180"> | 1 | Joins two side cap pieces. A bump near each end clicks into the window in a socket's tab: its steep face holds, its ramp leads in | 32 × 21.9 × 8.4 | Flat, bumps up |
+| `joiner_sash` | <img src="images/part_joiner_sash.png" width="180"> | 2 | Joins two sash cap pieces, one in each wall | 52 × 13.8 × 10.9 | Flat, bumps up |
 
 **Snap test.** The smallest joint test, to feel the snap after changing the tab: the room-side wall of the sash cap's joint, both ends, and one `joiner_sash`, about 20 g. The full `joint_tests` also checks the side cap's joint. The tab is now 11.6 mm wide and 13 mm long (8 × 12 in the first joint test): more material beside the window, about the same flex, less strain at its root. The snap test passed: it snaps firmly, the tab is sturdy, and the joint comes apart and goes back together without breaking it. The sash cap's sockets have since gone from 15 to 25 mm deep, so its joint won't rock; the tab and the bump, measured from the segment's end, are unchanged.
 
@@ -153,7 +154,7 @@ For a 0.4 mm nozzle. The caps print standing, the joiners flat.
 | Top and bottom layers | 4 | 4 | |
 | Infill | Gyroid, 10 to 15 % | Gyroid, 40 % | See below |
 | Supports | None | None | Every overhang is 45° or less: diamond windows, gabled socket ends |
-| Brim | 5 mm | None | A segment is 216 mm tall on a 21 × 61 mm footprint: the brim keeps it from tipping or lifting |
+| Brim | Outer only, 20 mm | None | A piece is up to 118 mm tall on a footprint about 21 × 61 mm: without a brim, a cap came loose and fell. Leave 15 mm between parts |
 | Elephant's foot compensation | 0.2 mm, if the slicer has it | | The sockets' mouths are chamfered too |
 
 **Infill.** The caps insulate with the air trapped in their infill, and only the plastic that bridges the cold and warm faces conducts heat. So density matters more than pattern: keep it low, and keep the walls to 3.

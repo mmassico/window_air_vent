@@ -52,7 +52,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part = "joint_tests";   // [cap_top, cap_bottom, side_0, side_1, side_2, side_3, side_4, sash_0, sash_1, sash_2, sash_3, sash_4, joiner_side, joiner_sash, joiners, joint_tests, snap_test, joint_side_lower, joint_side_upper, joint_sash_lower, joint_sash_upper, joint_view, assembly_view, corners, corner_top, corner_bottom, corner_side_top, corner_side_bottom, corner_sash_top, corner_sash_bottom, latch_slice, corners_view, slices, slice_top, slice_bottom, slice_side, slice_sash, slice_pair_view]
+part = "joint_tests";   // [cap_top, cap_bottom, side_0a, side_0b, side_1a, side_1b, side_2a, side_2b, side_3a, side_3b, side_4a, side_4b, sash_0a, sash_0b, sash_1a, sash_1b, sash_2a, sash_2b, sash_3a, sash_3b, sash_4a, sash_4b, joiner_side, joiner_sash, joiners, joint_tests, snap_test, joint_side_lower, joint_side_upper, joint_sash_lower, joint_sash_upper, joint_view, assembly_view, corners, corner_top, corner_bottom, corner_side_top, corner_side_bottom, corner_sash_top, corner_sash_bottom, latch_slice, corners_view, slices, slice_top, slice_bottom, slice_side, slice_sash, slice_pair_view]
 
 /* [Fit] */
 clr      = 0.3;     // clearance per side on the window's ribs, channel and sash
@@ -77,6 +77,9 @@ latch_t  = 3;       // latch test slice: thickness
 /* [Joints] */
 splits   = [216, 432, 648, 864];  // heights of the joints between the side and sash caps' segments: 5 segments,
                                   //   numbered 0 to 4 from the floor, each under 256 mm in its print orientation
+halves   = true;    // print each segment in two halves, a and b from the floor, joined at its middle: a 215 mm
+                    //   segment standing on its end can be knocked off the bed near its top. The halves keep the
+                    //   whole segments' joints, so they mix with whole segments already printed (halves = false)
 j_d      = [15, 25]; // socket depth into each segment's end (to the eaves of its roof, see socket()): side cap, sash
                      //   cap. The sash cap's tab is its socket's whole outer wall but for 2 mm a side, so its joiner
                      //   goes deeper, to bear on a rigid wall well past the tab: the joint then won't rock
@@ -100,7 +103,8 @@ explode  = 0;       // assembly_view: gap between the pieces along the height (0
 
 /* [Labels] */
 // each full cap is engraved on its back (the face against the window): T and B for the top and bottom caps, F0 to
-// F4 for the side cap's segments (the side frame), W0 to W4 for the sash cap's (the window's sash)
+// F4 for the side cap's segments (the side frame), W0 to W4 for the sash cap's (the window's sash); F0a, F0b and so
+// on for halves
 tag_h    = 6;       // letter height
 tag_d    = 0.6;     // depth
 
@@ -428,28 +432,43 @@ module joiner_print(kind) {
 
 module upright_cap(kind) if (kind == "side") side_cap(); else sash_cap();
 
-// segment i of an upright cap (0 at the floor), with a socket in each end that meets another segment, and its label
-// at mid-height, reading upward, on the back's outdoor half: the side cap's beside the tongue, the sash cap's
-// between the groove's tongue and the wall
-function seg_lo(i) = i == 0 ? -1 : splits[i - 1];
-function seg_hi(i) = i == len(splits) ? H + 1 : splits[i];
+// the pieces the upright caps print in: the segments, or their halves. cuts: the joints between them, from the floor
+seg_ends = concat([0], splits, [H]);
+cuts = halves ? [for (k = [1 : 2 * len(splits) + 1])
+                    k % 2 == 0 ? seg_ends[k / 2] : (seg_ends[(k - 1) / 2] + seg_ends[(k + 1) / 2]) / 2]
+              : splits;
+function seg_name(i) = halves ? str(floor(i / 2), chr(97 + i % 2)) : str(i);   // 0a, 0b, 1a... or 0, 1, 2...
+
+// the side cap's latch relief, from the bottom of its lower slopes to the top of its upper ones (see side_cap())
+relief = let(lz = bot_ribs[0][2] + latch[1], d = (ow + 1 - latch[0] + clr) + lip_d + 1)
+    [lz - clr - d, lz + latch[2] + clr + d];
+
+// piece i turns over to print on its upper end: the lowest one (its base and lips start above its foot, like the
+// corner pieces), and a side cap piece whose lower end is in the latch relief (its upper end has the full profile)
+function seg_flip(kind, i) = i == 0 || (kind == "side" && seg_lo(i) > relief[0] && seg_lo(i) < relief[1]);
+
+// piece i of an upright cap (0 at the floor), with a socket in each end that meets another piece, and its label at
+// mid-height, reading upward, on the back's outdoor half: the side cap's beside the tongue, the sash cap's between
+// the groove's tongue and the wall. A socket opening up as it prints has a flat bottom, one opening down a gable
+function seg_lo(i) = i == 0 ? -1 : cuts[i - 1];
+function seg_hi(i) = i == len(cuts) ? H + 1 : cuts[i];
 module segment(kind, i) {
     zm = (max(seg_lo(i), 0) + min(seg_hi(i), H)) / 2;
+    f  = seg_flip(kind, i);
     difference() {
         intersection() { upright_cap(kind); bx(-50, xs + 50, -50, 50, seg_lo(i), seg_hi(i)); }
         for (r = socks(kind)) {
-            if (i > 0) socket(r, seg_lo(i), 1);
-            if (i < len(splits)) socket(r, seg_hi(i), -1, i > 0);   // on top as it prints, except segment 0's
+            if (i > 0) socket(r, seg_lo(i), 1, f);
+            if (i < len(cuts)) socket(r, seg_hi(i), -1, !f);
         }
-        if (kind == "side") tag(str("F", i), [0, -(side_ch[0] / 2 - clr + ow) / 2, zm], [0, 0, 1], [0, 1, 0]);
-        else tag(str("W", i), [xs, -(groove[0] / 2 - clr + sash_t / 2 + clr) / 2, zm], [0, 0, 1], [0, -1, 0]);
+        if (kind == "side") tag(str("F", seg_name(i)), [0, -(side_ch[0] / 2 - clr + ow) / 2, zm], [0, 0, 1], [0, 1, 0]);
+        else tag(str("W", seg_name(i)), [xs, -(groove[0] / 2 - clr + sash_t / 2 + clr) / 2, zm], [0, 0, 1], [0, -1, 0]);
     }
 }
 
-// print orientation: segment 0 is turned over onto its upper end (its base and lips start above its foot, like the
-// corner pieces); the others stand on their lower end
+// print orientation: standing on its lower end, or turned over onto its upper end (seg_flip())
 module segment_print(kind, i) translate([kind == "sash" ? -xs : 0, 0, 0])
-    if (i == 0) translate([0, 0, seg_hi(0)]) rotate([180, 0, 0]) segment(kind, 0);
+    if (seg_flip(kind, i)) translate([0, 0, seg_hi(i)]) rotate([180, 0, 0]) segment(kind, i);
     else translate([0, 0, -seg_lo(i)]) segment(kind, i);
 
 // joint test: the two segment ends at the second joint, joint_l long; the upper one stands on its socket end, the
@@ -483,9 +502,9 @@ module snap_test() {
 
 // all the joiners for both caps: one per joint in the side cap, two in the sash cap
 module joiners() {
-    n = len(splits);
-    for (i = [0 : n - 1]) translate([i * 34, 0, 0]) joiner_print("side");
-    for (i = [0 : 2 * n - 1]) translate([(i % 2) * 56 + 11, 22 + floor(i / 2) * 16, 0]) joiner_print("sash");
+    n = len(cuts);
+    for (i = [0 : n - 1]) translate([(i % 5) * 34, floor(i / 5) * 26, 0]) joiner_print("side");
+    for (i = [0 : 2 * n - 1]) translate([(i % 3) * 56 + 11, 48 + floor(i / 3) * 16, 0]) joiner_print("sash");
 }
 
 // a joint, opened up: the lower end, the joiners, the upper end lifted (installed orientation)
@@ -509,7 +528,7 @@ module joint_view() {
 // every part in its place in the window, the foam and the window as ghosts; explode > 0 spreads the pieces apart
 // along the height (then the ghosts are left out)
 module assembly_view() {
-    n = len(splits);
+    n = len(cuts);
     e = explode;
     color([0.9, 0.75, 0.3]) render() at_bottom() cap_bottom();   // the printed caps, with their labels
     color([0.95, 0.6, 0.25]) translate([0, 0, (n + 2) * e]) render() at_top() cap_top();
@@ -519,7 +538,7 @@ module assembly_view() {
         color(i % 2 == 0 ? [0.5, 0.8, 0.6] : [0.27, 0.58, 0.38]) render() segment("sash", i);
     }
     for (i = [0 : n - 1]) translate([0, 0, (i + 1.5) * e]) color([0.85, 0.3, 0.3])
-        for (kind = ["side", "sash"], r = socks(kind)) joiner(r, splits[i]);
+        for (kind = ["side", "sash"], r = socks(kind)) joiner(r, cuts[i]);
     if (e == 0) {
         %translate([base, -foam_t / 2, zb]) cube([foam_w, foam_t, zt - zb]);
         %window_ghost();
@@ -576,9 +595,9 @@ module corners_view() {
 
 if (part == "cap_top")            cap_top();
 if (part == "cap_bottom")         cap_bottom();
-for (i = [0 : len(splits)]) {
-    if (part == str("side_", i))  segment_print("side", i);
-    if (part == str("sash_", i))  segment_print("sash", i);
+for (i = [0 : len(cuts)]) {
+    if (part == str("side_", seg_name(i)))  segment_print("side", i);
+    if (part == str("sash_", seg_name(i)))  segment_print("sash", i);
 }
 if (part == "joiner_side")        joiner_print("side");
 if (part == "joiner_sash")        joiner_print("sash");
