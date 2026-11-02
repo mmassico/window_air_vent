@@ -25,7 +25,7 @@ Side cap in blue, sash cap in green, top cap in orange, bottom cap in yellow. Th
 - **Lips:** every cap has a lip on each face of the foam, 8 mm deep and 4.8 mm thick. They keep the foam from falling indoor or outdoor, and leave 96 mm of foam uncovered across the window, so the vent's chassis (at least 90 mm wide) fits between them with 3 mm to spare on each side. For security, the sash stays open only 118 mm, close to the 100 mm opening that building codes commonly use as a limit, and the thick lips make the insert sturdier. The top and bottom caps' lips run their full length and straddle the ends of the side and sash caps, which aligns the corners.
 - **Gaps:** 0.5 mm where a cap's end meets another cap, for foam tape. 0.3 mm per side on the window's ribs and channels, 0.5 mm at the bottom of a slot.
 
-The side and sash caps run nearly the full height, so they print in five segments of about 215 mm each, joined at 216, 432, 648 and 864 mm above the floor. Each segment has a socket in each end that meets another one: in the tongue for the side cap, in each wall for the sash cap. A separate joiner, printed flat, fills the two sockets of a joint. A bump near each of its ends clicks into a window in a tab of the socket's wall (two slits make the tab), so the segments snap together without glue. The window and the bump are diamonds: their 45° edges print standing without an overhang, and a pull on the joint wedges the bump's V into the window's V, which centres it rather than pushing the tab out. Each socket's closed end is a 45° gable for the same reason, so a socket printed opening down needs no bridge. A socket printed opening up has a flat bottom instead, at the same depth: a firmer stop for the joiner. The side cap's tabs are on the tongue's back face, hidden in the channel; the sash cap's are on the walls' free ends.
+The side and sash caps run nearly the full height, so they print in five segments of about 215 mm each, joined at 216, 432, 648 and 864 mm above the floor. Each segment has a socket in each end that meets another one: in the tongue for the side cap, in each wall for the sash cap. A separate joiner, printed flat, fills the two sockets of a joint. A bump near each of its ends clicks into a window in a tab of the socket's wall (two slits make the tab), so the segments snap together without glue. The window and the bump are diamonds: their 45° edges print standing without an overhang, and a pull on the joint wedges the bump's V into the window's V, which centres it rather than pushing the tab out. Each socket's closed end is a 45° gable for the same reason, so a socket printed opening down needs no bridge. A socket printed opening up has a flat bottom instead, at the same depth: a firmer stop for the joiner. The side cap's tabs are on the tongue's back face, hidden in the channel; the sash cap's are on the walls' free ends. There the tab takes nearly all of the socket's outer wall, which would let the joint rock in the tab's direction, so the sash cap's sockets go 25 mm deep instead of 15: its joiners reach well past the tabs, into rigid walls.
 
 The caps print in one piece across their section, with low infill: the trapped air insulates, and only thin walls bridge the cold and warm faces.
 
@@ -77,7 +77,7 @@ The caps are exported for 2 in foam (50.8 mm). The boards measured 49.9 to 51 mm
 | `cap_bottom` | <img src="images/part_cap_bottom.png" height="200"> | B | 1 | Bottom cap, whole | 60.8 × 22.5 × 118 | Standing on its end |
 | `side_0` to `side_4` | <img src="images/part_side_0.png" height="200"> | F0 to F4 | 1 each | Side cap's segments, numbered from 0 at the floor. `side_2` has the relief around the window latch. Shown: `side_0`, turned over | 21.2 × 60.8 × 213 to 216 | Standing; `side_0` turned over, on its upper end |
 | `sash_0` to `sash_4` | <img src="images/part_sash_0.png" height="200"> | W0 to W4 | 1 each | Sash cap's segments, numbered from 0 at the floor. Shown: `sash_0`, turned over | 21.7 × 60.8 × 215 to 216 | Standing; `sash_0` turned over, on its upper end |
-| `joiners` | <img src="images/part_joiners.png" width="180"> | | 1 plate | All the joiners: 4 for the side cap, 8 for the sash cap | 134 × 56 plate | Flat, bumps up |
+| `joiners` | <img src="images/part_joiners.png" width="180"> | | 1 plate | All the joiners: 4 for the side cap, 8 for the sash cap | 134 × 88 plate | Flat, bumps up |
 
 **Plates.** Slicer estimates (Bambu Studio, the settings below), not measured prints:
 
@@ -124,16 +124,22 @@ Optional now: they checked the model against the window before the full caps. Pr
 |---|---|---|---|---|---|
 | `latch_slice` | <img src="images/part_latch_slice.png" width="180"> | 1 | Side cap's section through the latch zone | 21.2 × 48.3 × 3 | Flat |
 
-**Joint test.** Both ends of the second joint (432 mm above the floor) in the side and sash caps, 24 mm each, with their joiners. Push a joiner into the lower end until it clicks, then push the upper end onto it. The upper ends print standing on their socket end, the lower ends with it on top: the real segments have both. `joint_tests` puts all of them on one plate, about 156 × 61.
+**Joint test.** Both ends of the second joint (432 mm above the floor) in the side and sash caps (24 mm each for the side cap, 35 mm for the sash cap's deeper sockets), with their joiners. Push a joiner into the lower end until it clicks, then push the upper end onto it. The upper ends print standing on their socket end, the lower ends with it on top: the real segments have both. `joint_tests` puts all of them on one plate, about 176 × 61.
 
 | Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
 |---|:---:|---|---|---|---|
 | `joint_side_lower` | <img src="images/part_joint_side_lower.png" width="180"> | 1 | Side cap below a joint: the socket in its tongue, with the snap tab and its window on the tongue's back face | 21.2 × 60.8 × 24 | Standing, socket up |
 | `joint_side_upper` | <img src="images/part_joint_side_upper.png" width="180"> | 1 | Side cap above a joint (seen from below) | 21.2 × 60.8 × 24 | Standing on its socket end |
-| `joint_sash_lower` | <img src="images/part_joint_sash_lower.png" width="180"> | 1 | Sash cap below a joint: a socket in each wall, the snap tab on the wall's free end | 21.7 × 60.8 × 24 | Standing, sockets up |
-| `joint_sash_upper` | <img src="images/part_joint_sash_upper.png" width="180"> | 1 | Sash cap above a joint (seen from below) | 21.7 × 60.8 × 24 | Standing on its socket end |
+| `joint_sash_lower` | <img src="images/part_joint_sash_lower.png" width="180"> | 1 | Sash cap below a joint: a socket in each wall, the snap tab on the wall's free end | 21.7 × 60.8 × 35 | Standing, sockets up |
+| `joint_sash_upper` | <img src="images/part_joint_sash_upper.png" width="180"> | 1 | Sash cap above a joint (seen from below) | 21.7 × 60.8 × 35 | Standing on its socket end |
 | `joiner_side` | <img src="images/part_joiner_side.png" width="180"> | 1 | Joins two side cap segments. A bump near each end clicks into the window in a socket's tab: its steep face holds, its ramp leads in | 32 × 21.9 × 8.4 | Flat, bumps up |
-| `joiner_sash` | <img src="images/part_joiner_sash.png" width="180"> | 2 | Joins two sash cap segments, one in each wall | 32 × 13.8 × 10.9 | Flat, bumps up |
+| `joiner_sash` | <img src="images/part_joiner_sash.png" width="180"> | 2 | Joins two sash cap segments, one in each wall | 52 × 13.8 × 10.9 | Flat, bumps up |
+
+**Snap test.** The smallest joint test, to feel the snap after changing the tab: the room-side wall of the sash cap's joint, both ends, and one `joiner_sash`, about 20 g. The full `joint_tests` also checks the side cap's joint. The tab is now 11.6 mm wide and 13 mm long (8 × 12 in the first joint test): more material beside the window, about the same flex, less strain at its root. The snap test passed: it snaps firmly, the tab is sturdy, and the joint comes apart and goes back together without breaking it. The sash cap's sockets have since gone from 15 to 25 mm deep, so its joint won't rock; the tab and the bump, measured from the segment's end, are unchanged.
+
+| Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
+|---|:---:|---|---|---|---|
+| `snap_test` | <img src="images/part_snap_test.png" width="180"> | 1 plate | One wall of a sash joint: the lower end (socket up), the upper end (socket down) and a joiner | 55 × 39 × 35 plate | As in `joint_tests` |
 
 ## Slicer settings
 
