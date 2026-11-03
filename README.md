@@ -192,6 +192,17 @@ The StepperOnline 17HS08-1004S, from its sheet and checked with a caliper. Its M
   <img src="doc/motor_mount.svg" alt="Section through a motor screw: motor end cap with a 2.5 mm deep M3 hole, 4 mm motor plate, 2 mm boss in the frame's 8 mm diamond pocket, 3 mm frame; an M3 x 8 button head reaches 2 mm into the motor, 0.5 mm short of the bottom, its head 0.65 mm below the frame" width="520">
 </p>
 
+Its four leads, from the sheet, and where they go on the controller PCB's motor header J4 (silkscreen 1A, 1B, 2A, 2B; the TMC2209's M1A, M1B, M2A, M2B). Each coil is a pair: about 3.7 Ω between its two leads, nothing between the pairs, which an ohmmeter confirms before plugging in.
+
+| J4 pin | Silkscreen | Driver output | Lead | Coil |
+|---|---|---|---|---|
+| 1 (square pad) | 1A | M1A | Black | A |
+| 2 | 1B | M1B | Green | A\ |
+| 3 | 2A | M2A | Red | B |
+| 4 | 2B | M2B | Blue | B\ |
+
+If the motor turns the wrong way, swap the two leads of one coil (black and green, for example). Never plug or unplug the motor with 12 V on: it can destroy the driver.
+
 ### The AS5600 board, a magnetic rotary position sensor
 
 The kit board, measured. Its four mounting holes form a 16.7 × 16.2 mm rectangle (not a square); the diagonal slots in the encoder plate take it as well as the smaller 20 × 20 boards. Mount it chip up, under the magnet, and solder the wires straight into its holes: they run inward under the board, in the 2 mm the standoff pads leave, and down through the diamond window under the chip.
