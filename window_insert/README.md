@@ -157,6 +157,18 @@ For a 0.4 mm nozzle. The caps print standing, the joiners flat.
 | Brim | Outer only, 20 mm | None | A piece is up to 118 mm tall on a footprint about 21 × 61 mm: without a brim, a cap came loose and fell. Leave 15 mm between parts |
 | Elephant's foot compensation | 0.2 mm, if the slicer has it | | The sockets' mouths are chamfered too |
 
+**As printed.** The settings that printed the full side cap, in Bambu Studio's names, for the caps and the segments (not the joiners):
+
+| Bambu Studio setting | Value |
+|---|---|
+| Brim type | Outer brim only |
+| Brim width | 20 mm |
+| Brim-object gap | 0 mm (at 0.1 mm, a tall segment tore away from its brim) |
+| Wall loops | 3 |
+| Sparse infill density | 10 % |
+| Sparse infill pattern | Gyroid |
+| Object-to-object distance | 15 mm |
+
 **Infill.** The caps insulate with the air trapped in their infill, and only the plastic that bridges the cold and warm faces conducts heat. So density matters more than pattern: keep it low, and keep the walls to 3.
 
 - Printed standing, the infill's channels run along the cap, not across it: heat crosses them and never runs along them.
