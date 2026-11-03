@@ -246,11 +246,11 @@ The ESP32 runs Arduino sketches (esp32 core 3.x). The first, [`firmware/baremeta
   <a href="doc/perfboard.svg"><img src="doc/perfboard.svg" alt="Perfboard build plan: the component side seen from above with the ESP32-S3, the TMC2209, headers J1 to J8, resistors R1 to R10 and C1 on a 24 x 18 grid; the solder side with 61 numbered, colour-coded wires; and the wire list" width="100%"></a>
 </p>
 
-**Or a printed circuit board.** The same circuit also exists as a 2-layer PCB of the protoboard's size (70 × 50 mm, 1.6 mm) with the same four M2 holes, so it drops into the box in its place: the ESP32-S3 and the TMC2209 sit on exactly the same pins, and every connector keeps its function. It adds a ground plane on both layers, 0.8 mm tracks for 12 V and the motor, a 1N5822 against a reversed 12 V plug (a jumper on JP1 bypasses it), test pads for GND, 3V3, VIN, 12 V and the TMC2209's DIAG, and since v1.1 a solder jumper on the back, JP2, that joins GPIO 21 to GPIO 3 for the firmware's audio mode (on v1.0, a short wire does it). Five boards cost US$10 to 32 at PCBWay with shipping, depending on its speed: upload [the Gerber zip](pcb/window_vent_ctrl_v1.1_gerbers.zip) and keep the standard options (2 layers, FR-4, 1.6 mm, 1 oz, HASL lead-free). [The schematic](pcb/window_vent_ctrl_schematic.pdf) and the KiCad 10 project are in [pcb/](pcb); the scripts `tools/pcb_*.py` build all of it, Freerouting doing the routing.
+**Or a printed circuit board.** The same circuit also exists as a 2-layer PCB of the protoboard's size (70 × 50 mm, 1.6 mm) with the same four M2 holes, so it drops into the box in its place: the ESP32-S3 and the TMC2209 sit on exactly the same pins, and every connector keeps its function. It adds a ground plane on both layers, 0.8 mm tracks for 12 V and the motor, a 1N5822 against a reversed 12 V plug (a jumper on JP1 bypasses it), test pads for GND, 3V3, VIN, 12 V and the TMC2209's DIAG, and since v1.1 a solder jumper on the back, JP2, that joins GPIO 21 to GPIO 3 for the firmware's audio mode (on v1.0, a short wire does it). Since v1.2, the 1-Wire pull-ups R9 and R10 lie flat on the back: on v1.1 they stood in the path of the ESP32's second USB-C plug (the unused USB-OTG one). Five boards cost US$10 to 32 at PCBWay with shipping, depending on its speed: upload [the Gerber zip](pcb/window_vent_ctrl_v1.2_gerbers.zip) and keep the standard options (2 layers, FR-4, 1.6 mm, 1 oz, HASL lead-free). [The schematic](pcb/window_vent_ctrl_schematic.pdf) and the KiCad 10 project are in [pcb/](pcb); the scripts `tools/pcb_*.py` build all of it, Freerouting doing the routing.
 
 <p align="center">
   <img src="pcb/view/render_top.png" alt="The controller PCB from above: the ESP32-S3 footprint across the back half with the antenna area clear on the right, the TMC2209 below it, the 12 V input with D1, JP1 and C1 at the bottom right, and the labelled connectors for the fans, motor, SCD40, AS5600 and both DS18B20 at the bottom left" width="49%">
-  <img src="pcb/view/render_bottom.png" alt="The controller PCB from below: the ground plane, the title WINDOW VENT CONTROLLER v1.1, the orientation sketch and the audio-mode solder jumper JP2" width="49%">
+  <img src="pcb/view/render_bottom.png" alt="The controller PCB from below: the ground plane, the title WINDOW VENT CONTROLLER v1.2, the orientation sketch and the audio-mode solder jumper JP2" width="49%">
 </p>
 
 <details open>
@@ -264,7 +264,7 @@ The ESP32 runs Arduino sketches (esp32 core 3.x). The first, [`firmware/baremeta
 | C1 | 1 | 220 µF 50 V | electrolytic, 10 mm, 5 mm pitch |
 | R1–R4 | 4 | 10 kΩ | 1/4 W, standing |
 | R5–R8 | 4 | 10 kΩ, 1 kΩ, 100 kΩ, 22 kΩ | 1/4 W, lying flat, component side: body 2.5 mm (max), otherwise: solder side |
-| R9, R10 | 2 | 4.7 kΩ | standing; leave R9 out in audio mode (or without the indoor probe) |
+| R9, R10 | 2 | 4.7 kΩ | 1/4 W, lying flat on the solder side (v1.2; standing on v1.1); leave R9 out in audio mode (or without the indoor probe) |
 | J1, JP1 | 2 | 2-pin header | plus a jumper shunt for JP1 |
 | J2–J6 | 5 | 4-pin header | 2.54 mm male |
 | J7, J8 | 2 | 3-pin header | 2.54 mm male |

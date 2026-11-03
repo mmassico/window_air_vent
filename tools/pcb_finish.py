@@ -13,7 +13,7 @@ PCB = os.path.join(ROOT, "pcb")
 NAME = "window_vent_ctrl"
 BOARD = os.path.join(PCB, NAME + ".kicad_pcb")
 CLI = r"C:\Program Files\KiCad\10.0\bin\kicad-cli.exe"
-REV = "v1.1"
+REV = "v1.2"
 mm = pcbnew.FromMM
 
 board = pcbnew.LoadBoard(os.path.join(PCB, "build", NAME + "_routed.kicad_pcb"))   # as routed, before any label
@@ -109,9 +109,9 @@ for ref, x, val, pads in (("R5", 112.48, "10k", (107.4, 117.56)), ("R6", 124.88,
     bb = t.GetBoundingBox()
     seg(pads[0] + 1.25, 131.35, pcbnew.ToMM(bb.GetLeft()) - 0.4, 131.35)
     seg(pcbnew.ToMM(bb.GetRight()) + 0.4, 131.35, pads[1] - 1.25, 131.35)
-text("R9", 102.1, 110.6, 0.8)
-text("R10", 105.2, 110.6, 0.8)
-text("4.7k", 103.65, 111.9, 0.8)
+for ref, x in (("R9", 101.9), ("R10", 105.6)):                  # on the back: the name along the body, read there
+    board.FindFootprintByReference(ref).Reference().SetVisible(False)
+    text(f"{ref} 4.7k", x, 117.28, 0.8, pcbnew.B_SilkS, angle=90)
 
 # 12 V input
 text("+12V", 167.9, 127.55, 1.0, bold=True)
@@ -136,8 +136,8 @@ text("VIN", 168.3, 136.6, 0.8)
 text("12V", 168.3, 144.1, 0.8)
 
 # test pads
-text("GND", 101.9, 116.3, 0.8)
-text("3V3", 105.1, 116.3, 0.8)
+text("GND", 101.9, 107.1, 0.8)
+text("3V3", 105.6, 107.1, 0.8)
 text("DIAG", 102.6, 128.55, 0.8)
 
 # the modules' names inside their outlines (visible before they go on)
@@ -146,7 +146,7 @@ for it in board.FindFootprintByReference("U1").GraphicalItems():     # an older 
     if isinstance(it, pcbnew.PCB_TEXT) and it.GetText() == "USB":
         it.SetText("")
 # which USB-C connector takes the cable: the USB-UART one, 6 mm toward the room from the module's centre line
-text("USB-UART", 104.2, 122.11, 1.0, bold=True, angle=90)
+text("USB-UART", 103.75, 122.11, 1.0, bold=True, angle=90)
 text("antenna to the right: no metal near it", 132.5, 116.0, 0.8)
 text("TMC2209", 145.2, 139.6, 1.2, bold=True)
 # pin 1 of each module: a small triangle pointing at it, inside the outline

@@ -111,14 +111,15 @@ PLACE = {
     "J2": (106.8, 148.1, 90), "J4": (118.6, 148.1, 90),       # the motor header next to the driver's motor pins
     # standing resistors: fan pull-ups and pull-downs between the fan 1/SCD40 row and the fan 0/motor row
     "R1": (107.0, 144.0, 0), "R2": (112.6, 144.0, 0), "R3": (118.8, 144.0, 0), "R4": (124.4, 144.0, 0),
-    # 1-Wire pull-ups beside the ESP32's USB end (kept clear of its USB-C connectors)
-    "R9": (102.1, 106.1, 270), "R10": (105.2, 106.1, 270),
-    # test pads clear of the USB-C cable's path (y 116.6 to 127.6 beside the ESP32), so they can be probed with it on
-    "TP1": (101.9, 114.0, 0), "TP2": (105.1, 114.0, 0), "TP5": (102.6, 130.6, 0),
+    # 1-Wire pull-ups beside the ESP32's USB end, lying on the back: the USB-C plugs pass over the top there (their
+    # undersides 2.6 mm up, too low for a resistor), and the 5 mm standoffs leave room under the board
+    "R9": (101.9, 112.2, 270), "R10": (105.6, 112.2, 270),
+    # test pads clear of the USB-UART cable's path (y 116.6 to 127.6 beside the ESP32), so they can be probed with it on
+    "TP1": (101.9, 109.4, 0), "TP2": (105.6, 109.4, 0), "TP5": (102.6, 130.6, 0),
     # audio-mode solder jumper (GPIO 21 to GPIO 3), on the back under the ESP32, between its two pins
     "JP2": (117.0, 124.0, 0),
 }
-BOTTOM = {"JP2"}                            # parts on the back (B.Cu)
+BOTTOM = {"JP2", "R9", "R10"}                            # parts on the back (B.Cu)
 
 board = pcbnew.BOARD()
 board.SetCopperLayerCount(2)
