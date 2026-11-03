@@ -52,7 +52,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part = "joint_tests";   // [cap_top, cap_bottom, side_0a, side_0b, side_1a, side_1b, side_2a, side_2b, side_3a, side_3b, side_4a, side_4b, sash_0a, sash_0b, sash_1a, sash_1b, sash_2a, sash_2b, sash_3a, sash_3b, sash_4a, sash_4b, joiner_side, joiner_sash, joiners, joint_tests, snap_test, joint_side_lower, joint_side_upper, joint_sash_lower, joint_sash_upper, joint_view, assembly_view, corners, corner_top, corner_bottom, corner_side_top, corner_side_bottom, corner_sash_top, corner_sash_bottom, latch_slice, corners_view, slices, slice_top, slice_bottom, slice_side, slice_sash, slice_pair_view]
+part = "joint_tests";   // [cap_top, cap_bottom, side_0a, side_0b, side_1a, side_1b, side_2a, side_2b, side_3a, side_3b, side_4a, side_4b, sash_0a, sash_0b, sash_1a, sash_1b, sash_2a, sash_2b, sash_3a, sash_3b, sash_4a, sash_4b, joiner_side, joiner_sash, joiners, joint_tests, snap_test, joint_side_lower, joint_side_upper, joint_sash_lower, joint_sash_upper, joint_view, assembly_view, corners, corner_top, corner_bottom, corner_side_top, corner_side_bottom, corner_sash_top, corner_sash_bottom, latch_slice, corners_view, slices, slice_top, slice_bottom, slice_side, slice_sash, slice_pair_view, latch_cover, latch_cover_view]
 
 /* [Fit] */
 clr      = 0.3;     // clearance per side on the window's ribs, channel and sash
@@ -100,6 +100,20 @@ j_end    = 0.1;     // play between each end of the joiner and its socket's roof
 j_ch     = 0.6;     // chamfer at the socket's mouth (lead-in, and room for the elephant's foot)
 joint_l  = [24, 35]; // joint test pieces: length of each segment end (past the socket's roof): side cap, sash cap
 explode  = 0;       // assembly_view: gap between the pieces along the height (0: assembled)
+
+/* [Latch cover] */
+// a liner for the foam's notch at the window latch, behind the latch: a flat floor just outdoor of the latch zone,
+// 45 degree risers out to the foam's room face (they carry on the side cap's relief across the foam), and a border
+// on that face, screwed into the foam. Its end against the side cap is open and straight, the cap's lip notched out
+// of the border's corners there. The foam's notch is carved to its outside
+lc_w     = 2;       // floor and risers
+lc_t     = 3;       // border thickness
+lc_b     = 12;      // border width, past the risers' foot
+lc_r     = 12;      // the border's two corners toward the sash: radius
+lc_screw = [4.25, 8, 3.5];   // screws into the foam: hole, head diameter, head height. The countersink has the
+                             //   head's own taper, so the head bears on its whole cone; it stands proud by what
+                             //   the head is taller than the border (0.5 with a 3 mm border)
+lc_holes = 6;       // screws: 4 (2 on the top border, 2 on the bottom one) or 6 (2 more on the sash end's)
 
 /* [Labels] */
 // each full cap is engraved on its back (the face against the window): T and B for the top and bottom caps, F0 to
@@ -574,6 +588,82 @@ module corner_sash_bottom() translate([-xs, 0, 0]) upright_bottom(true);
 module latch_slice() let(zm = bot_ribs[0][2] + latch[1] + latch[2] / 2)
     translate([0, 0, -zm]) intersection() { side_cap(); bx(-50, 50, -50, 50, zm, zm + latch_t); }
 
+/* =================== LATCH COVER =================== */
+lc_z  = [bot_ribs[0][2] + latch[1] - clr, bot_ribs[0][2] + latch[1] + latch[2] + clr];   // inside, at its floor
+lc_zm = (lc_z[0] + lc_z[1]) / 2;
+lc_x  = latch[3] + clr;                 // inside, at its floor
+lc_x0 = base + clr;                     // its open end, against the side cap's base
+lc_u0 = latch[0] - clr;                 // the floor's room face, as the side cap's relief
+lc_uf = foam_t / 2;                     // the foam's room face
+lc_h  = lc_uf - lc_u0;                  // the risers' height
+// the risers' outer edge on the foam's face: x at the sash end, z at the bottom and top (the notch's outline there)
+lc_fx = lc_x + lc_h + lc_w * sqrt(2);
+lc_fz = [lc_z[0] - lc_h - lc_w * sqrt(2), lc_z[1] + lc_h + lc_w * sqrt(2)];
+
+// a 2D shape in the x-z plane, run along u from u0 to u1
+module xz_prism(u0, u1) translate([0, u1, 0]) rotate([90, 0, 0]) linear_extrude(u1 - u0) children();
+
+// the liner's inside grown by g normal to its faces, from its floor out past the border, open at the side cap
+module lc_solid(g) let(k = g * (sqrt(2) - 1), u1 = lc_uf + lc_t + 1, d = u1 - lc_u0 + g * sqrt(2)) hull() {
+    bx(-1, lc_x + k, lc_u0 - g, lc_u0 - g + eps, lc_z[0] - k, lc_z[1] + k);
+    bx(-1, lc_x + d, u1 - eps, u1, lc_z[0] - d, lc_z[1] + d);
+}
+
+// the screws' centres, in the border's middle: [x, z]. Along the top and bottom, the first one clears the side
+// cap's lip
+lc_bz = [lc_fz[0] - lc_b / 2, lc_fz[1] + lc_b / 2];
+lc_screws = concat([for (x = [lc_x0 + lip_d + 7, lc_fx - 6], z = lc_bz) [x, z]],
+                   lc_holes == 6 ? [for (s = [-1, 1]) [lc_fx + lc_b / 2, lc_zm + s * 35]] : []);
+
+// the liner in its place in the foam
+module latch_cover() {
+    hole = lc_screw[0]; hd = lc_screw[1] + 0.4; hh = lc_screw[2];
+    taper = (lc_screw[1] - hole) / 2 / hh;   // the head's taper: radius per mm of height
+    difference() {
+        union() {
+            intersection() {   // the floor and the risers, in the foam
+                difference() { lc_solid(lc_w); lc_solid(0); }
+                bx(lc_x0, lc_fx + 1, lc_u0 - lc_w - 1, lc_uf, lc_fz[0] - 1, lc_fz[1] + 1);
+            }
+            difference() {   // the border, on the foam's face
+                xz_prism(lc_uf, lc_uf + lc_t) hull() {
+                    translate([lc_x0, lc_fz[0] - lc_b]) square([eps, lc_fz[1] - lc_fz[0] + 2 * lc_b]);
+                    for (z = [lc_fz[0] - lc_b + lc_r, lc_fz[1] + lc_b - lc_r])
+                        translate([lc_fx + lc_b - lc_r, z]) circle(lc_r, $fn = 96);
+                }
+                lc_solid(0);
+            }
+        }
+        // the side cap grown by clr (by a cube): its lip, outside its relief, notches the border's corners at that
+        // end (render(): computed once, which keeps the preview light)
+        render() minkowski() {
+            intersection() { side_cap(); bx(-20, base + lip_d + 1, 0, ow + 1, lc_fz[0] - lc_b - 5, lc_fz[1] + lc_b + 5); }
+            cube(2 * clr, center = true);
+        }
+        // the screws: a hole, and a countersink with the head's taper, its top hh - lc_t above the border
+        for (s = lc_screws) translate([s[0], 0, s[1]]) rotate([-90, 0, 0]) {
+            translate([0, 0, lc_uf - 1]) cylinder(d = hole, h = lc_t + 2, $fn = 32);
+            translate([0, 0, lc_uf + hh]) mirror([0, 0, 1])
+                cylinder(d1 = hd, d2 = hd - 2 * taper * hh, h = hh, $fn = 48);
+        }
+    }
+}
+
+// print orientation: standing on its open end (the side cap's): the floor, the border and the top and bottom
+// risers are walls, the sash end's riser a 45 degree overhang
+module latch_cover_print() rotate([0, -90, 0]) translate([-lc_x0, 0, -lc_zm]) latch_cover();
+
+// the liner in the notched foam, beside the side cap, the latch zone as a ghost
+module latch_cover_view() {
+    color([0.85, 0.5, 0.75]) latch_cover();
+    color([0.4, 0.6, 0.9]) intersection() { side_cap(); bx(-50, 50, -50, 50, lc_fz[0] - 30, lc_fz[1] + 30); }
+    color([0.85, 0.85, 0.8]) difference() {
+        bx(base, base + foam_w, -foam_t / 2, foam_t / 2, lc_fz[0] - 30, lc_fz[1] + 30);
+        lc_solid(lc_w);
+    }
+    %bx(0, latch[3], latch[0], latch[0] + 40, lc_z[0] + clr, lc_z[1] - clr);
+}
+
 // all six on one plate (print two top and two bottom pieces to try all four corners at once)
 module corners() {
     translate([0, 0, 0])     corner_top();
@@ -618,6 +708,8 @@ if (part == "corner_side_bottom") corner_side_bottom();
 if (part == "corner_sash_top")    corner_sash_top();
 if (part == "corner_sash_bottom") corner_sash_bottom();
 if (part == "latch_slice")        latch_slice();
+if (part == "latch_cover")        latch_cover_print();
+if (part == "latch_cover_view")   latch_cover_view();
 if (part == "corners_view")       corners_view();
 if (part == "slices")             slices();
 if (part == "slice_top")          slice("top");

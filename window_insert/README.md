@@ -78,6 +78,7 @@ The caps are exported for 2 in foam (50.8 mm). The boards measured 49.9 to 51 mm
 | `side_0a` to `side_4b` | <img src="images/part_side_0a.png" height="200"> | F0a to F4b | 1 each | Side cap's pieces, from `side_0a` at the floor: `side_0a`, `side_0b`, `side_1a` and so on. `side_2a` and `side_2b` have the relief around the window latch. Shown: `side_0a`, turned over | 21.2 × 60.8 × 105 to 108 | Standing; `side_0a` and `side_2b` turned over, on their upper end |
 | `sash_0a` to `sash_4b` | <img src="images/part_sash_0a.png" height="200"> | W0a to W4b | 1 each | Sash cap's pieces, from `sash_0a` at the floor. Shown: `sash_0a`, turned over | 21.7 × 60.8 × 107 to 108 | Standing; `sash_0a` turned over, on its upper end |
 | `joiners` | <img src="images/part_joiners.png" width="180"> | | 1 plate | All the joiners: 9 for the side cap, 18 for the sash cap | 168 × 146 plate | Flat, bumps up |
+| `latch_cover` | <img src="images/part_latch_cover.png" width="180"> | | 1 | Liner for the foam's notch at the window latch, behind the latch: a flat floor 0.3 mm outdoor of the latch zone, 45° risers out to the foam's room face (they carry the side cap's relief on across the foam), and a 3 mm border on that face, screwed into the foam (6 countersunk holes). Its end against the side cap is open and straight; the cap's lip is notched out of the border's corners there, 0.3 mm clear. Its two corners toward the sash are rounded | 59 × 12.5 × 125 | Standing on its open end (the side cap's) |
 
 **Plates.** Slicer estimates (Bambu Studio, the settings below), not measured prints:
 
@@ -85,15 +86,27 @@ The caps are exported for 2 in foam (50.8 mm). The boards measured 49.9 to 51 mm
 - The twenty halves, with the 20 mm brim and 15 mm between parts, need two plates.
 - `side_2b` prints turned over, on its 648 mm end: its lower end is in the latch relief, which would leave it standing on a smaller face. The relief's slopes are 45° both ways, so it needs no supports.
 - The joiners print on their own plate, with 4 walls and 40 % infill.
+- `latch_cover` stands on its open end, a thin U on the bed: give it the 20 mm brim. The riser at its sash end is a 45° overhang; where the border starts past the cap's lip, a 3 mm wide ledge about 7 mm long bridges.
+
+### Latch cover notch
+
+The latch cover lines a notch in the foam's room face, at the side frame's end. Carve it to the cover's outside, 45° on its three sides:
+
+- **Depth:** 9.5 mm from the room face.
+- **On the room face:** from the foam's end to 47.6 mm along it, and from 480.9 to 582.1 mm above the foam's bottom edge (101.3 mm tall).
+- **At the bottom:** to 38.1 mm from the foam's end, from 490.4 to 572.6 mm (82.3 mm tall).
+
+Try the cover in the notch, then screw it on.
 
 ### To buy
 
 | Item | Qty | Use |
 |---|---|---|
-| XPS foam board, 2 in (51 mm), 30 psi | 1 strip, 112 × about 1050 mm | The insert itself. A 24 × 48 in board is enough: cut the strip along its 48 in side. Notch it at the latch (37 × 7.2 × 80 mm, see [the latch zone](#the-windows-measurements)). The [main parts list](../README.md#hardware) has the grade and why |
+| XPS foam board, 2 in (51 mm), 30 psi | 1 strip, 112 × about 1050 mm | The insert itself. A 24 × 48 in board is enough: cut the strip along its 48 in side. Notch it at the latch for the [latch cover](#latch-cover-notch), or 37 × 7.2 × 80 mm without it (see [the latch zone](#the-windows-measurements)). The [main parts list](../README.md#hardware) has the grade and why |
 | Thin foam tape (weatherstrip) | About 1 m | In the top frame's channel (2 or 3 mm), and in the 0.5 mm gaps where the caps' ends meet |
 | Tape that peels off cleanly | About 2.5 m | Over the joint between the lips and the foam on the room side, for drafts |
-| PETG filament | About 0.95 kg | The caps (924 g) and the joiners |
+| Short screws, countersunk, 8 mm head | 6 | The latch cover, into the foam: 4.25 mm hole, a head 3.5 mm tall (it stands 0.5 mm proud of the 3 mm border). Coarse threads hold best in XPS |
+| PETG filament | About 1 kg | The caps (924 g), the joiners and the latch cover (48 g) |
 
 ### Test pieces
 
