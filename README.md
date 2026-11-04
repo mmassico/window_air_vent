@@ -121,7 +121,7 @@ The split housing (`body_top` 136 cm³, `body_bottom` 145 cm³, `splice` 8 cm³)
 
 - Printed fully solid, 412 cm³ of PETG (1.27 g/cm³) weighs about 523 g.
 - Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 470–520 g, plus a little for the skirt or brim and purging.
-- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³. The screen frame's `screen_test` adds 6 cm³ (7 g). The optional drip tray adds 36 cm³ (45 g): `tray` 31 cm³, `tray_feet` 4 cm³, and its `tray_test` 4 cm³ (5 g).
+- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³. The screen frame's `screen_test` adds 6 cm³ (7 g). The optional drip tray adds 38 cm³ (48 g): `tray` 34 cm³, `tray_feet` 4 cm³, and its `tray_test` 4 cm³ (5 g).
 - Print time: very roughly 9–12 hours for the housing on a Bambu Lab P1 (0.2 mm layers; about 7–9 hours at 0.28 mm), and about 3–4 hours for all the other parts together. The slicer gives the exact figures.
 
 ### Slicer settings
@@ -383,7 +383,7 @@ Each sleeve has a 15 mm drain slot at the bottom, through its wall and the plate
 
 ### Drip tray
 
-An optional tray on the window ledge, under the whole unit, from the foam to just past the fans. It catches drips of condensation, which evaporate indoors, and it levels the unit on a ledge that isn't flat. The electronics box, the unit's lowest part, stands on three 2 mm ribs, so it stays above any water. At 88 mm wide, the tray is 4 mm wider than the fans on each side.
+An optional tray on the window ledge, under the whole unit, from the foam to just past the fans. It catches drips of condensation, which evaporate indoors, and it levels the unit on a ledge that isn't flat. The electronics box, the unit's lowest part, stands on five 3 mm ribs, so it stays above any water. The ribs run from wall to wall, and the outer two, under the box's side walls, run into the corner posts: they carry the unit's weight to the legs, where the thin floor alone would sag. At 88 mm wide, the tray is 4 mm wider than the fans on each side.
 
 A leg in each corner sets the height. Each one is an M3 × 20 button head screw, held by its head in a slot at the top of a corner post, and a square foot with a captive nut that slides in the post's socket below. Turning the screw from above, with a 2 mm hex key through the hole in the post's top, moves the foot up or down: 0.5 mm per turn. The floor's underside can sit 3.5 to 11 mm above the ledge. The posts are inside the tray's outline, so nothing sticks out toward the window frame.
 

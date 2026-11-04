@@ -231,7 +231,9 @@ tray_wall  = 2;     // walls
 tray_floor = 1.6;   // floor (5 bottom layers or more, so it holds water)
 tray_rim   = 10;    // the walls' height above the floor
 tray_front = 5;     // the inside reaches this far past the fans' front faces
-tray_rib   = [2, 2, 3];   // ribs under the box, along it: height, width, count
+tray_rib   = [3, 2, 5];   // ribs along the tray, wall to wall: height, width, count. The outer two run under the
+                    //   box's side walls and into the posts, so they carry its weight to the legs; the floor alone
+                    //   would sag
 tray_post  = 13.4;  // corner posts: outside size (a 2 mm wall around the socket)
 tray_sock  = 16;    // socket depth, from the floor's underside up
 tray_foot  = [9, 0.2, 16];   // feet: square side, clearance each side in the socket, length
@@ -929,9 +931,10 @@ module tray() {
                 translate([-tr_xo, 0, 0]) cube([2 * tr_xo, tr_y1, tray_floor + tray_rim]);
                 translate([-tr_xo + w, w, tray_floor]) cube([2 * (tr_xo - w), tr_y1 - 2 * w, tray_rim + 1]);
             }
-            for (i = [0 : tray_rib[2] - 1])   // ribs under the box
-                translate([-ebox_w / 2 + 10 + i * (ebox_w - 20) / (tray_rib[2] - 1) - tray_rib[1] / 2, y_br + 2, tray_floor - eps])
-                    cube([tray_rib[1], duct_len + ebox_t - y_br - 4, tray_rib[0] + eps]);
+            xr = ebox_w / 2 - ebox_t / 2;   // the outer ribs: under the middle of the box's side walls
+            for (i = [0 : tray_rib[2] - 1])   // the ribs, from the back wall to the front one
+                translate([-xr + i * 2 * xr / (tray_rib[2] - 1) - tray_rib[1] / 2, w - eps, tray_floor - eps])
+                    cube([tray_rib[1], tr_y1 - 2 * w + 2 * eps, tray_rib[0] + eps]);
             for (c = tr_pc) translate([c[0] * (tr_xo - P / 2) - P / 2, c[1] - P / 2, 0]) cube([P, P, tr_top]);
         }
         for (c = tr_pc) translate([c[0] * (tr_xo - P / 2), c[1], 0]) {
