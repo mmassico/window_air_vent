@@ -111,7 +111,7 @@ Try the cover in the notch, then screw it on.
 | XPS foam board, 2 in (51 mm), 30 psi | 1 strip, 112 × about 1050 mm | The insert itself. A 24 × 48 in board is enough: cut the strip along its 48 in side. Notch it at the latch for the [latch cover](#latch-cover-notch), or 37 × 7.2 × 80 mm without it (see [the latch zone](#the-windows-measurements)). The [main parts list](../README.md#hardware) has the grade and why |
 | Thin foam tape (weatherstrip) | About 1 m | In the top frame's channel (2 or 3 mm), and in the 0.5 mm gaps where the caps' ends meet |
 | Tape that peels off cleanly | About 2.5 m | Over the joint between the lips and the foam on the room side, for drafts |
-| Short screws, countersunk, 8 mm head | 6 | The latch cover, into the foam: 4.25 mm hole, a head 3.5 mm tall (it stands 0.5 mm proud of the 3 mm border). Coarse threads hold best in XPS |
+| Short screws, countersunk, 8 mm head | 6 | The latch cover, into the foam: 4.25 mm hole, a head 3.5 mm tall. The countersinks are 8.8 mm wide at the border's face (`lc_csk`), so the head sits just below it, and its tip goes on past the 3 mm border into the foam. Coarse threads hold best in XPS |
 | PETG filament | About 1 kg | The caps (924 g), the joiners (25 g) and the latch cover (23 g) |
 
 ### Test pieces

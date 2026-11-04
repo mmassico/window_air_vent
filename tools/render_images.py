@@ -196,8 +196,8 @@ def parts():
         save(render(t(f"p_{name}.png"), VENT, camera, size, [f'part="{name}"'], viewall=viewall, fins=True), f"part_{name}.png")
 
 def screen():   # both seen from the outdoor face (the groove)
-    for name, camera, size, viewall in [("screen_frame", "0,0,0,215,0,25,0", (900, 1100), True),
-                                        ("screen_test", "0,80,5,215,0,25,220", (1000, 700), False)]:
+    for name, camera, size, viewall in [("screen_frame", "0,0,0,215,0,205,0", (900, 1100), True),
+                                        ("screen_test", "0,-80,5,215,0,205,220", (1000, 700), False)]:
         save(render(t(f"p_{name}.png"), VENT, camera, size, [f'part="{name}"'], viewall=viewall), f"part_{name}.png")
 
 def split_view():

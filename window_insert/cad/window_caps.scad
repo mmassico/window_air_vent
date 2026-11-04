@@ -111,8 +111,10 @@ lc_t     = 3;       // border thickness
 lc_b     = 12;      // border width, past the risers' foot
 lc_r     = 12;      // the border's two corners toward the sash: radius
 lc_screw = [4.25, 8, 3.5];   // screws into the foam: hole, head diameter, head height. The countersink has the
-                             //   head's own taper, so the head bears on its whole cone; it stands proud by what
-                             //   the head is taller than the border (0.5 with a 3 mm border)
+                             //   head's own taper, so the head bears on its whole cone
+lc_csk   = 0.8;     // the countersink's diameter at the border's face, past the head's: the head sits 0.75 below it
+                    //   (about 0.5 as printed; with the cone's top 0.4 wide and 0.5 above the face, it stood 0.75
+                    //   proud). The head's tip goes on past the 3 mm border into the foam
 lc_holes = 6;       // screws: 4 (2 on the top border, 2 on the bottom one) or 6 (2 more on the sash end's)
 
 /* [Labels] */
@@ -617,7 +619,7 @@ lc_screws = concat([for (x = [lc_x0 + lip_d + 7, lc_fx - 6], z = lc_bz) [x, z]],
 
 // the liner in its place in the foam
 module latch_cover() {
-    hole = lc_screw[0]; hd = lc_screw[1] + 0.4; hh = lc_screw[2];
+    hole = lc_screw[0]; hd = lc_screw[1] + lc_csk; hh = lc_screw[2];
     taper = (lc_screw[1] - hole) / 2 / hh;   // the head's taper: radius per mm of height
     difference() {
         union() {
@@ -640,11 +642,11 @@ module latch_cover() {
             intersection() { side_cap(); bx(-20, base + lip_d + 1, 0, ow + 1, lc_fz[0] - lc_b - 5, lc_fz[1] + lc_b + 5); }
             cube(2 * clr, center = true);
         }
-        // the screws: a hole, and a countersink with the head's taper, its top hh - lc_t above the border
+        // the screws: a hole, and a countersink with the head's taper, hd wide at the border's face
         for (s = lc_screws) translate([s[0], 0, s[1]]) rotate([-90, 0, 0]) {
             translate([0, 0, lc_uf - 1]) cylinder(d = hole, h = lc_t + 2, $fn = 32);
-            translate([0, 0, lc_uf + hh]) mirror([0, 0, 1])
-                cylinder(d1 = hd, d2 = hd - 2 * taper * hh, h = hh, $fn = 48);
+            translate([0, 0, lc_uf + lc_t + eps]) mirror([0, 0, 1])
+                cylinder(d1 = hd, d2 = hd - 2 * taper * (lc_t + 1), h = lc_t + 1 + eps, $fn = 48);
         }
     }
 }

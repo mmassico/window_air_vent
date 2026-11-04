@@ -214,7 +214,12 @@ scr_chamf  = 0.4;   // 45 deg chamfer on the groove's mouth (on the bed): eases 
 scr_sleeve = [83.3, 2, 10, 1];   // sleeves: OD (the hole saw's 83.3), wall, length past the plate, lead-in chamfer;
                     //   the windows in the plate are the sleeves' bore
 scr_screw  = [4.25, 8, 3.5];  // screws: hole, head diameter, head height (countersunk; as the latch cover's)
+scr_csk    = 0.8;   // the countersinks' diameter at the face, past the head's: the head sits 0.75 below the face
+                    //   (about 0.5 as printed: the latch cover's, 0.4 wide at the top, came out 0.25 shallower)
 scr_edge   = 1.2;   // material between a countersink and the groove or the frame's edge
+scr_drain  = [15, 1];   // drain at the bottom of each hole: width, and the drop of its floor from the hole's floor
+                    //   (inside) to the outdoor face, so condensation runs out under the mesh instead of pooling
+                    //   against the sleeve's end
 
 /* [Hidden] */
 $fn = 96;
@@ -826,15 +831,19 @@ module tube_spacer() {
 // intake at +y. The mesh covers the whole face, both windows and the plate between them, and its edge is pressed
 // into one stadium-shaped groove around both holes. The screws sit in the four corners, outside the groove.
 sc_ri = scr_sleeve[0] / 2 - scr_sleeve[1];                // window radius (the sleeve's bore)
+sc_dz = scr_sleeve[1] + scr_drain[1];                     // the frame's bottom end moves down this far: as much wall
+                                                          //   under the lower drain as beside the windows
 sc_go = scr_w / 2 - scr_groove[2];                        // groove's outer radius, about each hole's centre
 sc_gi = sc_go - scr_groove[0];                            // and its inner radius
-sc_hd = scr_screw[1] + 0.4;                               // countersink diameter at the face
+sc_hd = scr_screw[1] + scr_csk;                           // countersink diameter at the face
 sc_sx = scr_w / 2 - scr_edge - sc_hd / 2;                 // screw position across
 sc_sz = pitch / 2 + sqrt(pow(sc_go + scr_edge + sc_hd / 2, 2) - pow(sc_sx, 2));   // and up, clear of the groove
-sc_hz = sc_sz + sc_hd / 2 + scr_edge;                     // the corners' reach above and below the centre
+sc_hz = sc_sz + sc_hd / 2 + scr_edge;                     // the corners' reach above the centre (and below, plus sc_dz)
 assert(sc_gi > sc_ri + 1, "screen frame: no wall between the window and the groove");
 
-module scr_stadium(rad) hull() for (z = zc) translate([0, z]) circle(rad, $fn = 180);
+module scr_stadium(rad) hull() for (z = [zc[0], zc[1] - sc_dz]) translate([0, z]) circle(rad, $fn = 180);
+module scr_stadium_cone(r1, r2, h)   // from r1 at z = -1 to r2 at h - 1: a 45 deg chamfer's cutter when r1 - r2 = h
+    hull() for (z = [zc[0], zc[1] - sc_dz]) translate([0, z, -1]) cylinder(r1 = r1, r2 = r2, h = h, $fn = 180);
 
 module screen_frame() {
     sl = scr_sleeve[2]; ld = scr_sleeve[3]; od = scr_sleeve[0];
@@ -844,7 +853,7 @@ module screen_frame() {
         union() {
             linear_extrude(scr_t) union() {
                 scr_stadium(scr_w / 2);
-                offset(r = 4) offset(delta = -4) square([scr_w, 2 * sc_hz], center = true);
+                translate([0, -sc_dz / 2]) offset(r = 4) offset(delta = -4) square([scr_w, 2 * sc_hz + sc_dz], center = true);
             }
             for (z = zc) translate([0, z, scr_t - eps]) {
                 cylinder(d = od, h = sl - ld + eps);
@@ -852,23 +861,29 @@ module screen_frame() {
             }
         }
         for (z = zc) translate([0, z, -1]) cylinder(r = sc_ri, h = scr_t + scr_sleeve[2] + 2, $fn = 180);
-        translate([0, 0, -1]) linear_extrude(scr_groove[1] + 1) difference() { scr_stadium(sc_go); scr_stadium(sc_gi); }
-        render() minkowski() {   // the groove mouth's chamfer
-            translate([0, 0, -1]) linear_extrude(1) difference() { scr_stadium(sc_go); scr_stadium(sc_gi); }
-            cylinder(r1 = scr_chamf, r2 = 0, h = scr_chamf, $fn = 8);
+        for (z = zc) hull() {   // the drains: through the sleeve's wall and the plate, the floor sloping down outward;
+                                // tall enough to clear the round window's edge across the whole width
+            dh = od / 2 - sc_ri + scr_drain[1] + 3;
+            translate([-scr_drain[0] / 2, z - od / 2, scr_t + sl]) cube([scr_drain[0], dh, 1]);
+            translate([-scr_drain[0] / 2, z - od / 2 - scr_drain[1], -1]) cube([scr_drain[0], dh, 1]);
         }
-        for (sx = [-1, 1], sz = [-1, 1]) translate([sx * sc_sx, sz * sc_sz, 0]) {
+        translate([0, 0, -1]) linear_extrude(scr_groove[1] + 1) difference() { scr_stadium(sc_go); scr_stadium(sc_gi); }
+        difference() {   // the groove mouth's chamfer: two hulled cones (a minkowski() took about a minute)
+            scr_stadium_cone(sc_go + scr_chamf + 1, sc_go, scr_chamf + 1);
+            scr_stadium_cone(sc_gi - scr_chamf - 1, sc_gi, scr_chamf + 1);
+        }
+        for (sx = [-1, 1], sz = [-1, 1]) translate([sx * sc_sx, sz * sc_sz - (sz < 0 ? sc_dz : 0), 0]) {
             translate([0, 0, -1]) cylinder(d = scr_screw[0], h = scr_t + 2);
             translate([0, 0, -eps]) cylinder(d1 = sc_hd, d2 = scr_screw[0], h = hh);
         }
     }
 }
 
-// screen_test: the frame's top end (groove, two screws and an arc of the sleeve), to try the cord and mesh in the
-// groove and the screws in a foam scrap before printing the whole frame
+// screen_test: the frame's bottom end (groove, two screws, an arc of the sleeve and its drain), to try the cord and
+// mesh in the groove, the screws in a foam scrap and the drain before printing the whole frame
 module screen_test() intersection() {
     screen_frame();
-    translate([-scr_w, pitch / 2 + 20, -1]) cube([2 * scr_w, 100, 50]);
+    translate([-scr_w, -pitch / 2 - 20 - sc_dz - 100, -1]) cube([2 * scr_w, 100, 50]);
 }
 
 // drill_guide: two bushings on a small base, for perpendicular pilot holes in the foam insert. Lay it on the drilling

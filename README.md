@@ -58,7 +58,7 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | `magnet_cap` | <img src="images/part_magnet_cap.png" width="180"> | 1 | Holds the encoder magnet on the bottom end of the shaft; one M3 grub screw, height adjustable ±1 mm | 14 × 14 × 12 | Bore down |
 | `ebox` | <img src="images/part_ebox.png" width="180"> | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay, and two back tabs screw to the bay walls | 80 × 76 × 64 | Floor on the bed |
 | `tube_spacer` | <img src="images/part_tube_spacer.png" width="180"> | 1 | Flat "8" over both spigots, against the stop rings and squeezed by the foam: it holds the spigots' ends at their spacing, so foam holes slightly off 96 mm can't bend the ducts and bind the shaft. The vent sits 2.5 mm further out of the foam | 90 × 186 × 2.5 | Flat |
-| `screen_frame` | <img src="images/part_screen_frame.png" width="180"> | 1 | [Insect screen](#insect-screen) frame on the foam's outdoor face: the mesh is pressed into a groove around both holes, two sleeves plug into the holes, four screws in the corners | 94 × 190 × 15 | Outdoor face on the bed, sleeves up |
+| `screen_frame` | <img src="images/part_screen_frame.png" width="180"> | 1 | [Insect screen](#insect-screen) frame on the foam's outdoor face: the mesh is pressed into a groove around both holes, two sleeves plug into the holes, four screws in the corners, a drain at the bottom of each hole | 94 × 193 × 15 | Outdoor face on the bed, sleeves up |
 
 **Housing and discs must match.** The housing's shaft bosses have flat inner faces, and the discs have matching flats. A housing printed before this change (curved boss faces) needs the earlier discs: set `flat_boss = false` in `cad/window_vent.scad` and export `disc` (or `disc_nofoam`). A disc with flats leaves a 1.6 mm gap at a curved boss, and a disc without them won't turn between flat bosses.
 
@@ -119,7 +119,7 @@ The split housing (`body_top` 136 cm³, `body_bottom` 145 cm³, `splice` 8 cm³)
 
 - Printed fully solid, 412 cm³ of PETG (1.27 g/cm³) weighs about 523 g.
 - Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 470–520 g, plus a little for the skirt or brim and purging.
-- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³. The screen frame's `screen_test` adds 5 cm³ (7 g).
+- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³. The screen frame's `screen_test` adds 6 cm³ (7 g).
 - Print time: very roughly 9–12 hours for the housing on a Bambu Lab P1 (0.2 mm layers; about 7–9 hours at 0.28 mm), and about 3–4 hours for all the other parts together. The slicer gives the exact figures.
 
 ### Slicer settings
@@ -360,12 +360,14 @@ Run the drill slowly. Hole saws often cut a little wider than labelled, so cut a
 
 A printed frame holds a fibreglass insect screen on the foam's outdoor face, over both holes. The mesh is pressed into a groove around the frame's edge by screen spline, the way a window screen is made, so it comes out for cleaning or replacement: pollen and fluff build up on the intake side, and every clog costs airflow. Two short sleeves on the frame's back plug into the holes' outdoor ends (the housing's spigots fill only the room-side 25 mm of the foam): they centre the frame, hold it, and keep insects from getting in behind it. Four countersunk screws in the corners keep it in place. At 94 mm wide, it fits between the caps' lips, flush with them. Its top edge is 95 mm above the vent's centre, clear of the probe's hole at 102 mm.
 
+Each sleeve has a 15 mm drain slot at the bottom, through its wall and the plate. Condensation runs along the hole's floor, so without the slot it would pool against the sleeve's end and soak into the foam. The slot's floor is flush with the hole's floor and drops 1 mm toward the outdoor face, so the water runs out under the mesh. The exhaust hole, the lower one, carries warm, damp room air out into the cold, so it gets the most.
+
 | Part | <div style="width:180px">Thumbnail</div> | Size (mm) | Print orientation |
 |---|:---:|---|---|
-| `screen_frame` | <img src="images/part_screen_frame.png" width="180"> | 94 × 190 × 15 | Outdoor face on the bed, sleeves up |
+| `screen_frame` | <img src="images/part_screen_frame.png" width="180"> | 94 × 193 × 15 | Outdoor face on the bed, sleeves up |
 | `screen_test` | <img src="images/part_screen_test.png" width="180"> | 94 × 27 × 15 | Outdoor face on the bed |
 
-**Try the groove first.** `screen_test` is the frame's top end: an arc of the groove, two screw holes and an arc of sleeve. Roll the spline (or the O-ring cord) over a scrap of mesh into it: it should go in with a firm push of the roller and not pop out when the mesh is pulled. If it is loose or too hard to roll in, change the groove's width, `scr_groove[0]` (2.8 mm), in `cad/window_vent.scad`. Try the screws in a foam scrap at the same time.
+**Try the groove first.** `screen_test` is the frame's bottom end: an arc of the groove, two screw holes and an arc of sleeve with its drain. Roll the spline (or the O-ring cord) over a scrap of mesh into it: it should go in with a firm push of the roller and not pop out when the mesh is pulled. If it is loose or too hard to roll in, change the groove's width, `scr_groove[0]` (2.8 mm), in `cad/window_vent.scad`. Try the screws in a foam scrap at the same time.
 
 **Fitting the mesh.**
 
