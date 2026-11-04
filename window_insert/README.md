@@ -96,6 +96,12 @@ The latch cover lines a notch in the foam's room face, at the side frame's end. 
 - **On the room face:** from the foam's end to 47.6 mm along it, and from 480.9 to 582.1 mm above the foam's bottom edge (101.3 mm tall).
 - **At the bottom:** to 38.1 mm from the foam's end, from 490.4 to 572.6 mm (82.3 mm tall).
 
+A full-size [template](doc/latch_template.pdf) has both rectangles: print it twice at 100 % (check its 100 mm bars), cut one copy to the outer rectangle and trace it on the room face, its left edge on the foam's end, and cut the other to the inner one, to check the floor. Line them up in height with the notch in the assembled side cap. Carve a little small, then sand until the cover sits flush.
+
+<p align="center">
+  <a href="doc/latch_template.pdf"><img src="images/latch_template.png" alt="Preview of the latch cover notch template: the outer rectangle, 47.6 x 101.3 mm, on the room face, and the inner one, 38.1 x 82.3 mm, the notch's floor, sharing the foam's end edge, with the 45 degree slopes between them, their heights above the foam's bottom edge, and 100 mm scale bars" width="300"></a>
+</p>
+
 Try the cover in the notch, then screw it on.
 
 ### To buy
@@ -106,7 +112,7 @@ Try the cover in the notch, then screw it on.
 | Thin foam tape (weatherstrip) | About 1 m | In the top frame's channel (2 or 3 mm), and in the 0.5 mm gaps where the caps' ends meet |
 | Tape that peels off cleanly | About 2.5 m | Over the joint between the lips and the foam on the room side, for drafts |
 | Short screws, countersunk, 8 mm head | 6 | The latch cover, into the foam: 4.25 mm hole, a head 3.5 mm tall (it stands 0.5 mm proud of the 3 mm border). Coarse threads hold best in XPS |
-| PETG filament | About 1 kg | The caps (924 g), the joiners and the latch cover (48 g) |
+| PETG filament | About 1 kg | The caps (924 g), the joiners (25 g) and the latch cover (23 g) |
 
 ### Test pieces
 
@@ -199,9 +205,11 @@ stl/                          the test pieces and the full caps, exported (defau
 doc/window_top_view.svg       the window's profiles at mid-height, seen from above, to scale
 doc/window_side_view.svg      the window's profiles across the foam, at the side frame, to scale
 doc/insert_width.svg          the widths across the window: caps, lips, uncovered foam, vent chassis
+doc/latch_template.pdf        the latch cover's notch, full size (and .svg): print at 100 %
 images/                       part thumbnails and assembly views used in this README
 tools/window_profiles_svg.py  draws the drawings in doc/ from the measurements in it (the same
                               values as in cad/window_caps.scad)
+tools/latch_template_svg.py   draws doc/latch_template.svg and .pdf, and its preview
 tools/render_images.py        regenerates the thumbnails in images/ from the model
 ```
 
