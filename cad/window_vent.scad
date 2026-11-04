@@ -225,15 +225,16 @@ scr_drain  = [15, 1];   // drain at the bottom of each hole: width, and the drop
 // a tray under the unit on the window ledge, for drips of condensation (they evaporate indoors); the electronics box
 // stands on ribs above its floor. A leg in each corner levels it: an M3 button head screw, its head held in a slot at
 // the top of a corner post and turned from above with a 2 mm hex key, drives a square foot with a captive nut up and
-// down in the post's socket. The posts are inside the tray's outline, so nothing sticks out toward the window's wall
-tray_gap   = 2;     // around the electronics box, each side
+// down in the post's socket. The posts stand beside the box, inside the tray's outline
+tray_gap   = 1;     // between the electronics box and the posts, each side
+tray_back  = 6;     // the back face's distance from the foam's room face: clear of the bottom cap's lip (4.8 thick)
 tray_wall  = 2;     // walls
 tray_floor = 1.6;   // floor (5 bottom layers or more, so it holds water)
 tray_rim   = 10;    // the walls' height above the floor
 tray_front = 5;     // the inside reaches this far past the fans' front faces
-tray_rib   = [3, 2, 5];   // ribs along the tray, wall to wall: height, width, count. The outer two run under the
-                    //   box's side walls and into the posts, so they carry its weight to the legs; the floor alone
-                    //   would sag
+tray_rib   = [3, 2, 7];   // ribs along the tray: height, width, count, evenly spaced across the inside. Each
+                    //   stops one rib width short of the walls at its ends, so water can pass from one channel to
+                    //   the next; a rib that would pass close beside the posts stops as short of them instead
 tray_post  = 13.4;  // corner posts: outside size (a 2 mm wall around the socket)
 tray_sock  = 16;    // socket depth, from the floor's underside up
 tray_foot  = [9, 0.2, 16];   // feet: square side, clearance each side in the socket, length
@@ -910,17 +911,20 @@ module screen_test() intersection() {
 // shank, a slot for its head (both open to the post's outer face, so the screw slides in from the side), and a roof
 // with a hole for the hex key. A slit up the post's outer face lets the shank in; the foot then holds the screw in
 // the middle, and the nut (wider than the slit) can't come out
-tr_xo  = ebox_w / 2 + tray_gap + tray_wall;          // the outer faces, across
-tr_y1  = duct_len + fan_t + tray_front + tray_wall;  // the front face; the back one is on the foam (y = 0)
+tr_xo  = ebox_w / 2 + tray_gap + tray_post;          // the outer faces, across: the posts beside the box
+tr_y1  = duct_len + fan_t + tray_front + tray_wall;  // the front face; the back one is at y = tray_back
 tr_hs  = tray_screw[3] + 0.4;                        // the head's slot: height
 tr_top = tray_sock + 1.5 + tr_hs + 1.5;              // the posts' height
-tr_pc  = [for (sx = [-1, 1], y = [tray_post / 2, tr_y1 - tray_post / 2]) [sx, y]];   // posts: side, y
+tr_pc  = [for (sx = [-1, 1], y = [tray_back + tray_post / 2, tr_y1 - tray_post / 2]) [sx, y]];   // posts: side, y
 tr_sz  = tray_sock + 1.5 - tray_screw[0];            // the screw's tip, from the floor's underside
 tr_fs  = tray_foot[0] + 2 * tray_foot[1];            // the socket's side
+tr_rx  = let(xi = tr_xo - tray_wall, n = tray_rib[2])   // the ribs' centres, evenly spaced across the inside
+         [for (i = [1 : n]) -xi + i * 2 * xi / (n + 1)];
+echo(tray_ribs_x = tr_rx);
 // the range of tray heights: the tip clears the foot's bottom by 1, passes the nut by 0.5, and the foot keeps 5 mm in
 // its socket and 0.3 below the screw's slot
 tr_rng = [max(1 - tr_sz, tray_foot[2] - tray_sock + 0.3), min(tray_foot[2] - 4.1 - tr_sz, tray_foot[2] - 5)];
-echo(tray_size = [2 * tr_xo, tr_y1, tray_floor + tray_rim], tray_post_top = tr_top, tray_h_range = tr_rng);
+echo(tray_size = [2 * tr_xo, tr_y1 - tray_back, tray_floor + tray_rim], tray_post_top = tr_top, tray_h_range = tr_rng);
 assert(tr_rng[0] < tray_h && tray_h < tr_rng[1], "tray_h out of the legs' range");
 
 module tray() {
@@ -928,13 +932,14 @@ module tray() {
     difference() {
         union() {
             difference() {   // the floor and walls
-                translate([-tr_xo, 0, 0]) cube([2 * tr_xo, tr_y1, tray_floor + tray_rim]);
-                translate([-tr_xo + w, w, tray_floor]) cube([2 * (tr_xo - w), tr_y1 - 2 * w, tray_rim + 1]);
+                translate([-tr_xo, tray_back, 0]) cube([2 * tr_xo, tr_y1 - tray_back, tray_floor + tray_rim]);
+                translate([-tr_xo + w, tray_back + w, tray_floor]) cube([2 * (tr_xo - w), tr_y1 - tray_back - 2 * w, tray_rim + 1]);
             }
-            xr = ebox_w / 2 - ebox_t / 2;   // the outer ribs: under the middle of the box's side walls
-            for (i = [0 : tray_rib[2] - 1])   // the ribs, from the back wall to the front one
-                translate([-xr + i * 2 * xr / (tray_rib[2] - 1) - tray_rib[1] / 2, w - eps, tray_floor - eps])
-                    cube([tray_rib[1], tr_y1 - 2 * w + 2 * eps, tray_rib[0] + eps]);
+            // the end gaps: from the walls, or from the posts for a rib less than 2 mm from their sides (a
+            // narrower slit beside them would hold water)
+            for (x = tr_rx) let(e = (abs(x) + tray_rib[1] / 2 > tr_xo - P - 2 ? P : w) + tray_rib[1])
+                translate([x - tray_rib[1] / 2, tray_back + e, tray_floor - eps])
+                    cube([tray_rib[1], tr_y1 - tray_back - 2 * e, tray_rib[0] + eps]);
             for (c = tr_pc) translate([c[0] * (tr_xo - P / 2) - P / 2, c[1] - P / 2, 0]) cube([P, P, tr_top]);
         }
         for (c = tr_pc) translate([c[0] * (tr_xo - P / 2), c[1], 0]) {
@@ -971,9 +976,9 @@ module tray_feet() for (i = [0 : 3]) translate([(i - 1.5) * (tray_foot[0] + 6), 
 module tray_test() {
     intersection() {
         tray();
-        translate([tr_xo - tray_post - 6, -1, -1]) cube([tray_post + 7, tray_post + 7, tr_top + 2]);
+        translate([tr_xo - tray_post - 6, tray_back - 1, -1]) cube([tray_post + 7, tray_post + 7, tr_top + 2]);
     }
-    translate([tr_xo - tray_post - 6 - tray_foot[0], tray_post / 2, 0]) tray_foot();
+    translate([tr_xo - tray_post - 6 - tray_foot[0], tray_back + tray_post / 2, 0]) tray_foot();
 }
 
 // tray_view: the unit on the tray, the feet at tray_h, on a ghost of the ledge

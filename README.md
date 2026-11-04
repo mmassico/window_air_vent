@@ -59,7 +59,7 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | `ebox` | <img src="images/part_ebox.png" width="180"> | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay, and two back tabs screw to the bay walls | 80 × 76 × 64 | Floor on the bed |
 | `tube_spacer` | <img src="images/part_tube_spacer.png" width="180"> | 1 | Flat "8" over both spigots, against the stop rings and squeezed by the foam: it holds the spigots' ends at their spacing, so foam holes slightly off 96 mm can't bend the ducts and bind the shaft. The vent sits 2.5 mm further out of the foam | 90 × 186 × 2.5 | Flat |
 | `screen_frame` | <img src="images/part_screen_frame.png" width="180"> | 1 | [Insect screen](#insect-screen) frame on the foam's outdoor face: the mesh is pressed into a groove around both holes, two sleeves plug into the holes, four screws in the corners, a drain at the bottom of each hole | 94 × 193 × 15 | Outdoor face on the bed, sleeves up |
-| `tray` | <img src="images/part_tray.png" width="180"> | (1) | Optional [drip tray](#drip-tray) on the window ledge, under the whole unit: the electronics box stands on ribs above its floor, and an adjustable leg in each corner levels it | 88 × 121 × 21 | Floor on the bed |
+| `tray` | <img src="images/part_tray.png" width="180"> | (1) | Optional [drip tray](#drip-tray) on the window ledge, under the whole unit: the electronics box stands on ribs above its floor, and an adjustable leg in each corner levels it | 109 × 115 × 21 | Floor on the bed |
 | `tray_feet` | <img src="images/part_tray_feet.png" width="180"> | (4) | The tray's feet, one per leg: each slides in its post's socket and carries a captive M3 nut | 9 × 9 × 16 each | Standing |
 
 **Housing and discs must match.** The housing's shaft bosses have flat inner faces, and the discs have matching flats. A housing printed before this change (curved boss faces) needs the earlier discs: set `flat_boss = false` in `cad/window_vent.scad` and export `disc` (or `disc_nofoam`). A disc with flats leaves a 1.6 mm gap at a curved boss, and a disc without them won't turn between flat bosses.
@@ -121,7 +121,7 @@ The split housing (`body_top` 136 cm³, `body_bottom` 145 cm³, `splice` 8 cm³)
 
 - Printed fully solid, 412 cm³ of PETG (1.27 g/cm³) weighs about 523 g.
 - Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 470–520 g, plus a little for the skirt or brim and purging.
-- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³. The screen frame's `screen_test` adds 6 cm³ (7 g). The optional drip tray adds 38 cm³ (48 g): `tray` 34 cm³, `tray_feet` 4 cm³, and its `tray_test` 4 cm³ (5 g).
+- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³. The screen frame's `screen_test` adds 6 cm³ (7 g). The optional drip tray adds 42 cm³ (53 g): `tray` 38 cm³, `tray_feet` 4 cm³, and its `tray_test` 4 cm³ (5 g).
 - Print time: very roughly 9–12 hours for the housing on a Bambu Lab P1 (0.2 mm layers; about 7–9 hours at 0.28 mm), and about 3–4 hours for all the other parts together. The slicer gives the exact figures.
 
 ### Slicer settings
@@ -383,13 +383,13 @@ Each sleeve has a 15 mm drain slot at the bottom, through its wall and the plate
 
 ### Drip tray
 
-An optional tray on the window ledge, under the whole unit, from the foam to just past the fans. It catches drips of condensation, which evaporate indoors, and it levels the unit on a ledge that isn't flat. The electronics box, the unit's lowest part, stands on five 3 mm ribs, so it stays above any water. The ribs run from wall to wall, and the outer two, under the box's side walls, run into the corner posts: they carry the unit's weight to the legs, where the thin floor alone would sag. At 88 mm wide, the tray is 4 mm wider than the fans on each side.
+An optional tray on the window ledge, under the whole unit, from 6 mm off the foam (clear of the bottom cap's lip) to just past the fans. It catches drips of condensation, which evaporate indoors, and it levels the unit on a ledge that isn't flat. The electronics box, the unit's lowest part, stands on seven 3 mm ribs, so it stays above any water. The ribs are evenly spaced across the tray, 13.1 mm apart, and stiffen its thin floor under the unit's weight, the outer two under the box's side walls. Each stops 2 mm short of the walls at its ends, so water can pass from one channel to the next; the outer two pass close to the corner posts, so they stop 2 mm short of the posts instead. At 109 mm wide, the tray reaches 14.4 mm past the fans on each side, so it needs about 15 mm or more beside the fans: a window frame's wall 20 mm away leaves 5.6 mm.
 
-A leg in each corner sets the height. Each one is an M3 × 20 button head screw, held by its head in a slot at the top of a corner post, and a square foot with a captive nut that slides in the post's socket below. Turning the screw from above, with a 2 mm hex key through the hole in the post's top, moves the foot up or down: 0.5 mm per turn. The floor's underside can sit 3.5 to 11 mm above the ledge. The posts are inside the tray's outline, so nothing sticks out toward the window frame.
+A leg in each corner sets the height. Each one is an M3 × 20 button head screw, held by its head in a slot at the top of a corner post, and a square foot with a captive nut that slides in the post's socket below. Turning the screw from above, with a 2 mm hex key through the hole in the post's top, moves the foot up or down: 0.5 mm per turn. The floor's underside can sit 3.5 to 11 mm above the ledge. The posts stand beside the electronics box, inside the tray's outline.
 
 | Part | <div style="width:180px">Thumbnail</div> | Size (mm) | Print orientation |
 |---|:---:|---|---|
-| `tray` | <img src="images/part_tray.png" width="180"> | 88 × 121 × 21 | Floor on the bed |
+| `tray` | <img src="images/part_tray.png" width="180"> | 109 × 115 × 21 | Floor on the bed |
 | `tray_feet` | <img src="images/part_tray_feet.png" width="180"> | 9 × 9 × 16 each, four | Standing |
 | `tray_test` | <img src="images/part_tray_test.png" width="180"> | 33 × 19 × 21 | Floor on the bed |
 
