@@ -59,8 +59,8 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | `ebox` | <img src="images/part_ebox.png" width="180"> | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay, and two back tabs screw to the bay walls | 80 × 76 × 64 | Floor on the bed |
 | `tube_spacer` | <img src="images/part_tube_spacer.png" width="180"> | 1 | Flat "8" over both spigots, against the stop rings and squeezed by the foam: it holds the spigots' ends at their spacing, so foam holes slightly off 96 mm can't bend the ducts and bind the shaft. The vent sits 2.5 mm further out of the foam | 90 × 186 × 2.5 | Flat |
 | `screen_frame` | <img src="images/part_screen_frame.png" width="180"> | 1 | [Insect screen](#insect-screen) frame on the foam's outdoor face: the mesh is pressed into a groove around both holes, two sleeves plug into the holes, four screws in the corners, a drain at the bottom of each hole | 94 × 193 × 15 | Outdoor face on the bed, sleeves up |
-| `tray` | <img src="images/part_tray.png" width="180"> | (1) | Optional [drip tray](#drip-tray) on the window ledge, under the whole unit: the electronics box stands on ribs above its floor, and an adjustable leg in each corner levels it | 109 × 115 × 21 | Floor on the bed |
-| `tray_feet` | <img src="images/part_tray_feet.png" width="180"> | (4) | The tray's feet, one per leg: each slides in its post's socket and carries a captive M3 nut | 9 × 9 × 16 each | Standing |
+| `tray` | <img src="images/part_tray.png" width="180"> | (1) | Optional [drip tray](#drip-tray) on the window ledge, under the whole unit: the electronics box stands on ribs above its floor, and an adjustable leg in each corner levels it | 112 × 115 × 22 | Floor on the bed |
+| `tray_feet` | <img src="images/part_tray_feet.png" width="180"> | (4) | The tray's feet, one per leg: each slides in its post's socket, carries a captive M3 nut, and has a groove for the M2 stop | 9 × 9 × 20 each | On its side, the nut's slot up |
 
 **Housing and discs must match.** The housing's shaft bosses have flat inner faces, and the discs have matching flats. A housing printed before this change (curved boss faces) needs the earlier discs: set `flat_boss = false` in `cad/window_vent.scad` and export `disc` (or `disc_nofoam`). A disc with flats leaves a 1.6 mm gap at a curved boss, and a disc without them won't turn between flat bosses.
 
@@ -121,7 +121,7 @@ The split housing (`body_top` 136 cm³, `body_bottom` 145 cm³, `splice` 8 cm³)
 
 - Printed fully solid, 412 cm³ of PETG (1.27 g/cm³) weighs about 523 g.
 - Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 470–520 g, plus a little for the skirt or brim and purging.
-- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³. The screen frame's `screen_test` adds 6 cm³ (7 g). The optional drip tray adds 42 cm³ (53 g): `tray` 38 cm³, `tray_feet` 4 cm³, and its `tray_test` 4 cm³ (5 g).
+- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³. The screen frame's `screen_test` adds 6 cm³ (7 g). The optional drip tray adds 46 cm³ (58 g): `tray` 41 cm³, `tray_feet` 5 cm³, and its `tray_test` 5 cm³ (6 g).
 - Print time: very roughly 9–12 hours for the housing on a Bambu Lab P1 (0.2 mm layers; about 7–9 hours at 0.28 mm), and about 3–4 hours for all the other parts together. The slicer gives the exact figures.
 
 ### Slicer settings
@@ -173,6 +173,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | Insect screen kit: fibreglass mesh, 0.125 in screen spline, spline roller | 1 | [Insect screen](#insect-screen): a piece of mesh about 115 × 210 mm and about 50 cm of spline (or 3 mm O-ring cord, cut from the 74 × 3 O-rings above) | — |
 | Countersunk screws, 8 mm head (3.5 mm high), about 25 mm long | 4 | Screen frame into the foam (4.25 mm holes) | — |
 | M3 × 20 button head screws (ISO 7380, 2 mm hex) + M3 nuts | 4 each | Optional [drip tray](#drip-tray): the legs. Felt pads under the feet are optional too | — |
+| M2 × 6 flat head screws | 4 | Optional [drip tray](#drip-tray): the legs' stops, through each post's outer wall (self-tapping) | — |
 | XPS foam board, 2 in (51 mm), 30 psi | 1 | Foam insert, e.g. Owens Corning FOAMULAR C-300 (2 × 24 × 96 in, R-10). The 30 psi grade over the 20 psi (wall) one: stiffer under the housing's weight, it doesn't creep around the spigots, and the hole saw cuts it cleaner. Many boards have shiplap (SL) edges, stepped to overlap on a wall: cut the insert from the middle of the board, or saw the step off any edge that meets the window frame | — |
 | Closed-cell neoprene foam sheet, self-adhesive, 1/16 in (1.6 mm) | 1 | Lip seals, cut with the [templates](#cutting-the-lip-foam); not needed with `disc_nofoam` ([without lip foam](#without-lip-foam)). The model leaves a 1.5 mm gap, so the foam is only lightly squeezed: closed-cell neoprene is too stiff for more | |
 | Perfboard (protoboard), 5 × 7 cm, holes 66 × 46 mm | 1 | Carrier for the ESP32 and the TMC2209 in the electronics box | |
@@ -383,27 +384,30 @@ Each sleeve has a 15 mm drain slot at the bottom, through its wall and the plate
 
 ### Drip tray
 
-An optional tray on the window ledge, under the whole unit, from 6 mm off the foam (clear of the bottom cap's lip) to just past the fans. It catches drips of condensation, which evaporate indoors, and it levels the unit on a ledge that isn't flat. The electronics box, the unit's lowest part, stands on seven 3 mm ribs, so it stays above any water. The ribs are evenly spaced across the tray, 13.1 mm apart, and stiffen its thin floor under the unit's weight, the outer two under the box's side walls. Each stops 2 mm short of the walls at its ends, so water can pass from one channel to the next; the outer two pass close to the corner posts, so they stop 2 mm short of the posts instead. At 109 mm wide, the tray reaches 14.4 mm past the fans on each side, so it needs about 15 mm or more beside the fans: a window frame's wall 20 mm away leaves 5.6 mm.
+An optional tray on the window ledge, under the whole unit, from 6 mm off the foam (clear of the bottom cap's lip) to just past the fans. It catches drips of condensation, which evaporate indoors, and it levels the unit on a ledge that isn't flat. The electronics box, the unit's lowest part, stands on seven 3 mm ribs, so it stays above any water. The ribs are evenly spaced across the tray, 13.1 mm apart, and stiffen its thin floor under the unit's weight, the outer two under the box's side walls. Each stops 2 mm short of the walls at its ends, so water can pass from one channel to the next; the outer two pass close to the corner posts, so they stop 2 mm short of the posts instead. At 112 mm wide, the tray reaches 15.9 mm past the fans on each side, so it needs about 16 mm or more beside the fans: a window frame's wall 20 mm away leaves about 4 mm.
 
-A leg in each corner sets the height. Each one is an M3 × 20 button head screw, held by its head in a slot at the top of a corner post, and a square foot with a captive nut that slides in the post's socket below. Turning the screw from above, with a 2 mm hex key through the hole in the post's top, moves the foot up or down: 0.5 mm per turn. The floor's underside can sit 3.5 to 11 mm above the ledge. The posts stand beside the electronics box, inside the tray's outline.
+A leg in each corner sets the height. Each one is an M3 × 20 button head screw and a square foot with a captive nut, which slides in the corner post's socket. The screw goes in from below, and its head presses up into a 45° pyramid that closes the top of the socket. Turning the screw from above, with a 2 mm hex key through the hole in the post's top, moves the foot up or down: 0.5 mm per turn. An M2 × 6 flat head screw, through the post's outer wall (3.5 mm thick, for its thread), rides in a groove up the foot. It holds the leg in when the tray is lifted, and the groove's ends stop the foot, so the floor's underside sits 4 to 11 mm above the ledge. The posts stand beside the electronics box, inside the tray's outline.
+
+**Print without supports.** Nothing in the posts or the feet needs one: the pyramid's faces slope at 45°, and the feet print on their side with the nut's slot and the groove facing up. Supports inside a post can't be removed (tried), and the first design's flat ceilings, bridged without supports, sagged too much for the screw's head.
 
 | Part | <div style="width:180px">Thumbnail</div> | Size (mm) | Print orientation |
 |---|:---:|---|---|
-| `tray` | <img src="images/part_tray.png" width="180"> | 109 × 115 × 21 | Floor on the bed |
-| `tray_feet` | <img src="images/part_tray_feet.png" width="180"> | 9 × 9 × 16 each, four | Standing |
-| `tray_test` | <img src="images/part_tray_test.png" width="180"> | 33 × 19 × 21 | Floor on the bed |
+| `tray` | <img src="images/part_tray.png" width="180"> | 112 × 115 × 22 | Floor on the bed |
+| `tray_feet` | <img src="images/part_tray_feet.png" width="180"> | 9 × 9 × 20 each, four | On its side, the nut's slot and the groove up |
+| `tray_test` | <img src="images/part_tray_test.png" width="180"> | 44 × 19 × 22 | Floor on the bed, the foot on its side |
 
 <p align="center">
   <img src="images/tray_view.png" alt="The unit standing on the drip tray on the window ledge: the electronics box on the tray's ribs, a leg in each corner of the tray" width="360">
 </p>
 
-**Try a leg first.** `tray_test` is one corner of the tray, with its post, and a foot. Fit a screw and a nut as below and check that the foot slides freely without wobbling and that the screw turns easily under a little load. Then fill the whole tray with water once, before trusting it.
+**Try a leg first.** `tray_test` is one corner of the tray, with its post, and a foot. Fit a screw, a nut and the M2 stop as below and check that the foot slides freely without wobbling, that the screw turns easily under a little load, and that the stop holds the foot at both ends of its travel. Then fill the whole tray with water once, before trusting it.
 
 **Fitting the legs.**
 
-1. Slide a nut into each foot's side slot, under its 1 mm cap.
-2. Slide a screw's head into a post's head slot from the outer face, the shank down the slit, until it sits over the hole in the post's top.
-3. Push a foot up into the socket from below and turn the screw from above to thread it on. Either way round works: the nut is wider than the slit, so it can't come out.
+1. Slide a nut into each foot's slot, under its 1 mm cap.
+2. Push a screw up into a post's socket from below, head first, until its head sits in the pyramid at the top.
+3. Push a foot up into the socket, its slotted, grooved face toward the post's outer wall, and turn the screw from above to thread it on. Bring the foot to about the middle of its travel.
+4. Drive the M2 × 6 through the small countersunk hole in the post's outer wall, into the foot's groove. It cuts its own thread in the plastic: snug it, then stop, or it strips.
 
 **Levelling.** Set the tray on the ledge with the feet at about 7 mm. Level it across and along with three legs, then bring the fourth down until it just starts to resist the key: four legs on a ledge that isn't flat, and no rocking. A slight tilt toward the foam (about 1 mm lower there) also helps the ducts drain outward.
 

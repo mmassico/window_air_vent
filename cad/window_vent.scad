@@ -223,9 +223,11 @@ scr_drain  = [15, 1];   // drain at the bottom of each hole: width, and the drop
 
 /* [Drip tray] */
 // a tray under the unit on the window ledge, for drips of condensation (they evaporate indoors); the electronics box
-// stands on ribs above its floor. A leg in each corner levels it: an M3 button head screw, its head held in a slot at
-// the top of a corner post and turned from above with a 2 mm hex key, drives a square foot with a captive nut up and
-// down in the post's socket. The posts stand beside the box, inside the tray's outline
+// stands on ribs above its floor. A leg in each corner levels it: an M3 button head screw, put in from below with its
+// head up in a pyramid at the top of a corner post's socket and turned from above with a 2 mm hex key, drives a
+// square foot with a captive nut up and down in the socket. An M2 screw through the post's wall rides in a groove up
+// the foot: it holds the leg in and stops its travel. Nothing in the post or the foot needs a bridge or a support.
+// The posts stand beside the box, inside the tray's outline
 tray_gap   = 1;     // between the electronics box and the posts, each side
 tray_back  = 6;     // the back face's distance from the foam's room face: clear of the bottom cap's lip (4.8 thick)
 tray_wall  = 2;     // walls
@@ -235,10 +237,18 @@ tray_front = 5;     // the inside reaches this far past the fans' front faces
 tray_rib   = [3, 2, 7];   // ribs along the tray: height, width, count, evenly spaced across the inside. Each
                     //   stops one rib width short of the walls at its ends, so water can pass from one channel to
                     //   the next; a rib that would pass close beside the posts stops as short of them instead
-tray_post  = 13.4;  // corner posts: outside size (a 2 mm wall around the socket)
-tray_sock  = 16;    // socket depth, from the floor's underside up
-tray_foot  = [9, 0.2, 16];   // feet: square side, clearance each side in the socket, length
-tray_screw = [20, 3.4, 5.7, 1.65];   // screws: length, hole, button head diameter and height (M3 x 20, ISO 7380)
+tray_post  = 13.4;  // corner posts: outside size along the tray (a 2 mm wall around the socket) ...
+tray_pwall = 3.5;   // ... and their outer wall, thicker for the M2 stop's thread (the posts grow outward)
+tray_sock  = 17;    // the socket's straight part, from the floor's underside up; a 45 deg pyramid closes it above
+tray_foot  = [9, 0.2, 20];   // feet: square side, clearance each side in the socket, length
+tray_screw = [20, 3.4, 5.7, 0.5];   // screws: length, hole, button head diameter (M3 x 20, ISO 7380), and the height
+                    //   of the head's rim, which bears on the pyramid's faces, above its underside (about)
+tray_pin   = [1.6, 3, 3.0, 2.4];   // the M2 x 6 stop (flat head): pilot hole, height above the floor's underside,
+                    //   its 90 deg countersink (shallow: 2.8 mm of thread in the 3.5 wall), and the width of the
+                    //   groove it rides in; the tip reaches 2.1 into the socket, 1.1 clear of the M3.
+                    //   The groove runs up the foot's face with the nut's slot (that face toward the post's outer
+                    //   wall; it is up when printing, so it has no overhang), open through to the screw's bore
+tray_range = [4, 11];   // the floor's underside above the ledge: the groove's two ends
 tray_h     = 7;     // the floor's underside above the ledge, in the tray_view
 
 /* [Hidden] */
@@ -907,28 +917,35 @@ module screen_test() intersection() {
 }
 
 // tray: the drip tray, with its floor's underside at z = 0 (its print orientation, floor on the bed); x and y as
-// installed. The post's layers, from the floor's underside up: the foot's socket, a layer with a slot for the screw's
-// shank, a slot for its head (both open to the post's outer face, so the screw slides in from the side), and a roof
-// with a hole for the hex key. A slit up the post's outer face lets the shank in; the foot then holds the screw in
-// the middle, and the nut (wider than the slit) can't come out
-tr_xo  = ebox_w / 2 + tray_gap + tray_post;          // the outer faces, across: the posts beside the box
+// installed. Each post: the foot's square socket from below, closed above by a 45 deg pyramid that the screw's head
+// presses up into, the hex key's hole on through the top, and the M2 stop's pilot hole through the outer wall
+tr_px  = tray_post - 2 + tray_pwall;                 // the posts' size across
+tr_xo  = ebox_w / 2 + tray_gap + tr_px;              // the outer faces, across: the posts beside the box
 tr_y1  = duct_len + fan_t + tray_front + tray_wall;  // the front face; the back one is at y = tray_back
-tr_hs  = tray_screw[3] + 0.4;                        // the head's slot: height
-tr_top = tray_sock + 1.5 + tr_hs + 1.5;              // the posts' height
-tr_pc  = [for (sx = [-1, 1], y = [tray_back + tray_post / 2, tr_y1 - tray_post / 2]) [sx, y]];   // posts: side, y
-tr_sz  = tray_sock + 1.5 - tray_screw[0];            // the screw's tip, from the floor's underside
 tr_fs  = tray_foot[0] + 2 * tray_foot[1];            // the socket's side
+tr_cx  = tr_xo - tray_pwall - tr_fs / 2;             // the sockets' centres, across
+tr_kh  = 3.2;                                        // the hex key's hole
+tr_pyr = (tr_fs - tr_kh) / 2;                        // the pyramid's height
+tr_top = tray_sock + tr_pyr + 1.5;                   // the posts' height
+tr_pc  = [for (sx = [-1, 1], y = [tray_back + tray_post / 2, tr_y1 - tray_post / 2]) [sx, y]];   // posts: side, y
+tr_hu  = tray_sock + tr_fs / 2 - tray_screw[2] / 2 - tray_screw[3];   // the head's underside: its rim on the pyramid
+tr_sz  = tr_hu - tray_screw[0];                      // the screw's tip, from the floor's underside
+tr_nut = tray_foot[2] - 1 - 2.6;                     // the foot's nut pocket: its bottom, up the foot (under a 1 mm cap)
+tr_gv  = [tray_pin[1] + tray_range[0] - 1, tray_pin[1] + tray_range[1] + 1];   // the groove, up the foot
 tr_rx  = let(xi = tr_xo - tray_wall, n = tray_rib[2])   // the ribs' centres, evenly spaced across the inside
          [for (i = [1 : n]) -xi + i * 2 * xi / (n + 1)];
 echo(tray_ribs_x = tr_rx);
-// the range of tray heights: the tip clears the foot's bottom by 1, passes the nut by 0.5, and the foot keeps 5 mm in
-// its socket and 0.3 below the screw's slot
-tr_rng = [max(1 - tr_sz, tray_foot[2] - tray_sock + 0.3), min(tray_foot[2] - 4.1 - tr_sz, tray_foot[2] - 5)];
-echo(tray_size = [2 * tr_xo, tr_y1 - tray_back, tray_floor + tray_rim], tray_post_top = tr_top, tray_h_range = tr_rng);
-assert(tr_rng[0] < tray_h && tray_h < tr_rng[1], "tray_h out of the legs' range");
+echo(tray_size = [2 * tr_xo, tr_y1 - tray_back, tray_floor + tray_rim], tray_post_top = tr_top, tray_h_range = tray_range);
+// over the range: the foot stays under the pyramid, the tip stays in the foot and through the nut, and the groove
+// stops short of the nut
+assert(tray_foot[2] - tray_range[0] <= tray_sock - 0.3, "tray: the foot reaches the pyramid");
+assert(tr_sz >= 1 - tray_range[0], "tray: the screw's tip comes out of the foot's bottom");
+assert(tr_sz <= tr_nut - tray_range[1] - 0.5, "tray: the screw's tip doesn't reach through the nut");
+assert(tr_gv[1] <= tr_nut - 1, "tray: the groove reaches the nut");
+assert(tray_range[0] <= tray_h && tray_h <= tray_range[1], "tray_h out of the legs' range");
 
 module tray() {
-    w = tray_wall; P = tray_post; fs = tr_fs; hd = tray_screw[2] + 0.5;
+    w = tray_wall; P = tray_post; fs = tr_fs;
     difference() {
         union() {
             difference() {   // the floor and walls
@@ -937,48 +954,59 @@ module tray() {
             }
             // the end gaps: from the walls, or from the posts for a rib less than 2 mm from their sides (a
             // narrower slit beside them would hold water)
-            for (x = tr_rx) let(e = (abs(x) + tray_rib[1] / 2 > tr_xo - P - 2 ? P : w) + tray_rib[1])
+            for (x = tr_rx) let(e = (abs(x) + tray_rib[1] / 2 > tr_xo - tr_px - 2 ? P : w) + tray_rib[1])
                 translate([x - tray_rib[1] / 2, tray_back + e, tray_floor - eps])
                     cube([tray_rib[1], tr_y1 - tray_back - 2 * e, tray_rib[0] + eps]);
-            for (c = tr_pc) translate([c[0] * (tr_xo - P / 2) - P / 2, c[1] - P / 2, 0]) cube([P, P, tr_top]);
+            for (c = tr_pc) translate([c[0] * (tr_xo - tr_px / 2) - tr_px / 2, c[1] - P / 2, 0]) cube([tr_px, P, tr_top]);
         }
-        for (c = tr_pc) translate([c[0] * (tr_xo - P / 2), c[1], 0]) {
+        for (c = tr_pc) translate([c[0] * tr_cx, c[1], 0]) {
             translate([-fs / 2, -fs / 2, -1]) cube([fs, fs, tray_sock + 1]);   // the foot's socket
-            hull() for (x = [0, c[0] * P]) translate([x, 0, tray_sock - eps])   // the shank's slot
-                cylinder(d = tray_screw[1] + 0.2, h = 1.5 + 2 * eps, $fn = 24);
-            hull() for (x = [0, c[0] * P]) translate([x, 0, tray_sock + 1.5])   // the head's slot
-                cylinder(d = hd, h = tr_hs, $fn = 32);
-            translate([c[0] > 0 ? 0 : -P, -(tray_screw[1] + 0.2) / 2, -1])        // the slit up the outer face
-                cube([P, tray_screw[1] + 0.2, tray_sock + 1]);
-            translate([0, 0, tray_sock]) cylinder(d = 3.2, h = tr_top, $fn = 24);   // the hex key's hole
+            hull() {   // the pyramid
+                translate([-fs / 2, -fs / 2, tray_sock - eps]) cube([fs, fs, eps]);
+                translate([-tr_kh / 2, -tr_kh / 2, tray_sock + tr_pyr - eps]) cube([tr_kh, tr_kh, eps]);
+            }
+            translate([0, 0, tray_sock]) cylinder(d = tr_kh, h = tr_top, $fn = 24);   // the hex key's hole
+            translate([c[0] * (fs / 2 - 1), 0, tray_pin[1]]) rotate([0, c[0] * 90, 0])   // the M2 stop's pilot hole:
+                cylinder(d = tray_pin[0], h = tray_pwall + 2, $fn = 16);                  // outward only (the inner
+                                                                                         // wall holds the water)
+            translate([c[0] * (fs / 2 + tray_pwall + eps), 0, tray_pin[1]]) rotate([0, c[0] * -90, 0])   // its countersink
+                cylinder(d1 = tray_pin[2], d2 = 0, h = tray_pin[2] / 2, $fn = 24);
         }
     }
 }
 
-// tray_foot: standing on its bottom. The nut slides in from one side, under a 1 mm cap; the screw's tip goes on into
-// the bore below it
+// tray_foot: standing, as installed. The nut slides in from one side, under a 1 mm cap; the screw's tip goes on into
+// the bore below it. A groove up the same face, from tr_gv[0] to tr_gv[1] and open through to the bore, takes the M2
+// stop
 module tray_foot() {
-    f = tray_foot[0]; L = tray_foot[2];
+    f = tray_foot[0]; L = tray_foot[2]; g = tray_pin[3];
     difference() {
         hull() {
             translate([-f / 2 + 0.6, -f / 2 + 0.6, 0]) cube([f - 1.2, f - 1.2, eps]);   // a 0.6 chamfer at the bottom
             translate([-f / 2, -f / 2, 0.6]) cube([f, f, L - 0.6]);
         }
-        translate([0, 0, 1.5]) cylinder(d = tray_screw[1], h = L, $fn = 24);
-        hull() for (x = [0, f]) translate([x, 0, L - 1 - 2.6]) cylinder(r = 5.8 / sqrt(3), h = 2.6, $fn = 6);
+        translate([0, 0, 1.5]) hull() {   // the bore: a teardrop, its point up when printing (toward +x)
+            cylinder(d = tray_screw[1], h = L, $fn = 24);
+            rotate(-45) cube([tray_screw[1] / 2, tray_screw[1] / 2, L]);
+        }
+        hull() for (x = [0, f]) translate([x, 0, tr_nut]) cylinder(r = 5.8 / sqrt(3), h = 2.6, $fn = 6);
+        translate([0, -g / 2, tr_gv[0]]) cube([f, g, tr_gv[1] - tr_gv[0]]);   // the stop's groove, to the bore
     }
 }
 
-module tray_feet() for (i = [0 : 3]) translate([(i - 1.5) * (tray_foot[0] + 6), 0, 0]) rotate(90) tray_foot();
+// tray_feet: the four, each on its side with the nut's slot up (no bridges)
+module tray_feet() for (i = [0 : 3]) translate([0, (i - 1.5) * (tray_foot[0] + 6), tray_foot[0] / 2])
+    rotate([0, -90, 0]) translate([0, 0, -tray_foot[2] / 2]) tray_foot();
 
-// tray_test: one corner of the tray (a post, its socket and slots, and a bit of floor and walls) and a foot, to try
-// the screw, the nut and the foot's slide before printing the whole tray
+// tray_test: one corner of the tray (a post, its socket, pyramid and stop's hole, and a bit of floor and walls) and a
+// foot, on its side, to try the screw, the nut, the foot's slide and the stop before printing the whole tray
 module tray_test() {
     intersection() {
         tray();
-        translate([tr_xo - tray_post - 6, tray_back - 1, -1]) cube([tray_post + 7, tray_post + 7, tr_top + 2]);
+        translate([tr_xo - tr_px - 6, tray_back - 1, -1]) cube([tr_px + 7, tray_post + 7, tr_top + 2]);
     }
-    translate([tr_xo - tray_post - 6 - tray_foot[0], tray_back + tray_post / 2, 0]) tray_foot();
+    translate([tr_xo - tr_px - 10 - tray_foot[2] / 2, tray_back + tray_post / 2, tray_foot[0] / 2])
+        rotate([0, -90, 0]) translate([0, 0, -tray_foot[2] / 2]) tray_foot();
 }
 
 // tray_view: the unit on the tray, the feet at tray_h, on a ghost of the ledge
@@ -987,10 +1015,12 @@ module tray_view() {
     assembly(plug = false);
     translate([0, 0, zt]) {
         color([0.45, 0.7, 0.85]) tray();
-        for (c = tr_pc) color([0.95, 0.6, 0.25]) translate([c[0] * (tr_xo - tray_post / 2), c[1], -tray_h]) tray_foot();
-        for (c = tr_pc) color([0.6, 0.6, 0.62]) translate([c[0] * (tr_xo - tray_post / 2), c[1], tr_sz]) {
-            cylinder(d = 3, h = tray_screw[0]);
-            translate([0, 0, tray_screw[0]]) cylinder(d = tray_screw[2], h = tray_screw[3], $fn = 24);
+        for (c = tr_pc) color([0.95, 0.6, 0.25]) translate([c[0] * tr_cx, c[1], -tray_h]) tray_foot();
+        for (c = tr_pc) color([0.6, 0.6, 0.62]) translate([c[0] * tr_cx, c[1], 0]) {
+            translate([0, 0, tr_sz]) cylinder(d = 3, h = tray_screw[0]);
+            translate([0, 0, tr_hu]) cylinder(d1 = tray_screw[2], d2 = 2.5, h = 1.65, $fn = 24);   // the head
+            translate([c[0] * (tr_fs / 2 + tray_pwall + 0.4), 0, tray_pin[1]]) rotate([0, 90, 0])   // the M2 stop
+                cylinder(d = 3.8, h = 1.3, center = true, $fn = 16);
         }
         %translate([-90, -10, -tray_h - 5]) cube([180, 190, 5]);   // the ledge (ghost)
     }
