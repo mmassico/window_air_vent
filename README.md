@@ -367,7 +367,7 @@ Each sleeve has a 15 mm drain slot at the bottom, through its wall and the plate
 | `screen_frame` | <img src="images/part_screen_frame.png" width="180"> | 94 × 193 × 15 | Outdoor face on the bed, sleeves up |
 | `screen_test` | <img src="images/part_screen_test.png" width="180"> | 94 × 27 × 15 | Outdoor face on the bed |
 
-**Try the groove first.** `screen_test` is the frame's bottom end: an arc of the groove, two screw holes and an arc of sleeve with its drain. Roll the spline (or the O-ring cord) over a scrap of mesh into it: it should go in with a firm push of the roller and not pop out when the mesh is pulled. If it is loose or too hard to roll in, change the groove's width, `scr_groove[0]` (2.8 mm), in `cad/window_vent.scad`. Try the screws in a foam scrap at the same time.
+**Try the groove first.** `screen_test` is the frame's bottom end: an arc of the groove, two screw holes and an arc of sleeve with its drain. The 2.8 mm groove has been tested with 0.125 in screen spline over fibreglass mesh, and it works well. The O-ring cord hasn't been tried yet, and other splines vary, so roll yours over a scrap of mesh into the test piece first: it should go in with a firm push of the roller and not pop out when the mesh is pulled. If it is loose or too hard to roll in, change the groove's width, `scr_groove[0]` (2.8 mm), in `cad/window_vent.scad`. Try the screws in a foam scrap at the same time.
 
 **Fitting the mesh.**
 
