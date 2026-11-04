@@ -200,6 +200,13 @@ def screen():   # both seen from the outdoor face (the groove)
                                         ("screen_test", "0,-80,5,215,0,205,220", (1000, 700), False)]:
         save(render(t(f"p_{name}.png"), VENT, camera, size, [f'part="{name}"'], viewall=viewall), f"part_{name}.png")
 
+def tray():   # the parts, then the unit on the tray (the slits in the posts' outer faces toward the camera)
+    for name, camera, size, viewall in [("tray", "0,0,0,55,0,25,0", (1100, 1000), True),
+                                        ("tray_feet", "0,0,0,55,0,25,0", (1000, 600), True),
+                                        ("tray_test", "0,0,0,55,0,25,0", (1000, 800), True)]:
+        save(render(t(f"p_{name}.png"), VENT, camera, size, [f'part="{name}"'], viewall=viewall), f"part_{name}.png")
+    save(render(t("tray_view.png"), VENT, "0,0,0,70,0,35,0", (1000, 1100), ['part="tray_view"'], viewall=True), "tray_view.png")
+
 def split_view():
     save(render(t("split.png"), VENT, "0,30,0,70,0,235,820", (1100, 1300), ['part="split_view"']), "split_view.png")
 
@@ -215,7 +222,7 @@ def louvers():
 
 
 JOBS = {f.__name__: f for f in (assembly, assembly_lbl, damper_section, side_section, damper_cutaway, damper_closed_view,
-                                parts, screen, split_view, louvers)}
+                                parts, screen, tray, split_view, louvers)}
 
 if __name__ == "__main__":
     names = sys.argv[1:] or list(JOBS)

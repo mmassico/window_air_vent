@@ -18,7 +18,7 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 - **Motor and encoder.** A NEMA 17 pancake stepper on top turns the shaft through a flexible coupler. A TMC2209 driver keeps it silent. The motor screws to a separate plate on the bench, and the plate then screws onto a frame on top of the housing from above. An AS5600 magnetic encoder at the bottom reads the absolute shaft angle, so the firmware always knows whether the dampers are really closed, with no homing and no limit switch.
 - **Fans.** Two 80 mm PWM fans screw onto the room end of the housing.
 - **Electronics box.** A tray under the housing holds a 5 × 7 cm perfboard with the ESP32 and the TMC2209 soldered on. The encoder plate is its lid, and its front wall rises to close the front of the bottom bay. The cables run down the right side (seen from the room), hidden behind the fans and held by three tie-wrap anchors on the back of the fan plate; the same anchors and a cable entry on the left side allow the mirror image. Power comes from two plug-in adapters: a 12 V brick for the fans and the motor, whose wire comes in with the other cables, and a 5 V USB-C adapter for the ESP32, whose cable passes through a diamond opening in the left wall. The [layout drawing](doc/ebox_layout.svg) shows where everything goes on the perfboard.
-- **Water stays out of the room.** A 3 mm drip dam across the lower part of each bore, just before the fan, stops droplets from running indoors. Around the bottom shaft hole in each duct, a 16 mm boss rises 3 mm above the floor, so water flows around it instead of down the shaft.
+- **Water stays out of the room.** A 3 mm drip dam across the lower part of each bore, just before the fan, stops droplets from running indoors. Around the bottom shaft hole in each duct, a 16 mm boss rises 3 mm above the floor, so water flows around it instead of down the shaft. An optional [drip tray](#drip-tray) under the unit, on the window ledge, catches anything that still drips; it evaporates there.
 - **How it seals.** The lips do the sealing, not the gap between the disc and the bore: the flat lip is 5.6 mm wide and overlaps the disc edge by 2 mm, and the conical lip meets the disc's bevelled rim over a band about 2.8 mm wide (the same 2 mm across the bore, along the 45° slope). Between them is 1.6 mm neoprene in a gap of about 1.5 mm, so it is only lightly squeezed: the disc's two seats are relieved for it (see [cutting the lip foam](#cutting-the-lip-foam)). The disc is 67 mm in a 74 mm bore so it can be slid in edge-on past the dam and the bosses. Around the shaft, where the lips must stop to clear the hub, a boss at the top and the one at the bottom close the gap. Their inner faces are flat, square to the shaft, and the disc's two shaft ends are cut to matching flats: a flat end turning about the shaft stays in its own plane, so the gap is 0.2 mm at every angle.
 
 <p align="center">
@@ -59,6 +59,8 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | `ebox` | <img src="images/part_ebox.png" width="180"> | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay, and two back tabs screw to the bay walls | 80 × 76 × 64 | Floor on the bed |
 | `tube_spacer` | <img src="images/part_tube_spacer.png" width="180"> | 1 | Flat "8" over both spigots, against the stop rings and squeezed by the foam: it holds the spigots' ends at their spacing, so foam holes slightly off 96 mm can't bend the ducts and bind the shaft. The vent sits 2.5 mm further out of the foam | 90 × 186 × 2.5 | Flat |
 | `screen_frame` | <img src="images/part_screen_frame.png" width="180"> | 1 | [Insect screen](#insect-screen) frame on the foam's outdoor face: the mesh is pressed into a groove around both holes, two sleeves plug into the holes, four screws in the corners, a drain at the bottom of each hole | 94 × 193 × 15 | Outdoor face on the bed, sleeves up |
+| `tray` | <img src="images/part_tray.png" width="180"> | (1) | Optional [drip tray](#drip-tray) on the window ledge, under the whole unit: the electronics box stands on ribs above its floor, and an adjustable leg in each corner levels it | 88 × 121 × 21 | Floor on the bed |
+| `tray_feet` | <img src="images/part_tray_feet.png" width="180"> | (4) | The tray's feet, one per leg: each slides in its post's socket and carries a captive M3 nut | 9 × 9 × 16 each | Standing |
 
 **Housing and discs must match.** The housing's shaft bosses have flat inner faces, and the discs have matching flats. A housing printed before this change (curved boss faces) needs the earlier discs: set `flat_boss = false` in `cad/window_vent.scad` and export `disc` (or `disc_nofoam`). A disc with flats leaves a 1.6 mm gap at a curved boss, and a disc without them won't turn between flat bosses.
 
@@ -119,7 +121,7 @@ The split housing (`body_top` 136 cm³, `body_bottom` 145 cm³, `splice` 8 cm³)
 
 - Printed fully solid, 412 cm³ of PETG (1.27 g/cm³) weighs about 523 g.
 - Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 470–520 g, plus a little for the skirt or brim and purging.
-- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³. The screen frame's `screen_test` adds 6 cm³ (7 g).
+- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³. The screen frame's `screen_test` adds 6 cm³ (7 g). The optional drip tray adds 36 cm³ (45 g): `tray` 31 cm³, `tray_feet` 4 cm³, and its `tray_test` 4 cm³ (5 g).
 - Print time: very roughly 9–12 hours for the housing on a Bambu Lab P1 (0.2 mm layers; about 7–9 hours at 0.28 mm), and about 3–4 hours for all the other parts together. The slicer gives the exact figures.
 
 ### Slicer settings
@@ -136,6 +138,7 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 | `ebox` | 4 | 15–20 % | No real loads; a 4th wall (same print time) makes the walls around the screw holes stronger |
 | `tube_spacer` | | 100 % | Thin rings (3 mm wide, 2.5 mm thick) that must not stretch: print it solid |
 | `screen_frame`, `screen_test` | 4 | 25 % | Thin plate and sleeves: 4 walls print them nearly solid, so the groove's walls hold the spline |
+| `tray`, `tray_feet`, `tray_test` | 4 | 25 % | The 5 bottom layers below keep the tray's 1.6 mm floor watertight; 4 walls make the posts and feet nearly solid |
 | `fittest`, `oring_test` | 4 | 25 % | As the housing, so they test what the housing will be |
 | `drill_guide` | 4 | 40 % | Small; 4 walls make the bushings solid |
 | `foam_guide_a`, `foam_guide_b` | 4 | 40 % | Thin plate and rib: 4 walls print them solid, so they stay flat and stiff |
@@ -169,6 +172,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | O-rings, 74 × 3 mm, nitrile 70A | 4 | Optional, and not needed by default: the plain Ø 83.7 spigots are a snug fit in the hole (83.3 mm with the 3-1/4 in hole saw). For a hole that comes out loose, set `orings = true` before printing the housing: two grooves per spigot, sized for this O-ring (about 6% stretch, 20% squeeze in an 83.3 mm hole) | $12.79 (pack of 10) |
 | Insect screen kit: fibreglass mesh, 0.125 in screen spline, spline roller | 1 | [Insect screen](#insect-screen): a piece of mesh about 115 × 210 mm and about 50 cm of spline (or 3 mm O-ring cord, cut from the 74 × 3 O-rings above) | — |
 | Countersunk screws, 8 mm head (3.5 mm high), about 25 mm long | 4 | Screen frame into the foam (4.25 mm holes) | — |
+| M3 × 20 button head screws (ISO 7380, 2 mm hex) + M3 nuts | 4 each | Optional [drip tray](#drip-tray): the legs. Felt pads under the feet are optional too | — |
 | XPS foam board, 2 in (51 mm), 30 psi | 1 | Foam insert, e.g. Owens Corning FOAMULAR C-300 (2 × 24 × 96 in, R-10). The 30 psi grade over the 20 psi (wall) one: stiffer under the housing's weight, it doesn't creep around the spigots, and the hole saw cuts it cleaner. Many boards have shiplap (SL) edges, stepped to overlap on a wall: cut the insert from the middle of the board, or saw the step off any edge that meets the window frame | — |
 | Closed-cell neoprene foam sheet, self-adhesive, 1/16 in (1.6 mm) | 1 | Lip seals, cut with the [templates](#cutting-the-lip-foam); not needed with `disc_nofoam` ([without lip foam](#without-lip-foam)). The model leaves a 1.5 mm gap, so the foam is only lightly squeezed: closed-cell neoprene is too stiff for more | |
 | Perfboard (protoboard), 5 × 7 cm, holes 66 × 46 mm | 1 | Carrier for the ESP32 and the TMC2209 in the electronics box | |
@@ -376,6 +380,34 @@ Each sleeve has a 15 mm drain slot at the bottom, through its wall and the plate
 3. Trim the mesh along the groove's outer edge with a sharp knife.
 
 **Fitting the frame.** Push the sleeves into the holes from outdoors, then put the four screws through the corners into the foam. Screws about 25 mm long reach 20 mm into the foam, which is plenty, since the sleeves carry the frame.
+
+### Drip tray
+
+An optional tray on the window ledge, under the whole unit, from the foam to just past the fans. It catches drips of condensation, which evaporate indoors, and it levels the unit on a ledge that isn't flat. The electronics box, the unit's lowest part, stands on three 2 mm ribs, so it stays above any water. At 88 mm wide, the tray is 4 mm wider than the fans on each side.
+
+A leg in each corner sets the height. Each one is an M3 × 20 button head screw, held by its head in a slot at the top of a corner post, and a square foot with a captive nut that slides in the post's socket below. Turning the screw from above, with a 2 mm hex key through the hole in the post's top, moves the foot up or down: 0.5 mm per turn. The floor's underside can sit 3.5 to 11 mm above the ledge. The posts are inside the tray's outline, so nothing sticks out toward the window frame.
+
+| Part | <div style="width:180px">Thumbnail</div> | Size (mm) | Print orientation |
+|---|:---:|---|---|
+| `tray` | <img src="images/part_tray.png" width="180"> | 88 × 121 × 21 | Floor on the bed |
+| `tray_feet` | <img src="images/part_tray_feet.png" width="180"> | 9 × 9 × 16 each, four | Standing |
+| `tray_test` | <img src="images/part_tray_test.png" width="180"> | 33 × 19 × 21 | Floor on the bed |
+
+<p align="center">
+  <img src="images/tray_view.png" alt="The unit standing on the drip tray on the window ledge: the electronics box on the tray's ribs, a leg in each corner of the tray" width="360">
+</p>
+
+**Try a leg first.** `tray_test` is one corner of the tray, with its post, and a foot. Fit a screw and a nut as below and check that the foot slides freely without wobbling and that the screw turns easily under a little load. Then fill the whole tray with water once, before trusting it.
+
+**Fitting the legs.**
+
+1. Slide a nut into each foot's side slot, under its 1 mm cap.
+2. Slide a screw's head into a post's head slot from the outer face, the shank down the slit, until it sits over the hole in the post's top.
+3. Push a foot up into the socket from below and turn the screw from above to thread it on. Either way round works: the nut is wider than the slit, so it can't come out.
+
+**Levelling.** Set the tray on the ledge with the feet at about 7 mm. Level it across and along with three legs, then bring the fourth down until it just starts to resist the key: four legs on a ledge that isn't flat, and no rocking. A slight tilt toward the foam (about 1 mm lower there) also helps the ducts drain outward.
+
+**The foam holes come after the tray.** The tray sets the unit's height, so drill the holes to match it: stand the unit on the levelled tray against the foam, mark the hole centres from it, then [drill](#drilling-the-foam-insert). Keep the unit below the window's latch zone.
 
 ## Assembly
 

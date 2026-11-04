@@ -6,7 +6,7 @@ Usage:    python tools/check.py [vent] [louvers]   (run from the window-vent fol
           vent: checks 1 to 7 (cad/window_vent.scad); louvers: check 8 (cad/louvers.scad)
 
 Checks
-  1. Each part: one closed (watertight) solid, fits a 256 x 256 x 256 mm bed.
+  1. Each part: one closed (watertight) solid (or its set of them), fits a 256 x 256 x 256 mm bed.
   2. The disc swings freely: no overlap with the housing from closed (0 deg) to open (90 deg).
   3. The lips stop the disc: turning it 3 deg past closed must hit them.
   4. The disc can be fitted: slid in edge-on from the fan end, it touches nothing.
@@ -26,7 +26,8 @@ warnings.filterwarnings('ignore')
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCAD = os.path.join(ROOT, "cad", "window_vent.scad")
 PARTS = ["body", "disc", "disc_nofoam", "motor_plate", "magnet_cap", "ebox", "fittest", "fin_test", "oring_test", "drill_guide", "foam_guide_a", "foam_guide_b", "tube_spacer",
-         "screen_frame", "screen_test", "body_top", "body_bottom", "splice"]
+         "screen_frame", "screen_test", "tray", "tray_feet", "tray_test", "body_top", "body_bottom", "splice"]
+BODIES = {"tray_feet": 4, "tray_test": 2}       # parts printed as several pieces; the others are one solid
 BED = 256.0                                      # Bambu Lab P1/X1/A1
 SMALL_BED = 180.0                                # Bambu Lab A1 mini
 SPLIT = ["body_top", "body_bottom", "splice"]    # must fit the small bed; they replace "body" there
@@ -53,7 +54,7 @@ def check_vent():
         size = [round(float(v), 1) for v in m.extents]
         bed = SMALL_BED if p in SPLIT else BED
         small = "fits 180" if max(size) <= SMALL_BED else "needs > 180"
-        report(p, m.is_watertight and len(m.split(only_watertight=False)) == 1 and max(size) <= bed,
+        report(p, m.is_watertight and len(m.split(only_watertight=False)) == BODIES.get(p, 1) and max(size) <= bed,
                f"size {size} mm, {m.volume/1000:.0f} cm3, {small}")
 
     # wrapper: overlap of the upper disc at angle a with the housing

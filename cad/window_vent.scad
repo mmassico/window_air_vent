@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, assembly_noplug, assembly_spc, body, disc, disc_nofoam, motor_plate, magnet_cap, ebox, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide, foam_guide_a, foam_guide_b, tube_spacer, screen_frame, screen_test]
+part  = "assembly"; // [assembly, tray, tray_feet, tray_test, tray_view, assembly_noplug, assembly_spc, body, disc, disc_nofoam, motor_plate, magnet_cap, ebox, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide, foam_guide_a, foam_guide_b, tube_spacer, screen_frame, screen_test]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -220,6 +220,23 @@ scr_edge   = 1.2;   // material between a countersink and the groove or the fram
 scr_drain  = [15, 1];   // drain at the bottom of each hole: width, and the drop of its floor from the hole's floor
                     //   (inside) to the outdoor face, so condensation runs out under the mesh instead of pooling
                     //   against the sleeve's end
+
+/* [Drip tray] */
+// a tray under the unit on the window ledge, for drips of condensation (they evaporate indoors); the electronics box
+// stands on ribs above its floor. A leg in each corner levels it: an M3 button head screw, its head held in a slot at
+// the top of a corner post and turned from above with a 2 mm hex key, drives a square foot with a captive nut up and
+// down in the post's socket. The posts are inside the tray's outline, so nothing sticks out toward the window's wall
+tray_gap   = 2;     // around the electronics box, each side
+tray_wall  = 2;     // walls
+tray_floor = 1.6;   // floor (5 bottom layers or more, so it holds water)
+tray_rim   = 10;    // the walls' height above the floor
+tray_front = 5;     // the inside reaches this far past the fans' front faces
+tray_rib   = [2, 2, 3];   // ribs under the box, along it: height, width, count
+tray_post  = 13.4;  // corner posts: outside size (a 2 mm wall around the socket)
+tray_sock  = 16;    // socket depth, from the floor's underside up
+tray_foot  = [9, 0.2, 16];   // feet: square side, clearance each side in the socket, length
+tray_screw = [20, 3.4, 5.7, 1.65];   // screws: length, hole, button head diameter and height (M3 x 20, ISO 7380)
+tray_h     = 7;     // the floor's underside above the ledge, in the tray_view
 
 /* [Hidden] */
 $fn = 96;
@@ -886,6 +903,91 @@ module screen_test() intersection() {
     translate([-scr_w, -pitch / 2 - 20 - sc_dz - 100, -1]) cube([2 * scr_w, 100, 50]);
 }
 
+// tray: the drip tray, with its floor's underside at z = 0 (its print orientation, floor on the bed); x and y as
+// installed. The post's layers, from the floor's underside up: the foot's socket, a layer with a slot for the screw's
+// shank, a slot for its head (both open to the post's outer face, so the screw slides in from the side), and a roof
+// with a hole for the hex key. A slit up the post's outer face lets the shank in; the foot then holds the screw in
+// the middle, and the nut (wider than the slit) can't come out
+tr_xo  = ebox_w / 2 + tray_gap + tray_wall;          // the outer faces, across
+tr_y1  = duct_len + fan_t + tray_front + tray_wall;  // the front face; the back one is on the foam (y = 0)
+tr_hs  = tray_screw[3] + 0.4;                        // the head's slot: height
+tr_top = tray_sock + 1.5 + tr_hs + 1.5;              // the posts' height
+tr_pc  = [for (sx = [-1, 1], y = [tray_post / 2, tr_y1 - tray_post / 2]) [sx, y]];   // posts: side, y
+tr_sz  = tray_sock + 1.5 - tray_screw[0];            // the screw's tip, from the floor's underside
+tr_fs  = tray_foot[0] + 2 * tray_foot[1];            // the socket's side
+// the range of tray heights: the tip clears the foot's bottom by 1, passes the nut by 0.5, and the foot keeps 5 mm in
+// its socket and 0.3 below the screw's slot
+tr_rng = [max(1 - tr_sz, tray_foot[2] - tray_sock + 0.3), min(tray_foot[2] - 4.1 - tr_sz, tray_foot[2] - 5)];
+echo(tray_size = [2 * tr_xo, tr_y1, tray_floor + tray_rim], tray_post_top = tr_top, tray_h_range = tr_rng);
+assert(tr_rng[0] < tray_h && tray_h < tr_rng[1], "tray_h out of the legs' range");
+
+module tray() {
+    w = tray_wall; P = tray_post; fs = tr_fs; hd = tray_screw[2] + 0.5;
+    difference() {
+        union() {
+            difference() {   // the floor and walls
+                translate([-tr_xo, 0, 0]) cube([2 * tr_xo, tr_y1, tray_floor + tray_rim]);
+                translate([-tr_xo + w, w, tray_floor]) cube([2 * (tr_xo - w), tr_y1 - 2 * w, tray_rim + 1]);
+            }
+            for (i = [0 : tray_rib[2] - 1])   // ribs under the box
+                translate([-ebox_w / 2 + 10 + i * (ebox_w - 20) / (tray_rib[2] - 1) - tray_rib[1] / 2, y_br + 2, tray_floor - eps])
+                    cube([tray_rib[1], duct_len + ebox_t - y_br - 4, tray_rib[0] + eps]);
+            for (c = tr_pc) translate([c[0] * (tr_xo - P / 2) - P / 2, c[1] - P / 2, 0]) cube([P, P, tr_top]);
+        }
+        for (c = tr_pc) translate([c[0] * (tr_xo - P / 2), c[1], 0]) {
+            translate([-fs / 2, -fs / 2, -1]) cube([fs, fs, tray_sock + 1]);   // the foot's socket
+            hull() for (x = [0, c[0] * P]) translate([x, 0, tray_sock - eps])   // the shank's slot
+                cylinder(d = tray_screw[1] + 0.2, h = 1.5 + 2 * eps, $fn = 24);
+            hull() for (x = [0, c[0] * P]) translate([x, 0, tray_sock + 1.5])   // the head's slot
+                cylinder(d = hd, h = tr_hs, $fn = 32);
+            translate([c[0] > 0 ? 0 : -P, -(tray_screw[1] + 0.2) / 2, -1])        // the slit up the outer face
+                cube([P, tray_screw[1] + 0.2, tray_sock + 1]);
+            translate([0, 0, tray_sock]) cylinder(d = 3.2, h = tr_top, $fn = 24);   // the hex key's hole
+        }
+    }
+}
+
+// tray_foot: standing on its bottom. The nut slides in from one side, under a 1 mm cap; the screw's tip goes on into
+// the bore below it
+module tray_foot() {
+    f = tray_foot[0]; L = tray_foot[2];
+    difference() {
+        hull() {
+            translate([-f / 2 + 0.6, -f / 2 + 0.6, 0]) cube([f - 1.2, f - 1.2, eps]);   // a 0.6 chamfer at the bottom
+            translate([-f / 2, -f / 2, 0.6]) cube([f, f, L - 0.6]);
+        }
+        translate([0, 0, 1.5]) cylinder(d = tray_screw[1], h = L, $fn = 24);
+        hull() for (x = [0, f]) translate([x, 0, L - 1 - 2.6]) cylinder(r = 5.8 / sqrt(3), h = 2.6, $fn = 6);
+    }
+}
+
+module tray_feet() for (i = [0 : 3]) translate([(i - 1.5) * (tray_foot[0] + 6), 0, 0]) rotate(90) tray_foot();
+
+// tray_test: one corner of the tray (a post, its socket and slots, and a bit of floor and walls) and a foot, to try
+// the screw, the nut and the foot's slide before printing the whole tray
+module tray_test() {
+    intersection() {
+        tray();
+        translate([tr_xo - tray_post - 6, -1, -1]) cube([tray_post + 7, tray_post + 7, tr_top + 2]);
+    }
+    translate([tr_xo - tray_post - 6 - tray_foot[0], tray_post / 2, 0]) tray_foot();
+}
+
+// tray_view: the unit on the tray, the feet at tray_h, on a ghost of the ledge
+module tray_view() {
+    zt = z_ep0 - ebox_h - ebox_t - tray_rib[0] - tray_floor;   // the floor's underside: the box stands on the ribs
+    assembly(plug = false);
+    translate([0, 0, zt]) {
+        color([0.45, 0.7, 0.85]) tray();
+        for (c = tr_pc) color([0.95, 0.6, 0.25]) translate([c[0] * (tr_xo - tray_post / 2), c[1], -tray_h]) tray_foot();
+        for (c = tr_pc) color([0.6, 0.6, 0.62]) translate([c[0] * (tr_xo - tray_post / 2), c[1], tr_sz]) {
+            cylinder(d = 3, h = tray_screw[0]);
+            translate([0, 0, tray_screw[0]]) cylinder(d = tray_screw[2], h = tray_screw[3], $fn = 24);
+        }
+        %translate([-90, -10, -tray_h - 5]) cube([180, 190, 5]);   // the ledge (ghost)
+    }
+}
+
 // drill_guide: two bushings on a small base, for perpendicular pilot holes in the foam insert. Lay it on the drilling
 // template: the notches at both ends on the vertical centre line, the active bushing's side notches on the hole's
 // cross arm; then drill through the paper. Printed base down, so the bores are vertical and round.
@@ -1045,6 +1147,10 @@ if (part == "foam_guide_b")   foam_guide(true);
 if (part == "tube_spacer")    tube_spacer();   // flat
 if (part == "screen_frame")   screen_frame();  // outdoor face on the bed, sleeves up
 if (part == "screen_test")    screen_test();
+if (part == "tray")           tray();          // floor on the bed
+if (part == "tray_feet")      tray_feet();     // four, standing
+if (part == "tray_test")      tray_test();
+if (part == "tray_view")      tray_view();
 if (part == "assembly_nofan") assembly_nofan();
 if (part == "body_top")       translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(true);    // fan plate on the bed
 if (part == "body_bottom")    translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(false);   // fan plate on the bed
