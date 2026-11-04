@@ -110,6 +110,11 @@ Two common boards are supported. The chip is centred on both. Board B is the one
 | Cold | nitrile is rated to −20 °C | | ✅ the grooves are in the room-side half of the foam, well above that |
 | Hole spacing in the foam | 96 vertically, centred in the gap | | ✅ |
 | Drill guide (`drill_guide`, optional) | two bushings 24 apart, 20 tall; bores `guide_d` [6.35, 6.5] + 0.2 (`guide_clear`); V-notches on the template's centre line and cross arms | 1/4 in bit (pilot holes), 6.5 mm bit (probe), 75 mm of flute or more | 📏 run each bit through its bushing once; the bit can tilt about 0.6° at most |
+| Insect screen frame (`screen_frame`) | 94 wide (`scr_w`), 5 thick (`scr_t`): between the caps' lips (96 apart), flush with them | foam face between the lips | ✅ 1 mm clear on each side |
+| Screen frame sleeves | Ø 83.3, 10 long, 1 mm lead-in, bore 79.3 (`scr_sleeve`) | the outdoor 25.8 mm of each hole (the spigots fill the room-side 25) | 📏 a light fit in an 83.3 hole; the bore is wider than the 74 duct |
+| Spline groove | 2.8 wide, 3 deep, 0.4 chamfer at the mouth (`scr_groove`, `scr_chamf`), one stadium around both holes | 0.125 in (3.2 mm) screen spline, or 3 mm O-ring cord, over fibreglass mesh | 📏 try both in `screen_test` first; adjust `scr_groove[0]` |
+| Screen frame screws | 4 corners, Ø 4.25 holes, countersunk for an 8 mm head 3.5 high (`scr_screw`) | countersunk screws, 8 mm head, about 25 mm long | ✅ about 20 mm into the foam, 9 mm clear of the holes |
+| Probe hole vs frame | frame top 95 above the vent's centre | probe hole at 102, Ø 6.5 | ✅ about 3.7 mm clear |
 
 ## Electronics box (`ebox`) and cables
 

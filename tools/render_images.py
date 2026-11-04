@@ -195,6 +195,11 @@ def parts():
             ("splice", "0,0,3,50,0,20,150", (1000, 800), False)]:
         save(render(t(f"p_{name}.png"), VENT, camera, size, [f'part="{name}"'], viewall=viewall, fins=True), f"part_{name}.png")
 
+def screen():   # both seen from the outdoor face (the groove)
+    for name, camera, size, viewall in [("screen_frame", "0,0,0,215,0,25,0", (900, 1100), True),
+                                        ("screen_test", "0,80,5,215,0,25,220", (1000, 700), False)]:
+        save(render(t(f"p_{name}.png"), VENT, camera, size, [f'part="{name}"'], viewall=viewall), f"part_{name}.png")
+
 def split_view():
     save(render(t("split.png"), VENT, "0,30,0,70,0,235,820", (1100, 1300), ['part="split_view"']), "split_view.png")
 
@@ -210,7 +215,7 @@ def louvers():
 
 
 JOBS = {f.__name__: f for f in (assembly, assembly_lbl, damper_section, side_section, damper_cutaway, damper_closed_view,
-                                parts, split_view, louvers)}
+                                parts, screen, split_view, louvers)}
 
 if __name__ == "__main__":
     names = sys.argv[1:] or list(JOBS)

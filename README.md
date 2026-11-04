@@ -12,7 +12,7 @@ There is no heat recovery: every litre of air exhausted is lost heat. In exchang
 
 ## How it works
 
-- **Foam insert.** A block of 2 in (51 mm) XPS foam, 30 psi grade, fills the window gap (100 mm or less, so a child can't fit through). Two 83 mm holes (a 3-1/4 in hole saw, see [drilling](#drilling-the-foam-insert)), stacked vertically: intake on top, exhaust below. An insect screen covers the outdoor face.
+- **Foam insert.** A block of 2 in (51 mm) XPS foam, 30 psi grade, fills the window gap (100 mm or less, so a child can't fit through). Two 83 mm holes (a 3-1/4 in hole saw, see [drilling](#drilling-the-foam-insert)), stacked vertically: intake on top, exhaust below. An [insect screen](#insect-screen) in a printed frame covers the outdoor face.
 - **Damper housing.** It sits on the **room** face of the foam, so its moving parts stay warm and dry (no ice). Its two spigots fit snugly in the foam holes; two O-rings on each are optional, for a hole that comes out loose. The housing comes out in spring, and the foam insert stays reusable.
 - **Butterfly dampers.** One vertical 5 mm steel shaft runs through both ducts and carries a disc in each. A quarter turn opens or closes both. Each disc closes against two half-ring lips lined with thin foam (or bare, with [`disc_nofoam`](#without-lip-foam)), one on each side of the shaft. One lip is flat; the other is a 45° cone, and the half of the disc that closes against it (engraved B) has a matching 45° bevel, so neither prints as a flat overhang.
 - **Motor and encoder.** A NEMA 17 pancake stepper on top turns the shaft through a flexible coupler. A TMC2209 driver keeps it silent. The motor screws to a separate plate on the bench, and the plate then screws onto a frame on top of the housing from above. An AS5600 magnetic encoder at the bottom reads the absolute shaft angle, so the firmware always knows whether the dampers are really closed, with no homing and no limit switch.
@@ -58,6 +58,7 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | `magnet_cap` | <img src="images/part_magnet_cap.png" width="180"> | 1 | Holds the encoder magnet on the bottom end of the shaft; one M3 grub screw, height adjustable ±1 mm | 14 × 14 × 12 | Bore down |
 | `ebox` | <img src="images/part_ebox.png" width="180"> | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay, and two back tabs screw to the bay walls | 80 × 76 × 64 | Floor on the bed |
 | `tube_spacer` | <img src="images/part_tube_spacer.png" width="180"> | 1 | Flat "8" over both spigots, against the stop rings and squeezed by the foam: it holds the spigots' ends at their spacing, so foam holes slightly off 96 mm can't bend the ducts and bind the shaft. The vent sits 2.5 mm further out of the foam | 90 × 186 × 2.5 | Flat |
+| `screen_frame` | <img src="images/part_screen_frame.png" width="180"> | 1 | [Insect screen](#insect-screen) frame on the foam's outdoor face: the mesh is pressed into a groove around both holes, two sleeves plug into the holes, four screws in the corners | 94 × 190 × 15 | Outdoor face on the bed, sleeves up |
 
 **Housing and discs must match.** The housing's shaft bosses have flat inner faces, and the discs have matching flats. A housing printed before this change (curved boss faces) needs the earlier discs: set `flat_boss = false` in `cad/window_vent.scad` and export `disc` (or `disc_nofoam`). A disc with flats leaves a 1.6 mm gap at a curved boss, and a disc without them won't turn between flat bosses.
 
@@ -101,7 +102,7 @@ PETG. No support is needed anywhere: every face that looks down when printing (t
 
 ### Filament
 
-About **0.45–0.5 kg of PETG** for one unit (about half a 1 kg spool), or roughly $12–17 at $25–35/kg.
+About **0.5 kg of PETG** for one unit (about half a 1 kg spool), or roughly $12–17 at $25–35/kg.
 
 | Part | Qty | Solid volume |
 |---|---|---|
@@ -111,13 +112,14 @@ About **0.45–0.5 kg of PETG** for one unit (about half a 1 kg spool), or rough
 | `magnet_cap` | 1 | 1.6 cm³ |
 | `ebox` | 1 | 47 cm³ |
 | `tube_spacer` | 1 | 4.5 cm³ |
-| **Total** | | **≈ 373 cm³** |
+| `screen_frame` | 1 | 39 cm³ |
+| **Total** | | **≈ 412 cm³** |
 
 The split housing (`body_top` 136 cm³, `body_bottom` 145 cm³, `splice` 8 cm³) adds about 7 cm³ (9 g).
 
-- Printed fully solid, 373 cm³ of PETG (1.27 g/cm³) weighs about 474 g.
-- Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 430–470 g, plus a little for the skirt or brim and purging.
-- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³.
+- Printed fully solid, 412 cm³ of PETG (1.27 g/cm³) weighs about 523 g.
+- Infill hardly matters: almost every wall, plate, lip and disc is 6 mm thick or less, so with 4–6 perimeters the slicer prints it solid anyway. Expect about 470–520 g, plus a little for the skirt or brim and purging.
+- The optional test prints add about 35 cm³ (44 g): `fittest` 12 cm³, `oring_test` 20 cm³, `fin_test` 3 cm³. The optional `drill_guide` adds 9 cm³ (11 g), and the optional lip foam cutting guides 9 cm³ (12 g): `foam_guide_a` 4.3 cm³, `foam_guide_b` 5.0 cm³. The screen frame's `screen_test` adds 5 cm³ (7 g).
 - Print time: very roughly 9–12 hours for the housing on a Bambu Lab P1 (0.2 mm layers; about 7–9 hours at 0.28 mm), and about 3–4 hours for all the other parts together. The slicer gives the exact figures.
 
 ### Slicer settings
@@ -133,6 +135,7 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 | `splice` | 5 | 40 % | Joins the two halves: nut pockets and countersunk screws |
 | `ebox` | 4 | 15–20 % | No real loads; a 4th wall (same print time) makes the walls around the screw holes stronger |
 | `tube_spacer` | | 100 % | Thin rings (3 mm wide, 2.5 mm thick) that must not stretch: print it solid |
+| `screen_frame`, `screen_test` | 4 | 25 % | Thin plate and sleeves: 4 walls print them nearly solid, so the groove's walls hold the spline |
 | `fittest`, `oring_test` | 4 | 25 % | As the housing, so they test what the housing will be |
 | `drill_guide` | 4 | 40 % | Small; 4 walls make the bushings solid |
 | `foam_guide_a`, `foam_guide_b` | 4 | 40 % | Thin plate and rib: 4 walls print them solid, so they stay flat and stiff |
@@ -164,6 +167,8 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | M3 × 10 (or M3 × 12) screws + M3 nuts | 6 each | Motor plate: two through the frame in front of the motor, two through the tower walls and the plate's back tabs. Electronics box: two through the bay walls and the box's back tabs | — |
 | M3 grub screws, 6 mm (and one 4–5 mm) | 5 | Two 6 mm per disc, 24 mm apart along the hub, so the disc can't rock on the shaft (flush with the hub); one 4–5 mm in the magnet cap (a 6 mm one would stick out 1.5 mm). Self-tapping into the plastic | — |
 | O-rings, 74 × 3 mm, nitrile 70A | 4 | Optional, and not needed by default: the plain Ø 83.7 spigots are a snug fit in the hole (83.3 mm with the 3-1/4 in hole saw). For a hole that comes out loose, set `orings = true` before printing the housing: two grooves per spigot, sized for this O-ring (about 6% stretch, 20% squeeze in an 83.3 mm hole) | $12.79 (pack of 10) |
+| Insect screen kit: fibreglass mesh, 0.125 in screen spline, spline roller | 1 | [Insect screen](#insect-screen): a piece of mesh about 115 × 210 mm and about 50 cm of spline (or 3 mm O-ring cord, cut from the 74 × 3 O-rings above) | — |
+| Countersunk screws, 8 mm head (3.5 mm high), about 25 mm long | 4 | Screen frame into the foam (4.25 mm holes) | — |
 | XPS foam board, 2 in (51 mm), 30 psi | 1 | Foam insert, e.g. Owens Corning FOAMULAR C-300 (2 × 24 × 96 in, R-10). The 30 psi grade over the 20 psi (wall) one: stiffer under the housing's weight, it doesn't creep around the spigots, and the hole saw cuts it cleaner. Many boards have shiplap (SL) edges, stepped to overlap on a wall: cut the insert from the middle of the board, or saw the step off any edge that meets the window frame | — |
 | Closed-cell neoprene foam sheet, self-adhesive, 1/16 in (1.6 mm) | 1 | Lip seals, cut with the [templates](#cutting-the-lip-foam); not needed with `disc_nofoam` ([without lip foam](#without-lip-foam)). The model leaves a 1.5 mm gap, so the foam is only lightly squeezed: closed-cell neoprene is too stiff for more | |
 | Perfboard (protoboard), 5 × 7 cm, holes 66 × 46 mm | 1 | Carrier for the ESP32 and the TMC2209 in the electronics box | |
@@ -350,6 +355,25 @@ Run the drill slowly. Hole saws often cut a little wider than labelled, so cut a
 <p align="center">
   <img src="doc/holesaw_83.svg" alt="83 mm hole saw: 32 mm cutting depth, pilot drill leading the teeth, 98 mm arbor; and a section of the 51 mm foam cut 32 mm from each face, with 13 mm of overlap" width="640">
 </p>
+
+### Insect screen
+
+A printed frame holds a fibreglass insect screen on the foam's outdoor face, over both holes. The mesh is pressed into a groove around the frame's edge by screen spline, the way a window screen is made, so it comes out for cleaning or replacement: pollen and fluff build up on the intake side, and every clog costs airflow. Two short sleeves on the frame's back plug into the holes' outdoor ends (the housing's spigots fill only the room-side 25 mm of the foam): they centre the frame, hold it, and keep insects from getting in behind it. Four countersunk screws in the corners keep it in place. At 94 mm wide, it fits between the caps' lips, flush with them. Its top edge is 95 mm above the vent's centre, clear of the probe's hole at 102 mm.
+
+| Part | <div style="width:180px">Thumbnail</div> | Size (mm) | Print orientation |
+|---|:---:|---|---|
+| `screen_frame` | <img src="images/part_screen_frame.png" width="180"> | 94 × 190 × 15 | Outdoor face on the bed, sleeves up |
+| `screen_test` | <img src="images/part_screen_test.png" width="180"> | 94 × 27 × 15 | Outdoor face on the bed |
+
+**Try the groove first.** `screen_test` is the frame's top end: an arc of the groove, two screw holes and an arc of sleeve. Roll the spline (or the O-ring cord) over a scrap of mesh into it: it should go in with a firm push of the roller and not pop out when the mesh is pulled. If it is loose or too hard to roll in, change the groove's width, `scr_groove[0]` (2.8 mm), in `cad/window_vent.scad`. Try the screws in a foam scrap at the same time.
+
+**Fitting the mesh.**
+
+1. Lay the frame on the table, outdoor face (the groove) up. Cut the mesh about 10 mm larger than the frame all round.
+2. Start the spline at the bottom, in the middle of the straight part. Roll it in along one side and around the top, keeping the mesh just taut, then down the other side and back to the start. Cut the spline so its two ends butt.
+3. Trim the mesh along the groove's outer edge with a sharp knife.
+
+**Fitting the frame.** Push the sleeves into the holes from outdoors, then put the four screws through the corners into the foam. Screws about 25 mm long reach 20 mm into the foam, which is plenty, since the sleeves carry the frame.
 
 ## Assembly
 

@@ -21,7 +21,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, assembly_noplug, assembly_spc, body, disc, disc_nofoam, motor_plate, magnet_cap, ebox, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide, foam_guide_a, foam_guide_b, tube_spacer]
+part  = "assembly"; // [assembly, assembly_noplug, assembly_spc, body, disc, disc_nofoam, motor_plate, magnet_cap, ebox, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide, foam_guide_a, foam_guide_b, tube_spacer, screen_frame, screen_test]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -202,6 +202,19 @@ fg_rib  = [3, 6, 5];  // stiffening rib along the middle of the strip: width, he
                       //   stops short of each end (room for the knife across the ends)
 fg_grip = [4, 18, 25];  // finger grip in the middle of the rib: width, top height above the bed, radius of its arched top
                       //   (sets its length: about 38 mm above the rib)
+
+/* [Insect screen frame] */
+// a frame on the foam's outdoor face, over both holes: fibreglass mesh pressed into a groove around its edge by screen
+// spline (0.125 in) or 3 mm O-ring cord, one loop. Sleeves on its back plug into the holes' outdoor ends (the spigots
+// fill only 25 mm of the foam), so it is centred and held by them; four countersunk screws into the foam keep it there
+scr_w      = 94;    // width: the foam shows 96 mm between the caps' lips
+scr_t      = 5;     // plate thickness: flush with the caps' lips, 5 mm proud of the foam
+scr_groove = [2.8, 3, 1.5];   // spline groove: width, depth, and the wall outside it at the frame's sides
+scr_chamf  = 0.4;   // 45 deg chamfer on the groove's mouth (on the bed): eases the cord in, offsets elephant's foot
+scr_sleeve = [83.3, 2, 10, 1];   // sleeves: OD (the hole saw's 83.3), wall, length past the plate, lead-in chamfer;
+                    //   the windows in the plate are the sleeves' bore
+scr_screw  = [4.25, 8, 3.5];  // screws: hole, head diameter, head height (countersunk; as the latch cover's)
+scr_edge   = 1.2;   // material between a countersink and the groove or the frame's edge
 
 /* [Hidden] */
 $fn = 96;
@@ -809,6 +822,55 @@ module tube_spacer() {
     }
 }
 
+// screen_frame: the insect screen's frame, in its print orientation: the outdoor face on the bed, sleeves up, the
+// intake at +y. The mesh covers the whole face, both windows and the plate between them, and its edge is pressed
+// into one stadium-shaped groove around both holes. The screws sit in the four corners, outside the groove.
+sc_ri = scr_sleeve[0] / 2 - scr_sleeve[1];                // window radius (the sleeve's bore)
+sc_go = scr_w / 2 - scr_groove[2];                        // groove's outer radius, about each hole's centre
+sc_gi = sc_go - scr_groove[0];                            // and its inner radius
+sc_hd = scr_screw[1] + 0.4;                               // countersink diameter at the face
+sc_sx = scr_w / 2 - scr_edge - sc_hd / 2;                 // screw position across
+sc_sz = pitch / 2 + sqrt(pow(sc_go + scr_edge + sc_hd / 2, 2) - pow(sc_sx, 2));   // and up, clear of the groove
+sc_hz = sc_sz + sc_hd / 2 + scr_edge;                     // the corners' reach above and below the centre
+assert(sc_gi > sc_ri + 1, "screen frame: no wall between the window and the groove");
+
+module scr_stadium(rad) hull() for (z = zc) translate([0, z]) circle(rad, $fn = 180);
+
+module screen_frame() {
+    sl = scr_sleeve[2]; ld = scr_sleeve[3]; od = scr_sleeve[0];
+    taper = (scr_screw[1] - scr_screw[0]) / 2 / scr_screw[2];   // head radius lost per mm of depth
+    hh = (sc_hd - scr_screw[0]) / 2 / taper;                    // countersink depth
+    difference() {
+        union() {
+            linear_extrude(scr_t) union() {
+                scr_stadium(scr_w / 2);
+                offset(r = 4) offset(delta = -4) square([scr_w, 2 * sc_hz], center = true);
+            }
+            for (z = zc) translate([0, z, scr_t - eps]) {
+                cylinder(d = od, h = sl - ld + eps);
+                translate([0, 0, sl - ld]) cylinder(d1 = od, d2 = od - 2 * ld, h = ld + eps);   // lead-in
+            }
+        }
+        for (z = zc) translate([0, z, -1]) cylinder(r = sc_ri, h = scr_t + scr_sleeve[2] + 2, $fn = 180);
+        translate([0, 0, -1]) linear_extrude(scr_groove[1] + 1) difference() { scr_stadium(sc_go); scr_stadium(sc_gi); }
+        render() minkowski() {   // the groove mouth's chamfer
+            translate([0, 0, -1]) linear_extrude(1) difference() { scr_stadium(sc_go); scr_stadium(sc_gi); }
+            cylinder(r1 = scr_chamf, r2 = 0, h = scr_chamf, $fn = 8);
+        }
+        for (sx = [-1, 1], sz = [-1, 1]) translate([sx * sc_sx, sz * sc_sz, 0]) {
+            translate([0, 0, -1]) cylinder(d = scr_screw[0], h = scr_t + 2);
+            translate([0, 0, -eps]) cylinder(d1 = sc_hd, d2 = scr_screw[0], h = hh);
+        }
+    }
+}
+
+// screen_test: the frame's top end (groove, two screws and an arc of the sleeve), to try the cord and mesh in the
+// groove and the screws in a foam scrap before printing the whole frame
+module screen_test() intersection() {
+    screen_frame();
+    translate([-scr_w, pitch / 2 + 20, -1]) cube([2 * scr_w, 100, 50]);
+}
+
 // drill_guide: two bushings on a small base, for perpendicular pilot holes in the foam insert. Lay it on the drilling
 // template: the notches at both ends on the vertical centre line, the active bushing's side notches on the hole's
 // cross arm; then drill through the paper. Printed base down, so the bores are vertical and round.
@@ -966,6 +1028,8 @@ if (part == "drill_guide")    drill_guide();
 if (part == "foam_guide_a")   foam_guide(false);   // plate on the bed
 if (part == "foam_guide_b")   foam_guide(true);
 if (part == "tube_spacer")    tube_spacer();   // flat
+if (part == "screen_frame")   screen_frame();  // outdoor face on the bed, sleeves up
+if (part == "screen_test")    screen_test();
 if (part == "assembly_nofan") assembly_nofan();
 if (part == "body_top")       translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(true);    // fan plate on the bed
 if (part == "body_bottom")    translate([0, 0, duct_len]) rotate([-90, 0, 0]) body_half(false);   // fan plate on the bed
