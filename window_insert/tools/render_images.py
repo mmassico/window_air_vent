@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regenerate the README's part thumbnails from cad/window_caps.scad.
+"""Regenerate the README's part thumbnails from cad/window_caps.scad and cad/mic_tube.scad.
 
 Requires: openscad (2021.01+) on PATH, python3 with Pillow.
 Usage:    python tools/render_images.py   (run from the window_insert folder)
@@ -12,18 +12,19 @@ from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CAPS = os.path.join(ROOT, "cad", "window_caps.scad")
+MIC = os.path.join(ROOT, "cad", "mic_tube.scad")
 IMG = os.path.join(ROOT, "images")
 tmp = tempfile.mkdtemp(prefix="wi_img_")
 
 
-def render(out, camera, size, defs=(), viewall=True):
+def render(out, camera, size, defs=(), viewall=True, src=CAPS):
     """viewall frames the part's bounding box; the upright corner pieces are cut from a cap by a large box, which
     viewall would frame instead, so they get an explicit camera."""
     cmd = ["openscad", "-o", out, f"--imgsize={size[0]},{size[1]}", "--colorscheme=Tomorrow", f"--camera={camera}"]
     if viewall:
         cmd += ["--viewall", "--autocenter"]
     cmd += sum([["-D", d] for d in defs], [])
-    subprocess.run(cmd + [CAPS], capture_output=True, text=True, check=True)
+    subprocess.run(cmd + [src], capture_output=True, text=True, check=True)
     return trim(Image.open(out))
 
 
@@ -98,3 +99,12 @@ if __name__ == "__main__":
                  ("assembly_side_bottom", "0,0,22,68,0,250,265", (900, 800)),
                  ("assembly_sash_bottom", "118,0,30,68,0,70,320", (900, 800))]]
     save(compose(views), "assembly.png")
+
+    # the microphone tube: its parts, and the parts installed in a piece of the foam
+    for name, camera, size, viewall in [
+            ("mic_tube", "0,0,0,55,0,25,0", (600, 1100), True),
+            ("mic_elbow", "0,0,0,55,0,25,0", (1000, 900), True),
+            ("mic_lid", "0,0,0,55,0,25,0", (1000, 800), True),
+            ("mic_bore_test", "0,0,0,55,0,25,0", (1000, 700), True),
+            ("mic_view", "0,-20,0,60,0,35,260", (1000, 900), False)]:
+        save(render(os.path.join(tmp, f"{name}.png"), camera, size, [f'part="{name}"'], viewall, MIC), f"part_{name}.png")
