@@ -19,6 +19,7 @@ HOLE = 83.0                  # foam hole: 3-1/4 in (83 mm) hole saw, 83.3 across
 PITCH = 96.0                 # pitch: duct centres, vertically
 STOP = 90.0                  # stop_od: the stop ring resting on the room face
 GAP = 100.0                  # largest window gap the insert fills
+FOAM_W = 112.0               # the window_insert's foam width (foam_w in window_insert/cad/window_caps.scad)
 PROBE = 6.5                  # hole for a 6 mm waterproof DS18B20 probe
 ARM = 20.0                   # cross arms, long enough to show past the drill_guide (base 26 wide)
 PAGE = (215.9, 279.4)        # US Letter, mm
@@ -68,10 +69,12 @@ for i, s in enumerate([
 # --- guides: centre line, the largest gap ----------------------------------------------------------------
 y_top, y_bot = CY - PITCH / 2 - STOP / 2 - 9 - 14, CY + PITCH / 2 + STOP / 2 + 4
 line(CX, y_top, CX, y_bot, "#555", 0.25)   # solid: the drill_guide's end notches sit on it
-for sx in (-1, 1):
-    line(CX + sx * GAP / 2, y_top + 2, CX + sx * GAP / 2, y_bot, "#777", 0.3, "3,2")
-text(CX + GAP / 2 + 1.5, y_bot - 2, f"{GAP:g} max", 2.8, "start", "#555")
-text(CX - GAP / 2 - 1.5, y_bot - 2, "insert width", 2.8, "end", "#555")
+XW = max(GAP, FOAM_W) / 2    # the outer guide, from the centre line: the labels on the right stay past it
+for w, dash in ((GAP, "3,2"), (FOAM_W, "6,1.5")):
+    for sx in (-1, 1):
+        line(CX + sx * w / 2, y_top + 2, CX + sx * w / 2, y_bot, "#777", 0.3, dash)
+    text(CX + w / 2 - 1, y_bot - 2, f"{w:g}", 2.8, "start", "#555", rotate=-90)   # inside its right-hand guide
+text(CX - XW - 1.5, y_bot - 2, "insert width", 2.8, "end", "#555")
 
 # --- the two holes -----------------------------------------------------------------------------------
 for dy, name, flow in ((-1, "INTAKE", "top: outdoor air in"), (1, "EXHAUST", "bottom: room air out")):
@@ -82,11 +85,11 @@ for dy, name, flow in ((-1, "INTAKE", "top: outdoor air in"), (1, "EXHAUST", "bo
     text(CX + 6, y - 6, name, 6, "start", weight="bold", color="#bbbbbb")   # right of the centre line
     text(CX + 6, y + 8.6, f"Ø {HOLE:g} hole", 3.6, "start", color=C_TXT, weight="bold")
     text(CX + 6, y + 13.6, flow, 3, "start", color="#666")
-text(CX + GAP / 2 + 1.5, CY + PITCH / 2 + STOP / 2 * 0.71 + 4, "dashed circle: stop ring Ø 90", 2.8, "start", "#777")
-text(CX + GAP / 2 + 1.5, CY + PITCH / 2 + STOP / 2 * 0.71 + 7.5, "(the housing on the room face)", 2.8, "start", "#777")
+text(CX + XW + 1.5, CY + PITCH / 2 + STOP / 2 * 0.71 + 4, "dashed circle: stop ring Ø 90", 2.8, "start", "#777")
+text(CX + XW + 1.5, CY + PITCH / 2 + STOP / 2 * 0.71 + 7.5, "(the housing on the room face)", 2.8, "start", "#777")
 
 # 96 between the centres
-x_d = CX + GAP / 2 + 12
+x_d = CX + XW + 8
 for dy in (-1, 1):
     line(CX + 8, CY + dy * PITCH / 2, x_d + 2, CY + dy * PITCH / 2, C_DIM, 0.25, "1,1")
 line(x_d, CY - PITCH / 2, x_d, CY + PITCH / 2, C_DIM, 0.35)
@@ -113,7 +116,7 @@ out.append(f'<rect x="{xb}" y="{yb0:.2f}" width="2.5" height="100" fill="#111"/>
 for i in range(11):
     line(xb + 2.5, yb0 + i * 10, xb + 2.5 + (3 if i % 5 == 0 else 1.5), yb0 + i * 10, C_CUT, 0.3)
 text(xb + 9, CY + 1.2, "100 mm", 3.4, "start", C_CUT, "bold")
-text(PAGE[0] - 12, 274, "tools/foam_template_svg.py (hole 83, pitch 96, stop_od 90)", 2.6, "end", "#777")
+text(PAGE[0] - 12, 274, "tools/foam_template_svg.py (hole 83, pitch 96, stop_od 90, widths 100 and 112)", 2.6, "end", "#777")
 
 W, H = PAGE
 svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}mm" height="{H}mm" viewBox="0 0 {W} {H}" '
