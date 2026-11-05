@@ -243,10 +243,9 @@ tray_sock  = 17;    // the socket's straight part, from the floor's underside up
 tray_foot  = [9, 0.2, 20];   // feet: square side, clearance each side in the socket, length
 tray_screw = [20, 3.4, 5.7, 0.5];   // screws: length, hole, button head diameter (M3 x 20, ISO 7380), and the height
                     //   of the head's rim, which bears on the pyramid's faces, above its underside (about)
-tray_pin   = [1.6, 3, [3.6, 1.25], 2.4];   // the M2 x 6 stop (flat head): pilot hole, height above the floor's
-                    //   underside, its countersink (diameter at the face and depth: the head measured 3.38 across
-                    //   and 1.2 to 1.25 tall, so it sits flush; 2.25 mm of thread left in the 3.5 wall), and the
-                    //   width of the groove it rides in; the tip reaches 2.5 into the socket, 0.7 clear of the M3.
+tray_pin   = [1.6, 3, 3.0, 2.4];   // the M2 x 6 stop (flat head): pilot hole, height above the floor's underside,
+                    //   its 90 deg countersink (shallow: 2.8 mm of thread in the 3.5 wall), and the width of the
+                    //   groove it rides in; the tip reaches 2.1 into the socket, 1.1 clear of the M3.
                     //   The groove runs up the foot's face with the nut's slot (that face toward the post's outer
                     //   wall; it is up when printing, so it has no overhang), open through to the screw's bore
 tray_range = [4, 11];   // the floor's underside above the ledge: the groove's two ends
@@ -971,7 +970,7 @@ module tray() {
                 cylinder(d = tray_pin[0], h = tray_pwall + 2, $fn = 16);                  // outward only (the inner
                                                                                          // wall holds the water)
             translate([c[0] * (fs / 2 + tray_pwall + eps), 0, tray_pin[1]]) rotate([0, c[0] * -90, 0])   // its countersink
-                cylinder(d1 = tray_pin[2][0], d2 = 2, h = tray_pin[2][1] + eps, $fn = 24);   // down to the shank
+                cylinder(d1 = tray_pin[2], d2 = 0, h = tray_pin[2] / 2, $fn = 24);
         }
     }
 }
