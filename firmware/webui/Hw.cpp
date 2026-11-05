@@ -15,6 +15,10 @@
 #define ANGLE_TOL       1.0f        // degrees: close enough
 #define SLOW_ZONE       15.0f       // degrees: slow down over the last part of a move
 #define MOVE_TIMEOUT_MS 8000        // a quarter turn takes about 1 s
+#define STALL_MS        600         // no progress toward the target for this long: the disc is stopped (at the
+                                    //   slowest setting, 100 microsteps/s slowed to 15 %, 0.5 deg takes 0.3 s)
+#define PROGRESS_DEG    0.5f        // ... progress meaning the closest approach so far improved by this much
+#define SEATED_DEG      5.0f        // stopped this close to closed, closing: seated on the lips, not blocked
 #define IDLE_OFF_MS     1500        // driver off this long after a move (the stepper's detent holds the damper)
 
 static HwStatus     s_st;
@@ -31,9 +35,9 @@ static float encAngle(uint16_t raw)
 
 static void damperTask(void*)
 {
-    uint32_t lastTry = 0, stopAt = 0, moveStart = 0;
-    bool     tmc = false, enabled = false, moving = false, fault = false;
-    float    lastTarget = -999;
+    uint32_t lastTry = 0, stopAt = 0, moveStart = 0, progressAt = 0;
+    bool     tmc = false, enabled = false, moving = false, fault = false, seated = false;
+    float    lastTarget = -999, bestErr = 0;
     long     lastV = 0;
 
     for (;;)
@@ -62,11 +66,14 @@ static void damperTask(void*)
         {
             lastTarget = target;
             fault = false;
+            seated = false;
             moveStart = now;
         }
+        if (seated && enc && angle > SEATED_DEG)    // pushed open since (airflow, a hand): close it again
+            seated = false;
 
         long v = 0;
-        if (tmc && enc && magnet && !fault)
+        if (tmc && enc && magnet && !fault && !seated)
         {
             float err = target - angle;
             if (fabsf(err) > ANGLE_TOL)
@@ -75,10 +82,36 @@ static void damperTask(void*)
                 {
                     moving = true;
                     moveStart = now;
+                    progressAt = now;
+                    bestErr = fabsf(err);
                 }
                 float k = constrain(fabsf(err) / SLOW_ZONE, 0.15f, 1.0f);
                 v = lroundf(g_set.motorSpeed * k) * (err > 0 ? 1 : -1) * g_set.motorDir;
-                if (now - moveStart > MOVE_TIMEOUT_MS)
+
+                // The encoder watches the disc: it must keep getting closer. Against the lips the motor slips and
+                // the disc bounces back a few degrees, so only a new closest approach counts as progress.
+                if (fabsf(err) < bestErr - PROGRESS_DEG)
+                {
+                    bestErr = fabsf(err);
+                    progressAt = now;
+                }
+                if (now - progressAt > STALL_MS)
+                {
+                    v = 0;
+                    moving = false;
+                    stopAt = now;
+                    if (target <= ANGLE_TOL && angle < SEATED_DEG)
+                    {
+                        seated = true;
+                        Log("Damper: closed, seated on the lips at %.1f deg", angle);
+                    }
+                    else
+                    {
+                        fault = true;
+                        Log("Damper: blocked at %.1f deg on the way to %.0f: stopped", angle, target);
+                    }
+                }
+                else if (now - moveStart > MOVE_TIMEOUT_MS)
                 {
                     fault = true;
                     v = 0;
