@@ -103,7 +103,8 @@ if __name__ == "__main__":
     # the microphone tube: its parts, and the parts installed in a piece of the foam
     for name, camera, size, viewall in [
             ("mic_tube", "0,0,0,55,0,25,0", (600, 1100), True),
-            ("mic_elbow", "0,0,0,55,0,25,0", (1000, 900), True),
+            ("mic_elbow_lower", "0,0,14,55,0,25,110", (1000, 900), False),   # cut from a large box: no viewall
+            ("mic_elbow_upper", "0,15.6,6,55,0,205,95", (1000, 900), False),
             ("mic_lid", "0,0,0,55,0,25,0", (1000, 800), True),
             ("mic_bore_test", "0,0,0,55,0,25,0", (1000, 700), True),
             ("mic_view", "0,-20,0,60,0,35,260", (1000, 900), False)]:

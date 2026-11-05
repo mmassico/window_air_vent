@@ -14,6 +14,10 @@
 //    foam, turning up to a tray for the module (the capsule a light press
 //    fit in its bore); a lid on the tray, with a notch for the cable to
 //    J7.
+//  * The elbow prints in two parts, split level with its flange's top
+//    and joined by four M2 screws: the lower one lies on its flange, so
+//    the tube's socket is a vertical hole; the upper one stands as
+//    installed, so the capsule's bore comes out round.
 //  * A flat on the tube's room end keys it in the elbow's socket, so the
 //    elbow's two screws keep the roof on top. In the foam the tube is
 //    round, so it seals all around.
@@ -24,7 +28,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part = "mic_view";   // [mic_tube, mic_elbow, mic_lid, mic_parts, mic_bore_test, mic_view]
+part = "mic_view";   // [mic_tube, mic_elbow_lower, mic_elbow_upper, mic_lid, mic_parts, mic_bore_test, mic_view]
 
 /* [Foam] */
 foam_t   = 50.8;    // foam thickness (2 in), as in window_caps.scad
@@ -54,7 +58,8 @@ mod_clr  = 0.5;     // around the PCB in the tray, per side: the capsule's bore 
 wall     = 1.6;     // tray walls, lid
 fl_t     = 3;       // flange on the foam's face (it is also the tray's back wall)
 fl_w     = 40;      // flange width (x), with the screws
-floor_z  = 12;      // the tray's floor (the PCB's front face) above the tube's axis
+floor_z  = 15;      // the tray's floor (the PCB's front face) above the tube's axis: the capsule's bore stays above
+                    //   the split
 tray_h   = 5;       // tray walls above the floor
 screw    = [4.25, 8, 3.5];   // screws into the foam, as the latch cover's: hole, head diameter, head height
 csk      = 0.8;     // the countersink's diameter at the flange's face, past the head's (as the latch cover's)
@@ -63,10 +68,18 @@ notch_w  = 8;       // cable notch in the tray's room-end wall
 lid_clr  = 0.1;     // the lid's rim inside the tray's walls, per side (a friction fit)
 lid_rim  = [0.8, 1.0];   // the lid's rim: width, depth
 
+/* [The elbow's joint] */
+m2       = [1.6, 2.2, 4.0];   // M2 screws joining the elbow's two parts: tapping hole (lower part), clearance hole
+                              //   and head pocket (upper part)
+m2_csk   = 2.0;     // the countersink's top (the head's top) above the split: 6 mm screws reach 4 mm into the lower part
+m2_tap   = 4.5;     // the tapping holes' depth below the split
+m2_at    = [[-5.7, 5.2], [5.7, 5.2], [-5.7, 17], [5.7, 17]];   // the screws: [x, y], clear of the socket, the sound path
+                                                           //   and the capsule's bore, the pockets inside the tray
+
 eps = 0.01;
 sock_r  = tube_od / 2 + sock_clr;
-blk     = sock_r + 2;                           // half the elbow's width around the socket; its flat bottom at
-                                                //   z = -blk
+blk     = sock_r + 2;                           // the elbow's flat bottom at z = -blk; its flange's top, and the
+                                                //   split between its two parts, at z = blk
 tw      = mod_w + 2 * mod_clr;                  // the tray's inside: width (x)
 tl      = mod_l + 2 * mod_clr;                  //   and length (y), from the flange
 cap_y   = fl_t + mod_clr + cap_e + cap_d / 2;   // the capsule's axis (x = 0)
@@ -109,15 +122,20 @@ module elbow() {
             // degrees or steeper)
             hull() {
                 translate([-tw / 2 - wall, 0, floor_z - 2]) cube([tw + 2 * wall, tray_y, 2]);
-                translate([-blk, 0, -blk]) cube([2 * blk, cap_y + tube_id / 2 + 2, eps]);
+                translate([-tw / 2 - wall, 0, -blk]) cube([tw + 2 * wall, 20, eps]);
             }
             translate([-tw / 2 - wall, 0, floor_z]) cube([tw + 2 * wall, tray_y, tray_h]);   // the tray's walls
         }
         translate([-tw / 2, fl_t, floor_z]) cube([tw, tl, tray_h + 1]);                     // the tray's inside
-        // the socket, and the sound path: along y, then up to the capsule
+        // the socket, and the sound path: along y, then up to the capsule. Below the split, the riser is a teardrop
+        // pointing toward the room: the lower part prints lying on its flange, and the teardrop's point is then up
         along_y(-1, sock_d) d_profile(sock_clr);
         along_y(sock_d - 1, cap_y) circle(d = tube_id, $fn = 48);
-        translate([0, cap_y, 0]) cylinder(d = tube_id, h = floor_z, $fn = 48);
+        translate([0, cap_y, -tube_id / 2]) linear_extrude(blk + tube_id / 2 + eps) hull() {
+            circle(d = tube_id, $fn = 48);
+            translate([0, tube_id / 2 * sqrt(2)]) square(eps, center = true);
+        }
+        translate([0, cap_y, blk]) cylinder(d = tube_id, h = floor_z - blk, $fn = 48);
         // the capsule's bore, 0.3 deeper than the capsule: the PCB bears on the floor
         translate([0, cap_y, floor_z - cap_h - 0.3]) cylinder(d = cap_d + cap_fit, h = cap_h + 1, $fn = 96);
         // a relief under the header's holes, for the solder on the PCB's front
@@ -130,6 +148,23 @@ module elbow() {
             translate([0, 0, fl_t + eps]) mirror([0, 0, 1])
                 cylinder(d1 = hd, d2 = hd - 2 * taper * (fl_t + 1), h = fl_t + 1 + eps, $fn = 48);
         }
+    }
+}
+
+// the two parts, split level with the flange's top: the lower one with the tapping holes, the upper one with the
+// clearance holes, countersinks and head pockets (from the tray's floor, under the PCB). render(): the preview
+// shows the split right
+module elbow_lower() render() difference() {
+    intersection() { elbow(); translate([-50, -1, -50]) cube([100, 100, 50 + blk]); }
+    for (p = m2_at) translate([p[0], p[1], blk - m2_tap]) cylinder(d = m2[0], h = m2_tap + 1, $fn = 24);
+}
+module elbow_upper() render() difference() {
+    intersection() { elbow(); translate([-50, -1, blk]) cube([100, 100, 50]); }
+    for (p = m2_at) translate([p[0], p[1], 0]) {
+        translate([0, 0, blk - 1]) cylinder(d = m2[1], h = m2_csk + 1, $fn = 24);
+        translate([0, 0, blk + m2_csk - (m2[2] - m2[1]) / 2])
+            cylinder(d1 = m2[1], d2 = m2[2], h = (m2[2] - m2[1]) / 2 + eps, $fn = 32);
+        translate([0, 0, blk + m2_csk]) cylinder(d = m2[2], h = floor_z, $fn = 32);
     }
 }
 
@@ -146,16 +181,19 @@ module lid() {
 }
 
 // --- prints ------------------------------------------------------------------------------------------------------
-// the tube stands on its room end, the cut on top; the elbow stands as installed, on its flat bottom (the capsule's
-// bore comes out round); the lid lies on its top
+// the tube stands on its room end, the cut on top; the elbow's lower part lies on its flange (the socket a vertical
+// hole), its upper part stands as installed, on the split (the capsule's bore comes out round); the lid lies on its
+// top
 module tube_print()  translate([0, 0, sock_d - end_gap]) rotate([-90, 0, 0]) tube();
-module elbow_print() translate([0, 0, blk]) elbow();
+module elbow_lower_print() rotate([90, 0, 0]) elbow_lower();
+module elbow_upper_print() translate([0, 0, -blk]) elbow_upper();
 module lid_print()   translate([0, tray_y, top_z + wall]) rotate([180, 0, 0]) lid();
 
 module mic_parts() {
-    elbow_print();
-    translate([fl_w / 2 + tw / 2 + wall + 5, 0, 0]) lid_print();
-    translate([fl_w / 2 + tw + 2 * wall + blk + 14, 15, 0]) tube_print();
+    translate([0, 25, 0]) elbow_lower_print();
+    translate([0, 35, 0]) elbow_upper_print();
+    translate([fl_w / 2 + tw / 2 + wall + 5, 35, 0]) lid_print();
+    translate([fl_w / 2 + tw + 2 * wall + blk + 14, 50, 0]) tube_print();
 }
 
 // three bores 0.1, 0.2 and 0.3 over the capsule's diameter, as deep as the elbow's, with a hole below each to push
@@ -175,7 +213,8 @@ module bore_test() {
 
 // --- installed, in a piece of the foam (a ghost), with the module -------------------------------------------------
 module mic_view() {
-    color([0.95, 0.6, 0.25]) elbow();
+    color([0.4, 0.6, 0.9])   elbow_lower();
+    color([0.95, 0.6, 0.25]) elbow_upper();
     color([0.9, 0.75, 0.3])  lid();
     color([0.85, 0.85, 0.85]) tube();
     color([0.2, 0.5, 0.3]) translate([-mod_w / 2, fl_t + mod_clr, floor_z]) cube([mod_w, mod_l, mod_t]);
@@ -187,7 +226,8 @@ module mic_view() {
 }
 
 if (part == "mic_tube")      tube_print();
-if (part == "mic_elbow")     elbow_print();
+if (part == "mic_elbow_lower") elbow_lower_print();
+if (part == "mic_elbow_upper") elbow_upper_print();
 if (part == "mic_lid")       lid_print();
 if (part == "mic_parts")     mic_parts();
 if (part == "mic_bore_test") bore_test();
