@@ -29,12 +29,14 @@ def esp_nets():
     return nets
 
 
-TMC_NETS = {"1": "TMC_EN", "2": "GND", "3": "GND", "5": "TMC_UART", "7": "TMC_STEP", "8": "TMC_DIR",
+TMC_NETS = {"1": "TMC_EN", "2": "GND", "3": "GND", "4": "TMC_PIN4", "5": "TMC_PIN5", "7": "TMC_STEP", "8": "TMC_DIR",
             "9": "+12V", "10": "GND", "11": "MOT_1B", "12": "MOT_1A", "13": "MOT_2A", "14": "MOT_2B",
             "15": "+3V3", "16": "GND"}
 
 R_FLAT = "window_vent:R_DIN0207_P10.16mm_Flat_Tight"   # lying under the modules' edges (courtyard = body)
 R_UP = "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P2.54mm_Vertical"
+R_0402 = "Resistor_SMD:R_0402_1005Metric_Pad0.72x0.64mm_HandSolder"   # the jumpers: a 0 ohm 0402 or a short wire
+DNP = {"JP2"}                                          # left out unless needed (the audio mode)
 
 
 def hdr(n):
@@ -48,8 +50,11 @@ PARTS = [
     ("J1", "Connector_Generic:Conn_01x02", "12V IN", hdr(2), {"1": "VIN", "2": "GND"}, ""),
     ("JP1", "Jumper:Jumper_2_Open", "D1 bypass", hdr(2), {"1": "VIN", "2": "+12V"}, ""),
     # audio mode: a microphone on J7 instead of the indoor probe; GPIO 21 has no ADC, so JP2 joins it to GPIO 3 (ADC1)
-    ("JP2", "Jumper:SolderJumper_2_Open", "AUDIO", "Jumper:SolderJumper-2_P1.3mm_Open_RoundedPad1.0x1.5mm",
-     {"1": "DQ_IN", "2": "MIC"}, ""),
+    ("JP2", "Jumper:Jumper_2_Open", "0R AUDIO", R_0402, {"1": "DQ_IN", "2": "MIC"}, ""),
+    # the driver's PDN_UART: on pin 5 (UART) or pin 4 (PDN) depending on the module, so both are fitted by default;
+    # leave one out if a module uses that pin for something else
+    ("JP3", "Jumper:Jumper_2_Bridged", "0R PDN", R_0402, {"1": "TMC_UART", "2": "TMC_PIN4"}, ""),
+    ("JP4", "Jumper:Jumper_2_Bridged", "0R UART", R_0402, {"1": "TMC_UART", "2": "TMC_PIN5"}, ""),
     ("D1", "Device:D_Schottky", "1N5822", "Diode_THT:D_DO-201AD_P5.08mm_Vertical_AnodeUp", {"1": "+12V", "2": "VIN"}, ""),
     ("C1", "Device:C_Polarized", "220uF 50V", "Capacitor_THT:CP_Radial_D10.0mm_P5.00mm", {"1": "+12V", "2": "GND"}, ""),
     ("R1", "Device:R", "10k", R_UP, {"1": "FAN0_TACH", "2": "+3V3"}, ""),

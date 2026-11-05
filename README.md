@@ -233,7 +233,7 @@ The Freenove ESP32-S3-WROOM Lite, measured. Its two pin rows are 25.3 mm apart, 
 
 A StepStick-format driver, measured: 20.81 × 15.08 mm, two rows of 8 pins 12.7 mm apart (5 holes on the perfboard). The chip is on the underside; its heatsink (15 × 14.4 mm, fins along the pin rows) sticks onto the thermal pad on top, toward the DIR/GND end so it clears the potentiometer, and stands 14.70 mm from the board's underside.
 
-Check which pin carries the chip's UART. Some modules, such as the TMC2209-LA, have a 0 Ω link that routes it to either the PDN pin (pin 4) or the UART pin (pin 5), and come with it on PDN; the controller uses pin 5. Nothing else uses pin 4, so a short wire between pins 4 and 5 on the board's underside makes either kind work (the firmware README's bring-up, step 5, shows how to tell).
+Check which pin carries the chip's UART. Some modules, such as the TMC2209-LA, have a 0 Ω link that routes it to either the PDN pin (pin 4) or the UART pin (pin 5), and come with it on PDN; the controller uses both. On the PCB, since v1.3, two 0 Ω 0402 jumpers on the back, JP3 (pin 4) and JP4 (pin 5), put the UART line on both pins, so either kind works; leave one out if a module uses that pin for something else. On an older PCB or the perfboard, nothing else uses pin 4, so a short wire between pins 4 and 5 on the board's underside does the same (the firmware README's bring-up, step 5, shows how to tell).
 
 <p align="center">
   <img src="doc/tmc2209.svg" alt="TMC2209 module, dimensioned: PCB 15.08 x 20.81 mm, two rows of 8 pins 12.7 mm apart (EN, MS1, MS2, PDN, UART, CLK, STEP, DIR; VM, GND, M1B, M1A, M2A, M2B, VIO, GND), heatsink 14.4 x 15 mm outline; side view: 1.62 mm PCB on a 2.62 mm spacer, 5.8 mm pins, 13.08 mm heatsink" width="640">
@@ -269,11 +269,11 @@ The ESP32 runs Arduino sketches (esp32 core 3.x). The first, [`firmware/baremeta
   <a href="doc/perfboard.svg"><img src="doc/perfboard.svg" alt="Perfboard build plan: the component side seen from above with the ESP32-S3, the TMC2209, headers J1 to J8, resistors R1 to R10 and C1 on a 24 x 18 grid; the solder side with 61 numbered, colour-coded wires; and the wire list" width="100%"></a>
 </p>
 
-**Or a printed circuit board.** The same circuit also exists as a 2-layer PCB of the protoboard's size (70 × 50 mm, 1.6 mm) with the same four M2 holes, so it drops into the box in its place: the ESP32-S3 and the TMC2209 sit on exactly the same pins, and every connector keeps its function. It adds a ground plane on both layers, 0.8 mm tracks for 12 V and the motor, a 1N5822 against a reversed 12 V plug (a jumper on JP1 bypasses it), test pads for GND, 3V3, VIN, 12 V and the TMC2209's DIAG, and since v1.1 a solder jumper on the back, JP2, that joins GPIO 21 to GPIO 3 for the firmware's audio mode (on v1.0, a short wire does it). Since v1.2, the 1-Wire pull-ups R9 and R10 lie flat on the back: on v1.1 they stood in the path of the ESP32's second USB-C plug (the unused USB-OTG one). Five boards cost US$10 to 32 at PCBWay with shipping, depending on its speed: upload [the Gerber zip](pcb/window_vent_ctrl_v1.2_gerbers.zip) and keep the standard options (2 layers, FR-4, 1.6 mm, 1 oz, HASL lead-free). [The schematic](pcb/window_vent_ctrl_schematic.pdf) and the KiCad 10 project are in [pcb/](pcb); the scripts `tools/pcb_*.py` build all of it, Freerouting doing the routing.
+**Or a printed circuit board.** The same circuit also exists as a 2-layer PCB of the protoboard's size (70 × 50 mm, 1.6 mm) with the same four M2 holes, so it drops into the box in its place: the ESP32-S3 and the TMC2209 sit on exactly the same pins, and every connector keeps its function. It adds a ground plane on both layers, 0.8 mm tracks for 12 V and the motor, a 1N5822 against a reversed 12 V plug (a jumper on JP1 bypasses it), test pads for GND, 3V3, VIN, 12 V and the TMC2209's DIAG, and since v1.1 a jumper on the back, JP2, that joins GPIO 21 to GPIO 3 for the firmware's audio mode (on v1.0, a short wire does it). Since v1.2, the 1-Wire pull-ups R9 and R10 lie flat on the back: on v1.1 they stood in the path of the ESP32's second USB-C plug (the unused USB-OTG one). Since v1.3, the jumpers are 0402 pads for a 0 Ω resistor or a short wire (JP2 was a solder jumper), and JP3 and JP4 put the TMC2209's UART line on both pins 4 and 5. Five boards cost US$10 to 32 at PCBWay with shipping, depending on its speed: upload [the Gerber zip](pcb/window_vent_ctrl_v1.3_gerbers.zip) and keep the standard options (2 layers, FR-4, 1.6 mm, 1 oz, HASL lead-free). [The schematic](pcb/window_vent_ctrl_schematic.pdf) and the KiCad 10 project are in [pcb/](pcb); the scripts `tools/pcb_*.py` build all of it, Freerouting doing the routing.
 
 <p align="center">
   <img src="pcb/view/render_top.png" alt="The controller PCB from above: the ESP32-S3 footprint across the back half with the antenna area clear on the right, the TMC2209 below it, the 12 V input with D1, JP1 and C1 at the bottom right, and the labelled connectors for the fans, motor, SCD40, AS5600 and both DS18B20 at the bottom left" width="49%">
-  <img src="pcb/view/render_bottom.png" alt="The controller PCB from below: the ground plane, the title WINDOW VENT CONTROLLER v1.2, the orientation sketch and the audio-mode solder jumper JP2" width="49%">
+  <img src="pcb/view/render_bottom.png" alt="The controller PCB from below: the ground plane, the title WINDOW VENT CONTROLLER v1.3, the orientation sketch, the audio-mode jumper JP2 and the UART jumpers JP3 and JP4" width="49%">
 </p>
 
 <details open>
@@ -291,7 +291,8 @@ The ESP32 runs Arduino sketches (esp32 core 3.x). The first, [`firmware/baremeta
 | J1, JP1 | 2 | 2-pin header | plus a jumper shunt for JP1 |
 | J2–J6 | 5 | 4-pin header | 2.54 mm male |
 | J7, J8 | 2 | 3-pin header | 2.54 mm male |
-| JP2 | | | solder jumper |
+| JP2 | | 0 Ω 0402 | on the back; fitted (or a wire) in audio mode only |
+| JP3, JP4 | 2 | 0 Ω 0402 | on the back, under the TMC2209's pins 4 and 5; or a short wire each |
 
 </details>
 

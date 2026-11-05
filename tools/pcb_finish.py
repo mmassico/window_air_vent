@@ -13,7 +13,7 @@ PCB = os.path.join(ROOT, "pcb")
 NAME = "window_vent_ctrl"
 BOARD = os.path.join(PCB, NAME + ".kicad_pcb")
 CLI = r"C:\Program Files\KiCad\10.0\bin\kicad-cli.exe"
-REV = "v1.2"
+REV = "v1.3"
 mm = pcbnew.FromMM
 
 board = pcbnew.LoadBoard(os.path.join(PCB, "build", NAME + "_routed.kicad_pcb"))   # as routed, before any label
@@ -105,7 +105,7 @@ text("R1-R4", 103.2, 142.9, 0.8)                                 # the standing 
 text("10k", 103.2, 144.2, 0.8)
 for ref, x, val, pads in (("R5", 112.48, "10k", (107.4, 117.56)), ("R6", 124.88, "1k", (119.8, 129.96)),
                           ("R8", 137.28, "22k", (132.2, 142.36)), ("R7", 149.72, "100k", (144.64, 154.8))):
-    t = text(f"{ref} {val}", x, 131.35, 0.8)              # the lying ones: "—— R5 10k ——" between their pads
+    t = text(f"{ref} {val}", x, 131.35, 0.8)              # the lying ones: "-- R5 10k --" between their pads
     bb = t.GetBoundingBox()
     seg(pads[0] + 1.25, 131.35, pcbnew.ToMM(bb.GetLeft()) - 0.4, 131.35)
     seg(pcbnew.ToMM(bb.GetRight()) + 0.4, 131.35, pads[1] - 1.25, 131.35)
@@ -166,9 +166,13 @@ text("this PCB", 135.0, 117.0, 1.0, pcbnew.B_SilkS)
 text("outdoor (top edge)", 135.0, 112.9, 0.8, pcbnew.B_SilkS)
 text("indoor (bottom edge)", 135.0, 121.1, 0.8, pcbnew.B_SilkS)
 text("github.com/mmassico/window_air_vent", 135.0, 124.2, 1.0, pcbnew.B_SilkS)
-# JP2, the audio-mode solder jumper (GPIO 21 to GPIO 3): its name and use on its right, seen from the back
+# JP2, the audio-mode jumper (GPIO 21 to GPIO 3): its name and use on its right, seen from the back
 text("JP2 AUDIO", 110.7, 123.35, 0.8, pcbnew.B_SilkS, bold=True)
 text("GPIO21-GPIO3", 110.7, 124.65, 0.8, pcbnew.B_SilkS)
+# JP3 and JP4, the PDN_UART jumpers under the TMC2209's pins 4 and 5: their names beside them, clear of the pins
+for ref, pin, x in (("JP3", "PDN", 148.6), ("JP4", "UART", 141.7)):
+    board.FindFootprintByReference(ref).Reference().SetVisible(False)
+    text(f"{ref} {pin}", x, 139.6, 0.8, pcbnew.B_SilkS, bold=True, angle=90)
 
 board.GetDesignSettings().m_MinResolvedSpokes = 1
 pcbnew.ZONE_FILLER(board).Fill(board.Zones())

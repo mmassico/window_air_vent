@@ -11,7 +11,7 @@ import os, sys, uuid
 import pcbnew
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from pcb_parts import PARTS
+from pcb_parts import PARTS, DNP
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PCB = os.path.join(ROOT, "pcb")
@@ -116,10 +116,12 @@ PLACE = {
     "R9": (101.9, 112.2, 270), "R10": (105.6, 112.2, 270),
     # test pads clear of the USB-UART cable's path (y 116.6 to 127.6 beside the ESP32), so they can be probed with it on
     "TP1": (101.9, 109.4, 0), "TP2": (105.6, 109.4, 0), "TP5": (102.6, 130.6, 0),
-    # audio-mode solder jumper (GPIO 21 to GPIO 3), on the back under the ESP32, between its two pins
+    # audio-mode jumper (GPIO 21 to GPIO 3), on the back under the ESP32, between its two pins
     "JP2": (117.0, 124.0, 0),
+    # PDN_UART jumpers on the back, just under the TMC2209's pins 4 (PDN) and 5 (UART), pad 2 toward the pin
+    "JP3": (tx - 3 * P, ty + 2.7, 90), "JP4": (tx - 4 * P, ty + 2.7, 90),
 }
-BOTTOM = {"JP2", "R9", "R10"}                            # parts on the back (B.Cu)
+BOTTOM = {"JP2", "JP3", "JP4", "R9", "R10"}              # parts on the back (B.Cu)
 
 board = pcbnew.BOARD()
 board.SetCopperLayerCount(2)
@@ -173,6 +175,7 @@ for ref, lib_id, value, fp_id, pins, desc in PARTS:
     x, y, rot = PLACE[ref]
     fp.SetPosition(pcbnew.VECTOR2I(mm(x), mm(y)))
     fp.SetOrientationDegrees(rot)
+    fp.SetDNP(ref in DNP)
     board.Add(fp)
     if ref in BOTTOM:
         fp.Flip(fp.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT)
