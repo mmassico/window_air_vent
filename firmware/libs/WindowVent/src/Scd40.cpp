@@ -54,9 +54,14 @@ static bool query(uint16_t cmd, uint16_t* words, int n, int waitMs = 1)
     return readWords(words, n);
 }
 
+// The SCD40 keeps measuring through an ESP32 reset, and while it measures it refuses most commands (start, serial,
+// self-test among them). Stop it first, so it always starts idle; an idle sensor accepts the stop too. Right after
+// power-up the sensor isn't ready yet and doesn't answer, but it is idle then anyway.
 void Scd40Begin(TwoWire* bus)
 {
     s_bus = bus;
+    Scd40StopPeriodic();
+    s_running = false;
 }
 
 bool Scd40StartPeriodic()

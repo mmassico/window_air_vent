@@ -1,6 +1,6 @@
 # Firmware
 
-> **Not tested with the parts yet.** Both sketches compile without warnings (Arduino core esp32 3.3.12). The web application runs on a bare ESP32-S3 board, in simulation; neither sketch has run with the sensors, the motor or the fans yet. The pin assignment, the wiring table and the driver code may still change after the first bench tests.
+> **Bench-tested with the parts, in `baremetal/`.** Both sketches compile without warnings (Arduino core esp32 3.3.12). On the bench, every part answers and works: the SCD40, the AS5600, the outdoor DS18B20, the MAX9814, the TMC2209 and the motor, both fans and the 12 V sense. The web application has run on a bare ESP32-S3 board, in simulation, but not yet with the parts.
 
 Two sketches and the library they share:
 
@@ -54,7 +54,7 @@ The table below gives the same connections, pin by pin.
 | | EN | GPIO 10 | 10 kΩ to 3V3: the motor stays off while the ESP32 boots |
 | | STEP, DIR | GPIO 11, GPIO 12 | |
 | | DIAG | GPIO 13 | |
-| | PDN_UART | GPIO 18 directly, and GPIO 17 through 1 kΩ | Single-wire UART |
+| | PDN_UART | GPIO 18 directly, and GPIO 17 through 1 kΩ | Single-wire UART, on the module's UART pin. Some modules route the chip's PDN_UART to their PDN pin instead, through a 0 Ω link: see step 5 below |
 | | MS1, MS2 | GND | UART address 0 |
 | | A1 A2 B1 B2 | Motor coils | Never plug or unplug the motor with 12 V on |
 | **Fan 0, intake** (Noctua: black GND, yellow 12 V, green tach, blue PWM) | PWM | GPIO 4 | 10 kΩ to GND: the fan stays slow while the ESP32 boots |
@@ -71,7 +71,7 @@ The table below gives the same connections, pin by pin.
 
 - **On the board itself:** the blue LED (GPIO 2) blinks as a heartbeat, and the RGB LED is on GPIO 48 (`led` command).
 - **Temperature sensors:** read with the `temp` command; the sketch drives the 1-Wire bus itself (`Ds18b20.cpp`), so no library is needed. The outdoor probe goes near the intake, away from the exhaust outlet and out of the sun.
-- **Audio mode (optional):** an analog microphone measures the outdoor sound level, for instance to close the damper when it's too loud outside. It takes the indoor DS18B20's header, so it replaces that probe. That header's line, GPIO 21, has no ADC, so GPIO 21 is joined to GPIO 3, the only free pin on ADC1: bridge the solder jumper JP2 on the back of the PCB (v1.1), or solder a short wire on a v1.0 PCB or the perfboard. ADC2 can't be used while Wi-Fi runs. Leave out that header's 4.7 kΩ pull-up: it would pull the microphone's output toward 3.3 V. Then set `AUDIO_MODE` to 1 in `Pins.h`. The firmware leaves GPIO 21 disconnected (input off, no pull-up or pull-down), reads the microphone on GPIO 3, and drops the indoor probe. GPIO 3 is a strapping pin, but only for the JTAG source, and only when an eFuse selects it, so the microphone's bias at reset does no harm. The MAX9814's output rests at about 1.25 V and swings up to 2 V peak to peak, inside the ADC's 0–3.1 V range. Tie its GAIN pin to VDD (40 dB) and leave A/R open. Its automatic gain control (AGC) holds loud sounds near a fixed output level, so a sound 10 dB louder may read only 1 or 2 dB higher. At 40 dB gain, it stays out of the way up to about 94 dB SPL, which covers outdoor noise (60 to 90 dB SPL); the readings stay linear and the `sound cal` offset holds. At 50 or 60 dB (GAIN to GND, or open), the AGC already acts from about 84 or 74 dB SPL.
+- **Audio mode (optional):** an analog microphone measures the outdoor sound level, for instance to close the damper when it's too loud outside. It takes the indoor DS18B20's header, so it replaces that probe. That header's line, GPIO 21, has no ADC, so GPIO 21 is joined to GPIO 3, the only free pin on ADC1: bridge the solder jumper JP2 on the back of the PCB (v1.1), or solder a short wire on a v1.0 PCB or the perfboard. ADC2 can't be used while Wi-Fi runs. Leave out that header's 4.7 kΩ pull-up: it would pull the microphone's output toward 3.3 V. `AUDIO_MODE` is 1 in `Pins.h` (audio mode); set it to 0 to use the indoor probe instead. The firmware leaves GPIO 21 disconnected (input off, no pull-up or pull-down), reads the microphone on GPIO 3, and drops the indoor probe. GPIO 3 is a strapping pin, but only for the JTAG source, and only when an eFuse selects it, so the microphone's bias at reset does no harm. The MAX9814's output rests at about 1.25 V and swings up to 2 V peak to peak, inside the ADC's 0–3.1 V range. Tie its GAIN pin to VDD (40 dB) and leave A/R open. Its automatic gain control (AGC) holds loud sounds near a fixed output level, so a sound 10 dB louder may read only 1 or 2 dB higher. At 40 dB gain, it stays out of the way up to about 94 dB SPL, which covers outdoor noise (60 to 90 dB SPL); the readings stay linear and the `sound cal` offset holds. At 50 or 60 dB (GAIN to GND, or open), the AGC already acts from about 84 or 74 dB SPL.
 - **Kept free for later:** GPIO 38, 39, 40, for the INMP441 microphone (I²S).
 - **Power:** two adapters. A 12 V brick feeds VM, the fans and the 12 V sense; a 5 V USB-C adapter powers the ESP32 through its USB-UART connector (the board makes the 3V3 for the sensors and the TMC2209 logic). Join the brick's GND and the ESP32's GND on the perfboard. The [layout drawing](../doc/ebox_layout.svg) shows where the parts go in the box.
 - **Driving the fan PWM directly:** the 3.3 V PWM output drives the Noctua PWM input as is (Noctua accepts a 3.3 V signal). If you ever add an inverting transistor, set `FAN_PWM_INVERT` to 1.
@@ -95,9 +95,11 @@ Each step only needs the parts before it. Each line shows a command, then what y
 4. **12 V on.**
    - `info`: Supply ≈ 12 V.
    - `fan all 30`, then `fan` a few seconds later: both fans report a speed.
-   - Try `fan 0 100` and `fan 1 0`. The NF-A8 doesn't stop at 0%; it runs at its minimum speed.
+   - Try `fan 0 100` and `fan 1 0`: each fan follows its own command.
+   - The NF-A8s tested stop at 0% and 5%, and start between 5 and 10% (about 180 rpm). With the dampers open, they reach about 2200 rpm at 100%.
 5. **Driver and motor.**
    - `tmc init`, then `tmc status`: version `0x21`, and IFCNT goes up by one after each `tmc wr` or `mot cur` command. That proves both directions of the UART work.
+   - No answer, while `tmc wr 0 0x1C0` still says OK: the ESP32 hears its own bytes, so the line is fine up to the module's UART pin, but the chip isn't on it. Some modules, such as the TMC2209-LA, have a 0 Ω link that routes the chip's PDN_UART to either their PDN pin (pin 4) or their UART pin (pin 5), and come with it on PDN. Nothing else uses pin 4 on the PCB or the perfboard, so join pins 4 and 5 with a short wire on the board's underside (or move the link to the UART pad).
    - `mot en 1`, then `mot step 800`: a quarter turn at the default 16 microsteps. The report compares the expected angle with the encoder's. If their signs are opposite, the firmware will simply flip one of them.
    - `mot step -800` comes back.
    - `mot vel 1000` turns continuously with the driver's own step generator. Run `mon`, slow the shaft with your fingers, and watch SG drop. `mot vel 0` stops it.

@@ -59,7 +59,7 @@
 // GPIO 21 disconnected (input off, no pulls), and the indoor DS18B20 is unavailable. With JP2 open, GPIO 3 is
 // unconnected. 1 = audio mode, 0 = indoor DS18B20 on GPIO 21.
 #ifndef AUDIO_MODE                      // (or -DAUDIO_MODE=1 on the compiler's command line)
-#define AUDIO_MODE      0
+#define AUDIO_MODE      1
 #endif
 #define PIN_MIC         3
 #define PIN_MIC_LINK    21      // wired to PIN_MIC, kept high impedance

@@ -233,6 +233,8 @@ The Freenove ESP32-S3-WROOM Lite, measured. Its two pin rows are 25.3 mm apart, 
 
 A StepStick-format driver, measured: 20.81 × 15.08 mm, two rows of 8 pins 12.7 mm apart (5 holes on the perfboard). The chip is on the underside; its heatsink (15 × 14.4 mm, fins along the pin rows) sticks onto the thermal pad on top, toward the DIR/GND end so it clears the potentiometer, and stands 14.70 mm from the board's underside.
 
+Check which pin carries the chip's UART. Some modules, such as the TMC2209-LA, have a 0 Ω link that routes it to either the PDN pin (pin 4) or the UART pin (pin 5), and come with it on PDN; the controller uses pin 5. Nothing else uses pin 4, so a short wire between pins 4 and 5 on the board's underside makes either kind work (the firmware README's bring-up, step 5, shows how to tell).
+
 <p align="center">
   <img src="doc/tmc2209.svg" alt="TMC2209 module, dimensioned: PCB 15.08 x 20.81 mm, two rows of 8 pins 12.7 mm apart (EN, MS1, MS2, PDN, UART, CLK, STEP, DIR; VM, GND, M1B, M1A, M2A, M2B, VIO, GND), heatsink 14.4 x 15 mm outline; side view: 1.62 mm PCB on a 2.62 mm spacer, 5.8 mm pins, 13.08 mm heatsink" width="640">
 </p>
@@ -255,7 +257,7 @@ The box seen from above, to scale, with the room at the bottom. The ESP32 lies a
 
 ### Firmware
 
-The ESP32 runs Arduino sketches (esp32 core 3.x). The first, [`firmware/baremetal/`](firmware/baremetal), is a serial command console that tests each electronic part on its own: fans, motor and driver, encoder, CO₂ sensor, temperature probes and the 12 V supply, and optionally a microphone's sound level (audio mode). The second, [`firmware/webui/`](firmware/webui), is the application: the CO₂ control, with its own web page on the home network for the live readings, graphs, settings and manual control, and a simulation that stands in for the sensors until they're connected. Both compile cleanly, and the web application runs on the bare ESP32 board in simulation, but neither has run with the parts yet. [firmware/README.md](firmware/README.md) has the board settings, the [wiring diagram](firmware/images/wiring.svg), a part-by-part bring-up, the command list and the web application.
+The ESP32 runs Arduino sketches (esp32 core 3.x). The first, [`firmware/baremetal/`](firmware/baremetal), is a serial command console that tests each electronic part on its own: fans, motor and driver, encoder, CO₂ sensor, temperature probes and the 12 V supply, and optionally a microphone's sound level (audio mode). The second, [`firmware/webui/`](firmware/webui), is the application: the CO₂ control, with its own web page on the home network for the live readings, graphs, settings and manual control, and a simulation that stands in for the sensors until they're connected. Both compile cleanly, and the web application runs on the bare ESP32 board in simulation, and the bare-metal console has now checked every part on the bench. [firmware/README.md](firmware/README.md) has the board settings, the [wiring diagram](firmware/images/wiring.svg), a part-by-part bring-up, the command list and the web application.
 
 <p align="center">
   <img src="firmware/images/wiring.svg?ver=2" alt="Wiring diagram: SCD40, AS5600, 12 V sense divider and both fans on the left of the ESP32-S3, TMC2209, stepper, two DS18B20 temperature sensors and the optional MAX9814 microphone (audio mode, with its GPIO 21 to GPIO 3 wire) on the right, 12 V brick and 5 V USB-C adapter on top" width="100%">

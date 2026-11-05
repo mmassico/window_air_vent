@@ -19,7 +19,7 @@
 #include "Ds18b20.h"
 #include "Sound.h"
 
-#define FW_NAME          "window-vent baremetal 1.2"
+#define FW_NAME          "window-vent baremetal 1.3"
 #define STEPS_PER_REV    200        // full steps per motor turn (1.8 deg)
 #define DEF_MICROSTEPS   16
 #define DEF_RUN_MA       500
