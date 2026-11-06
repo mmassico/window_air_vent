@@ -12,6 +12,7 @@
 #include "SetupPage.h"
 
 #define MAX_BODY      4096
+#define MAX_SOCKETS   12            // pages hold several; 13 at most (LWIP_MAX_SOCKETS 16, less 3)
 #define LOG_PER_GET   200           // log lines per GET /api/log at most
 #define SHELL_WAIT_MS 15000         // a console command's answer, at most
 
@@ -401,8 +402,8 @@ static esp_err_t onWs(httpd_req_t* req)
 static void sendAll(void* arg)
 {
     char* text = (char*)arg;
-    size_t fds = 8;
-    int    list[8];
+    size_t fds = MAX_SOCKETS;
+    int    list[MAX_SOCKETS];
     int    n = 0;
     if (httpd_get_client_list(s_server, &fds, list) == ESP_OK)
     {
@@ -469,7 +470,7 @@ void WebBegin(WebCommandFn onCommand, WebShellFn onShell)
     cfg.uri_match_fn     = httpd_uri_match_wildcard;
     cfg.lru_purge_enable = true;
     cfg.stack_size       = 10240;
-    cfg.max_open_sockets = 8;
+    cfg.max_open_sockets = MAX_SOCKETS;
     if (httpd_start(&s_server, &cfg) != ESP_OK)
     {
         Log("HTTP server failed to start");

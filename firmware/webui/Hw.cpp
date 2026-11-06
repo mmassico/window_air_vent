@@ -193,6 +193,11 @@ static void damperTask(void*)
             fault = false;
             seated = false;
             moveStart = now;
+            if (moving)                             // a new move, even in mid-move: the stall check starts over,
+            {                                       //   or it would measure progress against the old target
+                moving = false;
+                stopAt = now;
+            }
         }
         if (seated && enc && angle > SEATED_DEG)    // pushed open since (airflow, a hand): close it again
             seated = false;

@@ -391,6 +391,8 @@ function axisStyle() {
 function makeCharts() {
   const acc = cssVar('--accent'), acc2 = cssVar('--accent2'), warm = cssVar('--warm'), cold = cssVar('--cold');
   const band = cssVar('--good');
+  // the same axis widths on both graphs, so their time axes line up
+  const LEFT_W = 50, RIGHT_W = 64;
   const w = $('chartCo2').clientWidth || 600;
   const targetBand = (u) => {
     if (!settings) return;
@@ -410,7 +412,7 @@ function makeCharts() {
       { label: 'Fans', scale: 'pct', stroke: acc2, width: 1, fill: acc2 + '26', paths: uPlot.paths.stepped({ align: 1 }), value: (u, v) => (v == null ? '--' : v.toFixed(0) + ' %') },
       { label: 'Humidity', scale: 'pct', stroke: cssVar('--muted'), width: 1, dash: [4, 4], value: (u, v) => (v == null ? '--' : v.toFixed(0) + ' %') },
     ],
-    axes: [{ ...axisStyle() }, { ...axisStyle(), scale: 'ppm', size: 50 }, { ...axisStyle(), scale: 'pct', side: 1, grid: { show: false }, size: 44, values: (u, v) => v.map((x) => x + '%') }],
+    axes: [{ ...axisStyle() }, { ...axisStyle(), scale: 'ppm', size: LEFT_W }, { ...axisStyle(), scale: 'pct', side: 1, grid: { show: false }, size: RIGHT_W, values: (u, v) => v.map((x) => x + '%') }],
     hooks: { drawAxes: [targetBand], ...legendHooks },
   }, [D.t, D.co2, D.fan, D.rh], $('chartCo2'));
   // temperatures, and in audio mode the outdoor sound on a dBA axis at the right
@@ -419,10 +421,12 @@ function makeCharts() {
     { label: 'Indoor', scale: 'C', stroke: warm, width: 2, value: (u, v) => (v == null ? '--' : v.toFixed(1) + ' ' + DEG + 'C') },
     { label: 'Outdoor', scale: 'C', stroke: cold, width: 2, value: (u, v) => (v == null ? '--' : v.toFixed(1) + ' ' + DEG + 'C') },
   ];
-  const tAxes = [{ ...axisStyle() }, { ...axisStyle(), scale: 'C', size: 50, values: (u, v) => v.map((x) => x + DEG) }];
+  const tAxes = [{ ...axisStyle() }, { ...axisStyle(), scale: 'C', size: LEFT_W, values: (u, v) => v.map((x) => x + DEG) }];
   if (chartSound) {
     tSeries.push({ label: 'Outdoor sound, loudest', scale: 'dBA', stroke: cssVar('--poor'), width: 1.5, value: (u, v) => (v == null ? '--' : v.toFixed(0) + ' dBA') });
-    tAxes.push({ ...axisStyle(), scale: 'dBA', side: 1, grid: { show: false }, size: 64, values: (u, v) => v.map((x) => x + ' dBA') });
+    tAxes.push({ ...axisStyle(), scale: 'dBA', side: 1, grid: { show: false }, size: RIGHT_W, values: (u, v) => v.map((x) => x + ' dBA') });
+  } else {
+    tAxes.push({ scale: 'C', side: 1, grid: { show: false }, ticks: { show: false }, size: RIGHT_W, values: () => [] });   // keeps the width
   }
   const temp = new uPlot({
     width: w, height: 230,
@@ -795,11 +799,25 @@ function initConsole() {
 // WebSocket
 // ------------------------------------------------------------------------------------------------
 
+// The vent's server, short of connections, closes the one it heard from the longest ago. A WebSocket only receives,
+// so it would always be that one: it says something every 2 s (measured: 4 s and more aren't enough).
+const WS_PING_MS = 2000;
+const WS_PING = '{"cmd":"ping"}';
+
 function connect() {
   const conn = $('conn');
-  ws = new WebSocket('ws://' + HOST + '/ws');
-  ws.onopen = () => { conn.textContent = 'Live'; conn.className = 'badge ok'; logFetch(); };
+  const sock = new WebSocket('ws://' + HOST + '/ws');
+  let ping = null;
+  ws = sock;
+  ws.onopen = () => {
+    conn.textContent = 'Live';
+    conn.className = 'badge ok';
+    logFetch();
+    sock.send(WS_PING);
+    ping = setInterval(() => sock.send(WS_PING), WS_PING_MS);
+  };
   ws.onclose = () => {
+    clearInterval(ping);
     conn.textContent = 'Offline';
     conn.className = 'badge err';
     setTimeout(connect, 2000);

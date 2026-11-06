@@ -95,7 +95,9 @@ main { max-width: 1180px; margin: 0 auto; padding: 18px 16px 90px; }
 .grid.two { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); margin-bottom: 16px; }
 .grid.hero { grid-template-columns: minmax(280px, 1fr) 2fr; margin-bottom: 16px; }
 @media (max-width: 760px) { .grid.hero { grid-template-columns: 1fr; } }
-.tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; align-content: start; }
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 16px; }
+@media (max-width: 900px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) { .tiles { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); } }
 .tiles .card { margin: 0; }
 .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
 
@@ -138,8 +140,9 @@ button.ghost:hover, a.button:hover { border-color: var(--accent); }
 .chip.on { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
 .chip.loud { color: var(--fair); border-color: color-mix(in srgb, var(--fair) 50%, transparent);
   background: color-mix(in srgb, var(--fair) 12%, transparent); font-weight: 600; letter-spacing: 0; white-space: nowrap; }
-.vrow { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 10px; }
-.vrow .chip { margin-left: auto; }
+.vrow { display: flex; align-items: center; justify-content: space-between; gap: 4px 10px; }
+.vrow .chip { margin-left: auto; padding: 4px 7px; line-height: 0; }
+.vrow .chip svg { width: 18px; height: 18px; }
 
 /* tiles */
 .tile { display: flex; flex-direction: column; gap: 4px; }

@@ -59,6 +59,8 @@ static const char* command(JsonObjectConst c)
 {
     const char* cmd = c["cmd"] | "";
 
+    if (!strcmp(cmd, "ping"))       // a page's keep-alive (app.js): nothing to do
+        return nullptr;
     if (!strcmp(cmd, "mode"))
     {
         const char* m = c["mode"] | "";
@@ -808,7 +810,8 @@ void loop()
         {
             if (!s_test)
                 HwSetFans(0, 0);    // the real fans stay off while simulating
-            HistAdd(s_in, s_out.fanPct, g_sim.angle, dtModel);
+            if (s_simChosen)        // not the few seconds at boot before the SCD40 answers: not real readings
+                HistAdd(s_in, s_out.fanPct, g_sim.angle, dtModel);
         }
         else
         {
