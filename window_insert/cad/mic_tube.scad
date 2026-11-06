@@ -20,7 +20,11 @@
 //    installed, so the capsule's bore comes out round.
 //  * A flat on the tube's room end keys it in the elbow's socket, so the
 //    elbow's two screws keep the roof on top. In the foam the tube is
-//    round, so it seals all around.
+//    round, so it seals all around. Its end bears on the socket's 45
+//    degree bottom, and an M2 from the elbow's side, tapped into the
+//    tube's wall, holds it there: the tube can't slide away into the
+//    foam.
+//  * The lid's rim clips into a groove in the tray's walls.
 //
 //  Installed coordinates: x across the window (along the foam's face),
 //  y toward the room (y = 0 on the foam's room face, its outdoor face at
@@ -38,9 +42,11 @@ tube_od  = 10.4;    // pressed into a 10 mm hole (the XPS gives a little)
 tube_id  = 7.0;     // the sound path's bore, from the tube's outdoor end to the capsule
 tube_fl  = 0.5;     // the key: a flat on top of the tube's room end (in the socket only), this deep into its circle
 tube_out = 12;      // the roof's tip past the foam's outdoor face (the 45 degree cut's bottom edge is tube_od closer)
-sock_d   = 7;       // socket depth in the elbow
+sock_d   = 9;       // socket depth in the elbow, to its bottom: a 45 degree cone down to the bore, the tube's stop
 sock_clr = 0.1;     // clearance per side in the socket: a snug slide
-end_gap  = 0.5;     // between the tube's end and the socket's bottom: the flange bears on the foam, not on the tube
+pin      = [6, 1.0];   // the M2 holding the tube in its socket, from the elbow's +x side, tapped into the tube's
+                       //   wall: its y, and its head's top this far inside the elbow's side (an M2 x 6 then takes
+                       //   the wall's whole 1.7 and ends 0.15 inside the bore)
 
 /* [Microphone module] */
 mod_l    = 25.67;   // MAX9814 module: PCB length
@@ -52,42 +58,55 @@ cap_h    = 6.5;     //   height
 cap_e    = 2.10;    //   from its wall to the PCB's near end; centred across the PCB's width
 hdr_e    = 1.5;     // the 5-pin header's holes (about 1 across): their centres from the PCB's far end
 cap_fit  = 0.2;     // the capsule's bore: this much over its diameter, a light press fit (mic_bore_test tries 0.1 to 0.3)
-mod_clr  = 0.5;     // around the PCB in the tray, per side: the capsule's bore sets its position
+mod_clr  = 0.5;     // at the PCB's ends in the tray (y), per side: the capsule's bore sets its position
+mod_side = 1.5;     // beside the PCB in the tray (x), per side: room for tweezers to lift it out
 
 /* [Elbow and lid] */
 wall     = 1.6;     // tray walls, lid
 fl_t     = 3;       // flange on the foam's face (it is also the tray's back wall)
-fl_w     = 40;      // flange width (x), with the screws
+fl_w     = 43;      // flange width (x), with the screws
 floor_z  = 15;      // the tray's floor (the PCB's front face) above the tube's axis: the capsule's bore stays above
                     //   the split
-tray_h   = 5;       // tray walls above the floor
+tray_h   = 6;       // tray walls above the floor: the lid's rim stays above the module's parts
 screw    = [4.25, 8, 3.5];   // screws into the foam, as the latch cover's: hole, head diameter, head height
 csk      = 0.8;     // the countersink's diameter at the flange's face, past the head's (as the latch cover's)
-screw_x  = 14;      // the screws' x, either side of the tube's axis (at z = 0)
+screw_x  = 15.5;    // the screws' x, either side of the tube's axis (at z = 0), their heads clear of the body
 notch_w  = 8;       // cable notch in the tray's room-end wall
-lid_clr  = 0.1;     // the lid's rim inside the tray's walls, per side (a friction fit)
-lid_rim  = [0.8, 1.0];   // the lid's rim: width, depth
+lid_clr  = 0.1;     // the lid's rim inside the tray's walls, per side
+lid_rim  = [0.8, 2.0];   // the lid's rim: width, depth
+lid_clip = 0.3;     // a 45 degree ridge on the rim's long sides, this far out, into a groove in the tray's walls: the
+                    //   lid clips on (lid_clip - lid_clr of interference per side)
 
 /* [The elbow's joint] */
 m2       = [1.6, 2.2, 4.0];   // M2 screws joining the elbow's two parts: tapping hole (lower part), clearance hole
                               //   and head pocket (upper part)
 m2_csk   = 2.0;     // the countersink's top (the head's top) above the split: 6 mm screws reach 4 mm into the lower part
 m2_tap   = 4.5;     // the tapping holes' depth below the split
-m2_at    = [[-5.7, 5.2], [5.7, 5.2], [-5.7, 17], [5.7, 17]];   // the screws: [x, y], clear of the socket, the sound path
+m2_at    = [[-6.5, 5.2], [6.5, 5.2], [-6.5, 17], [6.5, 17]];   // the screws: [x, y], clear of the socket, the sound path
                                                            //   and the capsule's bore, the pockets inside the tray
 
 eps = 0.01;
 sock_r  = tube_od / 2 + sock_clr;
 blk     = sock_r + 2;                           // the elbow's flat bottom at z = -blk; its flange's top, and the
                                                 //   split between its two parts, at z = blk
-tw      = mod_w + 2 * mod_clr;                  // the tray's inside: width (x)
+tube_end = sock_d + sock_clr;                   // the tube's room end, where its edge meets the socket's cone
+tw      = mod_w + 2 * mod_side;                 // the tray's inside: width (x)
 tl      = mod_l + 2 * mod_clr;                  //   and length (y), from the flange
 cap_y   = fl_t + mod_clr + cap_e + cap_d / 2;   // the capsule's axis (x = 0)
 tray_y  = fl_t + tl + wall;                     // the tray's room end, outside
 top_z   = floor_z + tray_h;
+clip_z  = top_z - lid_rim[1] / 2;               // the clip's ridge and groove
 
 // a 2D shape (X = x, Y = z) run along y from y0 to y1
 module along_y(y0, y1) translate([0, y1, 0]) rotate([90, 0, 0]) linear_extrude(y1 - y0) children();
+
+// a hole along +x from x = 0 to x = l, at y, z = 0 (small enough to print round, lying)
+module hole_x(y, d, l) translate([0, y, 0]) rotate([0, 90, 0]) cylinder(d = d, h = l, $fn = 24);
+
+// the clip's 45 degree profile on the face at |x| = x0, on side s: out to x0 + out, h above and below clip_z there
+module clip_profile(s, x0, out, h)
+    polygon([[s * (x0 - h), clip_z - 2 * h], [s * (x0 + out), clip_z - h + out], [s * (x0 + out), clip_z + h - out],
+             [s * (x0 - h), clip_z + 2 * h]]);
 
 // the tube's end in the socket, a D, grown by c: its flat on top
 module d_profile(c = 0) intersection() {
@@ -97,13 +116,14 @@ module d_profile(c = 0) intersection() {
 
 // --- the tube, through the foam ----------------------------------------------------------------------------------
 // round in the foam; its room end flat on top, in the socket (the flat starts at 45 degrees, at the foam's face:
-// no overhang as printed); its outdoor end cut at 45 degrees, the top the longer side (the plane through the roof's
-// tip, its normal along +y and +z). render(): the preview shows the cuts right
+// no overhang as printed), with the pin's tapping hole on its +x side; its outdoor end cut at 45 degrees, the top the longer
+// side (the plane through the roof's tip, its normal along +y and +z). render(): the preview shows the cuts right
 module tube() render() difference() {
-    along_y(-foam_t - tube_out, sock_d - end_gap) difference() { circle(d = tube_od, $fn = 72); circle(d = tube_id, $fn = 48); }
+    along_y(-foam_t - tube_out, tube_end) difference() { circle(d = tube_od, $fn = 72); circle(d = tube_id, $fn = 48); }
     rotate([90, 0, 90]) linear_extrude(2 * tube_od, center = true)   // 2D: X = y, Y = z
-        polygon([[sock_d, tube_od / 2 - tube_fl], [0, tube_od / 2 - tube_fl], [-tube_fl - 1, tube_od / 2 + 1],
-                 [sock_d, tube_od / 2 + 1]]);
+        polygon([[tube_end + 1, tube_od / 2 - tube_fl], [0, tube_od / 2 - tube_fl], [-tube_fl - 1, tube_od / 2 + 1],
+                 [tube_end + 1, tube_od / 2 + 1]]);
+    hole_x(pin[0], m2[0], tube_od);
     translate([0, -foam_t - tube_out, tube_od / 2]) rotate([45, 0, 0]) translate([-50, -100, -50]) cube(100);
 }
 
@@ -130,6 +150,8 @@ module elbow() {
         // the socket, and the sound path: along y, then up to the capsule. Below the split, the riser is a teardrop
         // pointing toward the room: the lower part prints lying on its flange, and the teardrop's point is then up
         along_y(-1, sock_d) d_profile(sock_clr);
+        translate([0, sock_d - 0.2, 0]) rotate([-90, 0, 0])   // the socket's bottom, 45 degrees: the tube's stop
+            cylinder(r1 = sock_r + 0.2, r2 = tube_id / 2 - 0.2, h = sock_r - tube_id / 2 + 0.4, $fn = 72);
         along_y(sock_d - 1, cap_y) circle(d = tube_id, $fn = 48);
         translate([0, cap_y, -tube_id / 2]) linear_extrude(blk + tube_id / 2 + eps) hull() {
             circle(d = tube_id, $fn = 48);
@@ -142,6 +164,14 @@ module elbow() {
         translate([-6.5, fl_t + mod_clr + mod_l - hdr_e - 1.5, floor_z - 1]) cube([13, 3, 2]);
         // the cable's notch, down to the PCB's back
         translate([-notch_w / 2, tray_y - wall - 1, floor_z + mod_t]) cube([notch_w, wall + 2, tray_h]);
+        // the pin: a clearance hole from the +x side into the socket, a countersink and a head pocket
+        hole_x(pin[0], m2[1], tw / 2 + wall + 1);
+        translate([tw / 2 + wall - pin[1] - (m2[2] - m2[1]) / 2 - 0.2, pin[0], 0]) rotate([0, 90, 0]) {
+            cylinder(d1 = m2[1] - 0.4, d2 = m2[2], h = (m2[2] - m2[1]) / 2 + 0.2 + eps, $fn = 32);
+            translate([0, 0, (m2[2] - m2[1]) / 2 + 0.2]) cylinder(d = m2[2], h = pin[1] + 2, $fn = 32);
+        }
+        // the clip's groove, in the tray's long walls
+        for (s = [-1, 1]) along_y(fl_t, fl_t + tl) clip_profile(s, tw / 2, lid_clip, 0.45);
         // the screws: a hole, and a countersink with the head's taper, hd wide at the flange's face
         for (s = [-1, 1]) translate([s * screw_x, 0, 0]) rotate([-90, 0, 0]) {
             translate([0, 0, -1]) cylinder(d = hole, h = fl_t + 2, $fn = 32);
@@ -169,7 +199,7 @@ module elbow_upper() render() difference() {
 }
 
 // --- the lid, on the tray ----------------------------------------------------------------------------------------
-module lid() {
+module lid() render() union() {
     translate([-tw / 2 - wall, 0, top_z]) cube([tw + 2 * wall, tray_y, wall]);
     difference() {   // a rim inside the walls, open at the cable's notch
         translate([-tw / 2 + lid_clr, fl_t + lid_clr, top_z - lid_rim[1]])
@@ -178,13 +208,18 @@ module lid() {
             cube([tw - 2 * (lid_clr + lid_rim[0]), tl - 2 * (lid_clr + lid_rim[0]), lid_rim[1] + 2]);
         translate([-notch_w / 2, tray_y - wall - 2, top_z - lid_rim[1] - 1]) cube([notch_w, wall + 3, lid_rim[1] + 2]);
     }
+    // the clip's ridges, on the rim's long sides, short of its ends so the rim flexes
+    for (s = [-1, 1]) intersection() {
+        along_y(fl_t + 4, fl_t + tl - 4) clip_profile(s, tw / 2 - lid_clr, lid_clip, 0.45);
+        translate([-tw / 2 - 1, 0, top_z - lid_rim[1]]) cube([tw + 2, tray_y, lid_rim[1]]);
+    }
 }
 
 // --- prints ------------------------------------------------------------------------------------------------------
 // the tube stands on its room end, the cut on top; the elbow's lower part lies on its flange (the socket a vertical
 // hole), its upper part stands as installed, on the split (the capsule's bore comes out round); the lid lies on its
 // top
-module tube_print()  translate([0, 0, sock_d - end_gap]) rotate([-90, 0, 0]) tube();
+module tube_print()  translate([0, 0, tube_end]) rotate([-90, 0, 0]) tube();
 module elbow_lower_print() rotate([90, 0, 0]) elbow_lower();
 module elbow_upper_print() translate([0, 0, -blk]) elbow_upper();
 module lid_print()   translate([0, tray_y, top_z + wall]) rotate([180, 0, 0]) lid();

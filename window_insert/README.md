@@ -167,17 +167,17 @@ For the firmware's [audio mode](../firmware/README.md#wiring), the MAX9814 micro
 
 - **The tube** goes straight through a 10 mm hole in the foam and stands out of its outdoor face. Its end there is cut at 45°, the top the longer side: a roof over the opening, which faces down and outward.
 - **The elbow** is screwed to the foam's room face. It takes the tube's end and turns the sound path up, to the module's capsule, which points down into it. Neither rain nor dust can settle on the capsule. It prints in two parts, split level with its flange's top and joined by four M2 screws: the lower part lies on its flange, so the tube's socket is a vertical hole, and the upper part stands as installed, so the capsule's bore comes out round.
-- **The tube's key:** a flat on top of its room end, in the elbow's socket, keeps the roof on top. Everywhere in the foam the tube is round, so it seals all around.
-- **The module** lies in a tray on top of the elbow, capsule side down, with a lid over it. The capsule is a light press fit in its bore, and the bore sets the module's position. The PCB lies on the tray's floor, 0.5 mm clear of its walls.
+- **The tube's key:** a flat on top of its room end, in the elbow's socket, keeps the roof on top. Everywhere in the foam the tube is round, so it seals all around. Its end bears on the socket's bottom, a 45° cone, and an M2 screw through the elbow's side, tapped into the tube's wall, holds it there: the tube can't slide away into the foam.
+- **The module** lies in a tray on top of the elbow, capsule side down, with a lid over it. The capsule is a light press fit in its bore, and the bore sets the module's position. The PCB lies on the tray's floor, 1.5 mm clear of its long walls, room for tweezers to lift it out, and 0.5 mm at its ends. The lid's rim clips into a groove in the tray's walls.
 
 <p align="center"><img src="images/part_mic_view.png" width="420" alt="The microphone tube in a piece of the foam, seen from the room: the tube through the foam, the elbow on the room face with its two screws, the tray and its lid on top"></p>
 
 **Installing it.** Put it above the vent unit, anywhere in the 96 mm of uncovered foam between the lips, clear of the vent's chassis and its electronics box.
 
-1. Tap the lower part's four 1.6 mm holes M2, and screw the upper part on from inside the tray with four M2 × 6 countersunk screws.
+1. Tap the lower part's four 1.6 mm holes M2, and screw the upper part on from inside the tray with four M2 × 6 countersunk screws. Tap the tube's 1.6 mm hole M2 too, gently: its wall is 1.7 mm.
 2. Drill the 10 mm hole straight through the foam, square to its faces, with a long bit.
-3. Push the tube in from the room side, cut end first, until its keyed end stands 6.5 mm out of the room face, the flat on top.
-4. Slide the elbow onto it, its flange flat on the foam, and screw the flange on.
+3. Push the tube in from the room side, cut end first, until its keyed end stands about 9 mm out of the room face, the flat on top.
+4. Slide the elbow onto it, its flange flat on the foam: the socket's bottom pushes the tube home. Screw the flange on, then the M2 × 6 countersunk screw through the elbow's side into the tube. Snug it, don't force it: it holds the tube in only four threads.
 5. Solder three wires to the module: VDD, GND and OUT, to J7's 3V3, GND and IN. Tie its GAIN pin to VDD (40 dB) and leave A/R open, as in the [firmware README](../firmware/README.md#wiring). Wires are better than a header: a straight header's pins would hit the lid.
 6. Press the capsule into its bore, the wires out through the tray's notch, and press the lid on.
 
@@ -185,16 +185,16 @@ For the firmware's [audio mode](../firmware/README.md#wiring), the MAX9814 micro
 
 | Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
 |---|:---:|---|---|---|---|
-| `mic_tube` | <img src="images/part_mic_tube.png" height="200"> | 1 | The tube: 10.4 outside, 7 inside, through the foam and 12 mm past its outdoor face (1.6 mm at the bottom of the 45° cut). Its last 6.5 mm on the room side, in the elbow, has a 0.5 mm flat on top | 10.4 × 10.4 × 69.3 | Standing on its room end, the cut on top. A 5 mm brim helps |
-| `mic_elbow_lower` | <img src="images/part_mic_elbow_lower.png" width="180"> | 1 | The elbow's lower part: the flange, with 2 countersunk holes for the foam screws, the tube's socket and the start of the sound path, which turns up as a teardrop. Four 1.6 mm holes, 4.5 mm deep, to tap M2 | 40 × 14.6 × 28.1 | Lying on its flange: the socket is a vertical hole, the teardrop's point up |
-| `mic_elbow_upper` | <img src="images/part_mic_elbow_upper.png" width="180"> | 1 | The elbow's upper part: the sound path up to the capsule's 9.85 mm bore, the tray for the module (a groove under the header's holes for their solder, a notch for the cable), and four countersunk M2 holes in the tray's floor, in pockets under the PCB | 18.7 × 31.3 × 12.7 | Standing as installed, on the split: the capsule's bore comes out round. The slope under the tray is 45° or steeper |
-| `mic_lid` | <img src="images/part_mic_lid.png" width="180"> | 1 | The tray's lid: a friction fit, its rim 0.1 mm inside the walls, clear of the module's parts | 18.7 × 31.3 × 2.6 | On its top, rim up |
+| `mic_tube` | <img src="images/part_mic_tube.png" height="200"> | 1 | The tube: 10.4 outside, 7 inside, through the foam and 12 mm past its outdoor face (1.6 mm at the bottom of the 45° cut). Its last 9.1 mm on the room side, in the elbow, has a 0.5 mm flat on top, and a 1.6 mm hole on its side to tap M2 | 10.4 × 10.4 × 71.9 | Standing on its room end, the cut on top. A 5 mm brim helps |
+| `mic_elbow_lower` | <img src="images/part_mic_elbow_lower.png" width="180"> | 1 | The elbow's lower part: the flange, with 2 countersunk holes for the foam screws, the tube's socket, its bottom a 45° cone, and the start of the sound path, which turns up as a teardrop. Four 1.6 mm holes, 4.5 mm deep, to tap M2, and on its side a countersunk M2 clearance hole into the socket, for the tube's screw | 43 × 14.6 × 28.1 | Lying on its flange: the socket is a vertical hole, the teardrop's point up |
+| `mic_elbow_upper` | <img src="images/part_mic_elbow_upper.png" width="180"> | 1 | The elbow's upper part: the sound path up to the capsule's 9.85 mm bore, the tray for the module (a groove under the header's holes for their solder, a notch for the cable, a groove along the long walls for the lid's clip), and four countersunk M2 holes in the tray's floor, in pockets under the PCB | 20.7 × 31.3 × 13.7 | Standing as installed, on the split: the capsule's bore comes out round. The slope under the tray is 45° or steeper |
+| `mic_lid` | <img src="images/part_mic_lid.png" width="180"> | 1 | The tray's lid: its rim 0.1 mm inside the walls, clear of the module's parts, with a 0.3 mm 45° ridge on each long side that clips into the walls' groove | 20.7 × 31.3 × 3.6 | On its top, rim up |
 | `mic_bore_test` | <img src="images/part_mic_bore_test.png" width="180"> | 1 | Three capsule bores, 9.75, 9.85 and 9.95 mm, as deep as the elbow's | 44 × 14.6 × 8.3 | Flat |
 
 | Item | Qty | Use |
 |---|---|---|
 | Short screws, countersunk, 8 mm head | 2 | The elbow's flange, into the foam: the latch cover's screws |
-| M2 × 6 countersunk screws, and an M2 tap | 4 | Joining the elbow's two parts: about 2 mm through the upper part, 4 mm into the lower one |
+| M2 × 6 countersunk screws, and an M2 tap | 5 | Four joining the elbow's two parts: about 2 mm through the upper part, 4 mm into the lower one. One through the elbow's side into the tube |
 | PETG filament | About 20 g | All four parts |
 
 ## Slicer settings
