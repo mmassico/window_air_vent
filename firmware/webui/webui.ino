@@ -16,6 +16,7 @@
 #include "As5600.h"
 #include "Tmc2209.h"
 #include "Sound.h"
+#include "Scd40.h"
 #include "Console.h"
 #include "App.h"
 #include "Settings.h"
@@ -268,6 +269,8 @@ static const char* HELP =
     "tmc rd <reg>                read a register\n"
     "tmc wr <reg> <value>        write a register (test mode)\n"
     "i2c scan <0|1>              the addresses that answer (0: SCD40 bus, 1: AS5600 bus)\n"
+    "co2 offset [C]              the SCD40's temperature offset (its own heat): show, or set and keep it\n"
+    "co2 tref <C>                a reference thermometer reads this beside it now: sets the offset to match\n"
     "sound [ms]                  a fresh burst from the microphone (default 500 ms): dBA, dBFS, bias, clipping\n"
     "sound cal <dBA>             the sound is this level now (a sound level meter, A): sets micCal and saves\n"
     "wifi <ssid> <password>      join a network, name without spaces (serial only); wifi forget erases it\n"
@@ -531,6 +534,36 @@ static void shell(int argc, char* argv[], Print& out)
             HwBusUnlock();
             out.printf("EN pin %s, DIAG pin %s\n", digitalRead(PIN_TMC_EN) ? "high (driver off)" : "low (driver on)",
                        digitalRead(PIN_TMC_DIAG) ? "high" : "low");
+        }
+    }
+
+    else if (!strcmp(c, "co2") && argc >= 2 && (!strcmp(argv[1], "offset") || !strcmp(argv[1], "tref")))
+    {
+        // The sensor takes these in idle mode only: stop its measurement, then start it again (HwPoll carries on).
+        bool  tref = !strcmp(argv[1], "tref");
+        bool  set = argc >= 3;
+        float val = set ? atof(argv[2]) : 0, before = 0, after = 0;
+        if (tref && (!set || !hw.scd || hw.scdT == 0))
+        {
+            out.print("co2 tref <C>: needs the reference's temperature, and a reading from the SCD40 first\n");
+            return;
+        }
+        bool ok = Scd40StopPeriodic() && Scd40GetTempOffset(&before);
+        if (ok && set)
+        {
+            float off = tref ? before + (hw.scdT - val) : val;
+            ok = Scd40SetTempOffset(off) && Scd40Persist() && Scd40GetTempOffset(&after);
+        }
+        Scd40StartPeriodic();
+        if (!ok)
+            out.print("SCD40: no answer\n");
+        else if (!set)
+            out.printf("SCD40 temperature offset: %.2f C (its reading: %.1f C)\n", before, hw.scdT);
+        else
+        {
+            Log("SCD40 temperature offset: %.2f -> %.2f C, kept in the sensor", before, after);
+            out.printf("SCD40 temperature offset: %.2f -> %.2f C, kept in the sensor; its readings change by %+.1f C "
+                       "from the next one (in 5 s)\n", before, after, before - after);
         }
     }
 

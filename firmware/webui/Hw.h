@@ -19,6 +19,7 @@ struct HwStatus
     float    travel;                            // degrees between the closed and open stops; 0: not measured
     int      duty[2], rpm[2];                   // fans: 0 intake, 1 exhaust
     float    snd;                               // last sound level, dB (calibrated or dBFS)
+    float    scdT;                              // the SCD40's last temperature, C (after its offset)
 };
 
 void HwBegin();

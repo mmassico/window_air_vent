@@ -351,6 +351,9 @@ void HwPoll(Inputs* in)
         {
             scdLast = now;
             in->co2 = r.co2;   in->co2Ok = true;
+            portENTER_CRITICAL(&s_mux);
+            s_st.scdT = r.tempC;
+            portEXIT_CRITICAL(&s_mux);
             if (!s_st.tin)                          // the SCD40's own temperature, unless the indoor DS18B20 answers
             {
                 in->tin = r.tempC;

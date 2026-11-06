@@ -133,3 +133,27 @@ bool Scd40IsRunning()
 {
     return s_running;
 }
+
+bool Scd40GetTempOffset(float* c)
+{
+    uint16_t w;
+    if (!query(0x2318, &w, 1))
+        return false;
+    *c = 175.0f * w / 65536.0f;
+    return true;
+}
+
+bool Scd40SetTempOffset(float c)
+{
+    uint16_t w = (uint16_t)lroundf(fminf(fmaxf(c, 0.0f), 20.0f) * 65536.0f / 175.0f);
+    bool ok = sendCommand(0x241d, &w, 1);
+    delay(1);
+    return ok;
+}
+
+bool Scd40Persist()
+{
+    bool ok = sendCommand(0x3615);
+    delay(800);
+    return ok;
+}
