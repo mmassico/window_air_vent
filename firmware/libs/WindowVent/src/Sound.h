@@ -11,6 +11,8 @@
 #define SOUND_HPF_HZ    150
 #define SOUND_MAX_MS    500     // longest burst (the sample buffer holds SOUND_RATE * SOUND_MAX_MS / 1000 samples)
 
+extern const float SOUND_A_SOS[2][5];   // the A-weighting at 8000 samples/s, two biquads: b0 b1 b2 a1 a2 (a0 = 1)
+
 struct SoundReading
 {
     float dbfs;         // level of the burst, after the high-pass filter

@@ -15,7 +15,7 @@
 #include "Pins.h"
 #include "As5600.h"
 #include "Tmc2209.h"
-#include "Sound.h"
+#include "SoundStream.h"
 #include "Scd40.h"
 #include "Console.h"
 #include "App.h"
@@ -161,6 +161,7 @@ static void broadcast()
         doc["time"] = tm;
     doc["mode"]      = ControlModeName(ControlMode());
     doc["bootMode"]  = ControlModeName(g_set.mode);
+    doc["setRev"]    = SettingsRev();
     doc["boostLeft"] = ControlBoostLeftS();
 
     JsonObject in = doc["in"].to<JsonObject>();
@@ -271,7 +272,8 @@ static const char* HELP =
     "i2c scan <0|1>              the addresses that answer (0: SCD40 bus, 1: AS5600 bus)\n"
     "co2 offset [C]              the SCD40's temperature offset (its own heat): show, or set and keep it\n"
     "co2 tref <C>                a reference thermometer reads this beside it now: sets the offset to match\n"
-    "sound [ms]                  a fresh burst from the microphone (default 500 ms): dBA, dBFS, bias, clipping\n"
+    "sound [ms]                  the microphone over the last ms (default 1000, up to 8000): dBA, loudest 1/8 s,\n"
+    "                            bias, clipping\n"
     "sound cal <dBA>             the sound is this level now (a sound level meter, A): sets micCal and saves\n"
     "wifi <ssid> <password>      join a network, name without spaces (serial only); wifi forget erases it\n"
     "pass <password>             the password of the web console and firmware updates; pass - removes it\n"
@@ -570,21 +572,28 @@ static void shell(int argc, char* argv[], Print& out)
     else if (!strcmp(c, "sound"))
     {
 #if AUDIO_MODE
-        SoundReading r;
+        SoundStats r;
         bool cal = argc == 3 && !strcmp(argv[1], "cal");
-        long ms = 500;
+        long ms = 1000;
         if (!cal && argc > 1 && !argInt(argc, argv, 1, &ms, out))
             return;
-        SoundMeasure(ms, &r);
+        uint32_t n = constrain(ms * SOUND_STREAM_PER_S / 1000, 1L, (long)SOUND_STREAM_RING);
+        uint32_t count = SoundStreamCount(), from = count > n ? count - n : 0;
+        if (!SoundStreamRead(&from, &r))
+        {
+            out.print("sound: no samples yet\n");
+            return;
+        }
         if (cal)
         {
             g_set.micCal = atof(argv[2]) - r.dba;
             bool saved = SettingsSave();
             Log("Microphone calibrated: micCal %.1f dB%s", g_set.micCal, saved ? "" : ", NOT saved");
         }
-        out.printf("%.1f dBFS A-weighted -> %.1f dBA (micCal %.1f); %.1f dBFS flat (150 Hz high-pass), bias %d mV, "
-                   "peak to peak %d counts%s, %.0f samples/s\n", r.dba, r.dba + g_set.micCal, g_set.micCal, r.dbfs,
-                   r.dcMv, r.p2p, r.clipped ? " CLIPPED" : "", r.rateHz);
+        out.printf("%.1f dBFS A-weighted -> %.1f dBA, loudest 1/8 s %.1f dBA (micCal %.1f); %.1f dBFS flat (150 Hz "
+                   "high-pass), bias %d mV, peak to peak %d counts%s, %.0f samples/s, over %.3f s\n", r.dba,
+                   r.dba + g_set.micCal, r.dbaMax + g_set.micCal, g_set.micCal, r.dbfs, r.dcMv, r.p2p,
+                   r.clipped ? " CLIPPED" : "", r.rateHz, r.blocks / (float)SOUND_STREAM_PER_S);
 #else
         out.print("sound: not in audio mode (AUDIO_MODE in Pins.h)\n");
 #endif
@@ -788,7 +797,10 @@ void loop()
         if (g_sim.on)
             SimInputs(&s_in);
         else
+        {
             s_in = s_hwIn;
+            s_hwIn.sndMax = SND_NONE;   // taken: the next step gets what comes after
+        }
         s_in.minuteOfDay = NetMinuteOfDay();
         float dtModel = g_sim.on && g_sim.model ? dt * g_sim.speed : dt;   // the control and the history follow model time
         ControlStep(s_in, dtModel, &s_out);

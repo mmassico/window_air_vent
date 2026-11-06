@@ -8,7 +8,7 @@
 // A-weighting at 8000 samples/s: the analog filter's poles at 20.6 Hz (twice), 107.7 Hz and 737.9 Hz, by the
 // bilinear transform, 0 dB at 1 kHz. Its two poles at 12.2 kHz are left out: they act above 4 kHz, where the
 // transform would bend the response. Two biquads: b0 b1 b2 a1 a2 (a0 = 1).
-static const float A_SOS[2][5] = {
+const float SOUND_A_SOS[2][5] = {
     { 0.8983096816f, -1.7966193631f, 0.8983096816f, -1.4695579119f, 0.5060072156f },
     { 1.0f,          -2.0f,          1.0f,          -1.9679028120f, 0.9681603694f },
 };
@@ -75,7 +75,7 @@ bool SoundMeasure(uint32_t ms, SoundReading* r)
         float v = x;                                // A-weighting, direct form I
         for (int k = 0; k < 2; k++)
         {
-            const float* c = A_SOS[k];
+            const float* c = SOUND_A_SOS[k];
             float* z = st[k];
             float o = c[0] * v + c[1] * z[0] + c[2] * z[1] - c[3] * z[2] - c[4] * z[3];
             z[1] = z[0]; z[0] = v;

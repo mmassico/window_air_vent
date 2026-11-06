@@ -7,6 +7,7 @@ static portMUX_TYPE s_mux = portMUX_INITIALIZER_UNLOCKED;
 
 // Sums over the current interval: one per field, with its number of valid samples.
 static struct { float sum[7]; int n[7]; } s_acc;
+static float s_sndMax = SND_NONE;                   // the sound keeps its loudest in the interval: a bark stays visible
 
 void HistBegin()
 {
@@ -26,6 +27,7 @@ static int16_t avg(int i, float scale)
 
 void HistAdd(const Inputs& in, float fanPct, float damperDeg, float dt)
 {
+    s_sndMax = max(s_sndMax, in.sndOk ? in.sndMax : SND_NONE);
     const bool  ok[7] = { in.co2Ok, in.tinOk, in.toutOk, in.rhOk, in.sndOk, true, true };
     const float v[7]  = { in.co2, in.tin, in.tout, in.rh, in.snd, fanPct, damperDeg };
     for (int i = 0; i < 7; i++)
@@ -42,7 +44,8 @@ void HistAdd(const Inputs& in, float fanPct, float damperDeg, float dt)
     r.tin    = avg(1, 10);
     r.tout   = avg(2, 10);
     r.rh     = avg(3, 10);
-    r.snd    = avg(4, 10);
+    r.snd    = s_sndMax > SND_NONE ? (int16_t)lroundf(s_sndMax * 10) : HIST_NONE;
+    s_sndMax = SND_NONE;
     r.fan    = (uint8_t)constrain(avg(5, 1), 0, 100);
     r.damper = (uint8_t)constrain(avg(6, 1), 0, 255);
     memset(&s_acc, 0, sizeof(s_acc));

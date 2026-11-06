@@ -93,6 +93,47 @@ function paint(r) {
   r.style.setProperty('--p', ((r.value - r.min) / (r.max - r.min)) * 100 + '%');
 }
 
+// On a touch screen, a native slider jumps to the finger as soon as it lands, even if the finger meant to scroll the
+// page. There, the field takes the touches instead: a vertical swipe scrolls, a tap does nothing, and a horizontal
+// drag moves the value by the distance dragged (the whole bar's width being the whole range).
+const TOUCH = matchMedia('(hover: none) and (pointer: coarse)').matches;
+const TOUCH_SLOP = 10;                          // px: the finger must move this far before its direction counts
+const TOUCH_BAR = 16;                           // px: how far above or below the bar a touch still takes it
+
+function touchSlider(el, rng) {
+  rng.style.pointerEvents = 'none';
+  el.style.touchAction = 'pan-y';               // vertical swipes stay the browser's
+  let start = null, drag = false, x0 = 0, v0 = 0;
+  el.addEventListener('touchstart', (e) => {
+    start = null;
+    if (e.touches.length !== 1 || e.target.closest('input[type=number]')) return;
+    const t = e.touches[0], r = rng.getBoundingClientRect();
+    if (t.clientY >= r.top - TOUCH_BAR && t.clientY <= r.bottom + TOUCH_BAR) start = { x: t.clientX, y: t.clientY };
+  }, { passive: true });
+  el.addEventListener('touchmove', (e) => {
+    if (!start) return;
+    const t = e.touches[0];
+    if (!drag) {
+      const dx = Math.abs(t.clientX - start.x), dy = Math.abs(t.clientY - start.y);
+      if (dx < TOUCH_SLOP && dy < TOUCH_SLOP) return;
+      if (dy >= dx) { start = null; return; }
+      drag = el.dragging = true;
+      x0 = t.clientX;
+      v0 = +rng.value;
+    }
+    rng.value = v0 + ((t.clientX - x0) / rng.clientWidth) * (rng.max - rng.min);
+    rng.dispatchEvent(new Event('input'));
+  }, { passive: true });
+  const end = () => {
+    start = null;
+    if (!drag) return;
+    drag = el.dragging = false;
+    rng.dispatchEvent(new Event('change'));
+  };
+  el.addEventListener('touchend', end);
+  el.addEventListener('touchcancel', end);
+}
+
 function buildField(el, onChange) {
   const { min, max, step, unit = '', label = '' } = el.dataset;
   el.innerHTML = '<label></label><div class="val"><input type="number"><span class="unit"></span></div><input type="range">';
@@ -120,6 +161,10 @@ function buildField(el, onChange) {
     rng.value = v;
     paint(rng);
   };
+  if (TOUCH) {
+    touchSlider(el, rng);
+    return;
+  }
   rng.addEventListener('pointerdown', () => (el.dragging = true));
   window.addEventListener('pointerup', () => (el.dragging = false));
 }
@@ -143,6 +188,42 @@ function fillSettings() {
   });
   $('motorRev').checked = settings.damper.motorDir < 0;
   settingsChanged();
+}
+
+// Another page (or the console) changed the settings: reload them. Edits not saved here stay: a key takes the new
+// value only if it still has the value it was loaded with.
+function mergeEdits(edit, base, theirs) {
+  for (const k of Object.keys(theirs)) {
+    const t = theirs[k];
+    if (t && typeof t === 'object' && !Array.isArray(t)) {
+      if (!edit[k]) edit[k] = {};
+      mergeEdits(edit[k], (base && base[k]) || {}, t);
+    } else if (JSON.stringify(edit[k]) === JSON.stringify(base[k])) {
+      edit[k] = t;
+    }
+  }
+}
+
+let setRev = null, syncing = false, syncAgain = false;
+
+async function syncSettings() {
+  if (!saved) return;                         // loadSettings is still at it
+  if (syncing) { syncAgain = true; return; }
+  syncing = true;
+  do {
+    syncAgain = false;
+    try {
+      const theirs = await (await fetch(API + '/api/settings')).json();
+      if (JSON.stringify(theirs) !== JSON.stringify(saved)) {
+        mergeEdits(settings, saved, theirs);
+        saved = theirs;
+        fillSettings();
+      }
+    } catch (e) {
+      setRev = null;                          // try again with the next state
+    }
+  } while (syncAgain);
+  syncing = false;
 }
 
 function initSettings() {
@@ -340,7 +421,7 @@ function makeCharts() {
   ];
   const tAxes = [{ ...axisStyle() }, { ...axisStyle(), scale: 'C', size: 50, values: (u, v) => v.map((x) => x + DEG) }];
   if (chartSound) {
-    tSeries.push({ label: 'Outdoor sound', scale: 'dBA', stroke: cssVar('--poor'), width: 1.5, value: (u, v) => (v == null ? '--' : v.toFixed(0) + ' dBA') });
+    tSeries.push({ label: 'Outdoor sound, loudest', scale: 'dBA', stroke: cssVar('--poor'), width: 1.5, value: (u, v) => (v == null ? '--' : v.toFixed(0) + ' dBA') });
     tAxes.push({ ...axisStyle(), scale: 'dBA', side: 1, grid: { show: false }, size: 64, values: (u, v) => v.map((x) => x + ' dBA') });
   }
   const temp = new uPlot({
@@ -430,6 +511,9 @@ function uptime(s) {
   const d = Math.floor(s / 86400), h = Math.floor(s / 3600) % 24, m = Math.floor(s / 60) % 60;
   return (d ? d + ' d ' : '') + h + ' h ' + String(m).padStart(2, '0') + ' min';
 }
+
+const STATE_GAP_MS = 15000;
+let lastStateAt = 0;
 
 function onState(s) {
   S = s;
@@ -529,10 +613,23 @@ function onState(s) {
     $('manPct').setValue(settings.mode.manualPct);
   }
 
+  if (s.setRev !== setRev) {                  // saved somewhere: maybe in another page
+    setRev = s.setRev;
+    syncSettings();
+  }
+  // No state for a while (the page was in the background, or the connection dropped): the vent kept its history, so
+  // take it again, or the graphs would join the two ends of the gap with a straight line.
+  const paused = lastStateAt && Date.now() - lastStateAt > STATE_GAP_MS;
+  lastStateAt = Date.now();
+
   // charts: a point per state, on the history clock
   if (s.clock < clockNow - 5) {               // the vent restarted: its clock began again
     clockNow = s.clock;
     loadHistory();
+  } else if (paused) {
+    clockNow = s.clock;
+    loadHistory();
+    syncSettings();
   } else if (s.clock > clockNow || !D.t.length) {
     clockNow = s.clock;
     pushPoint(s.clock, s.in.co2, s.out.fan, s.in.tin, s.in.tout, s.in.rh, s.in.snd);

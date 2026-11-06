@@ -232,8 +232,16 @@ void SettingsLoad()
         SettingsFromJson(&g_set, doc.as<JsonObjectConst>());
 }
 
+static uint32_t s_rev;
+
+uint32_t SettingsRev()
+{
+    return s_rev;
+}
+
 bool SettingsSave()
 {
+    s_rev++;
     JsonDocument doc;
     SettingsToJson(g_set, doc.to<JsonObject>());
     String js;

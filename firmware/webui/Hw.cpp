@@ -7,6 +7,7 @@
 #include "Fans.h"
 #include "Ds18b20.h"
 #include "Sound.h"
+#include "SoundStream.h"
 #include "Log.h"
 
 #define MICROSTEPS      16
@@ -298,11 +299,12 @@ void HwBegin()
     pinMode(PIN_TMC_DIAG, INPUT);
 
     FansBegin();
-    analogReadResolution(12);
     Ds18b20Begin(PIN_TEMP_OUT);
 #if AUDIO_MODE
-    SoundBegin(PIN_MIC, PIN_MIC_LINK);
+    if (!SoundStreamBegin(PIN_MIC, PIN_MIC_LINK, PIN_12V_SENSE))    // it also reads the 12 V sense
+        Log("Microphone: the ADC's continuous mode didn't start");
 #else
+    analogReadResolution(12);
     Ds18b20Begin(PIN_TEMP_IN);
 #endif
 
@@ -403,15 +405,27 @@ void HwPoll(Inputs* in)
     }
 
 #if AUDIO_MODE
-    // Sound: a 100 ms burst every 2 s (it blocks the loop meanwhile; the damper has its own task).
-    if (now - sndLast >= 2000)
+    // Sound: continuous (SoundStream.h). The level over the last second, and the loudest block since the control's
+    // last step, which clears sndMax: nothing between two readings is lost.
+    if (now - sndLast >= 250)
     {
+        static uint32_t cursor, lastCount, lastNew;
         sndLast = now;
-        SoundReading r;
-        bool ok = SoundMeasure(100, &r) && r.dcMv > 300 && r.dcMv < 3000;   // no bias: no microphone
+        SoundStats st;
+        if (SoundStreamRead(&cursor, &st))
+            in->sndMax = max(in->sndMax, st.dbaMax + g_set.micCal);     // A-weighted: dBA once calibrated
+        uint32_t count = SoundStreamCount();
+        if (count != lastCount)
+        {
+            lastCount = count;
+            lastNew = now;
+        }
+        uint32_t sec = count > SOUND_STREAM_PER_S ? count - SOUND_STREAM_PER_S : 0;
+        bool ok = now - lastNew < 2000 && SoundStreamRead(&sec, &st)
+                  && st.dcMv > 300 && st.dcMv < 3000;   // no bias: no microphone
         in->sndOk = ok;
         if (ok)
-            in->snd = r.dba + g_set.micCal;     // A-weighted: dBA once calibrated
+            in->snd = st.dba + g_set.micCal;
         portENTER_CRITICAL(&s_mux);
         s_st.mic = ok;
         s_st.snd = ok ? in->snd : 0;
@@ -425,7 +439,12 @@ void HwPoll(Inputs* in)
     if (now - v12Last >= 1000)
     {
         v12Last = now;
-        float v = analogReadMilliVolts(PIN_12V_SENSE) * (V12_DIV_TOP + V12_DIV_BOTTOM) / V12_DIV_BOTTOM / 1000.0f;
+#if AUDIO_MODE
+        float mv = SoundStreamOtherMv();
+#else
+        float mv = analogReadMilliVolts(PIN_12V_SENSE);
+#endif
+        float v = mv * (V12_DIV_TOP + V12_DIV_BOTTOM) / V12_DIV_BOTTOM / 1000.0f;
         portENTER_CRITICAL(&s_mux);
         s_st.v12 = v;
         s_st.scd = scdRunning;

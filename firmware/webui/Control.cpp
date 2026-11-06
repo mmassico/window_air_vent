@@ -198,7 +198,7 @@ void ControlStep(const Inputs& in, float dt, Outputs* out)
         out->limits |= LIM_QUIET;
     }
 
-    if (s.noiseEnabled && in.sndOk && in.snd >= s.noiseDb)
+    if (s.noiseEnabled && in.sndOk && in.sndMax >= s.noiseDb)   // the loudest 1/8 s: a short sound counts
         s_noiseLeftS = s.noiseHoldS;
     else
         s_noiseLeftS = max(0.0f, s_noiseLeftS - dt);

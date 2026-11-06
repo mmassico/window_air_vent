@@ -56,7 +56,7 @@ void SimInputs(Inputs* in)
     in->tin  = g_sim.tin;  in->tinOk  = true;
     in->rh   = g_sim.rh;   in->rhOk   = true;
     in->tout = g_sim.tout; in->toutOk = true;
-    in->snd  = g_sim.snd;  in->sndOk  = true;
+    in->snd  = g_sim.snd;  in->sndOk  = true;  in->sndMax = g_sim.snd;
 }
 
 void SimToJson(JsonObject o)

@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 #define FW_NAME      "window-vent webui"
-#define FW_VERSION   "0.2.0"
+#define FW_VERSION   "0.2.2"
 
 #define CURVE_POINTS 5          // CO2 to fan look-up curve: ppm -> %, linear between the points
 
@@ -65,6 +65,8 @@ struct Settings
     char     tz[48];                    // POSIX TZ string
 };
 
+#define SND_NONE -999.0f
+
 // One set of sensor readings (from the hardware, or the simulation).
 struct Inputs
 {
@@ -72,7 +74,8 @@ struct Inputs
     float tin;   bool tinOk;            // indoor C
     float rh;    bool rhOk;             // %
     float tout;  bool toutOk;           // outdoor C
-    float snd;   bool sndOk;            // dB
+    float snd;   bool sndOk;            // dB, over the last second
+    float sndMax;                       // the loudest 1/8 s since the last control step, dB (SND_NONE: none yet)
     int   minuteOfDay;                  // local time, -1 if unknown
 };
 

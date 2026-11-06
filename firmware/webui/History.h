@@ -17,7 +17,7 @@ struct __attribute__((packed)) HistRec
     int16_t  co2;                       // ppm
     int16_t  tin, tout;                 // 0.1 C
     int16_t  rh;                        // 0.1 %
-    int16_t  snd;                       // 0.1 dB
+    int16_t  snd;                       // 0.1 dB, the loudest 1/8 s in the interval
     uint8_t  fan;                       // %
     uint8_t  damper;                    // degrees from closed (0 to 255)
 };
