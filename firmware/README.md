@@ -1,6 +1,6 @@
 # Firmware
 
-> **Bench-tested with the parts, in `baremetal/`.** Both sketches compile without warnings (Arduino core esp32 3.3.12). On the bench, every part answers and works: the SCD40, the AS5600, the outdoor DS18B20, the MAX9814, the TMC2209 and the motor, both fans and the 12 V sense. The web application runs on the complete vent unit: every part answers, and the console, the firmware update over the Wi-Fi and both of its rollbacks (a crash at boot, no confirmation within 5 min) work. At every boot, a boundary test finds the damper's two ends.
+> **Running on the installed vent, in `webui/`.** Both sketches compile without warnings (Arduino core esp32 3.3.12). The web application runs the complete unit in a window, and it's now updated over the Wi-Fi: every part answers, and the console, the firmware update and both of its rollbacks (a crash at boot, no confirmation within 5 min) work. At every boot, a boundary test finds the damper's two ends. The SCD40's temperature matches two other thermometers within 0.2 °C, so its factory offset stays. Its CO₂ is still to be checked against a calibrated meter. The microphone was calibrated on the bench against a sound level meter, before it went into its tube; it's too noisy outdoors to repeat that in place, so the tube's effect on the level hasn't been measured. `baremetal/` checked every part on the bench first.
 
 Two sketches and the library they share:
 

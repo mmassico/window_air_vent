@@ -14,7 +14,7 @@ The insert in the window, seen from the room, with the window and the foam drawn
 
 Side cap in blue, sash cap in green, top cap in orange, bottom cap in yellow. The side and sash caps' pieces alternate between a light and a dark shade. In OpenSCAD: `part = "assembly_view"`, and `explode = 50` to spread the pieces apart.
 
-> **Status: ready to print.** The profile slices, the corner pieces, a joint and the latch slice are printed and fit the window, after a few corrections: the top frame's room-side rib sits 1.5 mm further toward the room than the bottom one, the sash's groove has screw heads near its ends, and a soft strip lies on the side frame channel's floor. The full caps are exported for the measured foam; printing them is next.
+> **Status: in use.** The vent runs in the window in this foam insert, and the outdoor microphone's tube is printed and installed through it. The profile slices, the corner pieces, a joint and the latch slice are printed and fit the window, after a few corrections: the top frame's room-side rib sits 1.5 mm further toward the room than the bottom one, the sash's groove has screw heads near its ends, and a soft strip lies on the side frame channel's floor. The full caps are exported for the measured foam.
 
 ## How it works
 
