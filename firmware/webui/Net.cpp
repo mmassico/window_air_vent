@@ -41,6 +41,7 @@ static void join()
 {
     WiFi.setHostname(g_set.host);
     WiFi.mode(s_ap ? WIFI_AP_STA : WIFI_STA);
+    WiFi.setSleep(false);                           // no modem sleep: on mains power, answers matter more
     WiFi.setAutoReconnect(true);
     WiFi.begin(s_ssid.c_str(), s_pass.c_str());
     s_joinStart = millis();

@@ -279,6 +279,7 @@ static const char* HELP =
     "sound cal <dBA>             the sound is this level now (a sound level meter, A): sets micCal and saves\n"
     "wifi <ssid> <password>      join a network, name without spaces (serial only); wifi forget erases it\n"
     "pass <password>             the password of the web console and firmware updates; pass - removes it\n"
+    "cpu                         CPU per task and core since the last cpu command (the first: since boot)\n"
     "ota                         the firmware slots, and whether this one is confirmed\n"
     "reboot                      restart\n";
 
@@ -639,6 +640,59 @@ static void shell(int argc, char* argv[], Print& out)
         {
             Log("Password %s", off ? "removed" : "set");
             out.printf("Password %s\n", off ? "removed: the web console and updates are refused" : "set");
+        }
+    }
+
+    else if (!strcmp(c, "cpu"))
+    {
+        // FreeRTOS's run-time counters (time in interrupts counts for the task they interrupted). Per task: its share
+        // of one core, so a core's tasks add up to 100.
+        #define CPU_TASKS 40
+        static struct { char name[configMAX_TASK_NAME_LEN]; uint32_t t; } prev[CPU_TASKS];
+        static int      prevN;
+        static uint32_t prevTotal;
+        static TaskStatus_t st[CPU_TASKS];
+        uint32_t total = 0;
+        int n = uxTaskGetSystemState(st, CPU_TASKS, &total);
+        uint32_t window = total - prevTotal;
+        out.printf("%.1f s, %d tasks. Loop's longest pass %.1f ms\n", window / 1e6f, n, s_loopMaxUs / 1000.0f);
+        for (int i = 0; i < n; i++)     // busiest first
+            for (int j = i + 1; j < n; j++)
+                if (st[j].ulRunTimeCounter - 0 > st[i].ulRunTimeCounter)
+                {
+                    TaskStatus_t x = st[i];
+                    st[i] = st[j];
+                    st[j] = x;
+                }
+        struct { const char* name; float pct; int core; uint32_t stack; int prio; } row[CPU_TASKS];
+        for (int i = 0; i < n; i++)
+        {
+            uint32_t was = 0;
+            for (int k = 0; k < prevN; k++)
+                if (!strcmp(prev[k].name, st[i].pcTaskName))
+                    was = prev[k].t;
+            row[i] = { st[i].pcTaskName, window ? (st[i].ulRunTimeCounter - was) * 100.0f / window : 0,
+                       st[i].xCoreID > 1 ? -1 : (int)st[i].xCoreID, (uint32_t)st[i].usStackHighWaterMark,
+                       (int)st[i].uxCurrentPriority };
+        }
+        for (int i = 0; i < n; i++)
+            for (int j = i + 1; j < n; j++)
+                if (row[j].pct > row[i].pct)
+                {
+                    auto x = row[i];
+                    row[i] = row[j];
+                    row[j] = x;
+                }
+        for (int i = 0; i < n; i++)
+            if (row[i].pct >= 0.05f || !strncmp(row[i].name, "IDLE", 4))
+                out.printf("  %-16s core %2d prio %2d  %5.1f %%  stack left %lu\n", row[i].name, row[i].core, row[i].prio,
+                           row[i].pct, (unsigned long)row[i].stack);
+        prevN = n;
+        prevTotal = total;
+        for (int i = 0; i < n; i++)
+        {
+            strlcpy(prev[i].name, st[i].pcTaskName, sizeof(prev[i].name));
+            prev[i].t = st[i].ulRunTimeCounter;
         }
     }
 

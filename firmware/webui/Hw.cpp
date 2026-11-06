@@ -22,7 +22,8 @@
 #define SEATED_DEG      5.0f        // stopped this close to closed, closing: seated on the lips, not blocked
 #define IDLE_OFF_MS     1500        // driver off this long after a move (the stepper's detent holds the damper)
 #define CAL_TIMEOUT_MS  20000       // boundary test: no stop within this (a free disc, a slipping coupling): it fails
-#define CAL_DIR_DEG     3.0f        // ... closing but the encoder went this far the other way: motorDir is inverted
+#define CAL_DIR_DEG     20.0f       // ... closing but the encoder went this far the other way: motorDir is inverted (not
+                                    //   a few degrees: a disc already on the lips bounces back when the motor slips)
 #define OPEN_MARGIN     2.0f        // the open target stays this far short of the open stop found by the test
 #define CLOSE_PUSH      2.0f        // closing aims this far past the closed stop, so it seats on the lips
 
@@ -54,6 +55,7 @@ struct Cal
     uint16_t startRaw, prevRaw;
     int32_t  pos, best, closed;     // encoder counts from startRaw, unwrapped; best: furthest so far this phase
     bool     flipped;
+    int8_t   dir0;                  // motorDir at the start: a test that fails puts it back
 };
 
 static float s_travel;              // degrees between the two stops, 0 until a test succeeded
@@ -75,8 +77,7 @@ static long calStep(Cal& c, uint16_t raw, uint32_t now)
     }
     if (c.phase == 1 && !c.flipped && c.pos > (int32_t)(CAL_DIR_DEG * 4096 / 360))
     {
-        g_set.motorDir = -g_set.motorDir;
-        s_calSave = true;
+        g_set.motorDir = -g_set.motorDir;           // for this test; saved only if it succeeds
         c.flipped = true;
         Log("Damper: the motor turns the other way: motorDir now %d; closing again", g_set.motorDir);
         c.start = c.progressAt = now;
@@ -97,14 +98,30 @@ static long calStep(Cal& c, uint16_t raw, uint32_t now)
         else
         {
             float travel = (c.best - c.closed) * 360.0f / 4096;
+            if ((travel < 20 || travel > 200) && !c.flipped)
+            {
+                // Started near the open stop with motorDir inverted: too close to tell while closing. Once, the
+                // other way.
+                g_set.motorDir = -g_set.motorDir;
+                c.flipped = true;
+                Log("Damper: only %.1f deg between the stops: trying motorDir %d", travel, g_set.motorDir);
+                c.phase = 1;
+                c.start = c.progressAt = now;
+                c.startRaw = raw;
+                c.pos = c.best = 0;
+                return -max(100L, (long)g_set.motorSpeed / 2) * g_set.motorDir;
+            }
             c.phase = 0;
             if (travel < 20 || travel > 200)
             {
+                g_set.motorDir = c.dir0;
                 Log("Damper: boundary test failed: %.1f deg between the stops; settings kept", travel);
                 return 0;
             }
             uint16_t zero = (c.startRaw + c.closed) & 0x0fff;
             if (abs(((int)zero - g_set.encZero + 2048) % 4096 - 2048) > 6)      // more than about 0.5 deg
+                s_calSave = true;
+            if (g_set.motorDir != c.dir0)
                 s_calSave = true;
             g_set.encZero = zero;
             s_travel = travel;
@@ -116,6 +133,7 @@ static long calStep(Cal& c, uint16_t raw, uint32_t now)
     if (now - c.start > CAL_TIMEOUT_MS)
     {
         c.phase = 0;
+        g_set.motorDir = c.dir0;
         Log("Damper: boundary test failed: no stop within %d s; settings kept", CAL_TIMEOUT_MS / 1000);
         return 0;
     }
@@ -166,6 +184,7 @@ static void damperTask(void*)
             s_calReq = false;
             cal = {};
             cal.phase = 1;
+            cal.dir0 = g_set.motorDir;
             cal.start = cal.progressAt = now;
             cal.startRaw = cal.prevRaw = r.raw;
             Log("Damper: boundary test: closing until it stops");
@@ -177,6 +196,7 @@ static void damperTask(void*)
             else
             {
                 cal.phase = 0;
+                g_set.motorDir = cal.dir0;
                 Log("Damper: boundary test stopped: the driver or the encoder no longer answers");
             }
             if (!cal.phase)                         // ended: move to the target afresh

@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 #define FW_NAME      "window-vent webui"
-#define FW_VERSION   "0.2.5"
+#define FW_VERSION   "0.2.7"
 
 #define CURVE_POINTS 5          // CO2 to fan look-up curve: ppm -> %, linear between the points
 
