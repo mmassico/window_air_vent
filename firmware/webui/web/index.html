@@ -101,9 +101,9 @@
       </div>
       <div class="card tile" id="sndTile" hidden>
         <div class="t-head">Outdoor sound</div>
-        <div class="t-val vrow"><span><span id="snd">--</span><small>dB</small></span><span id="sndChip" class="chip loud" hidden>Loud outside</span></div>
+        <div class="t-val vrow"><span><span id="snd">--</span><small>dBA</small></span><span id="sndChip" class="chip loud" hidden>Loud outside</span></div>
         <div class="t-sub" id="sndSub">&nbsp;</div>
-        <div class="lvlbar" id="sndBar" title="30 to 100 dB"><b id="sndMark"></b></div>
+        <div class="lvlbar" id="sndBar" title="30 to 100 dBA"><b id="sndMark"></b></div>
       </div>
     </div>
   </div>
@@ -178,10 +178,10 @@
     <div class="card">
       <div class="card-head"><h3>Outdoor noise</h3><label class="switch"><input type="checkbox" data-key="noise.enabled"><span></span></label></div>
       <div class="fields one">
-        <div class="field" data-key="noise.db" data-min="30" data-max="110" data-step="1" data-unit="dB" data-label="Too loud above"></div>
+        <div class="field" data-key="noise.db" data-min="30" data-max="110" data-step="1" data-unit="dBA" data-label="Too loud above"></div>
         <div class="field" data-key="noise.pct" data-min="0" data-max="100" data-step="5" data-unit="%" data-label="Fan cap (0: close)"></div>
         <div class="field" data-key="noise.holdS" data-min="0" data-max="1800" data-step="30" data-unit="s" data-label="Hold after the last loud reading"></div>
-        <div class="field" data-key="noise.micCal" data-min="-20" data-max="150" data-step="0.5" data-unit="dB" data-label="Microphone calibration (dBFS to dB SPL)"></div>
+        <div class="field" data-key="noise.micCal" data-min="-20" data-max="150" data-step="0.5" data-unit="dB" data-label="Microphone calibration (A-weighted dBFS to dBA)"></div>
       </div>
     </div>
   </div>
@@ -247,7 +247,7 @@
         <div class="field sim" data-sim="tin" data-min="10" data-max="35" data-step="0.1" data-unit="&deg;C" data-label="Indoor" data-manual></div>
         <div class="field sim" data-sim="tout" data-min="-35" data-max="40" data-step="0.5" data-unit="&deg;C" data-label="Outdoor"></div>
         <div class="field sim" data-sim="rh" data-min="0" data-max="100" data-step="1" data-unit="%" data-label="Humidity"></div>
-        <div class="field sim" data-sim="snd" data-min="20" data-max="100" data-step="1" data-unit="dB" data-label="Outdoor sound"></div>
+        <div class="field sim" data-sim="snd" data-min="20" data-max="100" data-step="1" data-unit="dBA" data-label="Outdoor sound"></div>
         <div class="field sim" data-sim="occupants" data-min="0" data-max="6" data-step="1" data-unit="" data-label="Occupants" data-model></div>
         <div class="field sim" data-sim="volume" data-min="10" data-max="500" data-step="5" data-unit="m&sup3;" data-label="Room volume" data-model></div>
         <div class="field sim" data-sim="leakAch" data-min="0" data-max="3" data-step="0.1" data-unit="/h" data-label="Natural air changes (leaks, open door)" data-model></div>
@@ -265,13 +265,18 @@
       <h3>Hardware</h3>
       <div class="chips" id="hwChips"></div>
       <dl class="kv" id="hwKv"></dl>
-      <div class="row"><button class="ghost" id="encZeroBtn">Damper is closed: set encoder zero</button></div>
+      <div class="row"><button class="ghost" id="damperCalBtn">Damper: run the boundary test</button></div>
     </div>
   </div>
 
   <div class="card">
-    <h3>Log</h3>
+    <h3>Log and console</h3>
     <pre id="log" class="log"></pre>
+    <form class="row" id="conForm" autocomplete="off">
+      <input type="text" id="conLine" class="coninput" maxlength="127" spellcheck="false" placeholder="A command, as on the serial console ('help' lists them)">
+      <button class="ghost" type="submit">Run</button>
+    </form>
+    <p class="muted">The console asks for the vent's password once per browser tab. Set it on the serial console: <code>pass &lt;password&gt;</code>.</p>
   </div>
 </section>
 
@@ -290,6 +295,9 @@
       <h3>Device</h3>
       <dl class="kv" id="sysKv"></dl>
       <div class="row"><button class="ghost danger" id="rebootBtn">Restart</button></div>
+      <h3>Firmware update</h3>
+      <p class="muted">The build's <code>.bin</code> (<code>webui.ino.bin</code>), with the vent's password. The vent restarts into it, and goes back to the previous firmware if the new one isn't on the Wi-Fi within 5 minutes.</p>
+      <div class="row"><input type="file" id="fwFile" accept=".bin"><button class="ghost" id="fwBtn">Update</button><span class="muted" id="fwMsg"></span></div>
     </div>
   </div>
 </section>

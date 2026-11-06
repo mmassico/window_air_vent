@@ -342,7 +342,7 @@ function makeCharts() {
     scales: { x: { time: true }, dB: { range: (u, lo, hi) => [Math.min(30, Math.floor((lo ?? 30) / 10) * 10), Math.max(80, Math.ceil((hi ?? 80) / 10) * 10)] } },
     series: [
       {},
-      { label: 'Outdoor sound', scale: 'dB', stroke: cssVar('--poor'), width: 1.5, value: (u, v) => (v == null ? '--' : v.toFixed(0) + ' dB') },
+      { label: 'Outdoor sound', scale: 'dB', stroke: cssVar('--poor'), width: 1.5, value: (u, v) => (v == null ? '--' : v.toFixed(0) + ' dBA') },
     ],
     axes: [{ ...axisStyle() }, { ...axisStyle(), scale: 'dB', size: 50 }],
   }, [D.t, D.snd], $('chartSnd'));
@@ -509,10 +509,10 @@ function onState(s) {
     if (sound && charts[2]) fitChart(charts[2]);
   }
   setText($('snd'), fmt(s.in.snd));
-  if (settings) {                                     // sound bar: 30 to 100 dB, green to the threshold, yellow above
+  if (settings) {                                     // sound bar: 30 to 100 dBA, green to the threshold, yellow above
     const n = settings.noise, pos = (v) => Math.min(100, Math.max(0, ((v - 30) / 70) * 100));
     const th = pos(n.db), loud = s.in.snd !== null && s.in.snd >= n.db;
-    setText($('sndSub'), 'Threshold: ' + fmt(n.db) + ' dB' + (n.enabled ? '' : ' (control off)'));
+    setText($('sndSub'), 'Threshold: ' + fmt(n.db) + ' dBA' + (n.enabled ? '' : ' (control off)'));
     $('sndBar').style.background = `linear-gradient(90deg, color-mix(in srgb, ${cssVar('--good')} 60%, transparent) 0 ${th}%, `
       + `color-mix(in srgb, ${cssVar('--fair')} 60%, transparent) ${th}% 100%)`;
     if (s.in.snd !== null) {
@@ -559,16 +559,16 @@ function onState(s) {
   kv($('hwKv'), [
     ['12 V supply', fmt(s.hw.v12, 1) + ' V'],
     ['Encoder', s.hw.enc ? s.hw.encRaw + ' raw, ' + fmt(s.hw.hwAngle, 1) + DEG : '--'],
+    ['Damper travel', s.hw.travel != null ? fmt(s.hw.travel, 1) + DEG + ' between its stops' : 'not measured'],
     ['Loop, longest', fmt(s.sys.loopMaxMs, 1) + ' ms'],
+    ['Test mode', s.sys.test ? 'on: the console drives the fans and the damper' : 'off'],
     ['Free memory', Math.round(s.sys.heap / 1024) + ' kB RAM, ' + Math.round(s.sys.psram / 1048576 * 10) / 10 + ' MB PSRAM'],
   ]);
-  if (s.log && s.log.length) {
-    const el = $('log');
-    const atEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - 4;
-    el.textContent += s.log.join('\n') + '\n';
-    if (el.textContent.length > 20000) el.textContent = el.textContent.slice(-15000);
-    if (atEnd) el.scrollTop = el.scrollHeight;
-  }
+  if (s.logEnd < logNext) {                     // the vent restarted: its lines start again from 0
+    logNext = 0;
+    logAdd('(the vent restarted)');
+    logFetch();
+  } else if (s.log) logLines(s.logEnd - s.log.length, s.log);
 
   // system
   kv($('netKv'), [
@@ -579,11 +579,115 @@ function onState(s) {
     ['Pages open', s.net.clients],
   ]);
   kv($('sysKv'), [
-    ['Firmware', 'window-vent webui ' + s.sys.ver],
+    ['Firmware', 'window-vent webui ' + s.sys.ver + (s.sys.otaPending ? ' (new, not confirmed yet)' : '')],
+    ['Password', s.sys.pass ? 'set' : 'not set (console and updates refused)'],
     ['Local time', s.time || 'not set (no NTP yet)'],
     ['Up for', uptime(s.uptime)],
     ['Audio mode', s.hw.audio ? 'yes (microphone on GPIO 3)' : 'no'],
   ]);
+}
+
+// ------------------------------------------------------------------------------------------------
+// Log and console
+// ------------------------------------------------------------------------------------------------
+
+let logNext = 0;                                // the number of the next log line to show
+
+function logAdd(text) {
+  const el = $('log');
+  const atEnd = el.scrollTop + el.clientHeight >= el.scrollHeight - 4;
+  el.textContent += text + '\n';
+  if (el.textContent.length > 200000) el.textContent = el.textContent.slice(-150000);
+  if (atEnd) el.scrollTop = el.scrollHeight;
+}
+
+// Lines numbered from `from`: only those not shown yet.
+function logLines(from, lines) {
+  lines.forEach((l, i) => { if (from + i >= logNext) logAdd(l); });
+  logNext = Math.max(logNext, from + lines.length);
+}
+
+// What the page missed (all the vent still has, on first connecting).
+async function logFetch() {
+  try {
+    for (let n = 0; n < 20; n++) {
+      const j = await (await fetch(API + '/api/log?since=' + logNext)).json();
+      if (logNext && j.from > logNext) logAdd('(' + (j.from - logNext) + ' lines lost)');
+      logLines(j.from, j.lines);
+      if (!j.lines.length || j.from + j.lines.length >= j.end) break;
+    }
+  } catch (e) { /* offline: the WebSocket retries */ }
+}
+
+function pass() {
+  try { return sessionStorage.getItem('pass') || ''; } catch (e) { return ''; }
+}
+function askPass(why) {
+  const p = prompt((why ? why + '. ' : '') + 'The vent\'s password (console and firmware updates):');
+  if (p !== null) try { sessionStorage.setItem('pass', p); } catch (e) { /* private mode */ }
+  return p;
+}
+
+async function runCommand(line) {
+  logAdd('> ' + line);
+  if (!pass() && askPass() === null) return;
+  for (let tries = 0; tries < 3; tries++) {
+    let r, t;
+    try {
+      r = await fetch(API + '/api/console', { method: 'POST', headers: { 'X-Pass': pass() }, body: line });
+      t = await r.text();
+    } catch (e) { logAdd('(not connected)'); return; }
+    if (r.status === 401 && t.startsWith('wrong') && askPass('Wrong password') !== null) continue;
+    logAdd(t.replace(/\n$/, ''));
+    return;
+  }
+}
+
+function initConsole() {
+  const hist = [];
+  let pos = -1;
+  $('conForm').onsubmit = (e) => {
+    e.preventDefault();
+    const line = $('conLine').value.trim();
+    if (!line) return;
+    if (hist[0] !== line) hist.unshift(line);
+    hist.length = Math.min(hist.length, 30);
+    pos = -1;
+    $('conLine').value = '';
+    $('log').scrollTop = $('log').scrollHeight;
+    runCommand(line);
+  };
+  $('conLine').onkeydown = (e) => {                // up and down: earlier commands
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+    e.preventDefault();
+    pos = Math.max(-1, Math.min(hist.length - 1, pos + (e.key === 'ArrowUp' ? 1 : -1)));
+    $('conLine').value = pos < 0 ? '' : hist[pos];
+  };
+
+  $('fwBtn').onclick = () => {
+    const f = $('fwFile').files[0];
+    if (!f) { toast('Pick the .bin file first'); return; }
+    if (!confirm(`Update the firmware with ${f.name} (${Math.round(f.size / 1024)} kB)? The vent restarts into it.`)) return;
+    if (!pass() && askPass() === null) return;
+    const msg = $('fwMsg');
+    const go = () => {
+      const x = new XMLHttpRequest();
+      x.open('POST', API + '/update');
+      x.setRequestHeader('X-Pass', pass());
+      x.upload.onprogress = (e) => { if (e.lengthComputable) msg.textContent = Math.round(e.loaded * 100 / e.total) + ' %'; };
+      x.onload = () => {
+        if (x.status === 200) { msg.textContent = 'Written: the vent restarts into it'; return; }
+        let m = x.responseText;
+        try { m = JSON.parse(m).error; } catch (e) { /* not JSON */ }
+        msg.textContent = m;
+        if (x.status === 401 && m.startsWith('wrong') && askPass('Wrong password') !== null) go();
+      };
+      x.onerror = () => { msg.textContent = 'The upload failed'; };
+      msg.textContent = 'Sending...';
+      x.send(f);
+    };
+    go();
+  };
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -593,7 +697,7 @@ function onState(s) {
 function connect() {
   const conn = $('conn');
   ws = new WebSocket('ws://' + HOST + '/ws');
-  ws.onopen = () => { conn.textContent = 'Live'; conn.className = 'badge ok'; };
+  ws.onopen = () => { conn.textContent = 'Live'; conn.className = 'badge ok'; logFetch(); };
   ws.onclose = () => {
     conn.textContent = 'Offline';
     conn.className = 'badge err';
@@ -644,7 +748,8 @@ function init() {
   $('simOn').addEventListener('change', () => send({ cmd: 'sim', on: $('simOn').checked }));
   document.querySelectorAll('#simModeSeg button').forEach((b) => (b.onclick = () => send({ cmd: 'sim', model: b.dataset.model === '1' })));
   document.querySelectorAll('#simSpeedSeg button').forEach((b) => (b.onclick = () => send({ cmd: 'sim', speed: +b.dataset.speed })));
-  $('encZeroBtn').onclick = () => { if (confirm('Take the damper\'s present position as closed (0' + DEG + ')?')) send({ cmd: 'encZero' }); };
+  $('damperCalBtn').onclick = () => { if (confirm('Close the damper until it stops, then open it until it stops, to find its two ends?')) send({ cmd: 'damperCal' }); };
+  initConsole();
 
   // system
   if (API) $('setupLink').href = API + '/setup';

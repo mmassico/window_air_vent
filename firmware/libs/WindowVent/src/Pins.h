@@ -63,7 +63,8 @@
 #endif
 #define PIN_MIC         3
 #define PIN_MIC_LINK    21      // wired to PIN_MIC, kept high impedance
-#define MIC_CAL_DB      0.0f    // dB SPL = dBFS + this ('sound cal' measures it); 0 = uncalibrated, levels in dBFS
+#define MIC_CAL_DB      90.8f   // dBA = A-weighted dBFS + this: measured on the bench MAX9814 (GAIN to VDD, 40 dB)
+                                //   against a calibrated meter ('sound cal' measures it); 0 = levels in dBFS
 
 // On-board indicators.
 #define PIN_LED         2       // blue LED, used as a heartbeat

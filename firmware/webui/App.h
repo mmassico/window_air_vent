@@ -3,7 +3,7 @@
 #include <Arduino.h>
 
 #define FW_NAME      "window-vent webui"
-#define FW_VERSION   "0.1.0"
+#define FW_VERSION   "0.2.0"
 
 #define CURVE_POINTS 5          // CO2 to fan look-up curve: ppm -> %, linear between the points
 
@@ -39,10 +39,10 @@ struct Settings
 
     // Outdoor noise (audio mode)
     bool     noiseEnabled;
-    float    noiseDb;                   // dB SPL (or dBFS if the microphone is uncalibrated)
+    float    noiseDb;                   // dBA (or dBFS if the microphone is uncalibrated)
     uint8_t  noisePct;                  // cap while too loud; 0 closes the damper
     uint16_t noiseHoldS;                // stays capped this long after the last loud reading
-    float    micCal;                    // dB SPL = dBFS + this (0: uncalibrated, levels in dBFS)
+    float    micCal;                    // dBA = A-weighted dBFS + this (0: uncalibrated, levels in dBFS)
 
     // Fans
     int8_t   balance;                   // intake minus exhaust, % (-20 to 20)

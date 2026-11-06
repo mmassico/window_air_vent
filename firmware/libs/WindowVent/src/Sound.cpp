@@ -3,6 +3,15 @@
 
 #define FULL_SCALE_RMS  (2048.0f / 1.41421356f)    // a sine from 0 to 4095
 #define SETTLE          32                         // samples skipped while the high-pass filter settles
+#define SETTLE_A        240                        // ... and while the A-weighting settles (its slowest pole, 20.6 Hz)
+
+// A-weighting at 8000 samples/s: the analog filter's poles at 20.6 Hz (twice), 107.7 Hz and 737.9 Hz, by the
+// bilinear transform, 0 dB at 1 kHz. Its two poles at 12.2 kHz are left out: they act above 4 kHz, where the
+// transform would bend the response. Two biquads: b0 b1 b2 a1 a2 (a0 = 1).
+static const float A_SOS[2][5] = {
+    { 0.8983096816f, -1.7966193631f, 0.8983096816f, -1.4695579119f, 0.5060072156f },
+    { 1.0f,          -2.0f,          1.0f,          -1.9679028120f, 0.9681603694f },
+};
 
 static uint8_t  s_pin;
 static uint16_t s_buf[SOUND_RATE * SOUND_MAX_MS / 1000];
@@ -54,7 +63,8 @@ bool SoundMeasure(uint32_t ms, SoundReading* r)
     // High-pass: y[i] = a * (y[i-1] + x[i] - x[i-1]), on the signal less its mean (a smaller start-up step).
     float rate = elapsed ? n * 1e6f / elapsed : SOUND_RATE;
     float a    = 1.0f / (1.0f + 2.0f * PI * SOUND_HPF_HZ / rate);
-    float prev = s_buf[0] - mean, y = 0, energy = 0;
+    float prev = s_buf[0] - mean, y = 0, energy = 0, energyA = 0;
+    float st[2][4] = {};                            // per biquad: x[n-1], x[n-2], y[n-1], y[n-2]
     for (uint32_t i = 1; i < n; i++)
     {
         float x = s_buf[i] - mean;
@@ -62,6 +72,18 @@ bool SoundMeasure(uint32_t ms, SoundReading* r)
         prev = x;
         if (i >= SETTLE)
             energy += y * y;
+        float v = x;                                // A-weighting, direct form I
+        for (int k = 0; k < 2; k++)
+        {
+            const float* c = A_SOS[k];
+            float* z = st[k];
+            float o = c[0] * v + c[1] * z[0] + c[2] * z[1] - c[3] * z[2] - c[4] * z[3];
+            z[1] = z[0]; z[0] = v;
+            z[3] = z[2]; z[2] = o;
+            v = o;
+        }
+        if (i >= SETTLE_A)
+            energyA += v * v;
     }
 
     long mv = 0;                                     // DC bias, calibrated: a few millivolt reads
@@ -70,6 +92,7 @@ bool SoundMeasure(uint32_t ms, SoundReading* r)
 
     r->rms     = sqrtf(energy / (n - SETTLE));
     r->dbfs    = SoundDb(r->rms);
+    r->dba     = n > SETTLE_A ? SoundDb(sqrtf(energyA / (n - SETTLE_A))) : r->dbfs;
     r->dcMv    = mv / 16;
     r->p2p     = hi - lo;
     r->clipped = lo == 0 || hi == 4095;

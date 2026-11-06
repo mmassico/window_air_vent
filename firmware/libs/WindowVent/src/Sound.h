@@ -1,8 +1,9 @@
 // Sound level from an analog microphone module (MAX9814: about 1.25 V DC bias, up to 2 V peak to peak) on an ADC1 pin.
 // Measured in blocking bursts of one-shot reads at SOUND_RATE: the 12 V sense also reads ADC1 one-shot, and the
-// core's continuous (DMA) mode can't share a unit with one-shot reads. Each burst: DC removed, a first-order high-pass
-// at SOUND_HPF_HZ (cuts wind rumble and the fans' hum), then the RMS. Levels are in dBFS: 0 dB is a sine filling the
-// ADC's whole range (0 to about 3.1 V at 12 dB attenuation).
+// core's continuous (DMA) mode can't share a unit with one-shot reads. Each burst: DC removed, then two levels: one
+// through a first-order high-pass at SOUND_HPF_HZ (cuts wind rumble and the fans' hum), one A-weighted, as a sound
+// level meter's dBA (IEC 61672, within 0.8 dB from 31 Hz to 3.9 kHz; at 8 kHz, nothing above 4 kHz is seen). Levels
+// are in dBFS: 0 dB is a sine filling the ADC's whole range (0 to about 3.1 V at 12 dB attenuation).
 #pragma once
 #include <Arduino.h>
 
@@ -13,6 +14,7 @@
 struct SoundReading
 {
     float dbfs;         // level of the burst, after the high-pass filter
+    float dba;          // the same, A-weighted (a calibration offset then gives dBA)
     float rms;          // the same, in ADC counts
     int   dcMv;         // DC bias (the module's output at rest), mV
     int   p2p;          // peak to peak, ADC counts (0-4095)

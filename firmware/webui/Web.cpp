@@ -1,6 +1,8 @@
 #include "Web.h"
 #include <esp_http_server.h>
 #include <Preferences.h>
+#include <StreamString.h>
+#include <Update.h>
 #include "App.h"
 #include "Settings.h"
 #include "History.h"
@@ -9,12 +11,16 @@
 #include "WebPage.h"
 #include "SetupPage.h"
 
-#define MAX_BODY 4096
+#define MAX_BODY      4096
+#define LOG_PER_GET   200           // log lines per GET /api/log at most
+#define SHELL_WAIT_MS 15000         // a console command's answer, at most
 
 static httpd_handle_t    s_server;
 static WebCommandFn      s_onCommand;
+static WebShellFn        s_onShell;
 static SemaphoreHandle_t s_lock;
 static volatile int      s_clients;
+static volatile uint32_t s_restartAt;   // after a firmware update: restart at this millis() (0: no)
 
 void WebLock()   { xSemaphoreTakeRecursive(s_lock, portMAX_DELAY); }
 void WebUnlock() { xSemaphoreGiveRecursive(s_lock); }
@@ -55,6 +61,48 @@ static bool readBody(httpd_req_t* req, char* buf, size_t size)
     return true;
 }
 
+// --- the password, for the console and the firmware update (kept in NVS, never sent back) ---------------------
+
+static String passGet()
+{
+    Preferences p;
+    String pass;
+    if (p.begin("vent", true))
+    {
+        pass = p.getString("admin", "");
+        p.end();
+    }
+    return pass;
+}
+
+bool WebPassIsSet()
+{
+    return passGet().length() > 0;
+}
+
+bool WebPassSet(const char* pass)
+{
+    Preferences p;
+    bool ok = p.begin("vent", false) && p.putString("admin", pass) == strlen(pass);
+    p.end();
+    return ok;
+}
+
+// nullptr if the request carries the password (header X-Pass), else why not; a wrong one costs a second.
+static const char* unauthorized(httpd_req_t* req)
+{
+    String pass = passGet();
+    if (!pass.length())
+        return "no password set yet: on the serial console, type pass <password>";
+    char got[64];
+    if (httpd_req_get_hdr_value_str(req, "X-Pass", got, sizeof(got)) != ESP_OK || pass != got)
+    {
+        delay(1000);
+        return "wrong password";
+    }
+    return nullptr;
+}
+
 // --- pages -----------------------------------------------------------------------------------------------------
 
 static esp_err_t pageGzip(httpd_req_t* req, const uint8_t* data, size_t len)
@@ -79,6 +127,16 @@ static esp_err_t onIndex(httpd_req_t* req)
 static esp_err_t onSetup(httpd_req_t* req)
 {
     return pageGzip(req, WEB_SETUP_GZ, sizeof(WEB_SETUP_GZ));
+}
+
+// CORS preflight, for a page served from a PC that sends the X-Pass header.
+static esp_err_t onOptions(httpd_req_t* req)
+{
+    cors(req);
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Methods", "GET, POST");
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Headers", "X-Pass, Content-Type");
+    httpd_resp_set_status(req, "204 No Content");
+    return httpd_resp_send(req, nullptr, 0);
 }
 
 // Anything else: on the setup network, every address leads to the setup page (captive portal); else 404.
@@ -130,6 +188,105 @@ static esp_err_t onCmd(httpd_req_t* req)
     const char* err = s_onCommand(in.as<JsonObjectConst>());
     WebUnlock();
     return err ? sendError(req, "400 Bad Request", err) : sendJson(req, "{\"ok\":true}");
+}
+
+// GET /api/log?since=N: {"first":oldest kept,"end":next line's number,"from":first sent,"lines":[...]}, up to
+// LOG_PER_GET lines from N (or from the oldest kept); ask again from "from" + the lines' count for the rest.
+static esp_err_t onLog(httpd_req_t* req)
+{
+    char q[32], v[16];
+    uint32_t since = 0;
+    if (httpd_req_get_url_query_str(req, q, sizeof(q)) == ESP_OK && httpd_query_key_value(q, "since", v, sizeof(v)) == ESP_OK)
+        since = strtoul(v, nullptr, 10);
+    JsonDocument doc;
+    uint32_t first = LogFirst(), end = LogCount();
+    uint32_t from = max(since, first);
+    doc["first"] = first;
+    doc["end"]   = end;
+    doc["from"]  = from;
+    JsonArray lines = doc["lines"].to<JsonArray>();
+    char line[LOG_LEN];
+    for (uint32_t i = from; i < end && i < from + LOG_PER_GET; i++)
+        if (LogLine(i, line))
+            lines.add(line);
+    String js;
+    serializeJson(doc, js);
+    return sendJson(req, js);
+}
+
+// POST /api/console: a command line (text), as on the serial console; answers with its text. It runs in the loop
+// (WebPoll), where the sensors' buses are safe to use.
+static char              s_shellLine[WEB_SHELL_LEN];
+static StreamString      s_shellOut;
+static volatile bool     s_shellPending;
+static SemaphoreHandle_t s_shellDone;
+
+static esp_err_t sendText(httpd_req_t* req, const char* status, const String& text)
+{
+    cors(req);
+    httpd_resp_set_status(req, status);
+    httpd_resp_set_type(req, "text/plain; charset=utf-8");
+    return httpd_resp_send(req, text.c_str(), text.length());
+}
+
+static esp_err_t onConsole(httpd_req_t* req)
+{
+    const char* no = unauthorized(req);
+    if (no)
+        return sendText(req, "401 Unauthorized", String(no) + "\n");
+    char line[WEB_SHELL_LEN];
+    if (!readBody(req, line, sizeof(line)))
+        return sendText(req, "400 Bad Request", "a command line, " + String(WEB_SHELL_LEN - 1) + " characters at most\n");
+    size_t n = strlen(line);
+    while (n && strchr("\r\n ", line[n - 1]))
+        line[--n] = 0;
+    xSemaphoreTake(s_shellDone, 0);                     // a stale answer, from a command that timed out
+    strcpy(s_shellLine, line);
+    s_shellOut.remove(0);
+    s_shellPending = true;
+    if (xSemaphoreTake(s_shellDone, pdMS_TO_TICKS(SHELL_WAIT_MS)) != pdTRUE)
+    {
+        s_shellPending = false;
+        return sendText(req, "504 Gateway Timeout", "no answer from the loop\n");
+    }
+    return sendText(req, "200 OK", s_shellOut);
+}
+
+// POST /update: the new firmware (the build's .bin) as the request's body. Written to the other app slot, then
+// the vent restarts into it; the new firmware must confirm itself (webui.ino), or the next restart rolls it back.
+static esp_err_t onUpdate(httpd_req_t* req)
+{
+    const char* no = unauthorized(req);
+    if (no)
+        return sendError(req, "401 Unauthorized", no);
+    size_t left = req->content_len;
+    if (!left || !Update.begin(left))
+        return sendError(req, "400 Bad Request", left ? Update.errorString() : "no firmware in the request");
+    Log("Firmware update: receiving %u bytes", (unsigned)left);
+    static uint8_t buf[4096];                           // httpd runs one request at a time
+    int timeouts = 0;
+    while (left)
+    {
+        int n = httpd_req_recv(req, (char*)buf, min(left, sizeof(buf)));
+        if (n == HTTPD_SOCK_ERR_TIMEOUT && ++timeouts < 5)
+            continue;
+        if (n <= 0 || Update.write(buf, n) != (size_t)n)
+        {
+            const char* why = n <= 0 ? "the upload broke off" : Update.errorString();
+            Update.abort();
+            Log("Firmware update failed: %s", why);
+            return sendError(req, "500 Internal Server Error", why);
+        }
+        left -= n;
+    }
+    if (!Update.end(true))
+    {
+        Log("Firmware update failed: %s", Update.errorString());
+        return sendError(req, "500 Internal Server Error", Update.errorString());
+    }
+    Log("Firmware update written: restarting into it");
+    s_restartAt = millis() + 1000;                      // once the answer has gone out
+    return sendJson(req, "{\"ok\":true}");
 }
 
 static esp_err_t onHistory(httpd_req_t* req)
@@ -280,6 +437,16 @@ int WebClients()
 
 void WebPoll()
 {
+    if (s_shellPending)                                 // a console command from POST /api/console
+    {
+        WebLock();
+        s_onShell(s_shellLine, s_shellOut);
+        WebUnlock();
+        s_shellPending = false;
+        xSemaphoreGive(s_shellDone);
+    }
+    if (s_restartAt && (int32_t)(millis() - s_restartAt) >= 0)
+        ESP.restart();
     if (s_newWifi)                                      // a new Wi-Fi network: joined from the loop, after the answer
     {
         s_newWifi = false;
@@ -290,13 +457,15 @@ void WebPoll()
 
 // --- start -----------------------------------------------------------------------------------------------------
 
-void WebBegin(WebCommandFn onCommand)
+void WebBegin(WebCommandFn onCommand, WebShellFn onShell)
 {
     s_onCommand = onCommand;
+    s_onShell = onShell;
     s_lock = xSemaphoreCreateRecursiveMutex();
+    s_shellDone = xSemaphoreCreateBinary();
 
     httpd_config_t cfg   = HTTPD_DEFAULT_CONFIG();
-    cfg.max_uri_handlers = 16;
+    cfg.max_uri_handlers = 20;
     cfg.uri_match_fn     = httpd_uri_match_wildcard;
     cfg.lru_purge_enable = true;
     cfg.stack_size       = 10240;
@@ -318,8 +487,12 @@ void WebBegin(WebCommandFn onCommand)
         { "/api/ui",       HTTP_GET,  onGetUi,        nullptr, false, false, nullptr },
         { "/api/ui",       HTTP_POST, onPostUi,       nullptr, false, false, nullptr },
         { "/api/wifi",     HTTP_POST, onWifi,         nullptr, false, false, nullptr },
+        { "/api/log",      HTTP_GET,  onLog,          nullptr, false, false, nullptr },
+        { "/api/console",  HTTP_POST, onConsole,      nullptr, false, false, nullptr },
+        { "/update",       HTTP_POST, onUpdate,       nullptr, false, false, nullptr },
         { "/ws",           HTTP_GET,  onWs,           nullptr, true,  false, nullptr },
         { "/*",            HTTP_GET,  onOther,        nullptr, false, false, nullptr },
+        { "/*",            HTTP_OPTIONS, onOptions,   nullptr, false, false, nullptr },
     };
     for (const httpd_uri_t& u : uris)
         httpd_register_uri_handler(s_server, &u);
