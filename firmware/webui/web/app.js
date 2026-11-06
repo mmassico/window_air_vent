@@ -288,6 +288,7 @@ function initCurve() {
 const D = { t: [], co2: [], fan: [], tin: [], tout: [], rh: [], snd: [] };
 let clockNow = 0;
 const charts = [];
+let chartSound = false;                         // audio mode: the outdoor sound on the temperatures' graph
 let rangeH = 6;
 try { rangeH = +(localStorage.getItem('rangeH') || 6); } catch (e) { /* private mode */ }
 
@@ -295,6 +296,12 @@ function fitChart(u) {
   const w = u.root.parentElement.clientWidth;
   if (w > 0) u.setSize({ width: w, height: u.height });
 }
+
+// The legend under a graph: the values under the mouse, or the latest ones when it isn't over the graph.
+function legendLatest(u) {
+  if (u.cursor.idx == null && u.data[0].length) u.setLegend({ idx: u.data[0].length - 1 });
+}
+const legendHooks = { setCursor: [legendLatest], setData: [legendLatest] };
 
 function axisStyle() {
   return { stroke: cssVar('--muted'), grid: { stroke: cssVar('--line'), width: 1 }, ticks: { stroke: cssVar('--line') } };
@@ -320,33 +327,31 @@ function makeCharts() {
       {},
       { label: 'CO\u2082', scale: 'ppm', stroke: acc, width: 2, value: (u, v) => (v == null ? '--' : v.toFixed(0) + ' ppm') },
       { label: 'Fans', scale: 'pct', stroke: acc2, width: 1, fill: acc2 + '26', paths: uPlot.paths.stepped({ align: 1 }), value: (u, v) => (v == null ? '--' : v.toFixed(0) + ' %') },
-    ],
-    axes: [{ ...axisStyle() }, { ...axisStyle(), scale: 'ppm', size: 50 }, { ...axisStyle(), scale: 'pct', side: 1, grid: { show: false }, size: 44, values: (u, v) => v.map((x) => x + '%') }],
-    hooks: { drawAxes: [targetBand] },
-  }, [D.t, D.co2, D.fan], $('chartCo2'));
-  const temp = new uPlot({
-    width: w, height: 200,
-    cursor: { drag: { x: false, y: false } },
-    scales: { x: { time: true }, C: { range: (u, lo, hi) => [Math.floor((lo ?? 0) - 1), Math.ceil((hi ?? 25) + 1)] }, pct: { range: [0, 100] } },
-    series: [
-      {},
-      { label: 'Indoor', scale: 'C', stroke: warm, width: 2, value: (u, v) => (v == null ? '--' : v.toFixed(1) + ' ' + DEG + 'C') },
-      { label: 'Outdoor', scale: 'C', stroke: cold, width: 2, value: (u, v) => (v == null ? '--' : v.toFixed(1) + ' ' + DEG + 'C') },
       { label: 'Humidity', scale: 'pct', stroke: cssVar('--muted'), width: 1, dash: [4, 4], value: (u, v) => (v == null ? '--' : v.toFixed(0) + ' %') },
     ],
-    axes: [{ ...axisStyle() }, { ...axisStyle(), scale: 'C', size: 50, values: (u, v) => v.map((x) => x + DEG) }, { ...axisStyle(), scale: 'pct', side: 1, grid: { show: false }, size: 44, values: (u, v) => v.map((x) => x + '%') }],
-  }, [D.t, D.tin, D.tout, D.rh], $('chartTemp'));
-  const snd = new uPlot({
-    width: w, height: 160,
+    axes: [{ ...axisStyle() }, { ...axisStyle(), scale: 'ppm', size: 50 }, { ...axisStyle(), scale: 'pct', side: 1, grid: { show: false }, size: 44, values: (u, v) => v.map((x) => x + '%') }],
+    hooks: { drawAxes: [targetBand], ...legendHooks },
+  }, [D.t, D.co2, D.fan, D.rh], $('chartCo2'));
+  // temperatures, and in audio mode the outdoor sound on a dBA axis at the right
+  const tSeries = [
+    {},
+    { label: 'Indoor', scale: 'C', stroke: warm, width: 2, value: (u, v) => (v == null ? '--' : v.toFixed(1) + ' ' + DEG + 'C') },
+    { label: 'Outdoor', scale: 'C', stroke: cold, width: 2, value: (u, v) => (v == null ? '--' : v.toFixed(1) + ' ' + DEG + 'C') },
+  ];
+  const tAxes = [{ ...axisStyle() }, { ...axisStyle(), scale: 'C', size: 50, values: (u, v) => v.map((x) => x + DEG) }];
+  if (chartSound) {
+    tSeries.push({ label: 'Outdoor sound', scale: 'dBA', stroke: cssVar('--poor'), width: 1.5, value: (u, v) => (v == null ? '--' : v.toFixed(0) + ' dBA') });
+    tAxes.push({ ...axisStyle(), scale: 'dBA', side: 1, grid: { show: false }, size: 64, values: (u, v) => v.map((x) => x + ' dBA') });
+  }
+  const temp = new uPlot({
+    width: w, height: 230,
     cursor: { drag: { x: false, y: false } },
-    scales: { x: { time: true }, dB: { range: (u, lo, hi) => [Math.min(30, Math.floor((lo ?? 30) / 10) * 10), Math.max(80, Math.ceil((hi ?? 80) / 10) * 10)] } },
-    series: [
-      {},
-      { label: 'Outdoor sound', scale: 'dB', stroke: cssVar('--poor'), width: 1.5, value: (u, v) => (v == null ? '--' : v.toFixed(0) + ' dBA') },
-    ],
-    axes: [{ ...axisStyle() }, { ...axisStyle(), scale: 'dB', size: 50 }],
-  }, [D.t, D.snd], $('chartSnd'));
-  charts.push(co2, temp, snd);
+    scales: { x: { time: true }, C: { range: (u, lo, hi) => [Math.floor((lo ?? 0) - 1), Math.ceil((hi ?? 25) + 1)] }, dBA: { range: (u, lo, hi) => [Math.min(30, Math.floor((lo ?? 30) / 10) * 10), Math.max(80, Math.ceil((hi ?? 80) / 10) * 10)] } },
+    series: tSeries,
+    axes: tAxes,
+    hooks: legendHooks,
+  }, chartSound ? [D.t, D.tin, D.tout, D.snd] : [D.t, D.tin, D.tout], $('chartTemp'));
+  charts.push(co2, temp);
 }
 
 function rebuildCharts() {
@@ -359,9 +364,8 @@ function redrawCharts() {
   if (!charts.length || $('tab-dash').hidden) return;
   const now = Date.now() / 1000;
   const x = D.t.map((c) => now - (clockNow - c));
-  charts[0].setData([x, D.co2, D.fan], false);
-  charts[1].setData([x, D.tin, D.tout, D.rh], false);
-  if (!$('chartSnd').hidden) charts[2].setData([x, D.snd], false);
+  charts[0].setData([x, D.co2, D.fan, D.rh], false);
+  charts[1].setData(chartSound ? [x, D.tin, D.tout, D.snd] : [x, D.tin, D.tout], false);
   for (const u of charts) if (!u.root.parentElement.hidden) u.setScale('x', { min: now - rangeH * 3600, max: now });
 }
 
@@ -504,9 +508,9 @@ function onState(s) {
   setText($('rpm1'), s.fans[1].rpm);
   $('fanBar').style.width = s.out.fan + '%';
   $('sndTile').hidden = !sound;
-  if ($('chartSnd').hidden === sound) {
-    $('chartSnd').hidden = !sound;
-    if (sound && charts[2]) fitChart(charts[2]);
+  if (chartSound !== sound) {                       // audio mode found: the sound curve joins the temperatures
+    chartSound = sound;
+    rebuildCharts();
   }
   setText($('snd'), fmt(s.in.snd));
   if (settings) {                                     // sound bar: 30 to 100 dBA, green to the threshold, yellow above

@@ -159,7 +159,7 @@ The ESP32 runs the ventilation on its own and serves a web page on the home netw
 *The dashboard, in simulation: a staged evening with one, two, then no occupants.*
 
 **The page**, in four tabs:
-- **Dashboard:** the mode (Auto, Manual, Off, Boost), a CO₂ gauge with the target range, the indoor and outdoor temperatures, humidity (with its comfort range and the dew point), the damper's position, the fans, the outdoor sound in audio mode, a line saying why the vent does what it does, and graphs over 1, 6 or 24 hours (a point every 10 s, kept in PSRAM).
+- **Dashboard:** the mode (Auto, Manual, Off, Boost), a CO₂ gauge with the target range, the indoor and outdoor temperatures, humidity (with its comfort range and the dew point), the damper's position, the fans, the outdoor sound in audio mode, a line saying why the vent does what it does, and two graphs over 1, 6 or 24 hours (a point every 10 s, kept in PSRAM): CO₂ with the fans and the humidity (in %), and the indoor and outdoor temperatures with the outdoor sound in audio mode (in dBA, on the right).
 - **Settings:** the CO₂ curve (drag its points), the damper's opening and closing levels, the absolute maximum and the target range; temperature, quiet hours, outdoor noise, fans, boost, the damper motor, network and time; then the page's theme and colours. The Save button stores the settings on the vent (NVS). The theme stays with each browser; the colours can be saved on the vent and loaded in another browser.
 - **System:** the Wi-Fi network, the firmware, the local time (NTP), restart, and the firmware update.
 - **Developer** (the wrench): the simulation, the control outputs, which parts answer, the damper's boundary test, and the log with a console under it.
