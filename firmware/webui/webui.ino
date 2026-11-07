@@ -44,6 +44,30 @@ static uint32_t s_loopMaxUs;
 static bool     s_test;             // test mode: the console drives the fans and the damper, not the control
 static uint32_t s_testAt;           // the last test command
 static bool     s_otaPending;       // this firmware came by update and isn't confirmed yet
+static const char* resetText(esp_reset_reason_t r);
+static float    s_cpuBusy[2];       // each core's busy share, %, over the last CPU_WINDOW_MS (-1: not measured yet)
+#define CPU_WINDOW_MS 5000
+
+// Each core's busy share: the time its idle task didn't get (FreeRTOS run-time counters, in us).
+static void cpuSample()
+{
+    static uint32_t lastT, lastIdle[2], lastAt;
+    static bool     have;
+    uint32_t        now = millis();
+    if (have && now - lastAt < CPU_WINDOW_MS)
+        return;
+    uint32_t t = (uint32_t)esp_timer_get_time();
+    for (int c = 0; c < 2; c++)
+    {
+        uint32_t idle = ulTaskGetIdleRunTimeCounterForCore(c);
+        uint32_t dt = t - lastT;
+        s_cpuBusy[c] = have && dt ? constrain(100.0f - (idle - lastIdle[c]) * 100.0f / dt, 0.0f, 100.0f) : -1;
+        lastIdle[c] = idle;
+    }
+    lastT = t;
+    lastAt = now;
+    have = true;
+}
 
 // The core checks a new firmware at boot unless this says the application will (it does, in the loop).
 extern "C" bool verifyRollbackLater()
@@ -221,12 +245,30 @@ static void broadcast()
     JsonObject n = doc["net"].to<JsonObject>();
     n["ssid"] = NetSsid(); n["ip"] = NetIp(); n["rssi"] = NetRssi();
     n["ap"] = NetApOn();   n["sta"] = NetStaOn(); n["host"] = g_set.host; n["clients"] = WebClients();
+    n["ch"] = NetChannel();
+    uint32_t drops, dropAgo;
+    int      dropReason;
+    NetDrops(&drops, &dropReason, &dropAgo);
+    n["drops"] = drops;    n["dropReason"] = dropReason; n["dropAgo"] = dropAgo;
+    WebSockCounts sc;
+    WebSockStats(&sc);
+    JsonObject sk = n["sock"].to<JsonObject>();
+    sk["open"] = sc.open;  sk["max"] = sc.max; sk["peak"] = sc.peak; sk["opened"] = sc.opened; sk["purged"] = sc.purged;
 
     JsonObject sys = doc["sys"].to<JsonObject>();
     sys["ver"]   = FW_VERSION;
     sys["heap"]  = ESP.getFreeHeap();
+    sys["heapMin"] = ESP.getMinFreeHeap();
     sys["psram"] = ESP.getFreePsram();
     sys["loopMaxMs"] = s_loopMaxUs / 1000.0f;
+    cpuSample();
+    JsonArray cpu = sys["cpu"].to<JsonArray>();
+    for (int c = 0; c < 2; c++)
+        if (s_cpuBusy[c] < 0)
+            cpu.add(nullptr);
+        else
+            cpu.add(roundf(s_cpuBusy[c] * 10) / 10);
+    sys["reset"] = resetText(esp_reset_reason());
     sys["test"]  = s_test;
     sys["pass"]  = WebPassIsSet();
     sys["otaPending"] = s_otaPending;
@@ -280,6 +322,8 @@ static const char* HELP =
     "wifi <ssid> <password>      join a network, name without spaces (serial only); wifi forget erases it\n"
     "pass <password>             the password of the web console and firmware updates; pass - removes it\n"
     "cpu                         CPU per task and core since the last cpu command (the first: since boot)\n"
+    "sockets                     the web server's connections: each one's type, client and age; counters\n"
+    "                            since boot; Wi-Fi drops\n"
     "ota                         the firmware slots, and whether this one is confirmed\n"
     "reboot                      restart\n";
 
@@ -699,6 +743,28 @@ static void shell(int argc, char* argv[], Print& out)
             strlcpy(prev[i].name, st[i].pcTaskName, sizeof(prev[i].name));
             prev[i].t = st[i].ulRunTimeCounter;
         }
+    }
+
+    else if (!strcmp(c, "sockets"))
+    {
+        WebSockCounts sc;
+        WebSockInfo   list[16];
+        WebSockStats(&sc);
+        int n = WebSockList(list, 16);
+        out.printf("%d of %d sockets open (the most at once since boot: %d); %lu accepted since boot, %lu closed while "
+                   "full (the LRU purge)\n", sc.open, sc.max, sc.peak, (unsigned long)sc.opened,
+                   (unsigned long)sc.purged);
+        for (int i = 0; i < n; i++)
+            out.printf("  fd %2d  %-9s  %s:%u  open %lu s\n", list[i].fd, list[i].ws ? "WebSocket" : "HTTP", list[i].ip,
+                       list[i].port, (unsigned long)list[i].ageS);
+        uint32_t drops, ago;
+        int      reason;
+        NetDrops(&drops, &reason, &ago);
+        if (drops)
+            out.printf("Wi-Fi: %lu drops since boot, the last %lu s ago (reason %d); channel %d, %d dBm\n",
+                       (unsigned long)drops, (unsigned long)ago, reason, NetChannel(), NetRssi());
+        else
+            out.printf("Wi-Fi: no drop since boot; channel %d, %d dBm\n", NetChannel(), NetRssi());
     }
 
     else if (!strcmp(c, "ota"))

@@ -14,6 +14,27 @@ static DNSServer s_dns;
 static String    s_ssid, s_pass;
 static bool      s_ap, s_sta, s_mdns, s_ntp;
 static uint32_t  s_joinStart, s_staSince, s_lostSince;
+static volatile uint32_t s_drops;           // disconnections from the access point since boot (while joined)
+static volatile uint8_t  s_dropReason;      // the last one's reason code (IEEE 802.11 / wifi_err_reason_t)
+static volatile uint32_t s_dropAt;          // millis() at the last one
+static volatile bool     s_linkUp;          // the driver's view, from its events (faster than WiFi.status())
+
+// Runs in the Wi-Fi event task: counts every drop, even one too short for NetPoll to see.
+static void onWifiEvent(arduino_event_id_t ev, arduino_event_info_t info)
+{
+    if (ev == ARDUINO_EVENT_WIFI_STA_CONNECTED)
+        s_linkUp = true;
+    else if (ev == ARDUINO_EVENT_WIFI_STA_DISCONNECTED)
+    {
+        if (s_linkUp)
+        {
+            s_drops = s_drops + 1;
+            s_dropReason = info.wifi_sta_disconnected.reason;
+            s_dropAt = millis();
+        }
+        s_linkUp = false;
+    }
+}
 
 static void apStart()
 {
@@ -58,6 +79,7 @@ void NetBegin()
         p.end();
     }
     WiFi.persistent(false);                         // the credentials live in our own NVS namespace
+    WiFi.onEvent(onWifiEvent);
     if (s_ssid.length())
         join();
     else
@@ -109,6 +131,14 @@ bool NetApOn()  { return s_ap; }
 bool NetStaOn() { return s_sta; }
 String NetSsid() { return s_ssid; }
 int  NetRssi()  { return s_sta ? WiFi.RSSI() : 0; }
+int  NetChannel() { return s_sta ? WiFi.channel() : 0; }
+
+void NetDrops(uint32_t* count, int* reason, uint32_t* agoS)
+{
+    *count = s_drops;
+    *reason = s_drops ? s_dropReason : 0;
+    *agoS = s_drops ? (millis() - s_dropAt) / 1000 : 0;
+}
 
 String NetIp()
 {

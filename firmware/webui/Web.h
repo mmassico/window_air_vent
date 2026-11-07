@@ -26,7 +26,26 @@ typedef void (*WebShellFn)(char* line, Print& out);
 void WebBegin(WebCommandFn onCommand, WebShellFn onShell);
 void WebBroadcast(const char* text);        // to every WebSocket client
 void WebPoll();                             // call from the loop
-int  WebClients();
+int  WebClients();                          // WebSocket clients (open pages), at the last broadcast
+
+// The server's sockets (HTTP and WebSocket connections together).
+struct WebSockCounts
+{
+    int      open, max, peak;               // open now, the table's size, the most open at once since boot
+    uint32_t opened;                        // connections accepted since boot
+    uint32_t purged;                        // closed while the table was full: most likely the LRU purge, which
+                                            //   closes the least recently used connection to make room
+};
+struct WebSockInfo
+{
+    int      fd;
+    bool     ws;                            // a WebSocket (else HTTP, kept alive between requests)
+    uint32_t ageS;                          // seconds since it was accepted
+    char     ip[16];
+    uint16_t port;
+};
+void WebSockStats(WebSockCounts* c);
+int  WebSockList(WebSockInfo* out, int max);   // the open sockets now; returns how many
 void WebLock();                             // held by the loop while it reads or changes shared state
 void WebUnlock();
 bool WebPassIsSet();

@@ -516,6 +516,12 @@ function uptime(s) {
   return (d ? d + ' d ' : '') + h + ' h ' + String(m).padStart(2, '0') + ' min';
 }
 
+// A Wi-Fi disconnection's reason code (ESP-IDF's wifi_err_reason_t): the usual ones by name.
+const DROP_REASONS = { 2: 'authentication expired', 3: 'the router sent it away', 4: 'idle too long',
+  8: 'it left', 15: 'key handshake timed out', 200: 'router beacons lost', 201: 'router not found',
+  202: 'authentication failed', 203: 'association failed', 204: 'handshake timed out', 205: 'connection failed' };
+const dropText = (r) => (DROP_REASONS[r] ? DROP_REASONS[r] + ', ' : '') + 'reason ' + r;
+
 const STATE_GAP_MS = 15000;
 let lastStateAt = 0;
 
@@ -681,13 +687,23 @@ function onState(s) {
     ['Status', s.net.sta ? 'joined, ' + s.net.rssi + ' dBm' : s.net.ap ? 'setup network open' : 'not joined'],
     ['Address', s.net.ip ? `<a href="http://${s.net.ip}/">${s.net.ip}</a>` : '--'],
     ['Name', `<a href="http://${s.net.host}.local/">${s.net.host}.local</a>`],
+    ['Channel', s.net.ch || '--'],
+    ['Wi-Fi drops', !s.net.drops ? 'none since the start'
+      : s.net.drops + ' since the start, the last ' + uptime(s.net.dropAgo) + ' ago (' + dropText(s.net.dropReason) + ')'],
     ['Pages open', s.net.clients],
+    ['Connections', s.net.sock ? s.net.sock.open + ' of ' + s.net.sock.max + ' open now, ' + s.net.sock.peak
+      + ' at most; ' + s.net.sock.opened + ' since the start, ' + s.net.sock.purged + ' closed to make room' : '--'],
   ]);
+  const cpu = s.sys.cpu || [];
   kv($('sysKv'), [
     ['Firmware', 'window-vent webui ' + s.sys.ver + (s.sys.otaPending ? ' (new, not confirmed yet)' : '')],
     ['Password', s.sys.pass ? 'set' : 'not set (console and updates refused)'],
     ['Local time', s.time || 'not set (no NTP yet)'],
-    ['Up for', uptime(s.uptime)],
+    ['Up for', uptime(s.uptime) + (s.sys.reset ? ' (last reset: ' + s.sys.reset + ')' : '')],
+    ['CPU busy', cpu[0] == null ? 'measuring' : 'core 0: ' + fmt(cpu[0], 1) + ' %, core 1: ' + fmt(cpu[1], 1) + ' % (last 5 s)'],
+    ['Loop, longest', fmt(s.sys.loopMaxMs, 1) + ' ms (last second)'],
+    ['Free memory', Math.round(s.sys.heap / 1024) + ' kB RAM (lowest ' + Math.round((s.sys.heapMin || 0) / 1024)
+      + ' kB), ' + Math.round(s.sys.psram / 1048576 * 10) / 10 + ' MB PSRAM'],
     ['Audio mode', s.hw.audio ? 'yes (microphone on GPIO 3)' : 'no'],
   ]);
 }

@@ -3,6 +3,7 @@
 #include <Preferences.h>
 #include <StreamString.h>
 #include <Update.h>
+#include <lwip/sockets.h>
 #include "App.h"
 #include "Settings.h"
 #include "History.h"
@@ -22,6 +23,12 @@ static WebShellFn        s_onShell;
 static SemaphoreHandle_t s_lock;
 static volatile int      s_clients;
 static volatile uint32_t s_restartAt;   // after a firmware update: restart at this millis() (0: no)
+
+// Socket counters, kept by the server's open and close callbacks (both run in the server's task).
+static volatile int      s_open, s_peak;
+static volatile uint32_t s_opened, s_purged;
+#define FD_SLOTS 64                         // lwIP's descriptors are below FD_SETSIZE (64)
+static uint32_t          s_openedAt[FD_SLOTS];   // millis() at each descriptor's accept
 
 void WebLock()   { xSemaphoreTakeRecursive(s_lock, portMAX_DELAY); }
 void WebUnlock() { xSemaphoreGiveRecursive(s_lock); }
@@ -436,6 +443,77 @@ int WebClients()
     return s_clients;
 }
 
+// --- socket statistics -----------------------------------------------------------------------------------------
+
+static esp_err_t onSockOpen(httpd_handle_t, int fd)
+{
+    s_open = s_open + 1;
+    s_opened = s_opened + 1;
+    if (s_open > s_peak)
+        s_peak = s_open;
+    if (fd >= 0 && fd < FD_SLOTS)
+        s_openedAt[fd] = millis();
+    return ESP_OK;
+}
+
+// With the table full, a close is almost always the LRU purge making room for a new connection.
+static void onSockClose(httpd_handle_t, int fd)
+{
+    if (s_open >= MAX_SOCKETS)
+        s_purged = s_purged + 1;
+    if (s_open > 0)
+        s_open = s_open - 1;
+    close(fd);                              // with a close callback, closing is ours to do
+}
+
+void WebSockStats(WebSockCounts* c)
+{
+    c->open = s_open;
+    c->max = MAX_SOCKETS;
+    c->peak = s_peak;
+    c->opened = s_opened;
+    c->purged = s_purged;
+}
+
+int WebSockList(WebSockInfo* out, int max)
+{
+    if (!s_server)
+        return 0;
+    size_t fds = MAX_SOCKETS;
+    int    list[MAX_SOCKETS];
+    if (httpd_get_client_list(s_server, &fds, list) != ESP_OK)
+        return 0;
+    int n = 0;
+    for (size_t i = 0; i < fds && n < max; i++)
+    {
+        WebSockInfo& s = out[n++];
+        struct sockaddr_storage a = {};
+        socklen_t               len = sizeof(a);
+        s.fd = list[i];
+        s.ws = httpd_ws_get_fd_info(s_server, list[i]) == HTTPD_WS_CLIENT_WEBSOCKET;
+        s.ageS = list[i] >= 0 && list[i] < FD_SLOTS ? (millis() - s_openedAt[list[i]]) / 1000 : 0;
+        s.port = 0;
+        strlcpy(s.ip, "?", sizeof(s.ip));
+        if (getpeername(list[i], (struct sockaddr*)&a, &len) == 0)
+        {
+            if (a.ss_family == AF_INET)
+            {
+                struct sockaddr_in* v4 = (struct sockaddr_in*)&a;
+                inet_ntoa_r(v4->sin_addr, s.ip, sizeof(s.ip));
+                s.port = ntohs(v4->sin_port);
+            }
+            else if (a.ss_family == AF_INET6)       // lwIP reports IPv4 peers of a dual-stack socket this way
+            {
+                struct sockaddr_in6* v6 = (struct sockaddr_in6*)&a;
+                const uint8_t*       b = (const uint8_t*)&v6->sin6_addr;
+                snprintf(s.ip, sizeof(s.ip), "%u.%u.%u.%u", b[12], b[13], b[14], b[15]);
+                s.port = ntohs(v6->sin6_port);
+            }
+        }
+    }
+    return n;
+}
+
 void WebPoll()
 {
     if (s_shellPending)                                 // a console command from POST /api/console
@@ -471,6 +549,8 @@ void WebBegin(WebCommandFn onCommand, WebShellFn onShell)
     cfg.lru_purge_enable = true;
     cfg.stack_size       = 10240;
     cfg.max_open_sockets = MAX_SOCKETS;
+    cfg.open_fn          = onSockOpen;
+    cfg.close_fn         = onSockClose;
     if (httpd_start(&s_server, &cfg) != ESP_OK)
     {
         Log("HTTP server failed to start");

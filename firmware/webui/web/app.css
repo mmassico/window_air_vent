@@ -53,10 +53,12 @@ p { margin: 6px 0 12px; }
 .muted { color: var(--muted); font-size: 13px; }
 small { font-size: .5em; color: var(--muted); margin-left: 3px; font-weight: 500; }
 
-/* header and tabs */
+/* header and tabs: their background spans the window, their content lines up with main's (--page wide, --gutter
+   inside it) */
+:root { --page: 1180px; --gutter: 16px; --edge: max(var(--gutter), calc((100% - var(--page)) / 2 + var(--gutter))); }
 .top {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 14px 20px; position: sticky; top: 0; z-index: 10;
+  padding: 14px var(--edge); position: sticky; top: 0; z-index: 10;
   background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(10px);
 }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; font-size: 17px; }
@@ -72,7 +74,7 @@ small { font-size: .5em; color: var(--muted); margin-left: 3px; font-weight: 500
 .badge.err { color: var(--bad); border-color: color-mix(in srgb, var(--bad) 40%, transparent); }
 .badge.warn { color: var(--warm); border-color: color-mix(in srgb, var(--warm) 45%, transparent);
   background: color-mix(in srgb, var(--warm) 12%, transparent); }
-.tabs { display: flex; gap: 4px; padding: 0 16px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tabs { display: flex; gap: 4px; padding: 0 var(--edge); border-bottom: 1px solid var(--line); overflow-x: auto; }
 .tabs a {
   padding: 10px 14px; color: var(--muted); text-decoration: none; border-bottom: 2px solid transparent;
   font-weight: 550; white-space: nowrap;
@@ -81,7 +83,7 @@ small { font-size: .5em; color: var(--muted); margin-left: 3px; font-weight: 500
 .tabs a.icontab { display: flex; align-items: center; padding: 10px 12px; }
 .tabicon { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
 
-main { max-width: 1180px; margin: 0 auto; padding: 18px 16px 90px; }
+main { max-width: var(--page); margin: 0 auto; padding: 18px var(--gutter) 90px; }
 
 /* layout */
 .card {

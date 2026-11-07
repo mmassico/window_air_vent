@@ -13,6 +13,9 @@ bool   NetStaOn();                      // joined the home network
 String NetSsid();
 String NetIp();                         // home network address, or the setup network's
 int    NetRssi();
+int    NetChannel();                    // the home network's channel, 0 when not joined
+void   NetDrops(uint32_t* count, int* reason, uint32_t* agoS);  // drops since boot, the last one's reason code
+                                        //   (0: none yet) and how many seconds ago
 int    NetMinuteOfDay();                // local time, -1 until NTP answered
 bool   NetTimeText(char* out, size_t n);
 void   NetSetCredentials(const char* ssid, const char* pass);   // saves, then joins
