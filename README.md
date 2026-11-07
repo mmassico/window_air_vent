@@ -187,9 +187,6 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | USB-C power adapter, 5 V (1 A or more), and a USB-C cable | 1 | Powers the ESP32 through its USB-UART connector, which also gives the console. The cable passes through a diamond opening in the box's left or right wall (`usb_port`: or only a cross to drill, or nothing; `usb_side`: left, right or both) | — |
 | **Total bought** | | Not counting the foam insert and foam sheet, or the two power adapters | **≈ $181** |
 
-> [!WARNING]
-> **SCD40: do not remove the white membrane on top of the sensor.** It looks like a small sticker, but it is part of the sensor: a gas-permeable filter that lets ambient air reach the photoacoustic NDIR cell while keeping dust, splashes and other contaminants out. Do not press on it, cover it, or clean near it with solvents or compressed air.
-
 ### The stepper motor
 
 The StepperOnline 17HS08-1004S, from its sheet and checked with a caliper. Its M3 holes are only 2.5 mm deep, so the motor plate has a 2 mm boss under each screw hole: through the 4 mm plate and the boss, an M3 × 8 reaches 2 mm into the motor. The bosses and the screw heads sit in the frame's diamond pockets.
@@ -241,10 +238,21 @@ Check which pin carries the chip's UART. Some modules, such as the TMC2209-LA, h
 
 ### The SCD40 board, the CO₂ sensor
 
-The Sensirion SCD40 on a small 13.70 × 21.70 mm board, measured: 7.85 mm from its underside to the sensor's top, four pin holes 2.54 mm apart along the bottom edge (GND, VDD, SCL, SDA). It carries its own I²C pull-ups (R1, R2, 10 kΩ), so the controller needs none for it. On the controller PCB, J5 has the same pin order, so a straight 4-wire cable joins them. Keep the sensor's membrane uncovered (see the warning above).
+The Sensirion SCD40 on a small 13.70 × 21.70 mm board, measured: 7.85 mm from its underside to the sensor's top, four pin holes 2.54 mm apart along the bottom edge (GND, VDD, SCL, SDA). It carries its own I²C pull-ups (R1, R2, 10 kΩ), so the controller needs none for it. On the controller PCB, J5 has the same pin order, so a straight 4-wire cable joins them. Keep the sensor's membrane uncovered (see the warning below).
 
 <p align="center">
   <img src="doc/scd40.svg" alt="SCD40 module, dimensioned: board 13.70 x 21.70 x 1.62 mm, 7.85 mm overall height, the sensor about 10.1 mm square near the top, four pin holes 2.54 mm apart along the bottom edge labelled GND, VDD, SCL, SDA, pin 1 hole 2.63 mm from the left edge and 1.00 mm from the bottom edge" width="640">
+</p>
+
+> [!WARNING]
+> **SCD40: do not remove the white membrane on top of the sensor.** It looks like a small sticker, but it is part of the sensor: a gas-permeable filter that lets ambient air reach the photoacoustic NDIR cell while keeping dust, splashes and other contaminants out. Do not press on it, cover it, or clean near it with solvents or compressed air.
+
+### The MAX9814 board, the microphone (optional)
+
+For the [audio mode](firmware/README.md#wiring), measured: 25.6 × 14.3 × 1.62 mm, 9 mm from its underside to the capsule's top, and parts up to about 3 mm on the back. The 9.70 mm capsule sits 2.10 mm from one end, centred across the board; the five header holes (GND, Vdd, Gain, Out, AR) run along the other end, and two mounting holes flank the capsule. Tie Gain to Vdd (40 dB) and leave AR open. It lies capsule down in the [microphone tube](window_insert/README.md#outdoor-microphone).
+
+<p align="center">
+  <img src="doc/max9814.svg" alt="MAX9814 module, dimensioned: board 25.6 x 14.3 x 1.62 mm, 9 mm from its underside to the capsule's top, parts up to about 3 mm on the back; the 9.70 mm capsule 2.10 mm from one end, centred; five header holes 2.54 mm apart (GND, Vdd, Gain, Out, AR), 1.0 mm from the other end; two 2.30 mm mounting holes, 1.0 mm from the end and 1.5 mm from the long edges" width="640">
 </p>
 
 ### The electronics box layout
@@ -488,6 +496,7 @@ tools/ebox_layout_svg.py    draws doc/ebox_layout.svg (the electronics box, to s
 tools/esp32_svg.py          draws doc/esp32_s3.svg (the ESP32-S3 board, dimensioned)
 tools/tmc2209_svg.py        draws doc/tmc2209.svg (the TMC2209 module, dimensioned)
 tools/scd40_svg.py          draws doc/scd40.svg (the SCD40 CO2 sensor board, dimensioned)
+tools/max9814_svg.py        draws doc/max9814.svg (the MAX9814 microphone board, dimensioned)
 tools/motor_svg.py          draws doc/motor_17hs08.svg (the stepper motor, dimensioned)
 tools/motor_mount_svg.py    draws doc/motor_mount.svg (section through a motor screw)
 tools/lip_templates_svg.py  draws doc/lip_templates.svg and .pdf (full-size foam templates) and 

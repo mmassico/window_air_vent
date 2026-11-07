@@ -49,15 +49,16 @@ pin      = [6, 1.0];   // the M2 holding the tube in its socket, from the elbow'
                        //   the wall's whole 1.7 and ends 0.15 inside the bore)
 
 /* [Microphone module] */
-mod_l    = 25.67;   // MAX9814 module: PCB length
-mod_w    = 14.5;    //   width
+mod_l    = 25.6;    // MAX9814 module (measured, doc/max9814.svg in the main folder): PCB length
+mod_w    = 14.3;    //   width
 mod_t    = 1.62;    //   thickness
-mod_h    = 1.5;     //   tallest part on its back (the capsule's pins, a capacitor); nothing but the capsule on its front
-cap_d    = 9.65;    // capsule: diameter
-cap_h    = 6.5;     //   height
+mod_h    = 3.0;     //   tallest part on its back (the chip, the capsule's pins); nothing but the capsule on its front
+cap_d    = 9.70;    // capsule: diameter (9.65 to 9.70, depending where it's measured)
+cap_h    = 7.38;    //   height above the PCB (9 overall, with the PCB)
 cap_e    = 2.10;    //   from its wall to the PCB's near end; centred across the PCB's width
 hdr_e    = 1.5;     // the 5-pin header's holes (about 1 across): their centres from the PCB's far end
-cap_fit  = 0.2;     // the capsule's bore: this much over its diameter, a light press fit (mic_bore_test tries 0.1 to 0.3)
+cap_fit  = 0.3;     // the capsule's bore: this much over its diameter, a light press fit (mic_bore_test tries 0.2 to 0.4;
+                    //   0.2 printed tight: it held, but the capsule was hard to take out)
 mod_clr  = 0.5;     // at the PCB's ends in the tray (y), per side: the capsule's bore sets its position
 mod_side = 1.5;     // beside the PCB in the tray (x), per side: room for tweezers to lift it out
 
@@ -65,7 +66,7 @@ mod_side = 1.5;     // beside the PCB in the tray (x), per side: room for tweeze
 wall     = 1.6;     // tray walls, lid
 fl_t     = 3;       // flange on the foam's face (it is also the tray's back wall)
 fl_w     = 43;      // flange width (x), with the screws
-floor_z  = 15;      // the tray's floor (the PCB's front face) above the tube's axis: the capsule's bore stays above
+floor_z  = 16;      // the tray's floor (the PCB's front face) above the tube's axis: the capsule's bore stays above
                     //   the split
 tray_h   = 6;       // tray walls above the floor: the lid's rim stays above the module's parts
 screw    = [4.25, 8, 3.5];   // screws into the foam, as the latch cover's: hole, head diameter, head height
@@ -231,10 +232,10 @@ module mic_parts() {
     translate([fl_w / 2 + tw + 2 * wall + blk + 14, 50, 0]) tube_print();
 }
 
-// three bores 0.1, 0.2 and 0.3 over the capsule's diameter, as deep as the elbow's, with a hole below each to push
+// three bores 0.2, 0.3 and 0.4 over the capsule's diameter, as deep as the elbow's, with a hole below each to push
 // the capsule out; the number of notches on the edge beside each tells which
 module bore_test() {
-    fits = [0.1, 0.2, 0.3];
+    fits = [0.2, 0.3, 0.4];
     p = cap_d + 5;
     difference() {
         cube([3 * p, p, cap_h + 0.3 + 1.5]);

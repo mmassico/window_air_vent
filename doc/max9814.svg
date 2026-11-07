@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1090" viewBox="0 0 1240 1090" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect width="1240" height="1090" fill="#ffffff"/>
+<rect x="150" y="150" width="614.4000000000001" height="343.20000000000005" rx="6" fill="#6a2c8c" stroke="#3e1554" stroke-width="2"/>
+<circle cx="201.6" cy="213.6" r="37.2" fill="#e8e8e8" stroke="#888" stroke-width="2"/>
+<circle cx="201.6" cy="213.6" r="27.6" fill="#ffffff" stroke="#888"/>
+<circle cx="201.6" cy="429.6" r="37.2" fill="#e8e8e8" stroke="#888" stroke-width="2"/>
+<circle cx="201.6" cy="429.6" r="27.6" fill="#ffffff" stroke="#888"/>
+<circle cx="316.8" cy="321.6" r="116.4" fill="#c8c8c8" stroke="#666" stroke-width="2"/>
+<circle cx="316.8" cy="321.6" r="99.6" fill="#2b2b2b" stroke="#555"/>
+<text x="316.8" y="317.6" font-size="15" text-anchor="middle" fill="#ffffff" font-weight="bold">capsule</text>
+<text x="316.8" y="336.6" font-size="12" text-anchor="middle" fill="#dddddd" font-weight="normal">felt up</text>
+<text x="514.8" y="220.8" font-size="13" text-anchor="start" fill="#f0e6f6" font-weight="normal">Gain: open 60 dB,</text>
+<text x="514.8" y="239.8" font-size="13" text-anchor="start" fill="#f0e6f6" font-weight="normal">GND 50 dB, Vdd 40 dB</text>
+<text x="514.8" y="258.8" font-size="13" text-anchor="start" fill="#f0e6f6" font-weight="normal">Out: 2 Vpp max,</text>
+<text x="514.8" y="277.8" font-size="13" text-anchor="start" fill="#f0e6f6" font-weight="normal">1.25 V DC</text>
+<circle cx="728.4" cy="199.7" r="20.4" fill="#e8e8e8" stroke="#888" stroke-width="2"/>
+<circle cx="728.4" cy="199.7" r="12.0" fill="#6a2c8c"/>
+<text x="702.0" y="204.7" font-size="14" text-anchor="end" fill="#ffffff" font-weight="bold">GND</text>
+<circle cx="728.4" cy="260.6" r="20.4" fill="#e8e8e8" stroke="#888" stroke-width="2"/>
+<circle cx="728.4" cy="260.6" r="12.0" fill="#6a2c8c"/>
+<text x="702.0" y="265.6" font-size="14" text-anchor="end" fill="#ffffff" font-weight="bold">Vdd</text>
+<circle cx="728.4" cy="321.6" r="20.4" fill="#e8e8e8" stroke="#888" stroke-width="2"/>
+<circle cx="728.4" cy="321.6" r="12.0" fill="#6a2c8c"/>
+<text x="702.0" y="326.6" font-size="14" text-anchor="end" fill="#ffffff" font-weight="bold">Gain</text>
+<circle cx="728.4" cy="382.6" r="20.4" fill="#e8e8e8" stroke="#888" stroke-width="2"/>
+<circle cx="728.4" cy="382.6" r="12.0" fill="#6a2c8c"/>
+<text x="702.0" y="387.6" font-size="14" text-anchor="end" fill="#ffffff" font-weight="bold">Out</text>
+<circle cx="728.4" cy="443.5" r="20.4" fill="#e8e8e8" stroke="#888" stroke-width="2"/>
+<circle cx="728.4" cy="443.5" r="12.0" fill="#6a2c8c"/>
+<text x="702.0" y="448.5" font-size="14" text-anchor="end" fill="#ffffff" font-weight="bold">AR</text>
+<line x1="150.0" y1="150.0" x2="150.0" y2="94.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="764.4" y1="150.0" x2="764.4" y2="94.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="150.0" y1="100.0" x2="764.4" y2="100.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="150.0,100.0 160.0,96.0 160.0,104.0" fill="#b3261e"/>
+<polygon points="764.4,100.0 754.4,104.0 754.4,96.0" fill="#b3261e"/>
+<text x="457.2" y="93.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">25.6</text>
+<line x1="764.4" y1="150.0" x2="865.4" y2="150.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="764.4" y1="493.2" x2="865.4" y2="493.2" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="859.4" y1="150.0" x2="859.4" y2="493.2" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="859.4,150.0 863.4,160.0 855.4,160.0" fill="#b3261e"/>
+<polygon points="859.4,493.2 855.4,483.2 863.4,483.2" fill="#b3261e"/>
+<text x="869.4" y="326.6" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">14.3</text>
+<line x1="150.0" y1="321.6" x2="150.0" y2="539.2" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="200.4" y1="321.6" x2="200.4" y2="539.2" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="150.0" y1="533.2" x2="200.4" y2="533.2" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="150.0,533.2 160.0,529.2 160.0,537.2" fill="#b3261e"/>
+<polygon points="200.4,533.2 190.4,537.2 190.4,529.2" fill="#b3261e"/>
+<text x="175.2" y="553.2" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">2.10</text>
+<line x1="200.4" y1="321.6" x2="200.4" y2="539.2" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="433.2" y1="321.6" x2="433.2" y2="539.2" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="200.4" y1="533.2" x2="433.2" y2="533.2" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="200.4,533.2 210.4,529.2 210.4,537.2" fill="#b3261e"/>
+<polygon points="433.2,533.2 423.2,537.2 423.2,529.2" fill="#b3261e"/>
+<text x="316.8" y="553.2" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">Ø 9.70</text>
+<line x1="740.4" y1="199.7" x2="740.4" y2="130.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="764.4" y1="199.7" x2="764.4" y2="130.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="740.4" y1="136.0" x2="764.4" y2="136.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="740.4,136.0 750.4,132.0 750.4,140.0" fill="#b3261e"/>
+<polygon points="764.4,136.0 754.4,140.0 754.4,132.0" fill="#b3261e"/>
+<text x="752.4" y="129.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">1.0</text>
+<line x1="760.8" y1="199.7" x2="800.4" y2="199.7" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="760.8" y1="443.5" x2="800.4" y2="443.5" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="794.4" y1="199.7" x2="794.4" y2="443.5" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="794.4,199.7 798.4,209.7 790.4,209.7" fill="#b3261e"/>
+<polygon points="794.4,443.5 790.4,433.5 798.4,433.5" fill="#b3261e"/>
+<text x="804.4" y="326.6" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">4 x 2.54</text>
+<text x="794.4" y="519.2" font-size="13" text-anchor="start" fill="#7a7a7a" font-weight="normal" font-style="italic">holes Ø 1 (standard)</text>
+<line x1="174.0" y1="150.0" x2="114.0" y2="150.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="174.0" y1="186.0" x2="114.0" y2="186.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="120.0" y1="150.0" x2="120.0" y2="186.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="120.0,150.0 124.0,160.0 116.0,160.0" fill="#b3261e"/>
+<polygon points="120.0,186.0 116.0,176.0 124.0,176.0" fill="#b3261e"/>
+<text x="110.0" y="173.0" font-size="15" text-anchor="end" fill="#b3261e" font-weight="normal">1.5</text>
+<line x1="150.0" y1="186.0" x2="150.0" y2="130.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="174.0" y1="186.0" x2="174.0" y2="130.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="150.0" y1="136.0" x2="174.0" y2="136.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="150.0,136.0 160.0,132.0 160.0,140.0" fill="#b3261e"/>
+<polygon points="174.0,136.0 164.0,140.0 164.0,132.0" fill="#b3261e"/>
+<text x="162.0" y="129.0" font-size="15" text-anchor="middle" fill="#b3261e" font-weight="normal">1.0</text>
+<text x="136.0" y="434.6" font-size="15" text-anchor="end" fill="#b3261e" font-weight="normal">holes Ø 2.30</text>
+<text x="457.2" y="593.2" font-size="15" text-anchor="middle" fill="#111" font-weight="bold">Top view, capsule side up</text>
+<rect x="330.0" y="791.1" width="614.4" height="38.9" fill="#6a2c8c" stroke="#3e1554" stroke-width="1.5"/>
+<rect x="380.4" y="614.0" width="232.8" height="177.1" fill="#c8c8c8" stroke="#666" stroke-width="1.5"/>
+<rect x="390.0" y="614.0" width="213.6" height="12.0" fill="#2b2b2b" stroke="#555" stroke-width="1.5"/>
+<rect x="414.0" y="830.0" width="432.0" height="72.0" fill="#f3eef6" stroke="#7a7a7a" stroke-width="1.5" stroke-dasharray="5,4"/>
+<text x="630.0" y="871.0" font-size="13" text-anchor="middle" fill="#7a7a7a" font-weight="normal" font-style="italic">parts on the back (chip, capsule's pins), up to about 3</text>
+<line x1="944.4" y1="830.0" x2="979.2" y2="830.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="944.4" y1="791.1" x2="979.2" y2="791.1" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="973.2" y1="830.0" x2="973.2" y2="791.1" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="973.2,830.0 969.2,820.0 977.2,820.0" fill="#b3261e"/>
+<polygon points="973.2,791.1 977.2,801.1 969.2,801.1" fill="#b3261e"/>
+<text x="983.2" y="815.6" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">1.62 board</text>
+<line x1="380.4" y1="830.0" x2="288.0" y2="830.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="380.4" y1="614.0" x2="288.0" y2="614.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="294.0" y1="830.0" x2="294.0" y2="614.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="294.0,830.0 290.0,820.0 298.0,820.0" fill="#b3261e"/>
+<polygon points="294.0,614.0 298.0,624.0 290.0,624.0" fill="#b3261e"/>
+<text x="284.0" y="727.0" font-size="15" text-anchor="end" fill="#b3261e" font-weight="normal">9.0 overall</text>
+<line x1="613.2" y1="791.1" x2="648.0" y2="791.1" stroke="#7a7a7a" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="613.2" y1="614.0" x2="648.0" y2="614.0" stroke="#7a7a7a" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="642.0" y1="791.1" x2="642.0" y2="614.0" stroke="#7a7a7a" stroke-width="1.5"/>
+<polygon points="642.0,791.1 638.0,781.1 646.0,781.1" fill="#7a7a7a"/>
+<polygon points="642.0,614.0 646.0,624.0 638.0,624.0" fill="#7a7a7a"/>
+<text x="652.0" y="707.6" font-size="15" text-anchor="start" fill="#7a7a7a" font-weight="normal" font-style="italic">7.38</text>
+<line x1="846.0" y1="902.0" x2="979.2" y2="902.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="846.0" y1="830.0" x2="979.2" y2="830.0" stroke="#b3261e" stroke-width="1" stroke-dasharray="3,3"/>
+<line x1="973.2" y1="902.0" x2="973.2" y2="830.0" stroke="#b3261e" stroke-width="1.5"/>
+<polygon points="973.2,902.0 969.2,892.0 977.2,892.0" fill="#b3261e"/>
+<polygon points="973.2,830.0 977.2,840.0 969.2,840.0" fill="#b3261e"/>
+<text x="983.2" y="871.0" font-size="15" text-anchor="start" fill="#b3261e" font-weight="normal">about 3</text>
+<text x="637.2" y="942.0" font-size="15" text-anchor="middle" fill="#111" font-weight="bold">Side view, from a long edge</text>
+<text x="40.0" y="50.0" font-size="22" text-anchor="start" fill="#111" font-weight="bold">MAX9814 microphone module (AGC amplifier and electret capsule on a 14.3 x 25.6 mm board), mm</text>
+<text x="40.0" y="995.0" font-size="14" text-anchor="start" fill="#333" font-weight="normal">Measured: board 25.6 x 14.3 x 1.62; 9 from its underside to the capsule's top; parts on the back up to about 3;</text>
+<text x="40.0" y="1017.0" font-size="14" text-anchor="start" fill="#333" font-weight="normal">capsule 2.10 from the near end; header holes 1.0 and mounting holes (Ø 2.30) 1.0 and 1.5 from the edges (edge to hole edge).</text>
+<text x="40.0" y="1039.0" font-size="14" text-anchor="start" fill="#333" font-weight="normal">Grey italic values are estimates or derived. Header pins 2.54 apart, centred; their order reads the other way on the back.</text>
+<text x="40.0" y="1061.0" font-size="14" text-anchor="start" fill="#333" font-weight="normal">Wired here: Vdd and GND to 3V3 and GND, Out to GPIO 21 (joined to GPIO 3), Gain to Vdd (40 dB), AR open.</text>
+</svg>
