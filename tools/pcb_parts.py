@@ -13,7 +13,7 @@ TMC_P = ["VM", "GND", "M1B", "M1A", "M2A", "M2B", "VIO", "GND"]
 ESP_GPIO = {
     "4": "FAN0_PWM", "5": "FAN1_PWM", "6": "ENC_SDA", "7": "ENC_SCL", "15": "FAN0_TACH", "16": "FAN1_TACH",
     "17": "TMC_TX", "18": "TMC_UART", "8": "SCD_SDA", "9": "SCD_SCL", "10": "TMC_EN", "11": "TMC_STEP",
-    "12": "TMC_DIR", "13": "TMC_DIAG", "14": "DQ_OUT", "1": "V12_SENSE", "21": "DQ_IN", "3": "MIC",
+    "12": "TMC_DIR", "13": "TMC_DIAG", "14": "DQ_OUT", "1": "V12_SENSE", "21": "DQ_IN", "3": "MIC", "38": "I2S_SCK", "39": "I2S_WS",
 }
 
 
@@ -73,7 +73,10 @@ PARTS = [
     ("J5", "Connector_Generic:Conn_01x04", "SCD40", hdr(4),   # 1:1 with the SCD40 module: GND, VDD, SCL, SDA
      {"1": "GND", "2": "+3V3", "3": "SCD_SCL", "4": "SCD_SDA"}, ""),
     ("J6", "Connector_Generic:Conn_01x04", "AS5600", hdr(4), {"1": "+3V3", "2": "GND", "3": "ENC_SDA", "4": "ENC_SCL"}, ""),
-    ("J7", "Connector_Generic:Conn_01x03", "DS18B20 in", hdr(3), {"1": "+3V3", "2": "DQ_IN", "3": "GND"}, ""),
+    # J7 (2 x 3): the indoor DS18B20 or the MAX9814 on its first row (3V3, IN, GND, as the old 3-pin header), or the
+    # INMP441 (I2S) on both rows: SD on IN (GPIO 21), WS, SCK, and the second GND for its L/R pin
+    ("J7", "Connector_Generic:Conn_02x03_Odd_Even", "DS18B20 in / MIC", "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical",
+     {"5": "+3V3", "3": "DQ_IN", "1": "GND", "6": "I2S_WS", "4": "I2S_SCK", "2": "GND"}, ""),
     ("J8", "Connector_Generic:Conn_01x03", "DS18B20 out", hdr(3), {"1": "GND", "2": "DQ_OUT", "3": "+3V3"}, ""),
     ("TP1", "Connector:TestPoint", "GND", "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm", {"1": "GND"}, ""),
     ("TP2", "Connector:TestPoint", "3V3", "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm", {"1": "+3V3"}, ""),

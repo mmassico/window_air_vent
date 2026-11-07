@@ -106,11 +106,13 @@ PLACE = {
     "J1": (168.2, 130.0, 0), "JP1": (160.4, 130.3, 90), "D1": (158.9, 135.2, 0), "C1": (158.7, 144.1, 0),
     "TP3": (168.3, 138.6, 0), "TP4": (168.3, 142.1, 0),
     # connectors, left of the TMC2209: three rows of headers, pins along x
-    "J6": (106.8, 135.3, 90), "J7": (118.6, 135.3, 90), "J8": (127.4, 135.3, 90),
-    "J3": (106.8, 140.7, 90), "J5": (118.6, 140.7, 90),
-    "J2": (106.8, 148.1, 90), "J4": (118.6, 148.1, 90),       # the motor header next to the driver's motor pins
-    # standing resistors: fan pull-ups and pull-downs between the fan 1/SCD40 row and the fan 0/motor row
-    "R1": (107.0, 144.0, 0), "R2": (112.6, 144.0, 0), "R3": (118.8, 144.0, 0), "R4": (124.4, 144.0, 0),
+    # J7 is 2 x 3, its first row (3V3, IN, GND) where the 3-pin header was; pin 1 (GND) at its right end
+    "J6": (106.8, 135.3, 90), "J7": (118.6 + 2 * P, 135.3, 270), "J8": (127.4, 135.3, 90),
+    "J3": (106.8, 140.7, 90),
+    "J2": (106.8, 148.1, 90), "J5": (118.6, 148.1, 90),
+    "J4": (131.4, 138.9, 0),                                   # the motor header, standing beside the driver's motor pins
+    # standing resistors: fan pull-ups and pull-downs, R1/R2 between the fan headers, R3/R4 under J7
+    "R1": (107.0, 144.0, 0), "R2": (112.6, 144.0, 0), "R3": (118.8, 142.0, 0), "R4": (124.4, 142.0, 0),
     # 1-Wire pull-ups beside the ESP32's USB end, lying on the back: the USB-C plugs pass over the top there (their
     # undersides 2.6 mm up, too low for a resistor), and the 5 mm standoffs leave room under the board
     "R9": (101.9, 112.2, 270), "R10": (105.6, 112.2, 270),

@@ -70,4 +70,5 @@
 #define PIN_LED         2       // blue LED, used as a heartbeat
 #define PIN_RGB         48      // WS2812
 
-// Reserved for the INMP441 microphone (I2S) later: SCK 38, WS 39, SD 40.
+// Reserved for the INMP441 microphone (I2S) later: SCK 38, WS 39, SD 21 (PCB v1.4: J7's second row has WS, SCK and a
+// GND for its L/R pin; SD is on J7's IN). Not supported by the firmware yet.

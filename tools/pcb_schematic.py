@@ -161,7 +161,7 @@ NOTES = [
     "R6 1k: single-wire UART, TX through 1k and RX straight onto PDN_UART. JP3/JP4 (0R 0402, both fitted): the module's PDN_UART is on pin 4 or pin 5, depending on the maker.",
     "R5 holds the driver off (EN high) while the ESP32 boots.",
     "R7/R8: 12 V reads 2.16 V on GPIO 1 (ADC1). R2/R4 keep the fans slow at boot; R1/R3 tach pull-ups; R9/R10 1-Wire pull-ups.",
-    "GPIO 38, 39, 40 stay free for the INMP441 microphone reserved in Pins.h (no room for its header on this board).",
+    "J7 (2 x 3): row 1 (3V3, IN, GND) takes the indoor DS18B20 or the MAX9814; both rows take the INMP441 (I2S): SD on IN (GPIO 21), WS GPIO 39, SCK GPIO 38, L/R to the second GND.",
     "AS5600: tie its DIR pin to GND at the module. C1 sits next to U2's VM pin.",
     "JP2 (0R 0402 on the back, not fitted): fit it, or a wire, for the audio mode, a microphone on J7 read on GPIO 3 (GPIO 21 has no ADC); leave R9 out then.",
 ]

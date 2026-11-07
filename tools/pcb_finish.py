@@ -13,7 +13,7 @@ PCB = os.path.join(ROOT, "pcb")
 NAME = "window_vent_ctrl"
 BOARD = os.path.join(PCB, NAME + ".kicad_pcb")
 CLI = r"C:\Program Files\KiCad\10.0\bin\kicad-cli.exe"
-REV = "v1.3"
+REV = "v1.4"
 mm = pcbnew.FromMM
 
 board = pcbnew.LoadBoard(os.path.join(PCB, "build", NAME + "_routed.kicad_pcb"))   # as routed, before any label
@@ -78,30 +78,25 @@ def pin_labels(x1, y, labels):
 pin_labels(106.8, 133.35, ["3V3", "GND", "SDA", "SCL"])        # J6
 pin_labels(118.6, 133.35, ["3V3", "IN", "GND"])                # J7: DS18B20 in (indoor, GPIO 21)
 pin_labels(127.4, 133.35, ["GND", "OUT", "3V3"])               # J8: DS18B20 out (outdoor, GPIO 14)
-# J7 and J8: a dotted bracket from both headers to their name, beside the TMC2209 and right of R4
-YB, XV = 137.45, 133.75
-dotted(118.6 + P, 136.95, 118.6 + P, YB)                        # from under J7's middle pin
-dotted(127.4 + P, 136.95, 127.4 + P, YB)                        # and J8's
-dotted(118.6 + P, YB, XV, YB)
-dotted(XV, YB, XV, 144.0)
-text("TEMP", XV - 1.5, 144.0, 0.8, bold=True, just="right")     # the DS18B20 temperature probes
-dotted(XV - 1.3, 144.0, XV, 144.0)                              # joined to the bracket
+pin_labels(118.6, 140.0, ["WS", "SCK", "GND"])                 # J7's second row: the INMP441 (I2S) microphone
+text("TEMP", 127.6, 137.5, 0.8, bold=True)                      # J8: the outdoor DS18B20, under its pins
 pin_labels(106.8, 138.7, ["GND", "12V", "TCH", "PWM"])         # J3: fan 1 (2 mm above the pins, as the other rows)
-pin_labels(118.6, 138.7, ["GND", "3V3", "SCL", "SDA"])         # J5: SCD40
+for i, s in enumerate(["1A", "1B", "2A", "2B"]):                 # J4: the motor, standing beside the TMC2209
+    text(s, 133.6, 138.9 + i * P, 0.8, angle=90)
 pin_labels(106.8, 146.05, ["GND", "12V", "TCH", "PWM"])        # J2: fan 0
-pin_labels(118.6, 146.05, ["1A", "1B", "2A", "2B"])            # J4: motor
+pin_labels(118.6, 146.05, ["GND", "3V3", "SCL", "SDA"])        # J5: SCD40
 text("AS5600", 102.8, 134.65, 0.8, bold=True)
 text("POS", 102.8, 135.95, 0.8)                                 # the position encoder
 fan1 = text("FAN1", 103.3, 140.7, 0.8, bold=True)
 poly([(102.75, 138.5), (103.85, 138.5), (103.3, 139.45)])       # fan 1: the exhaust, the bottom duct
 GAP = 106.8 - 1.27 - pcbnew.ToMM(fan1.GetBoundingBox().GetRight())     # FAN1 to its header's outline
 text("FAN0", 104.75, 148.1, 0.8, bold=True, angle=90)       # beside its header
-for name, y in (("SCD40", 140.05), ("MOTOR", 148.1)):         # the same gap after J5's and J4's outline
-    text(name, 118.6 + 3 * P + 1.27 + GAP, y, 0.8, bold=True, just="left")
-text("CO_{2}", 118.6 + 3 * P + 1.27 + GAP, 141.35, 0.8, just="left")   # with a subscript 2
+text("MOTOR", 129.2, 141.0, 0.8, bold=True, angle=90)          # beside their headers, as FAN0
+text("SCD40", 128.75, 147.6, 0.8, bold=True, angle=90)
+text("R3 R4 10k", 122.0, 144.25, 0.8)                            # the standing pair, under J7
 
 # resistors: standing ones above their pads, lying ones on their body
-text("R1-R4", 103.2, 142.9, 0.8)                                 # the standing ones, left to right
+text("R1 R2", 103.2, 142.9, 0.8)                                 # the standing ones, left to right
 text("10k", 103.2, 144.2, 0.8)
 for ref, x, val, pads in (("R5", 112.48, "10k", (107.4, 117.56)), ("R6", 124.88, "1k", (119.8, 129.96)),
                           ("R8", 137.28, "22k", (132.2, 142.36)), ("R7", 149.72, "100k", (144.64, 154.8))):
