@@ -325,7 +325,11 @@ void HwBegin()
 
     FansBegin();
     Ds18b20Begin(PIN_TEMP_OUT);
-#if AUDIO_MODE
+#if AUDIO_MODE && MIC_INMP441
+    analogReadResolution(12);                       // the ADC stays free: the 12 V sense reads one-shot
+    if (!SoundStreamBeginI2s(PIN_I2S_SCK, PIN_I2S_WS, PIN_I2S_SD, PIN_MIC))  // GPIO 3, if JP2 joins it, left floating
+        Log("Microphone: the I2S driver didn't start");
+#elif AUDIO_MODE
     if (!SoundStreamBegin(PIN_MIC, PIN_MIC_LINK, PIN_12V_SENSE))    // it also reads the 12 V sense
         Log("Microphone: the ADC's continuous mode didn't start");
 #else
@@ -446,8 +450,7 @@ void HwPoll(Inputs* in)
             lastNew = now;
         }
         uint32_t sec = count > SOUND_STREAM_PER_S ? count - SOUND_STREAM_PER_S : 0;
-        bool ok = now - lastNew < 2000 && SoundStreamRead(&sec, &st)
-                  && st.dcMv > 300 && st.dcMv < 3000;   // no bias: no microphone
+        bool ok = now - lastNew < 2000 && SoundStreamRead(&sec, &st) && st.micOk;
         in->sndOk = ok;
         if (ok)
             in->snd = st.dba + g_set.micCal;
@@ -464,7 +467,7 @@ void HwPoll(Inputs* in)
     if (now - v12Last >= 1000)
     {
         v12Last = now;
-#if AUDIO_MODE
+#if AUDIO_MODE && !MIC_INMP441
         float mv = SoundStreamOtherMv();
 #else
         float mv = analogReadMilliVolts(PIN_12V_SENSE);

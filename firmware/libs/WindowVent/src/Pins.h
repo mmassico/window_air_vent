@@ -63,12 +63,28 @@
 #endif
 #define PIN_MIC         3
 #define PIN_MIC_LINK    21      // wired to PIN_MIC, kept high impedance
+
+// Audio mode's microphone: 0 = the MAX9814 (analog, above), 1 = an INMP441 (I2S, digital) on PCB v1.4's J7: its first
+// row as for the MAX9814 (3V3, IN = SD, GND), its second row WS, SCK and GND (for the INMP441's L/R pin: the left
+// slot). SD is GPIO 21, any GPIO can carry I2S; GPIO 38 and 39 are free on this board (35-37 are the octal PSRAM's).
+// Leave JP2 open (GPIO 3 is then unused; if fitted, the firmware leaves GPIO 3 high impedance). R9 (4.7 k to 3V3) may
+// stay. Its levels are factory-calibrated (+-1 dB): no 'sound cal' needed. The 12 V sense goes back to analogRead.
+#ifndef MIC_INMP441
+#define MIC_INMP441     0
+#endif
+#define PIN_I2S_SCK     38
+#define PIN_I2S_WS      39
+#define PIN_I2S_SD      21      // J7's IN, as the DS18B20's DQ and the MAX9814's OUT
+#if MIC_INMP441
+#define MIC_NAME        "inmp441"
+#define MIC_CAL_DB      120.0f  // dBA = A-weighted dBFS + this: the INMP441 gives -26 dBFS at 94 dB SPL (1 kHz)
+#else
+#define MIC_NAME        "max9814"
 #define MIC_CAL_DB      90.8f   // dBA = A-weighted dBFS + this: measured on the bench MAX9814 (GAIN to VDD, 40 dB)
                                 //   against a calibrated meter ('sound cal' measures it); 0 = levels in dBFS
+#endif
 
 // On-board indicators.
 #define PIN_LED         2       // blue LED, used as a heartbeat
 #define PIN_RGB         48      // WS2812
 
-// Reserved for the INMP441 microphone (I2S) later: SCK 38, WS 39, SD 21 (PCB v1.4: J7's second row has WS, SCK and a
-// GND for its L/R pin; SD is on J7's IN). Not supported by the firmware yet.

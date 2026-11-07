@@ -100,6 +100,7 @@ void SettingsToJson(const Settings& s, JsonObject o)
 
     JsonObject n = o["noise"].to<JsonObject>();
     n["enabled"] = s.noiseEnabled; n["db"] = s.noiseDb; n["pct"] = s.noisePct; n["holdS"] = s.noiseHoldS; n["micCal"] = s.micCal;
+    n["mic"] = MIC_NAME;                            // which microphone micCal belongs to
 
     JsonObject f = o["fans"].to<JsonObject>();
     f["balance"] = s.balance;     f["minDuty"] = s.fanMinDuty;
@@ -229,7 +230,12 @@ void SettingsLoad()
     p.end();
     JsonDocument doc;
     if (js.length() && !deserializeJson(doc, js))
+    {
         SettingsFromJson(&g_set, doc.as<JsonObjectConst>());
+        // micCal saved for the other microphone (settings without "mic" come from the MAX9814): its default instead
+        if (strcmp(doc["noise"]["mic"] | "max9814", MIC_NAME))
+            g_set.micCal = MIC_CAL_DB;
+    }
 }
 
 static uint32_t s_rev;

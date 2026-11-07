@@ -9,7 +9,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "firmware", "images", "wiring.svg")
-W, H = 1640, 1480
+W, H = 1640, 1700
 
 C_I2C = "#1b7f3b"
 C_MOT = "#6a3fb5"
@@ -18,7 +18,7 @@ C_SNS = "#b3261e"
 C_PWR = "#1f5fbf"
 C_TMP = "#0b7a75"
 C_AUD = "#a0287a"
-NET = {"12V": "#b3261e", "3V3": "#d17a00", "5V": "#1f5fbf", "GND": "#333333"}
+NET = {"12V": "#b3261e", "3V3": "#d17a00", "5V": "#1f5fbf", "GND": "#333333", "SCK": C_AUD, "WS": C_AUD}
 
 out = []
 
@@ -290,6 +290,29 @@ for y, pin, net in ((yv, "VDD", "3V3"), (yg, "GND", "GND")):
     lead_tag(TX1, y, net, "right", 30)
 text(TX0 + 10, MY0 + 108, "GAIN to VDD (40 dB), A/R open", 12.5, color="#444")
 
+# Or an INMP441 (I2S, digital): SD on the same GPIO 21, WS and SCK on GPIO 39 and 38 (net tags: PCB v1.4's J7 has
+# them on its second row). MIC_INMP441 1 in Pins.h.
+IY0 = 1370
+box(TX0, IY0, TX1, IY0 + 130, "INMP441 (audio mode)", "I2S microphone, optional")
+out[-3] = out[-3].replace('stroke-width="2"/>', 'stroke-width="2" stroke-dasharray="8,5"/>')
+text((TX0 + TX1) / 2, IY0 - 12, "or", 13, "middle", "bold", "#444", italic=True)
+ysd = IY0 + 66
+text(TX0 + 10, ysd + 5, "SD", 14)
+dot(1120, yo, C_AUD)
+line([(1120, yo), (1120, ysd), (TX0, ysd)], C_AUD)
+for y, pin, net in ((IY0 + 90, "WS", "WS"), (IY0 + 114, "SCK", "SCK")):
+    text(TX0 + 10, y + 5, pin, 14)
+    lead_tag(TX0, y, net, "left", 30)
+for y, pin, net in ((IY0 + 66, "VDD", "3V3"), (IY0 + 90, "GND", "GND"), (IY0 + 114, "L/R", "GND")):
+    text(TX1 - 10, y + 5, pin, 14, "end")
+    lead_tag(TX1, y, net, "right", 30)
+text(TX1 + 20, IY0 + 152, "L/R to GND: the left channel", 12.5, "end", color="#444")
+for y, gpio, net in ((880, 38, "SCK"), (910, 39, "WS")):
+    esp_right(y, f"GPIO {gpio}  I2S {net}", C_AUD)
+    line([(EX1, y), (960, y)], C_AUD, 2)
+    tag(960, y, net, "right")
+text(930, 945, "INMP441 only", 12.5, color=C_AUD, italic=True)
+
 y3, yl = 1100, 1232
 text(EX0 + 10, y3 + 5, "GPIO 3  mic (audio)", 14)
 dot(920, 1166, C_AUD)
@@ -320,9 +343,11 @@ notes = [
     "DS18B20: three wires each (no parasite power), one 4.7 k pull-up per sensor at the ESP32 end. The indoor one (dashed) is optional.",
     "Audio mode (dashed, AUDIO_MODE 1 in Pins.h): the MAX9814 takes the indoor probe's header, without its 4.7 k pull-up,"
     " and GPIO 21 is joined to GPIO 3 (a wire, or JP2 on PCB v1.1).",
+    "Or the INMP441 (MIC_INMP441 1): SD on GPIO 21 (GPIO 3 unused, the 4.7 k may stay), WS and SCK on GPIO 39 and 38:"
+    " PCB v1.4's J7 (2 x 3) carries all of them.",
 ]
 for i, n in enumerate(notes):
-    text(60, 1355 + i * 24, n, 14, color="#333")
+    text(60, 1555 + i * 24, n, 14, color="#333")
 
 text(60, 34, "Window vent: wiring", 24, weight="bold")
 

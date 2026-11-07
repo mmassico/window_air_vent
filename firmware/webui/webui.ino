@@ -594,9 +594,14 @@ static void shell(int argc, char* argv[], Print& out)
             Log("Microphone calibrated: micCal %.1f dB%s", g_set.micCal, saved ? "" : ", NOT saved");
         }
         out.printf("%.1f dBFS A-weighted -> %.1f dBA, loudest 1/8 s %.1f dBA (micCal %.1f); %.1f dBFS flat (150 Hz "
-                   "high-pass), bias %d mV, peak to peak %d counts%s, %.0f samples/s, over %.3f s\n", r.dba,
-                   r.dba + g_set.micCal, r.dbaMax + g_set.micCal, g_set.micCal, r.dbfs, r.dcMv, r.p2p,
-                   r.clipped ? " CLIPPED" : "", r.rateHz, r.blocks / (float)SOUND_STREAM_PER_S);
+                   "high-pass), ", r.dba, r.dba + g_set.micCal, r.dbaMax + g_set.micCal, g_set.micCal, r.dbfs);
+#if MIC_INMP441
+        out.printf("INMP441 (I2S)%s", r.micOk ? "" : ", NO SIGNAL: check its wiring and its L/R pin to GND");
+#else
+        out.printf("bias %d mV", r.dcMv);
+#endif
+        out.printf(", peak to peak %d counts%s, %.0f samples/s, over %.3f s\n", r.p2p, r.clipped ? " CLIPPED" : "",
+                   r.rateHz, r.blocks / (float)SOUND_STREAM_PER_S);
 #else
         out.print("sound: not in audio mode (AUDIO_MODE in Pins.h)\n");
 #endif
