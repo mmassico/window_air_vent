@@ -162,7 +162,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | AS5600 magnetic encoder board + **diametric** magnet | 1 | Sold with the magnet (the kit: 23.3 × 22.8 mm board, 3.95 × 2 mm magnet). A 20 × 20 board with 15 mm hole spacing also fits: 4 × M3 × 12 + nuts onto standoff pads on the bottom plate. See the magnet note below | $12.69 (pack of 2) |
 | ESP32-S3 dev board | 1 | Freenove ESP32-S3-WROOM Lite (FNK0099), the board the firmware's pinout is written for; other ESP32-S3-WROOM-1 boards work with a pin check. Flash it over USB on the bench; the final firmware updates over Wi-Fi | — |
 | CO₂ sensor, NDIR | 1 | Sensirion SCD40 module (CO₂ + temperature + humidity, I²C). Not CCS811/SGP30 ("eCO₂" estimates) | $37.45 |
-| DS18B20 temperature probe, waterproof | 1 (+1 optional) | Outdoor air: the 6 mm stainless probe on its cable goes through the foam insert, above the upper hole ([template](#drilling-the-foam-insert)). A second one, indoors on an inside wall, is optional: the SCD40 already reads the room's temperature | — |
+| DS18B20 temperature probe, waterproof | 1 (+1 optional) | Outdoor air: the 6 mm stainless probe on its cable goes through the foam insert ([template](#drilling-the-foam-insert)); if possible, far from the exhaust (the upper hole), whose warm air skews the reading. A second one, indoors on an inside wall, is optional: the SCD40 already reads the room's temperature | — |
 | Steel rod, 5 mm × 200 mm | 1 | Damper shaft. 200 mm fits as is, no cutting. If it is HSS (very hard), grind a small flat with a rotary tool where each disc and the coupler clamp, so the screws can't slip | $12.79 (pack of 2) |
 | Flexible shaft coupler, 5–5 mm, 19 × 25 mm | 1 | | $13.49 (pack of 2) |
 | M3 × 35 screws + M3 nuts | 8 each | Fans | — |
@@ -351,7 +351,7 @@ To adjust (open `cad/window_vent.scad` in OpenSCAD, change `seat_bare`, export `
 
 ### Drilling the foam insert
 
-The insert takes two 83 mm holes, 96 mm apart, exhaust on top. The housing's plain Ø 83.7 spigots are a snug fit in them (the saw measures 83.3 across its teeth, so its holes come out about 83.3), so no O-rings are needed (sand a tight hole a little). Print the [drilling template](doc/foam_template.pdf) at 100 %, check its 100 mm bars, tape it on the foam centred across its width, and mark both centres with an awl. The template also marks an optional hole for the outdoor temperature probe, above the upper hole.
+The insert takes two 83 mm holes, 96 mm apart, exhaust on top. The housing's plain Ø 83.7 spigots are a snug fit in them (the saw measures 83.3 across its teeth, so its holes come out about 83.3), so no O-rings are needed (sand a tight hole a little). Print the [drilling template](doc/foam_template.pdf) at 100 %, check its 100 mm bars, tape it on the foam centred across its width, and mark both centres with an awl. The template also marks an optional hole for the outdoor temperature probe, above the upper hole. That spot dates from when the intake was on top: it now sits over the exhaust, whose warm air reaches the probe, so if possible put the probe far from the exhaust instead (not between the holes: the insect screen's frame covers that strip).
 
 <p align="center">
   <a href="doc/foam_template.pdf"><img src="images/foam_template.png" alt="Preview of the drilling template: two 83 mm circles 96 mm apart, labelled exhaust (top) and intake (bottom), with centre crosses, the stop ring outlines, 100 and 112 mm width guides, an optional probe hole above the upper hole, and 100 mm scale bars" width="300"></a>

@@ -58,13 +58,14 @@ def arrow(x, y, dx, dy, color=C_DIM):
 
 
 # --- title and instructions ---------------------------------------------------------------------------
-text(12, 15, "Foam insert: drilling template, full size (mm)", 6, "start", weight="bold")
+text(12, 13, "Foam insert: drilling template, full size (mm)", 6, "start", weight="bold")
 for i, s in enumerate([
         "Print at 100 % (Actual size, not Fit to page); both bars must measure 100 mm.",
         "Tape it on the foam, centred across the insert's width, EXHAUST on top (it works from either face).",
         "Drill a pilot hole right through each centre: mark it with an awl, or set the drill_guide on the lines.",
-        "Cut with a 3-1/4 in (83 mm) hole saw, halfway from each face, centred on the pilot hole."]):
-    text(12, 23 + i * 5, s, 3.4, "start")
+        "Cut with a 3-1/4 in (83 mm) hole saw, halfway from each face, centred on the pilot hole.",
+        "Outdoor probe: if possible, put it far from the exhaust (the top hole), not in the spot marked below."]):
+    text(12, 20 + i * 4.6, s, 3.4, "start")   # the last one ends above the centre line (y 40)
 
 # --- guides: centre line, the largest gap ----------------------------------------------------------------
 y_top, y_bot = CY - PITCH / 2 - STOP / 2 - 9 - 14, CY + PITCH / 2 + STOP / 2 + 4
