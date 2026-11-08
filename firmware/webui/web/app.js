@@ -608,15 +608,18 @@ function onState(s) {
     chartSound = sound;
     rebuildCharts();
   }
-  setText($('snd'), fmt(s.in.snd));
+  // the loudest 1/8 s since the last state: what the noise cap compares, and what the history keeps (older
+  // firmware: the second's level)
+  const snd = s.in.sndMax !== undefined ? s.in.sndMax : s.in.snd;
+  setText($('snd'), fmt(snd));
   if (settings) {                                     // sound bar: 30 to 100 dBA, green to the threshold, yellow above
     const n = settings.noise, pos = (v) => Math.min(100, Math.max(0, ((v - 30) / 70) * 100));
-    const th = pos(n.db), loud = s.in.snd !== null && s.in.snd >= n.db;
+    const th = pos(n.db), loud = snd !== null && snd >= n.db;
     setText($('sndSub'), 'Threshold: ' + fmt(n.db) + ' dBA' + (n.enabled ? '' : ' (control off)'));
     $('sndBar').style.background = `linear-gradient(90deg, color-mix(in srgb, ${cssVar('--good')} 60%, transparent) 0 ${th}%, `
       + `color-mix(in srgb, ${cssVar('--fair')} 60%, transparent) ${th}% 100%)`;
-    if (s.in.snd !== null) {
-      $('sndMark').style.left = pos(s.in.snd) + '%';
+    if (snd !== null) {
+      $('sndMark').style.left = pos(snd) + '%';
       $('sndMark').style.background = loud ? cssVar('--fair') : cssVar('--good');
     }
   }
@@ -644,7 +647,7 @@ function onState(s) {
     syncSettings();
   } else if (s.clock > clockNow || !D.t.length) {
     clockNow = s.clock;
-    pushPoint(s.clock, s.in.co2, s.out.fan, s.in.tin, s.in.tout, s.in.rh, s.in.snd);
+    pushPoint(s.clock, s.in.co2, s.out.fan, s.in.tin, s.in.tout, s.in.rh, s.in.sndMax !== undefined ? s.in.sndMax : s.in.snd);
     redrawCharts();
   }
   if (!$('tab-settings').hidden && curveDrag < 0) drawCurve();

@@ -37,6 +37,7 @@
 
 static Inputs   s_hwIn;             // the hardware's latest readings
 static Inputs   s_in;               // what the control uses (hardware or simulation)
+static float    s_sndPeak = SND_NONE;   // the loudest 1/8 s since the last state sent (what the noise cap compares)
 static Outputs  s_out;
 static bool     s_reboot;
 static bool     s_simChosen;        // the user switched the simulation: no automatic change any more
@@ -196,6 +197,8 @@ static void broadcast()
     num(in, "rh", s_in.rhOk, s_in.rh, 0);
     num(in, "tout", s_in.toutOk, s_in.tout, 1);
     num(in, "snd", s_in.sndOk, s_in.snd, 0);
+    num(in, "sndMax", s_in.sndOk && s_sndPeak > SND_NONE, s_sndPeak, 0);   // the live graph and the tile use this
+    s_sndPeak = SND_NONE;
 
     JsonObject out = doc["out"].to<JsonObject>();
     out["open"]    = s_out.open;
@@ -942,6 +945,8 @@ void loop()
             s_hwIn.sndMax = SND_NONE;   // taken: the next step gets what comes after
         }
         s_in.minuteOfDay = NetMinuteOfDay();
+        if (s_in.sndOk)
+            s_sndPeak = max(s_sndPeak, s_in.sndMax);
         float dtModel = g_sim.on && g_sim.model ? dt * g_sim.speed : dt;   // the control and the history follow model time
         ControlStep(s_in, dtModel, &s_out);
         if (g_sim.on)
