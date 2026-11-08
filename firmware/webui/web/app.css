@@ -49,6 +49,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 h3 { margin: 0 0 10px; font-size: 15px; font-weight: 600; letter-spacing: .01em; }
+.card > h3:not(:first-child) { margin-top: 24px; }   /* a second section in a card: clear of the one above */
 p { margin: 6px 0 12px; }
 .muted { color: var(--muted); font-size: 13px; }
 small { font-size: .5em; color: var(--muted); margin-left: 3px; font-weight: 500; }
@@ -136,6 +137,7 @@ button.ghost:hover, a.button:hover { border-color: var(--accent); }
 .pill { margin-top: 10px; padding: 4px 14px; border-radius: 99px; font-weight: 600; font-size: 13px; background: var(--card2); }
 .reason { color: var(--muted); font-size: 13px; min-height: 2.9em; margin: 10px 0 4px; }
 .chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.chips + .kv { margin-top: 14px; }                   /* the hardware chips, then their readings */
 .chip { font-size: 12px; padding: 3px 10px; border-radius: 99px; background: var(--card2); border: 1px solid var(--line); }
 .chip.ok { color: var(--good); }
 .chip.no { color: var(--bad); }
