@@ -78,8 +78,8 @@ PARTS = [
     ("J7", "Connector_Generic:Conn_02x03_Odd_Even", "DS18B20 in / MIC", "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Vertical",
      {"5": "+3V3", "3": "DQ_IN", "1": "GND", "6": "I2S_WS", "4": "I2S_SCK", "2": "GND"}, ""),
     ("J8", "Connector_Generic:Conn_01x03", "DS18B20 out", hdr(3), {"1": "GND", "2": "DQ_OUT", "3": "+3V3"}, ""),
-    ("TP1", "Connector:TestPoint", "GND", "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm", {"1": "GND"}, ""),
-    ("TP2", "Connector:TestPoint", "3V3", "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm", {"1": "+3V3"}, ""),
+    # +3V3 bulk capacitor (6.3 x 11 mm): its pads are also the 3V3 and GND test points
+    ("C2", "Device:C_Polarized", "470uF 10V", "Capacitor_THT:CP_Radial_D6.3mm_P2.50mm", {"1": "+3V3", "2": "GND"}, ""),
     ("TP3", "Connector:TestPoint", "VIN", "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm", {"1": "VIN"}, ""),
     ("TP4", "Connector:TestPoint", "12V", "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm", {"1": "+12V"}, ""),
     ("TP5", "Connector:TestPoint", "DIAG", "TestPoint:TestPoint_THTPad_D2.0mm_Drill1.0mm", {"1": "TMC_DIAG"}, ""),

@@ -13,7 +13,7 @@ PCB = os.path.join(ROOT, "pcb")
 NAME = "window_vent_ctrl"
 BOARD = os.path.join(PCB, NAME + ".kicad_pcb")
 CLI = r"C:\Program Files\KiCad\10.0\bin\kicad-cli.exe"
-REV = "v1.4"
+REV = "v1.5"
 mm = pcbnew.FromMM
 
 board = pcbnew.LoadBoard(os.path.join(PCB, "build", NAME + "_routed.kicad_pcb"))   # as routed, before any label
@@ -130,9 +130,16 @@ text("D1", 156.55, 138.6, 0.8)                                   # below-left of
 text("VIN", 168.3, 136.6, 0.8)
 text("12V", 168.3, 144.1, 0.8)
 
-# test pads
-text("GND", 101.9, 107.1, 0.8)
-text("3V3", 105.6, 107.1, 0.8)
+# C2, the +3V3 bulk capacitor (where the 3V3 and GND test pads were): its "+" above it, over pad 1, still visible with
+# the capacitor on (the library's, beside it, met the ESP32's outline)
+c2 = board.FindFootprintByReference("C2")
+for it in list(c2.GraphicalItems()):
+    if it.GetLayer() == pcbnew.F_SilkS and not isinstance(it, pcbnew.PCB_TEXT) and it.GetShape() == pcbnew.SHAPE_T_SEGMENT:
+        s_, e_ = it.GetStart(), it.GetEnd()
+        if abs(s_.x - e_.x) + abs(s_.y - e_.y) < mm(1.1):
+            c2.Remove(it)
+seg(104.55, 103.3, 105.35, 103.3)
+seg(104.95, 102.9, 104.95, 103.7)
 text("DIAG", 102.6, 128.55, 0.8)
 
 # the modules' names inside their outlines (visible before they go on)

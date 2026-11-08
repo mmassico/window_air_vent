@@ -116,8 +116,10 @@ PLACE = {
     # 1-Wire pull-ups beside the ESP32's USB end, lying on the back: the USB-C plugs pass over the top there (their
     # undersides 2.6 mm up, too low for a resistor), and the 5 mm standoffs leave room under the board
     "R9": (101.9, 112.2, 270), "R10": (105.6, 112.2, 270),
-    # test pads clear of the USB-UART cable's path (y 116.6 to 127.6 beside the ESP32), so they can be probed with it on
-    "TP1": (101.9, 109.4, 0), "TP2": (105.6, 109.4, 0), "TP5": (102.6, 130.6, 0),
+    # +3V3 bulk capacitor in the top-left corner, as high as it goes: its courtyard (r 3.4) touches H1's (r 2.45), and
+    # its silk circle stays clear of the ESP32's outline (x 107.16). Pad 1 (+3V3) on the right, GND on the left, as the test pads it replaces. Clear of
+    # the USB-UART cable's path (y 116.6 to 127.6 beside the ESP32), so its pads can be probed with the cable on.
+    "C2": (104.95, 107.5, 180), "TP5": (102.6, 130.6, 0),
     # audio-mode jumper (GPIO 21 to GPIO 3), on the back under the ESP32, between its two pins
     "JP2": (117.0, 124.0, 0),
     # PDN_UART jumpers on the back, just under the TMC2209's pins 4 (PDN) and 5 (UART), pad 2 toward the pin
