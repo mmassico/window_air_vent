@@ -26,7 +26,8 @@ static volatile uint32_t s_restartAt;   // after a firmware update: restart at t
 
 // Socket counters, kept by the server's open and close callbacks (both run in the server's task).
 static volatile int      s_open, s_peak;
-static volatile uint32_t s_opened, s_purged;
+static volatile uint32_t s_opened, s_purged, s_slow;
+static volatile bool     s_bcastQueued;     // a broadcast waits in the server's queue: skip the next one
 #define FD_SLOTS 64                         // lwIP's descriptors are below FD_SETSIZE (64)
 static uint32_t          s_openedAt[FD_SLOTS];   // millis() at each descriptor's accept
 
@@ -370,13 +371,149 @@ static esp_err_t onWifi(httpd_req_t* req)
 
 // --- WebSocket -------------------------------------------------------------------------------------------------
 
+// A connection's client address into ip ("?" if unknown); returns its port (0 if unknown).
+static uint16_t peer(int fd, char* ip, size_t size)
+{
+    struct sockaddr_storage a = {};
+    socklen_t               len = sizeof(a);
+    strlcpy(ip, "?", size);
+    if (getpeername(fd, (struct sockaddr*)&a, &len) != 0)
+        return 0;
+    if (a.ss_family == AF_INET)
+    {
+        struct sockaddr_in* v4 = (struct sockaddr_in*)&a;
+        inet_ntoa_r(v4->sin_addr, ip, size);
+        return ntohs(v4->sin_port);
+    }
+    if (a.ss_family == AF_INET6)                // lwIP reports IPv4 peers of a dual-stack socket this way
+    {
+        struct sockaddr_in6* v6 = (struct sockaddr_in6*)&a;
+        const uint8_t*       b = (const uint8_t*)&v6->sin6_addr;
+        snprintf(ip, size, "%u.%u.%u.%u", b[12], b[13], b[14], b[15]);
+        return ntohs(v6->sin6_port);
+    }
+    return 0;
+}
+
+// WebSocket sends never wait. The server has one task: a page asleep in the background keeps its connection but
+// stops reading, its TCP window fills, and a blocking send then waits 5 s (send_wait_timeout) for every broadcast,
+// so the server never gets to new requests. Here a frame goes out as far as there is room, the rest is kept and
+// sent at the next broadcast (a frame is never cut: that would break the stream). While a page still has some
+// of its last frame to take, newer states skip it (each one carries the whole state; the page fetches the log
+// lines it missed). WS_MISS_MAX skipped in a row (no progress for that long): the page is asleep, it is closed,
+// and it opens a new WebSocket when it wakes up.
+#define WS_MISS_MAX 15                      // broadcasts, one a second
+#define WS_HEAD_MAX 10                      // a frame's header, at most
+
+struct WsTail
+{
+    uint8_t* buf;                           // what is left to send of a frame (nullptr: nothing)
+    uint16_t len, off;
+};
+static WsTail  s_tail[FD_SLOTS];
+static uint8_t s_missed[FD_SLOTS];          // states skipped in a row
+static bool    s_wsSeen[FD_SLOTS];          // its "connected" line is in the log
+
+static void tailFree(int fd)
+{
+    free(s_tail[fd].buf);
+    s_tail[fd] = {};
+}
+
+// Sends more of the kept part; false if the connection failed.
+static bool wsFlush(int fd)
+{
+    WsTail& t = s_tail[fd];
+    while (t.buf && t.off < t.len)
+    {
+        int r = send(fd, t.buf + t.off, t.len - t.off, MSG_DONTWAIT);
+        if (r > 0)
+            t.off += r;
+        else if (r < 0 && errno != EAGAIN && errno != EWOULDBLOCK)
+            return false;
+        else
+            return true;                    // full again
+    }
+    tailFree(fd);
+    return true;
+}
+
+// Sends a frame as far as it fits now and keeps the rest (after any part still kept); false if it failed.
+static bool wsPush(int fd, const uint8_t* data, size_t len)
+{
+    WsTail& t = s_tail[fd];
+    size_t  done = 0;
+    if (!t.buf)
+        while (done < len)
+        {
+            int r = send(fd, data + done, len - done, MSG_DONTWAIT);
+            if (r > 0)
+                done += r;
+            else if (r < 0 && errno != EAGAIN && errno != EWOULDBLOCK)
+                return false;
+            else
+                break;
+        }
+    if (done == len)
+        return true;
+    size_t   keep = t.buf ? t.len - t.off : 0;
+    uint8_t* b = (uint8_t*)malloc(keep + len - done);
+    if (!b)
+        return false;
+    if (keep)
+        memcpy(b, t.buf + t.off, keep);
+    memcpy(b + keep, data + done, len - done);
+    free(t.buf);
+    t.buf = b;
+    t.len = keep + len - done;
+    t.off = 0;
+    return true;
+}
+
+// Writes a text frame's header (server frames are not masked) just before payload, which has WS_HEAD_MAX bytes
+// of room in front; returns where the frame starts.
+static uint8_t* wsFrame(uint8_t* payload, size_t len, size_t* frameLen)
+{
+    uint8_t h[WS_HEAD_MAX];
+    size_t  n;
+    h[0] = 0x81;                            // FIN, text
+    if (len < 126)
+    {
+        h[1] = len;
+        n = 2;
+    }
+    else if (len < 65536)
+    {
+        h[1] = 126;
+        h[2] = len >> 8;
+        h[3] = len;
+        n = 4;
+    }
+    else
+    {
+        h[1] = 127;
+        for (int i = 0; i < 8; i++)
+            h[2 + i] = (uint64_t)len >> (56 - 8 * i);
+        n = 10;
+    }
+    memcpy(payload - n, h, n);
+    *frameLen = n + len;
+    return payload - n;
+}
+
+static void wsClose(int fd, const char* why)
+{
+    char     ip[16];
+    uint16_t port = peer(fd, ip, sizeof(ip));
+    Log("WebSocket %s:%u %s: closed", ip, port, why);
+    tailFree(fd);
+    httpd_sess_trigger_close(s_server, fd);
+}
+
 static esp_err_t onWs(httpd_req_t* req)
 {
-    if (req->method == HTTP_GET)                        // the handshake
-    {
-        Log("WebSocket client connected");
-        return ESP_OK;
-    }
+    if (req->method == HTTP_GET)                        // the handshake: since ESP-IDF 5.5 the server no longer
+        return ESP_OK;                                  //   calls the handler for it (see sendAll)
     httpd_ws_frame_t f = {};
     if (httpd_ws_recv_frame(req, &f, 0) != ESP_OK)
         return ESP_FAIL;
@@ -393,49 +530,90 @@ static esp_err_t onWs(httpd_req_t* req)
     WebLock();
     const char* err = s_onCommand(in.as<JsonObjectConst>());
     WebUnlock();
-    if (err)
+    int fd = httpd_req_to_sockfd(req);
+    if (err && fd >= 0 && fd < FD_SLOTS)    // through the same queue as the states, so frames never mix
     {
-        String js = String("{\"type\":\"error\",\"msg\":\"") + err + "\"}";
-        httpd_ws_frame_t r = {};
-        r.type = HTTPD_WS_TYPE_TEXT;
-        r.payload = (uint8_t*)js.c_str();
-        r.len = js.length();
-        httpd_ws_send_frame(req, &r);
+        String   js = String("{\"type\":\"error\",\"msg\":\"") + err + "\"}";
+        uint8_t* b = (uint8_t*)malloc(WS_HEAD_MAX + js.length());
+        if (b)
+        {
+            memcpy(b + WS_HEAD_MAX, js.c_str(), js.length());
+            size_t   n;
+            uint8_t* fr = wsFrame(b + WS_HEAD_MAX, js.length(), &n);
+            if (!wsPush(fd, fr, n))
+                wsClose(fd, "failed");
+            free(b);
+        }
     }
     return ESP_OK;
 }
 
-// Runs in the server's task (httpd_queue_work): sends one text to every WebSocket client.
+// Runs in the server's task (httpd_queue_work): sends one state to every WebSocket client. arg: the text, after
+// WS_HEAD_MAX bytes of room for the frame's header.
 static void sendAll(void* arg)
 {
-    char* text = (char*)arg;
-    size_t fds = MAX_SOCKETS;
-    int    list[MAX_SOCKETS];
-    int    n = 0;
+    uint8_t* buf = (uint8_t*)arg;
+    uint32_t t0 = millis();
+    s_bcastQueued = false;
+    size_t   frameLen;
+    uint8_t* frame = wsFrame(buf + WS_HEAD_MAX, strlen((char*)buf + WS_HEAD_MAX), &frameLen);
+    size_t   fds = MAX_SOCKETS;
+    int      list[MAX_SOCKETS];
+    int      n = 0;
     if (httpd_get_client_list(s_server, &fds, list) == ESP_OK)
-    {
-        httpd_ws_frame_t f = {};
-        f.type = HTTPD_WS_TYPE_TEXT;
-        f.payload = (uint8_t*)text;
-        f.len = strlen(text);
         for (size_t i = 0; i < fds; i++)
-            if (httpd_ws_get_fd_info(s_server, list[i]) == HTTPD_WS_CLIENT_WEBSOCKET)
+        {
+            int fd = list[i];
+            if (fd < 0 || fd >= FD_SLOTS || httpd_ws_get_fd_info(s_server, fd) != HTTPD_WS_CLIENT_WEBSOCKET)
+                continue;
+            if (!s_wsSeen[fd])              // a new WebSocket (the handshake has no hook in this core)
             {
-                httpd_ws_send_frame_async(s_server, list[i], &f);
-                n++;
+                char ip[16];
+                peer(fd, ip, sizeof(ip));
+                Log("WebSocket client %s connected", ip);
+                s_wsSeen[fd] = true;
             }
-    }
+            if (!wsFlush(fd))
+            {
+                wsClose(fd, "failed");
+                continue;
+            }
+            if (s_tail[fd].buf)             // still taking an older state
+            {
+                if (++s_missed[fd] >= WS_MISS_MAX)
+                {
+                    s_slow = s_slow + 1;
+                    wsClose(fd, "not reading (a page asleep?)");
+                }
+                continue;
+            }
+            s_missed[fd] = 0;
+            if (!wsPush(fd, frame, frameLen))
+                wsClose(fd, "failed");
+            else
+                n++;
+        }
     s_clients = n;
-    free(text);
+    free(buf);
+    if (millis() - t0 > 300)
+        Log("WebSocket broadcast took %lu ms", (unsigned long)(millis() - t0));
 }
 
 void WebBroadcast(const char* text)
 {
-    if (!s_server)
+    if (!s_server || s_bcastQueued)         // the last one has not gone out yet: no backlog
         return;
-    char* copy = strdup(text);
-    if (copy && httpd_queue_work(s_server, sendAll, copy) != ESP_OK)
+    size_t len = strlen(text);
+    char*  copy = (char*)malloc(WS_HEAD_MAX + len + 1);
+    if (!copy)
+        return;
+    memcpy(copy + WS_HEAD_MAX, text, len + 1);
+    s_bcastQueued = true;
+    if (httpd_queue_work(s_server, sendAll, copy) != ESP_OK)
+    {
+        s_bcastQueued = false;
         free(copy);
+    }
 }
 
 int WebClients()
@@ -452,7 +630,12 @@ static esp_err_t onSockOpen(httpd_handle_t, int fd)
     if (s_open > s_peak)
         s_peak = s_open;
     if (fd >= 0 && fd < FD_SLOTS)
+    {
         s_openedAt[fd] = millis();
+        s_missed[fd] = 0;
+        s_wsSeen[fd] = false;
+        tailFree(fd);
+    }
     return ESP_OK;
 }
 
@@ -463,7 +646,16 @@ static void onSockClose(httpd_handle_t, int fd)
         s_purged = s_purged + 1;
     if (s_open > 0)
         s_open = s_open - 1;
+    if (fd >= 0 && fd < FD_SLOTS)
+        tailFree(fd);
+    // A close with the send queue full (the client not reading) cannot queue its FIN: lwIP then retries for
+    // the socket's send timeout (5 s, in the server's task) before it resets. 1 ms: it resets at once.
+    struct timeval tv = { 0, 1000 };
+    setsockopt(fd, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
+    uint32_t t0 = millis();
     close(fd);                              // with a close callback, closing is ours to do
+    if (millis() - t0 > 300)
+        Log("Closing a connection took %lu ms", (unsigned long)(millis() - t0));
 }
 
 void WebSockStats(WebSockCounts* c)
@@ -473,6 +665,7 @@ void WebSockStats(WebSockCounts* c)
     c->peak = s_peak;
     c->opened = s_opened;
     c->purged = s_purged;
+    c->slow = s_slow;
 }
 
 int WebSockList(WebSockInfo* out, int max)
@@ -487,29 +680,10 @@ int WebSockList(WebSockInfo* out, int max)
     for (size_t i = 0; i < fds && n < max; i++)
     {
         WebSockInfo& s = out[n++];
-        struct sockaddr_storage a = {};
-        socklen_t               len = sizeof(a);
         s.fd = list[i];
         s.ws = httpd_ws_get_fd_info(s_server, list[i]) == HTTPD_WS_CLIENT_WEBSOCKET;
         s.ageS = list[i] >= 0 && list[i] < FD_SLOTS ? (millis() - s_openedAt[list[i]]) / 1000 : 0;
-        s.port = 0;
-        strlcpy(s.ip, "?", sizeof(s.ip));
-        if (getpeername(list[i], (struct sockaddr*)&a, &len) == 0)
-        {
-            if (a.ss_family == AF_INET)
-            {
-                struct sockaddr_in* v4 = (struct sockaddr_in*)&a;
-                inet_ntoa_r(v4->sin_addr, s.ip, sizeof(s.ip));
-                s.port = ntohs(v4->sin_port);
-            }
-            else if (a.ss_family == AF_INET6)       // lwIP reports IPv4 peers of a dual-stack socket this way
-            {
-                struct sockaddr_in6* v6 = (struct sockaddr_in6*)&a;
-                const uint8_t*       b = (const uint8_t*)&v6->sin6_addr;
-                snprintf(s.ip, sizeof(s.ip), "%u.%u.%u.%u", b[12], b[13], b[14], b[15]);
-                s.port = ntohs(v6->sin6_port);
-            }
-        }
+        s.port = peer(list[i], s.ip, sizeof(s.ip));
     }
     return n;
 }
@@ -551,6 +725,10 @@ void WebBegin(WebCommandFn onCommand, WebShellFn onShell)
     cfg.max_open_sockets = MAX_SOCKETS;
     cfg.open_fn          = onSockOpen;
     cfg.close_fn         = onSockClose;
+    cfg.keep_alive_enable   = true;         // a client gone without a word (a phone off the Wi-Fi) is closed
+    cfg.keep_alive_idle     = 10;           //   after 10 s of silence and 3 unanswered probes 5 s apart
+    cfg.keep_alive_interval = 5;
+    cfg.keep_alive_count    = 3;
     if (httpd_start(&s_server, &cfg) != ESP_OK)
     {
         Log("HTTP server failed to start");

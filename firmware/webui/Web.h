@@ -35,6 +35,8 @@ struct WebSockCounts
     uint32_t opened;                        // connections accepted since boot
     uint32_t purged;                        // closed while the table was full: most likely the LRU purge, which
                                             //   closes the least recently used connection to make room
+    uint32_t slow;                          // WebSockets closed because the page stopped reading (asleep in
+                                            //   the background): sending to it would stall the whole server
 };
 struct WebSockInfo
 {

@@ -679,6 +679,10 @@ function onState(s) {
     logNext = 0;
     logAdd('(the vent restarted)');
     logFetch();
+  } else if (logBusy) {
+    // logFetch is getting them
+  } else if (s.logEnd - (s.log ? s.log.length : 0) > logNext) {
+    logFetch();                                 // a state was skipped (the page was slow): fetch the gap
   } else if (s.log) logLines(s.logEnd - s.log.length, s.log);
 
   // system
@@ -692,7 +696,8 @@ function onState(s) {
       : s.net.drops + ' since the start, the last ' + uptime(s.net.dropAgo) + ' ago (' + dropText(s.net.dropReason) + ')'],
     ['Pages open', s.net.clients],
     ['Connections', s.net.sock ? s.net.sock.open + ' of ' + s.net.sock.max + ' open now, ' + s.net.sock.peak
-      + ' at most; ' + s.net.sock.opened + ' since the start, ' + s.net.sock.purged + ' closed to make room' : '--'],
+      + ' at most; ' + s.net.sock.opened + ' since the start, ' + s.net.sock.purged + ' closed to make room'
+      + (s.net.sock.slow ? ', ' + s.net.sock.slow + ' pages not reading closed' : '') : '--'],
   ]);
   const cpu = s.sys.cpu || [];
   kv($('sysKv'), [
@@ -728,8 +733,12 @@ function logLines(from, lines) {
   logNext = Math.max(logNext, from + lines.length);
 }
 
-// What the page missed (all the vent still has, on first connecting).
+// What the page missed (all the vent still has, on first connecting, or a gap). While it runs, the states'
+// lines wait: it gets them too, in order.
+let logBusy = false;
 async function logFetch() {
+  if (logBusy) return;
+  logBusy = true;
   try {
     for (let n = 0; n < 20; n++) {
       const j = await (await fetch(API + '/api/log?since=' + logNext)).json();
@@ -738,6 +747,7 @@ async function logFetch() {
       if (!j.lines.length || j.from + j.lines.length >= j.end) break;
     }
   } catch (e) { /* offline: the WebSocket retries */ }
+  logBusy = false;
 }
 
 function pass() {

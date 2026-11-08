@@ -253,7 +253,7 @@ static void broadcast()
     WebSockCounts sc;
     WebSockStats(&sc);
     JsonObject sk = n["sock"].to<JsonObject>();
-    sk["open"] = sc.open;  sk["max"] = sc.max; sk["peak"] = sc.peak; sk["opened"] = sc.opened; sk["purged"] = sc.purged;
+    sk["open"] = sc.open;  sk["max"] = sc.max; sk["peak"] = sc.peak; sk["opened"] = sc.opened; sk["purged"] = sc.purged; sk["slow"] = sc.slow;
 
     JsonObject sys = doc["sys"].to<JsonObject>();
     sys["ver"]   = FW_VERSION;
@@ -752,8 +752,8 @@ static void shell(int argc, char* argv[], Print& out)
         WebSockStats(&sc);
         int n = WebSockList(list, 16);
         out.printf("%d of %d sockets open (the most at once since boot: %d); %lu accepted since boot, %lu closed while "
-                   "full (the LRU purge)\n", sc.open, sc.max, sc.peak, (unsigned long)sc.opened,
-                   (unsigned long)sc.purged);
+                   "full (the LRU purge), %lu WebSockets closed for not reading\n", sc.open, sc.max, sc.peak,
+                   (unsigned long)sc.opened, (unsigned long)sc.purged, (unsigned long)sc.slow);
         for (int i = 0; i < n; i++)
             out.printf("  fd %2d  %-9s  %s:%u  open %lu s\n", list[i].fd, list[i].ws ? "WebSocket" : "HTTP", list[i].ip,
                        list[i].port, (unsigned long)list[i].ageS);
