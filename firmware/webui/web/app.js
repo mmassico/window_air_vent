@@ -187,6 +187,7 @@ function fillSettings() {
     else el.value = v === undefined ? '' : v;
   });
   $('motorRev').checked = settings.damper.motorDir < 0;
+  $('intakeLow').checked = settings.fans.intakeFan === 1;
   settingsChanged();
 }
 
@@ -244,6 +245,7 @@ function initSettings() {
     }
   });
   $('motorRev').addEventListener('change', () => { settings.damper.motorDir = $('motorRev').checked ? -1 : 1; settingsChanged(); });
+  $('intakeLow').addEventListener('change', () => { settings.fans.intakeFan = $('intakeLow').checked ? 1 : 0; settingsChanged(); });
   $('revertBtn').onclick = () => { settings = clone(saved); fillSettings(); };
   $('saveBtn').onclick = async () => {
     try {

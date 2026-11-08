@@ -43,6 +43,7 @@ void SettingsDefaults(Settings* s)
 
     s->balance    = 0;
     s->fanMinDuty = 20;
+    s->intakeFan  = INTAKE_FAN;
 
     s->mode       = MODE_AUTO;
     s->boostMin   = 30;
@@ -103,7 +104,7 @@ void SettingsToJson(const Settings& s, JsonObject o)
     n["mic"] = MIC_NAME;                            // which microphone micCal belongs to
 
     JsonObject f = o["fans"].to<JsonObject>();
-    f["balance"] = s.balance;     f["minDuty"] = s.fanMinDuty;
+    f["balance"] = s.balance;     f["minDuty"] = s.fanMinDuty; f["intakeFan"] = s.intakeFan;
 
     JsonObject m = o["mode"].to<JsonObject>();
     m["boostMin"] = s.boostMin;   m["manualOpen"] = s.manualOpen; m["manualPct"] = s.manualPct;
@@ -186,6 +187,7 @@ void SettingsFromJson(Settings* s, JsonObjectConst o)
     {
         num(f, "balance", &s->balance, -20, 20);
         num(f, "minDuty", &s->fanMinDuty, 0, 60);
+        num(f, "intakeFan", &s->intakeFan, 0, 1);
     }
 
     JsonObjectConst m = o["mode"];

@@ -707,7 +707,7 @@
 <text x="434.5" y="830.5" font-size="9.5" text-anchor="middle" fill="#111" font-weight="bold" stroke="#ffffff" stroke-opacity="0.6" stroke-width="3" stroke-linejoin="round" paint-order="stroke">TACH</text>
 <rect x="394.4" y="805.0" width="9" height="9" fill="#e0b84a" stroke="#000"/>
 <text x="398.9" y="830.5" font-size="9.5" text-anchor="middle" fill="#111" font-weight="bold" stroke="#ffffff" stroke-opacity="0.6" stroke-width="3" stroke-linejoin="round" paint-order="stroke">PWM</text>
-<text x="452.3" y="845.5" font-size="11.5" text-anchor="middle" fill="#111" font-weight="bold">J2 FAN 0 (intake)</text>
+<text x="452.3" y="845.5" font-size="11.5" text-anchor="middle" fill="#111" font-weight="bold">J2 FAN 0 (exhaust)</text>
 <rect x="240.7" y="793.5" width="138.7" height="32.0" rx="2" fill="#1a1a1a" fill-opacity="0.88" stroke="#000" stroke-width="1.5"/>
 <rect x="358.9" y="805.0" width="9" height="9" fill="#e0b84a" stroke="#000"/>
 <text x="363.4" y="830.5" font-size="9.5" text-anchor="middle" fill="#111" font-weight="bold" stroke="#ffffff" stroke-opacity="0.6" stroke-width="3" stroke-linejoin="round" paint-order="stroke">GND</text>
@@ -717,7 +717,7 @@
 <text x="292.2" y="830.5" font-size="9.5" text-anchor="middle" fill="#111" font-weight="bold" stroke="#ffffff" stroke-opacity="0.6" stroke-width="3" stroke-linejoin="round" paint-order="stroke">TACH</text>
 <rect x="252.2" y="805.0" width="9" height="9" fill="#e0b84a" stroke="#000"/>
 <text x="256.7" y="830.5" font-size="9.5" text-anchor="middle" fill="#111" font-weight="bold" stroke="#ffffff" stroke-opacity="0.6" stroke-width="3" stroke-linejoin="round" paint-order="stroke">PWM</text>
-<text x="310.0" y="845.5" font-size="11.5" text-anchor="middle" fill="#111" font-weight="bold">J3 FAN 1 (exhaust)</text>
+<text x="310.0" y="845.5" font-size="11.5" text-anchor="middle" fill="#111" font-weight="bold">J3 FAN 1 (intake)</text>
 <rect x="382.9" y="651.3" width="138.7" height="32.0" rx="2" fill="#1a1a1a" fill-opacity="0.88" stroke="#000" stroke-width="1.5"/>
 <rect x="501.1" y="662.8" width="9" height="9" fill="#e0b84a" stroke="#000"/>
 <text x="505.6" y="688.3" font-size="9.5" text-anchor="middle" fill="#111" font-weight="bold" stroke="#ffffff" stroke-opacity="0.6" stroke-width="3" stroke-linejoin="round" paint-order="stroke">1A</text>

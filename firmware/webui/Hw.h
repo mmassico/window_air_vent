@@ -17,7 +17,7 @@ struct HwStatus
     bool     moving, fault;                     // fault: didn't reach the target in time
     bool     calibrating;                       // the boundary test is running
     float    travel;                            // degrees between the closed and open stops; 0: not measured
-    int      duty[2], rpm[2];                   // fans: 0 intake, 1 exhaust
+    int      duty[2], rpm[2];                   // fans by role: 0 intake, 1 exhaust (whichever connector)
     float    snd;                               // last sound level, dB (calibrated or dBFS)
     float    scdT;                              // the SCD40's last temperature, C (after its offset)
 };
@@ -25,6 +25,7 @@ struct HwStatus
 void HwBegin();
 void HwPoll(Inputs* in);                        // call often: updates in with fresh readings, keeps old ones
 void HwSetFans(float intakePct, float exhaustPct);
+int  HwFanConn(int role);   // role 0 intake, 1 exhaust -> its connector: 0 = FAN0 (upper), 1 = FAN1 (lower)
 void HwSetDamper(float deg);
 void HwStatusGet(HwStatus* st);
 int  HwDuty(float pct);                         // fan % to PWM duty, with the minimum duty

@@ -304,7 +304,8 @@ static const char* HELP =
     "sim on|off                  the simulation\n"
     "test on|off                 test mode: the control stops driving the fans and the damper (off by\n"
     "                            itself after 10 min without a test command)\n"
-    "fan <0|1|all> <duty%>       a fan's PWM duty, 0 = intake, 1 = exhaust (test mode)\n"
+    "fan <0|1|all> <duty%>       a fan's PWM duty by connector, 0 = FAN0 (upper), 1 = FAN1 (lower), or\n"
+    "                            fan intake|exhaust <duty%> by role (test mode)\n"
     "damper <deg>                move the damper to this angle from closed, with the encoder (test mode)\n"
     "damper cal                  boundary test: close until it stops, open until it stops (as at boot)\n"
     "enc                         encoder: raw, angle, magnet, AGC, magnitude\n"
@@ -447,7 +448,8 @@ static void shell(int argc, char* argv[], Print& out)
         else
             out.print("  stops: not measured (no boundary test yet, or it failed)\n");
         for (int i = 0; i < 2; i++)
-            out.printf("Fan %d (%s): duty %d %%, %d rpm\n", i, i ? "exhaust" : "intake", hw.duty[i], hw.rpm[i]);
+            out.printf("Fan %s on FAN%d (%s): duty %d %%, %d rpm\n", i ? "exhaust" : "intake", HwFanConn(i),
+                       HwFanConn(i) ? "lower" : "upper", hw.duty[i], hw.rpm[i]);
         out.printf("12 V: %.2f V\n", hw.v12);
         out.printf("Answering: SCD40 %s, AS5600 %s, TMC2209 %s, DS18B20 out %s, %s %s\n", hw.scd ? "yes" : "NO",
                    hw.enc ? "yes" : "NO", hw.tmc ? "yes" : "NO", hw.tout ? "yes" : "NO",
@@ -497,11 +499,22 @@ static void shell(int argc, char* argv[], Print& out)
         long duty;
         if (!argInt(argc, argv, 2, &duty, out) || !testMode(out))
             return;
-        bool all = !strcmp(argv[1], "all");
+        const char* a = argv[1];
+        int conn = !strcmp(a, "all") ? -1 : !strcmp(a, "intake") ? HwFanConn(0) : !strcmp(a, "exhaust") ? HwFanConn(1)
+                 : !strcmp(a, "0") ? 0 : !strcmp(a, "1") ? 1 : -2;
+        if (conn == -2)
+        {
+            out.print("fan: 0, 1, intake, exhaust or all\n");
+            return;
+        }
         for (int i = 0; i < 2; i++)
-            if (all || atoi(argv[1]) == i)
+            if (conn < 0 || conn == i)
                 HwSetFanDuty(i, duty);
-        out.printf("Fan %s: duty %ld %%\n", argv[1], constrain(duty, 0L, 100L));
+        if (conn < 0)
+            out.printf("Both fans: duty %ld %%\n", constrain(duty, 0L, 100L));
+        else
+            out.printf("FAN%d (%s, the %s): duty %ld %%\n", conn, conn ? "lower" : "upper",
+                       conn == HwFanConn(0) ? "intake" : "exhaust", constrain(duty, 0L, 100L));
     }
 
     else if (!strcmp(c, "damper") && argc == 2 && !strcmp(argv[1], "cal"))

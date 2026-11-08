@@ -3,9 +3,10 @@
 #include <Arduino.h>
 
 #define FW_NAME      "window-vent webui"
-#define FW_VERSION   "0.2.10"
+#define FW_VERSION   "0.2.11"
 
 #define CURVE_POINTS 5          // CO2 to fan look-up curve: ppm -> %, linear between the points
+#define INTAKE_FAN   1          // the intake fan's connector by default: 0 = FAN0 (upper), 1 = FAN1 (lower)
 
 enum Mode : uint8_t { MODE_AUTO, MODE_MANUAL, MODE_OFF, MODE_BOOST };
 
@@ -47,6 +48,8 @@ struct Settings
     // Fans
     int8_t   balance;                   // intake minus exhaust, % (-20 to 20)
     uint8_t  fanMinDuty;                // PWM duty at 1 % demand
+    uint8_t  intakeFan;                 // the intake fan's connector: 0 = FAN0 (upper), 1 = FAN1 (lower); the
+                                        //   exhaust is on the other (the fans mount either way in the housing)
 
     // Modes
     Mode     mode;                      // the mode at boot (MODE_BOOST is never saved)

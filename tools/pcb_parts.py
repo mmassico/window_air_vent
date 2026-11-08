@@ -67,8 +67,8 @@ PARTS = [
     ("R8", "Device:R", "22k", R_FLAT, {"1": "V12_SENSE", "2": "GND"}, ""),
     ("R9", "Device:R", "4.7k", R_FLAT, {"1": "DQ_IN", "2": "+3V3"}, ""),
     ("R10", "Device:R", "4.7k", R_FLAT, {"1": "DQ_OUT", "2": "+3V3"}, ""),
-    ("J2", "Connector_Generic:Conn_01x04", "FAN 0 intake", hdr(4), {"1": "GND", "2": "+12V", "3": "FAN0_TACH", "4": "FAN0_PWM"}, ""),
-    ("J3", "Connector_Generic:Conn_01x04", "FAN 1 exhaust", hdr(4), {"1": "GND", "2": "+12V", "3": "FAN1_TACH", "4": "FAN1_PWM"}, ""),
+    ("J2", "Connector_Generic:Conn_01x04", "FAN 0 exhaust", hdr(4), {"1": "GND", "2": "+12V", "3": "FAN0_TACH", "4": "FAN0_PWM"}, ""),
+    ("J3", "Connector_Generic:Conn_01x04", "FAN 1 intake", hdr(4), {"1": "GND", "2": "+12V", "3": "FAN1_TACH", "4": "FAN1_PWM"}, ""),
     ("J4", "Connector_Generic:Conn_01x04", "MOTOR", hdr(4), {"1": "MOT_1A", "2": "MOT_1B", "3": "MOT_2A", "4": "MOT_2B"}, ""),
     ("J5", "Connector_Generic:Conn_01x04", "SCD40", hdr(4),   # 1:1 with the SCD40 module: GND, VDD, SCL, SDA
      {"1": "GND", "2": "+3V3", "3": "SCD_SCL", "4": "SCD_SDA"}, ""),

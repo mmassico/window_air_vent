@@ -487,10 +487,15 @@ int HwDuty(float pct)
     return lroundf(g_set.fanMinDuty + pct * (100 - g_set.fanMinDuty) / 100.0f);
 }
 
+int HwFanConn(int role)
+{
+    return role ^ (g_set.intakeFan & 1);
+}
+
 void HwSetFans(float intakePct, float exhaustPct)
 {
-    FansSetDuty(0, HwDuty(intakePct));
-    FansSetDuty(1, HwDuty(exhaustPct));
+    FansSetDuty(HwFanConn(0), HwDuty(intakePct));
+    FansSetDuty(HwFanConn(1), HwDuty(exhaustPct));
 }
 
 void HwSetDamper(float deg)
@@ -530,7 +535,7 @@ void HwStatusGet(HwStatus* st)
     portEXIT_CRITICAL(&s_mux);
     for (int i = 0; i < 2; i++)
     {
-        st->duty[i] = FansGetDuty(i);
-        st->rpm[i]  = FansRpm(i);
+        st->duty[i] = FansGetDuty(HwFanConn(i));
+        st->rpm[i]  = FansRpm(HwFanConn(i));
     }
 }

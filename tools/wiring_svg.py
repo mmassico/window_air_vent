@@ -199,8 +199,8 @@ def fan(y0, idx, name, ytach, ypwm, xpu, xpd):
     pull(xpd, ypwm, "GND", "10 k", False, C_FAN)
 
 
-fan(730, 0, "intake", 800, 840, 520, 400)
-fan(900, 1, "exhaust", 970, 1010, 560, 440)
+fan(730, 0, "exhaust", 800, 840, 520, 400)
+fan(900, 1, "intake", 970, 1010, 560, 440)
 
 # ---------------------------------------------------------------------------------------------
 # Right side: TMC2209 and motor

@@ -3,8 +3,9 @@
 //  Parametric OpenSCAD model (tested with OpenSCAD 2021.01).
 //
 //  * A foam insert fills the window gap (about 100 mm wide). Two 83 mm
-//    holes, stacked vertically, go through it: intake on top, exhaust
-//    below.
+//    holes, stacked vertically, go through it: exhaust on top, intake
+//    below (the cold air comes in low, the warm exhaust leaves high, so
+//    neither loops back into the other).
 //  * This housing sits on the ROOM face of the foam (warm side, so no
 //    ice on the moving parts). Its spigots slide into the foam holes and
 //    fit snugly (two O-rings each are optional).
@@ -256,7 +257,7 @@ $fn = 96;
 eps = 0.01;
 r      = duct_id / 2;
 ro     = r + wall;
-zc     = [pitch / 2, -pitch / 2];          // upper (intake), lower (exhaust)
+zc     = [pitch / 2, -pitch / 2];          // upper (exhaust), lower (intake)
 z_top  = pitch / 2 + ro;                   // top of the upper duct
 z_mp0  = z_top + boss_h + coupler_room;    // motor plate bottom
 z_mp1  = z_mp0 + mp_t;
@@ -373,7 +374,7 @@ module bracket(z0, z1, wz0, wz1) {
 }
 
 // Airflow arrow engraved in the outer face of both bracket walls: dir = +1 toward the room
-// (intake, upper duct), -1 toward the foam (exhaust, lower duct). Same direction seen from either side.
+// (intake, lower duct), -1 toward the foam (exhaust, upper duct). Same direction seen from either side.
 module flow_arrows(zm, dir, len = 36, shaft = 3, head = 9, depth = 0.8) {
     yc = ys + 7;
     pts = [[-len / 2, -shaft / 2], [len / 2 - 8, -shaft / 2], [len / 2 - 8, -head / 2], [len / 2, 0],
@@ -506,10 +507,10 @@ module body_bored() {
                     translate([sx * (x_br - tower_t / 2) - tower_t, y_br + eb_tab[1] / 2, z_ep1 + eb_tab[2] / 2])
                         rotate([0, 90, 0]) cylinder(d = 3.4, h = 2 * tower_t, $fn = 24);
                 }
-                // airflow arrows: intake (upper duct) toward the room, exhaust (lower duct) toward the foam,
+                // airflow arrows: exhaust (upper duct) toward the foam, intake (lower duct) toward the room,
                 // centred in the band between each diamond window and its duct
-                flow_arrows((z_top + boss_h + pitch / 2 + sqrt(ro * ro - x_br * x_br)) / 2, 1);
-                flow_arrows(-(z_top + boss_h + pitch / 2 + sqrt(ro * ro - x_br * x_br)) / 2, -1);
+                flow_arrows((z_top + boss_h + pitch / 2 + sqrt(ro * ro - x_br * x_br)) / 2, -1);
+                flow_arrows(-(z_top + boss_h + pitch / 2 + sqrt(ro * ro - x_br * x_br)) / 2, 1);
                 for (sx = [-1, 1])   // M3 clearance holes for the motor plate's back tabs, through the tower walls
                     translate([sx * (x_br - tower_t / 2) - tower_t, y_br + mp_tab[1] / 2, z_mp0 - mp_tab[2] / 2])
                         rotate([0, 90, 0]) cylinder(d = 3.4, h = 2 * tower_t, $fn = 24);
@@ -858,7 +859,7 @@ module tube_spacer() {
 }
 
 // screen_frame: the insect screen's frame, in its print orientation: the outdoor face on the bed, sleeves up, the
-// intake at +y. The mesh covers the whole face, both windows and the plate between them, and its edge is pressed
+// upper hole (exhaust) at +y. The mesh covers the whole face, both windows and the plate between them, and its edge is pressed
 // into one stadium-shaped groove around both holes. The screws sit in the four corners, outside the groove.
 sc_ri = scr_sleeve[0] / 2 - scr_sleeve[1];                // window radius (the sleeve's bore)
 sc_dz = scr_sleeve[1] + scr_drain[1];                     // the frame's bottom end moves down this far: as much wall

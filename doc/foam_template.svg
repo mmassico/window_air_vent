@@ -2,7 +2,7 @@
 <rect width="215.9" height="279.4" fill="#ffffff"/>
 <text x="12.00" y="15.00" font-size="6" text-anchor="start" fill="#333333" font-weight="bold">Foam insert: drilling template, full size (mm)</text>
 <text x="12.00" y="23.00" font-size="3.4" text-anchor="start" fill="#333333" font-weight="normal">Print at 100 % (Actual size, not Fit to page); both bars must measure 100 mm.</text>
-<text x="12.00" y="28.00" font-size="3.4" text-anchor="start" fill="#333333" font-weight="normal">Tape it on the foam, centred across the insert's width, INTAKE on top (it works from either face).</text>
+<text x="12.00" y="28.00" font-size="3.4" text-anchor="start" fill="#333333" font-weight="normal">Tape it on the foam, centred across the insert's width, EXHAUST on top (it works from either face).</text>
 <text x="12.00" y="33.00" font-size="3.4" text-anchor="start" fill="#333333" font-weight="normal">Drill a pilot hole right through each centre: mark it with an awl, or set the drill_guide on the lines.</text>
 <text x="12.00" y="38.00" font-size="3.4" text-anchor="start" fill="#333333" font-weight="normal">Cut with a 3-1/4 in (83 mm) hole saw, halfway from each face, centred on the pilot hole.</text>
 <line x1="107.95" y1="40.00" x2="107.95" y2="253.00" stroke="#555" stroke-width="0.25"/>
@@ -19,18 +19,18 @@
 <line x1="107.95" y1="102.00" x2="107.95" y2="114.00" stroke="#111111" stroke-width="0.3"/>
 <line x1="87.95" y1="108.00" x2="127.95" y2="108.00" stroke="#111111" stroke-width="0.2"/>
 <circle cx="107.95" cy="108.00" r="0.60" fill="none" stroke="#111111" stroke-width="0.3"/>
-<text x="113.95" y="102.00" font-size="6" text-anchor="start" fill="#bbbbbb" font-weight="bold">INTAKE</text>
+<text x="113.95" y="102.00" font-size="6" text-anchor="start" fill="#bbbbbb" font-weight="bold">EXHAUST</text>
 <text x="113.95" y="116.60" font-size="3.6" text-anchor="start" fill="#333333" font-weight="bold">Ø 83 hole</text>
-<text x="113.95" y="121.60" font-size="3" text-anchor="start" fill="#666" font-weight="normal">top: outdoor air in</text>
+<text x="113.95" y="121.60" font-size="3" text-anchor="start" fill="#666" font-weight="normal">top: room air out</text>
 <circle cx="107.95" cy="204.00" r="45.00" fill="none" stroke="#888" stroke-width="0.3" stroke-dasharray="1.5,1.5"/>
 <circle cx="107.95" cy="204.00" r="41.50" fill="none" stroke="#111111" stroke-width="0.5"/>
 <line x1="101.95" y1="204.00" x2="113.95" y2="204.00" stroke="#111111" stroke-width="0.3"/>
 <line x1="107.95" y1="198.00" x2="107.95" y2="210.00" stroke="#111111" stroke-width="0.3"/>
 <line x1="87.95" y1="204.00" x2="127.95" y2="204.00" stroke="#111111" stroke-width="0.2"/>
 <circle cx="107.95" cy="204.00" r="0.60" fill="none" stroke="#111111" stroke-width="0.3"/>
-<text x="113.95" y="198.00" font-size="6" text-anchor="start" fill="#bbbbbb" font-weight="bold">EXHAUST</text>
+<text x="113.95" y="198.00" font-size="6" text-anchor="start" fill="#bbbbbb" font-weight="bold">INTAKE</text>
 <text x="113.95" y="212.60" font-size="3.6" text-anchor="start" fill="#333333" font-weight="bold">Ø 83 hole</text>
-<text x="113.95" y="217.60" font-size="3" text-anchor="start" fill="#666" font-weight="normal">bottom: room air out</text>
+<text x="113.95" y="217.60" font-size="3" text-anchor="start" fill="#666" font-weight="normal">bottom: outdoor air in</text>
 <text x="165.45" y="239.95" font-size="2.8" text-anchor="start" fill="#777" font-weight="normal">dashed circle: stop ring Ø 90</text>
 <text x="165.45" y="243.45" font-size="2.8" text-anchor="start" fill="#777" font-weight="normal">(the housing on the room face)</text>
 <line x1="115.95" y1="108.00" x2="173.95" y2="108.00" stroke="#b3261e" stroke-width="0.25" stroke-dasharray="1,1"/>

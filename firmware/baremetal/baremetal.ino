@@ -72,7 +72,7 @@ static const char* HELP =
     "  tmc status                   version, interface counter, flags, StallGuard, DIAG pin\r\n"
     "  tmc rd <reg>                 read a register\r\n"
     "  tmc wr <reg> <value>         write a register\r\n"
-    "Fans (0 = intake, 1 = exhaust)\r\n"
+    "Fans (0 = FAN0, upper, exhaust; 1 = FAN1, lower, intake)\r\n"
     "  fan                          duty and speed of both fans\r\n"
     "  fan <0|1|all> <duty%>        set the PWM duty\r\n"
 #if AUDIO_MODE
@@ -481,7 +481,7 @@ static void cmdFan(int argc, char* argv[])
     if (argc == 1)
     {
         for (int i = 0; i < FAN_COUNT; i++)
-            Serial.printf("%sFan %d (%s): %d%%, %d rpm", i ? "\r\n" : "", i, i ? "exhaust" : "intake",
+            Serial.printf("%sFan %d (%s): %d%%, %d rpm", i ? "\r\n" : "", i, i ? "intake" : "exhaust",
                           FansGetDuty(i), FansRpm(i));
         return;
     }

@@ -88,7 +88,7 @@ pin_labels(118.6, 146.05, ["GND", "3V3", "SCL", "SDA"])        # J5: SCD40
 text("AS5600", 102.8, 134.65, 0.8, bold=True)
 text("POS", 102.8, 135.95, 0.8)                                 # the position encoder
 fan1 = text("FAN1", 103.3, 140.7, 0.8, bold=True)
-poly([(102.75, 138.5), (103.85, 138.5), (103.3, 139.45)])       # fan 1: the exhaust, the bottom duct
+poly([(102.75, 138.5), (103.85, 138.5), (103.3, 139.45)])       # fan 1: the bottom duct (the intake)
 GAP = 106.8 - 1.27 - pcbnew.ToMM(fan1.GetBoundingBox().GetRight())     # FAN1 to its header's outline
 text("FAN0", 104.75, 148.1, 0.8, bold=True, angle=90)       # beside its header
 text("MOTOR", 129.2, 141.0, 0.8, bold=True, angle=90)          # beside their headers, as FAN0

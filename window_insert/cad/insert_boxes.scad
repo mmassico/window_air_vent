@@ -45,7 +45,7 @@ vent_box = 1;       // the box with the vent's holes, cut into pieces a to d (bo
                     //   housing must stay clear of the latch zone (box 2)
 v_pitch  = 96;      // between the two holes' centres (window_vent.scad: pitch)
 v_bore   = 84.1;    // hole for the housing's 83.7 spigots, 0.2 per side: rigid, unlike foam, so it can't squeeze
-probe    = true;    // the outdoor temperature probe's hole, above the intake
+probe    = true;    // the outdoor temperature probe's hole, above the upper hole (the exhaust)
 probe_d  = 6.5;     // for the 6 mm DS18B20 probe
 probe_up = 102;     // above the vent's centre, as on the drilling template (pitch / 2 + 45 + 9)
 

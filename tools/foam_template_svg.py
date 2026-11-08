@@ -61,7 +61,7 @@ def arrow(x, y, dx, dy, color=C_DIM):
 text(12, 15, "Foam insert: drilling template, full size (mm)", 6, "start", weight="bold")
 for i, s in enumerate([
         "Print at 100 % (Actual size, not Fit to page); both bars must measure 100 mm.",
-        "Tape it on the foam, centred across the insert's width, INTAKE on top (it works from either face).",
+        "Tape it on the foam, centred across the insert's width, EXHAUST on top (it works from either face).",
         "Drill a pilot hole right through each centre: mark it with an awl, or set the drill_guide on the lines.",
         "Cut with a 3-1/4 in (83 mm) hole saw, halfway from each face, centred on the pilot hole."]):
     text(12, 23 + i * 5, s, 3.4, "start")
@@ -77,7 +77,7 @@ for w, dash in ((GAP, "3,2"), (FOAM_W, "6,1.5")):
 text(CX - XW - 1.5, y_bot - 2, "insert width", 2.8, "end", "#555")
 
 # --- the two holes -----------------------------------------------------------------------------------
-for dy, name, flow in ((-1, "INTAKE", "top: outdoor air in"), (1, "EXHAUST", "bottom: room air out")):
+for dy, name, flow in ((-1, "EXHAUST", "top: room air out"), (1, "INTAKE", "bottom: outdoor air in")):
     y = CY + dy * PITCH / 2
     circle(CX, y, STOP, "#888", 0.3, "1.5,1.5")          # the stop ring's footprint on the room face
     circle(CX, y, HOLE, C_CUT, 0.5)
@@ -96,7 +96,7 @@ line(x_d, CY - PITCH / 2, x_d, CY + PITCH / 2, C_DIM, 0.35)
 arrow(x_d, CY - PITCH / 2, 0, -1); arrow(x_d, CY + PITCH / 2, 0, 1)
 text(x_d + 2, CY + 1.2, f"{PITCH:g} between centres", 3.4, "start", C_DIM, "bold")
 
-# --- optional probe hole, above the intake ------------------------------------------------------------
+# --- optional probe hole, above the upper hole ------------------------------------------------------------
 yp = CY - PITCH / 2 - STOP / 2 - 9
 circle(CX, yp, PROBE, C_OPT, 0.4, "1,0.8")
 cross(CX, yp, 4.5, C_OPT)

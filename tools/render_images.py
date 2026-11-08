@@ -107,10 +107,10 @@ def assembly():
 ASM_LABELS = [
     ("L", "Stepper motor", 300, 140),
     ("L", "Shaft coupler", 360, 350),
-    ("L", "Fan, intake", 60, 560),
+    ("L", "Fan, exhaust", 60, 560),
     ("L", "Damper disc", 300, 680),
     ("L", "Shaft", 375, 800),
-    ("L", "Fan, exhaust", 70, 1100),
+    ("L", "Fan, intake", 70, 1100),
     ("L", "Electronics box", 200, 1640),
     ("R", "Foam insert", 700, 80),
     ("R", "Motor plate", 545, 215),
