@@ -439,6 +439,14 @@ function makeCharts() {
     hooks: legendHooks,
   }, chartSound ? [D.t, D.tin, D.tout, D.snd] : [D.t, D.tin, D.tout], $('chartTemp'));
   charts.push(co2, temp);
+  for (const u of charts) u.ctx.canvas.addEventListener('contextrestored', () => setTimeout(checkCharts, 0));
+}
+
+// A canvas that lost its context (the computer or the GPU asleep, a tab hidden for long) comes back with its drawing
+// state reset. uPlot still thinks its font is set and draws the axis text in the browser's 10 px default, which is
+// tiny on a high-DPI screen. Rebuild the graphs when that happens.
+function checkCharts() {
+  if (charts.some((u) => !u.ctx.font.startsWith(u.axes[0].font[1] + 'px'))) rebuildCharts();
 }
 
 function rebuildCharts() {
@@ -960,6 +968,7 @@ function init() {
     const w = $('chartCo2').clientWidth;
     if (w !== chartW) { chartW = w; charts.forEach(fitChart); }
   }).observe($('chartCo2'));
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) checkCharts(); });
   showTab();
   loadSettings();
   loadHistory();
