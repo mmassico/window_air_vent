@@ -1,11 +1,28 @@
-"""Parts and nets of the controller PCB (pcb/window_vent_ctrl), shared by tools/pcb_schematic.py and tools/pcb_layout.py.
+"""Parts and nets of the controller PCB (pcb/window_vent_ctrl*), shared by tools/pcb_schematic.py and tools/pcb_layout.py.
 
 The circuit is the one in firmware/images/wiring.svg and doc/perfboard.svg; pins as in firmware/libs/WindowVent/src/Pins.h.
 Each part: reference, lib_id (KiCad symbol), value, footprint, {pin number: net}. Pins left out are not connected.
+
+Two boards, chosen with the VENT_PCB environment variable (the same for every pcb_*.py script):
+  lite     pcb/window_vent_ctrl (v1.5): the Freenove ESP32-S3 Lite (FNK0099), 2 x 20 pins
+  devkitc  (default) pcb/window_vent_ctrl_devkitc (v2.0): an ESP32-S3-N16R8 board in the DevKitC-1 layout, 2 x 22
+           pins, with a U.FL connector for an external antenna. Its 20 middle pins of each row are the Freenove's, on the
+           same holes; the extra pin at each end is 3V3 or GND. No JP1 (D1 bypass): the extra pins take its place. No TP3
+           (VIN) and TP4 (12V): C2 and J1 take their place; probe J1 pin 1 (VIN) or a fan header's pin 2 (12V).
 """
+import os
+
+VARIANT = os.environ.get("VENT_PCB", "devkitc")
+assert VARIANT in ("lite", "devkitc"), "VENT_PCB: lite or devkitc"
+DEVKITC = VARIANT == "devkitc"
+NAME = "window_vent_ctrl_devkitc" if DEVKITC else "window_vent_ctrl"
+REV = "v2.0" if DEVKITC else "v1.5"
 
 ESP_L = ["3V3", "EN", "4", "5", "6", "7", "15", "16", "17", "18", "8", "3", "46", "9", "10", "11", "12", "13", "14", "5V"]
 ESP_R = ["TX", "RX", "1", "2", "42", "41", "40", "39", "38", "37", "36", "35", "0", "45", "48", "47", "21", "20", "19", "GND"]
+if DEVKITC:                                            # one more pin at each end of each row
+    ESP_L = ["3V3"] + ESP_L + ["GND"]
+    ESP_R = ["GND"] + ESP_R + ["GND"]
 TMC_S = ["EN", "MS1", "MS2", "PDN", "UART", "CLK", "STEP", "DIR"]
 TMC_P = ["VM", "GND", "M1B", "M1A", "M2A", "M2B", "VIO", "GND"]
 
@@ -45,6 +62,8 @@ def hdr(n):
 
 PARTS = [
     # ref, lib_id, value, footprint, pins, description (for the schematic)
+    ("U1", "window_vent:ESP32S3_DevKitC", "ESP32-S3-N16R8 (DevKitC-1 type)", "window_vent:ESP32S3_DevKitC_N16R8", esp_nets(), "")
+    if DEVKITC else
     ("U1", "window_vent:ESP32S3_Lite", "Freenove ESP32-S3 Lite", "window_vent:Freenove_ESP32S3_Lite", esp_nets(), ""),
     ("U2", "window_vent:TMC2209_Module", "TMC2209 module", "window_vent:TMC2209_StepStick", TMC_NETS, ""),
     ("J1", "Connector_Generic:Conn_01x02", "12V IN", hdr(2), {"1": "VIN", "2": "GND"}, ""),
@@ -88,5 +107,9 @@ PARTS = [
     ("H3", "Mechanical:MountingHole", "M2", "MountingHole:MountingHole_2.2mm_M2", {}, ""),
     ("H4", "Mechanical:MountingHole", "M2", "MountingHole:MountingHole_2.2mm_M2", {}, ""),
 ]
+if DEVKITC:
+    PARTS = [p for p in PARTS if p[0] not in ("JP1", "TP3", "TP4")]
+    # D1 with a tight courtyard (tools/pcb_layout.py): C2 stands next to its anode lead
+    PARTS = [p[:3] + ("window_vent:D_DO-201AD_P5.08mm_Vertical_AnodeUp_Tight",) + p[4:] if p[0] == "D1" else p for p in PARTS]
 
 POWER_NETS = {"GND": "power:GND", "+3V3": "power:+3V3", "+12V": "power:+12V"}

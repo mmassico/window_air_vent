@@ -9,9 +9,11 @@ straightened); GND pours on both layers; zone fill; save.
 import fnmatch, json, math, os, subprocess, sys
 import pcbnew
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from pcb_parts import NAME, DEVKITC
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PCB = os.path.join(ROOT, "pcb")
-NAME = "window_vent_ctrl"
 BOARD = os.path.join(PCB, NAME + ".kicad_pcb")
 FREEROUTING = os.path.join(os.environ["LOCALAPPDATA"], "freerouting", "freerouting.exe")
 mm = pcbnew.FromMM
@@ -300,7 +302,8 @@ nf.SetDoNotAllowZoneFills(True); nf.SetDoNotAllowFootprints(False)
 nf.SetLayer(pcbnew.F_Cu)
 nf.SetZoneName("no fill, top edge")
 o = nf.Outline(); o.NewOutline()
-for x, y in ((100, 100), (158.06, 100), (158.06, 102.3), (100, 102.3)):
+nf_x = 160.6 if DEVKITC else 158.06                    # past the top row's last pin
+for x, y in ((100, 100), (nf_x, 100), (nf_x, 102.3), (100, 102.3)):
     o.Append(mm(x), mm(y))
 board.Add(nf)
 gnd = board.FindNet("/GND")

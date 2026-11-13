@@ -5,15 +5,16 @@ fabrication files (Gerbers and drill, zipped for PCBWay) and renders.
 Usage: "C:/Program Files/KiCad/10.0/bin/python.exe" tools/pcb_finish.py   (after tools/pcb_route.py)
 Positions in mm on the board as placed by tools/pcb_layout.py (seen from above, the window side at the top).
 """
-import os, shutil, subprocess, zipfile
-import pcbnew
+import math, os, shutil, subprocess, zipfile
+import pcbnew, sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from pcb_parts import NAME, REV, DEVKITC
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PCB = os.path.join(ROOT, "pcb")
-NAME = "window_vent_ctrl"
 BOARD = os.path.join(PCB, NAME + ".kicad_pcb")
 CLI = r"C:\Program Files\KiCad\10.0\bin\kicad-cli.exe"
-REV = "v1.5"
 mm = pcbnew.FromMM
 
 board = pcbnew.LoadBoard(os.path.join(PCB, "build", NAME + "_routed.kicad_pcb"))   # as routed, before any label
@@ -109,14 +110,31 @@ for ref, x in (("R9", 101.9), ("R10", 105.6)):                  # on the back: t
     text(f"{ref} 4.7k", x, 117.28, 0.8, pcbnew.B_SilkS, angle=90)
 
 # 12 V input
-text("+12V", 167.9, 127.55, 1.0, bold=True)
-text("GND", 165.15, 132.54, 0.8)
+if DEVKITC:                                     # J1 lower down, under C2: "+12V" above it, "GND" below it
+    text("+12V", 169.8, 136.9, 1.0, bold=True, just="right")    # centred between C2's outline and J1's
+    text("GND", 168.5, 144.0, 0.8)
+else:
+    text("+12V", 167.9, 127.55, 1.0, bold=True)
+    text("GND", 165.15, 132.54, 0.8)
 # D1: a diode symbol between it and C1, as on the board: anode (pad 2) on the right, cathode bar on the left
-dx, dy = 163.2, 138.15
-seg(dx + 0.5, dy, dx + 1.2, dy)                                    # anode lead
-poly([(dx + 0.5, dy - 0.5), (dx + 0.5, dy + 0.5), (dx - 0.45, dy)])
-seg(dx - 0.5, dy - 0.5, dx - 0.5, dy + 0.5)                        # cathode bar
-seg(dx - 0.5, dy, dx - 1.2, dy)                                    # cathode lead
+# (devkitc: D1 turned 45 deg clockwise; the symbol too, parallel to its lead, right of its name)
+dx, dy, da = (159.0, 137.7, 45) if DEVKITC else (163.2, 138.15, 0)
+
+
+def rp(x, y):
+    """a symbol point: (x, y) from the symbol's centre, turned da degrees clockwise on the board"""
+    c, s_ = math.cos(math.radians(da)), math.sin(math.radians(da))
+    return dx + x * c - y * s_, dy + x * s_ + y * c
+
+
+def rseg(x1, y1, x2, y2):
+    seg(*rp(x1, y1), *rp(x2, y2))
+
+
+rseg(0.5, 0, 1.2, 0)                                               # anode lead
+poly([rp(0.5, -0.5), rp(0.5, 0.5), rp(-0.45, 0)])
+rseg(-0.5, -0.5, -0.5, 0.5)                                        # cathode bar
+rseg(-0.5, 0, -1.2, 0)                                             # cathode lead
 for it in board.FindFootprintByReference("D1").GraphicalItems():     # the library's "A" mark: the symbol replaces it
     if isinstance(it, pcbnew.PCB_TEXT) and it.GetText() == "A":
         it.SetText("")
@@ -125,10 +143,11 @@ for it in board.FindFootprintByReference("C1").GraphicalItems():     # its "+" a
         s_, e_ = it.GetStart(), it.GetEnd()
         if abs(s_.x - e_.x) + abs(s_.y - e_.y) < mm(1.1) and pcbnew.ToMM(s_.x) < 157:
             it.Move(pcbnew.VECTOR2I(mm(0.35), mm(-0.75)))
-text("D1 BYPASS", 161.67, 127.75, 0.8)
-text("D1", 156.55, 138.6, 0.8)                                   # below-left of its body, clear of it
-text("VIN", 168.3, 136.6, 0.8)
-text("12V", 168.3, 144.1, 0.8)
+text("D1", *((156.6, 137.6) if DEVKITC else (156.55, 138.6)), 0.8)   # below-left of its body, clear of it
+if not DEVKITC:                                 # (devkitc: no TP3/TP4)
+    text("D1 BYPASS", 161.67, 127.75, 0.8)
+    text("VIN", 168.3, 136.6, 0.8)
+    text("12V", 168.3, 144.1, 0.8)
 
 # C2, the +3V3 bulk capacitor (where the 3V3 and GND test pads were): its "+" above it, over pad 1, still visible with
 # the capacitor on (the library's, beside it, met the ESP32's outline)
@@ -138,21 +157,32 @@ for it in list(c2.GraphicalItems()):
         s_, e_ = it.GetStart(), it.GetEnd()
         if abs(s_.x - e_.x) + abs(s_.y - e_.y) < mm(1.1):
             c2.Remove(it)
-seg(104.55, 103.3, 105.35, 103.3)
-seg(104.95, 102.9, 104.95, 103.7)
-text("DIAG", 102.6, 128.55, 0.8)
+px, py = (163.85, 132.6) if DEVKITC else (104.95, 103.3)    # devkitc: inside its outline, left of pad 1 (the
+seg(px - 0.4, py, px + 0.4, py)                              # library's spot meets the module's outline there too)
+seg(px, py - 0.4, px, py + 0.4)
+text("DIAG", 102.4 if DEVKITC else 102.6, 128.55, 0.8)   # devkitc: clear of the module outline
 
 # the modules' names inside their outlines (visible before they go on)
-text("ESP32-S3-WROOM-1", 132.5, 113.5, 1.2, bold=True)
+text("ESP32-S3-N16R8" if DEVKITC else "ESP32-S3-WROOM-1", 132.5, 113.5, 1.2, bold=True)
 for it in board.FindFootprintByReference("U1").GraphicalItems():     # an older footprint's "USB" mark: replaced below
     if isinstance(it, pcbnew.PCB_TEXT) and it.GetText() == "USB":
         it.SetText("")
 # which USB-C connector takes the cable: the USB-UART one, 6 mm toward the room from the module's centre line
-text("USB-UART", 103.75, 122.11, 1.0, bold=True, angle=90)
-text("antenna to the right: no metal near it", 132.5, 116.0, 0.8)
+text("USB-UART", 103.05 if DEVKITC else 103.75, 122.11, 1.0, bold=True, angle=90)   # devkitc: the longer module
+text("antenna to the right: no metal near it (U.FL: external one)" if DEVKITC else
+     "antenna to the right: no metal near it", 132.5, 116.0, 0.8)
 text("TMC2209", 145.2, 139.6, 1.2, bold=True)
+if DEVKITC:
+    # the Freenove ESP32-S3 Lite (ESP32-S3-WROOM-1) fits the 20 inner pins of each row: its outline, dotted, 0.25 mm
+    # outside the devkitc's along the rows; the short sides only between the rows, clear of the pads
+    fx0, fx1, fy0, fy1 = 156.59 - 19 * P - 0.87, 156.59 + 0.87, 116.11 - 14.25, 116.11 + 14.25
+    dotted(fx0, fy0, fx1, fy0)
+    dotted(fx0, fy1, fx1, fy1)
+    for x in (fx0, fx1):
+        dotted(x, 104.6, x, 127.6)
+    text("dotted: Freenove ESP32-S3 Lite (WROOM-1), on the inner pins", 132.5, 106.2, 0.8)
 # pin 1 of each module: a small triangle pointing at it, inside the outline
-for px, py in ((156.59, 103.41), (154.05, 133.89)):
+for px, py in ((159.13 if DEVKITC else 156.59, 103.41), (154.05, 133.89)):
     poly([(px, py + 1.2), (px - 0.6, py + 2.2), (px + 0.6, py + 2.2)])
 
 # the back: title, version, orientation
@@ -190,7 +220,7 @@ with open(pro_path, "w", encoding="utf-8", newline="\n") as fh:
     json.dump(pro, fh, indent=2)
 
 # --- DRC, fabrication files, renders -------------------------------------------------------------------------------
-rpt = os.path.join(PCB, "drc.rpt")
+rpt = os.path.join(PCB, "drc_devkitc.rpt" if DEVKITC else "drc.rpt")
 subprocess.run([CLI, "pcb", "drc", "--schematic-parity", "--format", "report", "-o", rpt, BOARD], capture_output=True)
 counts = {}
 for line in open(rpt, encoding="utf-8"):
@@ -199,7 +229,7 @@ for line in open(rpt, encoding="utf-8"):
         counts[k] = counts.get(k, 0) + 1
 print("DRC:", counts or "clean")
 
-fab = os.path.join(PCB, "fab")
+fab = os.path.join(PCB, "fab_devkitc" if DEVKITC else "fab")
 shutil.rmtree(fab, ignore_errors=True)
 os.makedirs(fab)
 subprocess.run([CLI, "pcb", "export", "gerbers", "--layers",
@@ -218,5 +248,6 @@ view = os.path.join(PCB, "view")
 os.makedirs(view, exist_ok=True)
 for side in ("top", "bottom"):                  # basic quality: no ray-traced shadows; transparent around the board
     subprocess.run([CLI, "pcb", "render", "--side", side, "--width", "1400", "--height", "1000", "--quality", "basic",
-                    "--background", "transparent", "-o", os.path.join(view, f"render_{side}.png"), BOARD], capture_output=True)
+                    "--background", "transparent", "-o",
+                    os.path.join(view, f"render{'_devkitc' if DEVKITC else ''}_{side}.png"), BOARD], capture_output=True)
 print("renders in", view)

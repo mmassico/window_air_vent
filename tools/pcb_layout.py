@@ -11,11 +11,10 @@ import os, sys, uuid
 import pcbnew
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from pcb_parts import PARTS, DNP
+from pcb_parts import PARTS, DNP, DEVKITC, NAME
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PCB = os.path.join(ROOT, "pcb")
-NAME = "window_vent_ctrl"
 FPLIB = r"C:\Program Files\KiCad\10.0\share\kicad\footprints"
 MYLIB = os.path.join(PCB, "window_vent.pretty")
 NS = uuid.UUID("6f1d2c4e-8a3b-4c5d-9e7f-102030405060")     # as in pcb_schematic.py: the symbols' UUIDs
@@ -33,7 +32,7 @@ def hole(c, r):
 
 
 # --- the two module footprints (pad 1 at the origin; same orientation as on the board) --------------------------
-def module_fp(name, descr, pads, outline, rows, extra="", silk_x=0.0):
+def module_fp(name, descr, pads, outline, rows, extra="", silk_x=0.0, crt_end=1.52):
     """rows: (x0, x1, y of each pin row): the courtyard covers the header strips only; the module stands 2.6 mm up
     on its pins, so parts lower than that (lying resistors) may go under its edges"""
     x0, y0, x1, y1 = outline
@@ -47,7 +46,7 @@ def module_fp(name, descr, pads, outline, rows, extra="", silk_x=0.0):
              extra]
     rx0, rx1, rys = rows
     for ry in rys:
-        lines.append(f'(fp_rect (start {rx0 - 1.52:.2f} {ry - 1.27:.2f}) (end {rx1 + 1.52:.2f} {ry + 1.27:.2f}) '
+        lines.append(f'(fp_rect (start {rx0 - crt_end:.2f} {ry - 1.27:.2f}) (end {rx1 + crt_end:.2f} {ry + 1.27:.2f}) '
                      '(stroke (width 0.05) (type solid)) (fill no) (layer "F.CrtYd"))')
     for num, x, y in pads:
         shape = "rect" if num == "1" else "circle"
@@ -68,6 +67,16 @@ module_fp("Freenove_ESP32S3_Lite", "Freenove ESP32-S3-WROOM Lite (FNK0099), sold
           f'(fp_rect (start {e_end:.2f} {5 * P - 9.25:.2f}) (end {e_end + 7:.2f} {5 * P + 9.25:.2f}) (stroke (width 0.12) (type dash)) (fill no) (layer "F.SilkS"))\n'
           f'(fp_text user "ANTENNA" (at {e_end + 3.5:.2f} {5 * P:.2f} 90) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))',
           silk_x=0.3)   # silk clear of the end pins' pads; "USB-UART" is board text (tools/pcb_finish.py)
+# ESP32-S3-N16R8, DevKitC-1 type (VENT_PCB=devkitc): 2 x 22 pins, the Freenove's 20 plus one at each end, so pad 1 is
+# the extra 3V3 one pin beyond the Freenove's pin 1. Rows 25.4 mm apart (measure before ordering: from its photos);
+# PCB about 56.3 x 28 (1.5 mm past the end pins), the module's antenna end 6.5 x 18 beyond it, with the U.FL socket.
+DK_END, DK_HALF, DK_ANT = 1.5, 14.0, 6.5
+dk_pads = [(str(i + 1), -i * P, 0.0) for i in range(22)] + [(str(23 + i), -i * P, 10 * P) for i in range(22)]
+module_fp("ESP32S3_DevKitC_N16R8", "ESP32-S3-N16R8 board, DevKitC-1 type (2 x 22), soldered on its pins; antenna to the right",
+          dk_pads, (-21 * P - DK_END, 5 * P - DK_HALF, DK_END, 5 * P + DK_HALF), (-21 * P, 0, (0, 10 * P)),
+          f'(fp_rect (start {DK_END:.2f} {5 * P - 9:.2f}) (end {DK_END + DK_ANT:.2f} {5 * P + 9:.2f}) (stroke (width 0.12) (type dash)) (fill no) (layer "F.SilkS"))\n'
+          f'(fp_text user "ANTENNA" (at {DK_END + DK_ANT / 2:.2f} {5 * P:.2f} 90) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))',
+          silk_x=0.3, crt_end=1.25)    # the row ends' courtyard clear of H1's
 # TMC2209: pins 1-8 EN ... DIR, pins 9-16 VM ... GND, 5 rows apart; EN/VM end on the right (toward the 12 V input)
 tmc_pads = [(str(i + 1), -i * P, 0.0) for i in range(8)] + [(str(9 + i), -i * P, 5 * P) for i in range(8)]
 t_end = (20.81 - 7 * P) / 2
@@ -91,6 +100,28 @@ with open(os.path.join(MYLIB, "R_DIN0207_P10.16mm_Flat_Tight.kicad_mod"), "w", e
         '(pad "1" thru_hole rect (at 0 0) (size 1.6 1.6) (drill 0.8) (layers "*.Cu" "*.Mask"))',
         '(pad "2" thru_hole circle (at 10.16 0) (size 1.6 1.6) (drill 0.8) (layers "*.Cu" "*.Mask"))',
         ")"]) + "\n")
+
+# the vertical DO-201AD diode (D1) with a tight courtyard: the library's is a rectangle over the body and the anode
+# lead, but at pad 2 there is only the lead, a wire rising to the bend over the body. This one is the body circle
+# (r 2.85, as the library's) joined by a band to a circle around pad 2 (r 1.85: its pad plus 0.25), so a part can stand
+# next to the lead (devkitc: C2)
+import math
+lib_d = open(os.path.join(FPLIB, "Diode_THT.pretty", "D_DO-201AD_P5.08mm_Vertical_AnodeUp.kicad_mod"), encoding="utf-8").read()
+RB, RL, D_P = 2.85, 1.85, 5.08
+a0 = math.degrees(math.asin(RL / RB))                    # where the body circle meets the band
+pts = [(RB * math.cos(math.radians(a0)), -RL), (D_P, -RL)]
+pts += [(D_P + RL * math.cos(math.radians(a)), RL * math.sin(math.radians(a))) for a in range(-80, 90, 10)]
+pts += [(D_P, RL), (RB * math.cos(math.radians(a0)), RL)]
+pts += [(RB * math.cos(math.radians(a)), RB * math.sin(math.radians(a))) for a in range(int(a0) + 10, 360 - int(a0), 10)]
+crt = ('(fp_poly (pts ' + " ".join(f"(xy {x:.3f} {y:.3f})" for x, y in pts) + ') (stroke (width 0.05) (type solid)) '
+       '(fill no) (layer "F.CrtYd"))')
+i0 = lib_d.index("\t(fp_rect")
+i1 = lib_d.index("\t(fp_line", i0)
+assert '"F.CrtYd"' in lib_d[i0:i1]
+tight = lib_d[:i0] + "\t" + crt + "\n" + lib_d[i1:]
+tight = tight.replace('(footprint "D_DO-201AD_P5.08mm_Vertical_AnodeUp"', '(footprint "D_DO-201AD_P5.08mm_Vertical_AnodeUp_Tight"', 1)
+with open(os.path.join(MYLIB, "D_DO-201AD_P5.08mm_Vertical_AnodeUp_Tight.kicad_mod"), "w", encoding="utf-8", newline="\n") as fh:
+    fh.write(tight)
 
 # --- placement: reference -> (x, y, rotation); the position is pad 1's -----------------------------------------
 ex, ey = hole(3, 0)
@@ -125,6 +156,17 @@ PLACE = {
     # PDN_UART jumpers on the back, just under the TMC2209's pins 4 (PDN) and 5 (UART), pad 2 toward the pin
     "JP3": (tx - 3 * P, ty + 2.7, 90), "JP4": (tx - 4 * P, ty + 2.7, 90),
 }
+if DEVKITC:
+    # the module's extra pins take JP1's place (antenna end) and C2's (USB end; C2 would stand under the module):
+    # C2 goes below the antenna end, to the right, clear of the module's corner and next to D1's anode lead (D1's
+    # tight courtyard); D1 a little lower, J1 below C2, as low as C1 lets it (no TP3/TP4: probe J1 or a fan header)
+    PLACE.update({
+        "U1": (ex + P, ey, 0),
+        "C2": (165.25, 132.6, 0),          # can centre (166.5, 132.6), its courtyard at the edge; "+12V" fits under it
+        "D1": (158.8, 133.0, 315),         # turned 45 deg clockwise: its lead toward C1, its body under the module's
+                                           # corner (clear of it), so C2 can come down past it
+        "J1": (168.5, 139.2, 0),           # right a little, its courtyard clear of C1's: room for "+12V" above
+    })
 BOTTOM = {"JP2", "JP3", "JP4", "R9", "R10"}              # parts on the back (B.Cu)
 
 board = pcbnew.BOARD()
@@ -200,8 +242,11 @@ ls = pcbnew.LSET(); ls.AddLayer(pcbnew.F_Cu); ls.AddLayer(pcbnew.B_Cu)
 ka.SetLayerSet(ls)
 ka.SetZoneName("antenna keep-out")
 o = ka.Outline(); o.NewOutline()
-for px, py in ((ex + e_end + 0.6, ey + 5 * P - 12.0), (BX + BW, ey + 5 * P - 12.0), (BX + BW, ey + 5 * P + 12.0),
-               (ex + e_end + 0.6, ey + 5 * P + 12.0)):
+# from the Freenove's module end, so it suits both boards on the devkitc PCB (the Freenove fits its inner pins);
+# there 11.6 mm either side of the antenna's centre line, not 12, to leave the devkitc's last pins out of it
+k_x, k_h = ex + e_end + 0.6, (11.6 if DEVKITC else 12.0)
+for px, py in ((k_x, ey + 5 * P - k_h), (BX + BW, ey + 5 * P - k_h), (BX + BW, ey + 5 * P + k_h),
+               (k_x, ey + 5 * P + k_h)):
     o.Append(mm(px), mm(py))
 board.Add(ka)
 
