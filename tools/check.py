@@ -2,8 +2,9 @@
 """Export every printable part from cad/window_vent.scad and run the geometry checks.
 
 Requires: openscad (2021.01+) on PATH, python3 with trimesh and scipy.
-Usage:    python tools/check.py [vent] [louvers]   (run from the window-vent folder; no group = both)
-          vent: checks 1 to 7 (cad/window_vent.scad); louvers: check 8 (cad/louvers.scad)
+Usage:    python tools/check.py [vent] [louvers] [fan_spacer]   (run from the window-vent folder; no group = all)
+          vent: checks 1 to 7 (cad/window_vent.scad); louvers: check 8 (cad/louvers.scad);
+          fan_spacer: check 9 (cad/fan_spacer.scad)
 
 Checks
   1. Each part: one closed (watertight) solid (or its set of them), fits a 256 x 256 x 256 mm bed.
@@ -18,6 +19,7 @@ Checks
   7. The motor plate only touches the housing (its back tabs pass through the frame's slots).
   8. Optional louvers: each part is one closed solid that fits a 180 mm bed, and from -45 to 45 deg
      the frame, blades, link and combs never collide.
+  9. Optional fan spacer: one closed solid that fits a 180 mm bed.
 """
 import os, subprocess, sys, tempfile, warnings
 import trimesh
@@ -152,7 +154,15 @@ def check_louvers():
         report(f"louvers at {a:3d} deg, {'felt link' if pad else 'link_nopad'} (frame, blades, link, combs)", v < 1e-6, f"{v:.3f} mm3")
 
 
-GROUPS = {"vent": check_vent, "louvers": check_louvers}
+def check_fan_spacer():
+    print("9. Optional fan spacer (cad/fan_spacer.scad)")
+    m = trimesh.load(openscad(os.path.join(tmp, "fan_spacer.stl"), ['part="spacer"'], os.path.join(ROOT, "cad", "fan_spacer.scad")))
+    size = [round(float(v), 1) for v in m.extents]
+    report("fan_spacer", m.is_watertight and len(m.split(only_watertight=False)) == 1 and max(size) <= SMALL_BED,
+           f"size {size} mm, {m.volume/1000:.1f} cm3")
+
+
+GROUPS = {"vent": check_vent, "louvers": check_louvers, "fan_spacer": check_fan_spacer}
 names = sys.argv[1:] or list(GROUPS)
 bad = [n for n in names if n not in GROUPS]
 if bad:

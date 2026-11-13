@@ -13,6 +13,7 @@ from PIL import Image, ImageChops, ImageDraw, ImageFont
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VENT = os.path.join(ROOT, "cad", "window_vent.scad")
 LOUV = os.path.join(ROOT, "cad", "louvers.scad")
+FSPC = os.path.join(ROOT, "cad", "fan_spacer.scad")
 IMG = os.path.join(ROOT, "images")
 tmp = tempfile.mkdtemp(prefix="wv_img_")
 
@@ -220,9 +221,12 @@ def louvers():
             ("retainer", "0,0,0,55,0,25,200", (1200, 1000), True)]:
         save(render(t(f"l_{name}.png"), LOUV, camera, size, [f'part="{name}"'], viewall=viewall), f"part_louver_{name}.png")
 
+def fan_spacer():
+    save(render(t("fspc.png"), FSPC, "0,0,0,55,0,25,0", (1000, 900), ['part="spacer"'], viewall=True), "part_fan_spacer.png")
+
 
 JOBS = {f.__name__: f for f in (assembly, assembly_lbl, damper_section, side_section, damper_cutaway, damper_closed_view,
-                                parts, screen, tray, split_view, louvers)}
+                                parts, screen, tray, split_view, louvers, fan_spacer)}
 
 if __name__ == "__main__":
     names = sys.argv[1:] or list(JOBS)
