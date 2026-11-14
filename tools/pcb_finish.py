@@ -105,9 +105,11 @@ for ref, x, val, pads in (("R5", 112.48, "10k", (107.4, 117.56)), ("R6", 124.88,
     bb = t.GetBoundingBox()
     seg(pads[0] + 1.25, 131.35, pcbnew.ToMM(bb.GetLeft()) - 0.4, 131.35)
     seg(pcbnew.ToMM(bb.GetRight()) + 0.4, 131.35, pads[1] - 1.25, 131.35)
-for ref, x in (("R9", 101.9), ("R10", 105.6)):                  # on the back: the name along the body, read there
-    board.FindFootprintByReference(ref).Reference().SetVisible(False)
-    text(f"{ref} 4.7k", x, 117.28, 0.8, pcbnew.B_SilkS, angle=90)
+for ref in ("R9", "R10"):                                       # on the back: the name along the body, read there
+    fp = board.FindFootprintByReference(ref)
+    fp.Reference().SetVisible(False)
+    c = [pcbnew.ToMM(p.GetPosition()) for p in fp.Pads()]        # midway between its pads (devkitc: R9 is lower)
+    text(f"{ref} 4.7k", (c[0][0] + c[1][0]) / 2, (c[0][1] + c[1][1]) / 2, 0.8, pcbnew.B_SilkS, angle=90)
 
 # 12 V input
 if DEVKITC:                                     # J1 lower down, under C2: "+12V" above it, "GND" below it
@@ -160,7 +162,7 @@ for it in list(c2.GraphicalItems()):
 px, py = (163.85, 132.6) if DEVKITC else (104.95, 103.3)    # devkitc: inside its outline, left of pad 1 (the
 seg(px - 0.4, py, px + 0.4, py)                              # library's spot meets the module's outline there too)
 seg(px, py - 0.4, px, py + 0.4)
-text("DIAG", 102.4 if DEVKITC else 102.6, 128.55, 0.8)   # devkitc: clear of the module outline
+text("DIAG", *((102.1, 129.05) if DEVKITC else (102.6, 128.55)), 0.8)   # devkitc: clear of the module outline
 
 # the modules' names inside their outlines (visible before they go on)
 text("ESP32-S3-N16R8" if DEVKITC else "ESP32-S3-WROOM-1", 132.5, 113.5, 1.2, bold=True)
@@ -168,19 +170,20 @@ for it in board.FindFootprintByReference("U1").GraphicalItems():     # an older 
     if isinstance(it, pcbnew.PCB_TEXT) and it.GetText() == "USB":
         it.SetText("")
 # which USB-C connector takes the cable: the USB-UART one, 6 mm toward the room from the module's centre line
-text("USB-UART", 103.05 if DEVKITC else 103.75, 122.11, 1.0, bold=True, angle=90)   # devkitc: the longer module
+text("USB-UART", 102.8 if DEVKITC else 103.75, 122.11, 1.0, bold=True, angle=90)   # devkitc: the wider module: left
+# of its outline, between R9's pads (R9 moved down for it)
+if DEVKITC:   # and the other one (the module's USB-OTG, 5.5 mm the other side of its centre line), smaller
+    text("USB-OTG", 102.8, 116.11 - 5.5, 0.8, angle=90)
 text("antenna to the right: no metal near it (U.FL: external one)" if DEVKITC else
      "antenna to the right: no metal near it", 132.5, 116.0, 0.8)
 text("TMC2209", 145.2, 139.6, 1.2, bold=True)
 if DEVKITC:
-    # the Freenove ESP32-S3 Lite (ESP32-S3-WROOM-1) fits the 20 inner pins of each row: its outline, dotted, 0.25 mm
-    # outside the devkitc's along the rows; the short sides only between the rows, clear of the pads
-    fx0, fx1, fy0, fy1 = 156.59 - 19 * P - 0.87, 156.59 + 0.87, 116.11 - 14.25, 116.11 + 14.25
-    dotted(fx0, fy0, fx1, fy0)
-    dotted(fx0, fy1, fx1, fy1)
+    # the Freenove ESP32-S3 Lite (ESP32-S3-WROOM-1) fits the 20 inner pins of each row: its ends, dotted, only between
+    # the rows (clear of the pads); both boards are 28.5 wide, so its long sides are the devkitc outline's
+    fx0, fx1 = 156.59 - 19 * P - 0.87, 156.59 + 0.87
     for x in (fx0, fx1):
         dotted(x, 104.6, x, 127.6)
-    text("dotted: Freenove ESP32-S3 Lite (WROOM-1), on the inner pins", 132.5, 106.2, 0.8)
+    text("dotted: Freenove ESP32-S3 Lite (WROOM-1) ends, on the inner pins", 132.5, 106.2, 0.8)
 # pin 1 of each module: a small triangle pointing at it, inside the outline
 for px, py in ((159.13 if DEVKITC else 156.59, 103.41), (154.05, 133.89)):
     poly([(px, py + 1.2), (px - 0.6, py + 2.2), (px + 0.6, py + 2.2)])

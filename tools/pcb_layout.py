@@ -68,9 +68,9 @@ module_fp("Freenove_ESP32S3_Lite", "Freenove ESP32-S3-WROOM Lite (FNK0099), sold
           f'(fp_text user "ANTENNA" (at {e_end + 3.5:.2f} {5 * P:.2f} 90) (layer "F.SilkS") (effects (font (size 1 1) (thickness 0.15))))',
           silk_x=0.3)   # silk clear of the end pins' pads; "USB-UART" is board text (tools/pcb_finish.py)
 # ESP32-S3-N16R8, DevKitC-1 type (VENT_PCB=devkitc): 2 x 22 pins, the Freenove's 20 plus one at each end, so pad 1 is
-# the extra 3V3 one pin beyond the Freenove's pin 1. Rows 25.4 mm apart (measure before ordering: from its photos);
-# PCB about 56.3 x 28 (1.5 mm past the end pins), the module's antenna end 6.5 x 18 beyond it, with the U.FL socket.
-DK_END, DK_HALF, DK_ANT = 1.5, 14.0, 6.5
+# the extra 3V3 one pin beyond the Freenove's pin 1. Measured (2026-11-14): rows about 25.35 apart, as the Freenove's
+# (on the 25.4 grid); PCB 56.9 x 28.5 (1.78 past the end pins), the antenna end 6.5 x 18 beyond it, with the U.FL socket.
+DK_END, DK_HALF, DK_ANT = (56.9 - 21 * P) / 2, 14.25, 6.5
 dk_pads = [(str(i + 1), -i * P, 0.0) for i in range(22)] + [(str(23 + i), -i * P, 10 * P) for i in range(22)]
 module_fp("ESP32S3_DevKitC_N16R8", "ESP32-S3-N16R8 board, DevKitC-1 type (2 x 22), soldered on its pins; antenna to the right",
           dk_pads, (-21 * P - DK_END, 5 * P - DK_HALF, DK_END, 5 * P + DK_HALF), (-21 * P, 0, (0, 10 * P)),
@@ -163,9 +163,11 @@ if DEVKITC:
     PLACE.update({
         "U1": (ex + P, ey, 0),
         "C2": (165.25, 132.6, 0),          # can centre (166.5, 132.6), its courtyard at the edge; "+12V" fits under it
-        "D1": (158.8, 133.0, 315),         # turned 45 deg clockwise: its lead toward C1, its body under the module's
+        "D1": (158.8, 133.35, 315),        # turned 45 deg clockwise: its lead toward C1, its body under the module's
                                            # corner (clear of it), so C2 can come down past it
         "J1": (168.5, 139.2, 0),           # right a little, its courtyard clear of C1's: room for "+12V" above
+        "TP5": (102.3, 131.1, 0),          # DIAG: clear of the wider module outline's corner
+        "R9": (101.9, 117.03, 270),        # down, so "USB-UART" is centred between its pads, on the connector's line
     })
 BOTTOM = {"JP2", "JP3", "JP4", "R9", "R10"}              # parts on the back (B.Cu)
 
