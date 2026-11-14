@@ -19,7 +19,8 @@ Checks
   7. The motor plate only touches the housing (its back tabs pass through the frame's slots).
   8. Optional louvers: each part is one closed solid that fits a 180 mm bed, and from -45 to 45 deg
      the frame, blades, link and combs never collide.
-  9. Optional fan spacer and shim: each one closed solid that fits a 180 mm bed; the shim's tabs clear the vanes.
+  9. Optional fan spacer and shim: each one closed solid that fits a 180 mm bed; the shim's tabs clear the vanes,
+     and hold it: turned 1 deg either way, they hit them.
 """
 import os, subprocess, sys, tempfile, warnings
 import trimesh
@@ -162,13 +163,17 @@ def check_fan_spacer():
         size = [round(float(v), 2) for v in m.extents]
         report(f"fan_{p}", m.is_watertight and len(m.split(only_watertight=False)) == 1 and max(size) <= SMALL_BED,
                f"size {size} mm, {m.volume/1000:.1f} cm3")
-    w = os.path.join(tmp, "fspc_ov.scad")
-    with open(w, "w") as fh:
-        fh.write(f'include <{FSPC.replace(os.sep, "/")}>\npart = "none";\n'
-                 "intersection() { spacer(); translate([0, 0, -shim_t]) shim(); }\n")
-    f = openscad(os.path.join(tmp, "fspc_ov.stl"), None, w)
-    v = 0.0 if f is None else abs(trimesh.load(f).volume)
-    report("shim's tabs clear the spacer's vanes", v < 1e-6, f"{v:.3f} mm3")
+    for rot in (0, -1, 1):     # in place: no overlap; turned 1 deg either way: its tabs hit the vanes
+        w = os.path.join(tmp, f"fspc_ov{rot}.scad")
+        with open(w, "w") as fh:
+            fh.write(f'include <{FSPC.replace(os.sep, "/")}>\npart = "none";\n'
+                     f"intersection() {{ spacer(); rotate({rot}) translate([0, 0, -shim_t]) shim(); }}\n")
+        f = openscad(os.path.join(tmp, f"fspc_ov{rot}.stl"), None, w)
+        v = 0.0 if f is None else abs(trimesh.load(f).volume)
+        if rot == 0:
+            report("shim's tabs clear the spacer's vanes", v < 1e-6, f"{v:.3f} mm3")
+        else:
+            report(f"shim turned {rot:+d} deg: its tabs hit the vanes (it can't turn)", v > 1e-3, f"{v:.3f} mm3")
 
 
 GROUPS = {"vent": check_vent, "louvers": check_louvers, "fan_spacer": check_fan_spacer}

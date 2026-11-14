@@ -146,7 +146,7 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 | `louver_blade` | 3 | 15 % | Thin and light; their pins come out solid anyway |
 | `louver_link_nopad` (or `louver_link`), `louver_retainer` | | 100 % | Small and thin |
 | `fan_spacer` | 3 | 15 % | Thin vertical walls and vanes: 3 walls print them solid |
-| `fan_shim` | | 100 % | Thin sheet: print it solid, at a layer height that gives 1.35 mm (or just under, so the pads still press a little) |
+| `fan_shim` | | 100 % | Thin sheet, 1.25 mm: print it solid, at a layer height that gives that thickness |
 | `fan_gasket_template` | 3 | 15 % | Just a template |
 
 - **Infill pattern: gyroid.** Equally strong in every direction, and it prints smoothly in PETG.
@@ -488,13 +488,13 @@ If one fan per duct can't keep up, a second, identical fan stacked on the first 
 | Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
 |---|:---:|---|---|---|---|
 | `fan_spacer` | <img src="images/part_fan_spacer.png" width="180"> | 1 per duct | Square block the size of the fans with their 76 mm bore, a 30 mm hub ring behind the motors and 8 radial vanes, 1.2 mm thick; M3 holes in the corners | 80 × 80 × 12 | Either face on the bed, no supports |
-| `fan_shim` | <img src="images/part_fan_shim.png" width="180"> | 2 per duct | Cross-shaped sheet, 1.35 mm thick, one on each face of the spacer: its corners are cut away around the fans' corner rubber pads, which stand that far proud of the fan's face, so the fan bears on the shim instead of only on its pads. Four tabs at the middle of its sides key it into the spacer's bore, between the vanes; small triangles fill the cross's inner corners, where the sheet is narrowest | 80 × 80 × 3.4 | Flat, tabs up |
+| `fan_shim` | <img src="images/part_fan_shim.png" width="180"> | 2 per duct | Cross-shaped sheet, 1.25 mm thick, one on each face of the spacer: its corners are cut away around the fans' corner rubber pads, which stand 1.35 mm proud of the fan's face, so the fan bears on the shim instead of only on its pads (which still press a little). Four pairs of tabs at the middle of its sides key it into the spacer's bore, each pair against the two vanes of its gap, so it can't turn; small triangles fill the cross's inner corners, where the sheet is narrowest | 80 × 80 × 3.4 | Flat, tabs up |
 
 About 26 cm³ (33 g) of PETG for each spacer, and 2 g for each shim.
 
-**Assembly:** the fan bolts go through the whole stack, outer fan, shim, spacer, shim and inner fan, into the fan plate's nuts as before: M3 × 75 instead of the M3 × 35 (2 × 25 + 1.35 + 12 + 1.35 + the 6 mm fan plate = 70.7; an M3 × 70 would reach only 1.9 mm into the nut). With `length = 10` in the model, M3 × 70 is enough. For two fans stacked without the spacer: M3 × 60. The shims' tabs go into the spacer. Both fans blow the same way: check the arrows on their frames. On the controller, each pair shares its fan header through a Y cable: both fans' 12 V, GND and PWM, but only one tachometer wire (leave the other fan's unconnected). The stack is about 65 mm deep instead of 25, so check what's in front of it on the room side. The louvers clip onto the outer fan as before.
+**Assembly:** the fan bolts go through the whole stack, outer fan, shim, spacer, shim and inner fan, into the fan plate's nuts as before: M3 × 75 instead of the M3 × 35 (2 × 25 + 1.25 + 12 + 1.25 + the 6 mm fan plate = 70.5; an M3 × 70 reaches only 2.1 mm into the 2.4 mm nut). With `length = 10` in the model, M3 × 70 is enough. For two fans stacked without the spacer: M3 × 60. The shims' tabs go into the spacer. Both fans blow the same way: check the arrows on their frames. On the controller, each pair shares its fan header through a Y cable: both fans' 12 V, GND and PWM, but only one tachometer wire (leave the other fan's unconnected). The stack is about 65 mm deep instead of 25, so check what's in front of it on the room side. The louvers clip onto the outer fan as before.
 
-**Settings**, in `cad/fan_spacer.scad`: `length` (the spacer's length), `vanes`, `vane_t`, `vane_rot` (turns the set of vanes) and `hub_d`; for the shim, `shim_t` (the pads' height), `shim_arm` (the cross's arm width) and the tabs' `tab_h`, `tab_w`, `tab_clr` and `tab_rot`, and `gusset` (the corner triangles).
+**Settings**, in `cad/fan_spacer.scad`: `length` (the spacer's length), `vanes`, `vane_t`, `vane_rot` (turns the set of vanes) and `hub_d`; for the shim, `shim_t` (the shim's thickness), `shim_arm` (the cross's arm width) and the tabs' `tab_h`, `tab_w`, `tab_clr` and `tab_rot`, and `gusset` (the corner triangles).
 
 
 ## Optional: a neoprene gasket under each fan
