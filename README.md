@@ -147,6 +147,7 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 | `louver_link_nopad` (or `louver_link`), `louver_retainer` | | 100 % | Small and thin |
 | `fan_spacer` | 3 | 15 % | Thin vertical walls and vanes: 3 walls print them solid |
 | `fan_shim` | | 100 % | Thin sheet: print it solid, at a layer height that gives 1.35 mm (or just under, so the pads still press a little) |
+| `fan_gasket_template` | 3 | 15 % | Just a template |
 
 - **Infill pattern: gyroid.** Equally strong in every direction, and it prints smoothly in PETG.
 - **Top and bottom shell layers: 5.** Flat faces stay smooth and the infill doesn't show through.
@@ -496,6 +497,17 @@ About 26 cm³ (33 g) of PETG for each spacer, and 2 g for each shim.
 **Settings**, in `cad/fan_spacer.scad`: `length` (the spacer's length), `vanes`, `vane_t`, `vane_rot` (turns the set of vanes) and `hub_d`; for the shim, `shim_t` (the pads' height), `shim_arm` (the cross's arm width) and the tabs' `tab_h`, `tab_w`, `tab_clr` and `tab_rot`, and `gusset` (the corner triangles).
 
 
+## Optional: a neoprene gasket under each fan
+
+The fans' corner rubber pads stand 1.35 mm proud of their faces, so each fan leaves a slit that wide all round between its frame and the housing's fan plate. Air leaks through it from the fan's pressure side back to its suction side, which costs pressure where it's needed most. A gasket of 1.6 mm neoprene (the lip seals' sheet), cut to the shims' cross shape, fills that slit: it squeezes a little when the bolts are tightened, seals, and keeps the fan on a soft mount (a rigid shim would bring back the vibration the pads keep out of the housing). The fan bolts stay M3 × 35.
+
+| Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
+|---|:---:|---|---|---|---|
+| `fan_gasket_template` | <img src="images/part_fan_gasket_template.png" width="180"> | 1 | Cutting template: the shim's outline without its tabs (its corners cut away around the pads, the fans' 76 mm bore) | 80 × 80 × 2 | Flat |
+
+Lay it on the neoprene, trace or cut along its edges with a sharp knife, and put the gasket between the fan and the fan plate, its corner notches around the pads. A quick test first, if you like: tape over the slit all round one fan, and see whether the PWM needed for the CO₂ setpoint drops.
+
+
 ## Files
 
 ```
@@ -506,8 +518,8 @@ doc/                        reference drawings: the motor, the AS5600, ESP32-S3,
 images/                     renders used in this README
 cad/window_vent.scad        parametric model (Customizer; part = "assembly" for the preview)
 cad/louvers.scad            optional adjustable louvers for the intake fan
-cad/fan_spacer.scad         optional spacer with straightening vanes between two stacked fans, and
-                            its shims
+cad/fan_spacer.scad         optional spacer with straightening vanes between two stacked fans, its
+                            shims, and a cutting template for neoprene fan gaskets
 stl/                        exported parts (default parameters)
 pcb/                        the controller PCB (KiCad 10): schematic and its PDF, board, Gerber zip 
                             for ordering, renders

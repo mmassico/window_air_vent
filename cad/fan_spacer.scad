@@ -28,7 +28,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part = "spacer";    // [spacer, shim, assembly]
+part = "spacer";    // [spacer, shim, gasket_template, assembly]
 
 /* [Spacer] */
 length   = 12;      // along the airflow (the fans' spacing)
@@ -48,6 +48,9 @@ tab_w    = 10;      // length along the bore
 tab_clr  = 0.2;     // clearance to the bore (radial)
 tab_rot  = 45;      // turns the tabs by whole vane pitches (45 deg: mid-sides, clear of the fan's frame at the diagonals)
 gusset   = 4;       // right-angle triangles filling the cross's inner corners (legs this long): more plastic there
+
+/* [Gasket template] */
+tmpl_t   = 2;       // the shim's outline without its tabs, to cut a neoprene gasket for the fan plate (thicker: stiffer)
 
 /* [Fan] */
 fan      = 80;      // fan frame size
@@ -75,17 +78,25 @@ module spacer() {
 }
 
 // cross-shaped shim, tabs up (as printed); in the stack, the tabs go into the spacer
-module shim() {
+module shim_sheet(t) {
     difference() {
         union() {
-            translate([-fan / 2, -shim_arm / 2, 0]) cube([fan, shim_arm, shim_t]);
-            translate([-shim_arm / 2, -fan / 2, 0]) cube([shim_arm, fan, shim_t]);
+            translate([-fan / 2, -shim_arm / 2, 0]) cube([fan, shim_arm, t]);
+            translate([-shim_arm / 2, -fan / 2, 0]) cube([shim_arm, fan, t]);
             for (sx = [-1, 1], sy = [-1, 1]) scale([sx, sy, 1])      // gussets in the four inner corners
                 translate([shim_arm / 2 - eps, shim_arm / 2 - eps, 0])
-                    linear_extrude(shim_t) polygon([[0, 0], [gusset + eps, 0], [0, gusset + eps]]);
+                    linear_extrude(t) polygon([[0, 0], [gusset + eps, 0], [0, gusset + eps]]);
         }
-        translate([0, 0, -1]) cylinder(d = bore, h = shim_t + 2, $fn = 180);
+        translate([0, 0, -1]) cylinder(d = bore, h = t + 2, $fn = 180);
     }
+}
+
+// cutting template for a neoprene gasket between the inner fan and the housing's fan plate: the shim's outline,
+// no tabs. The gasket seals the slit the fan's corner pads leave there, and keeps the fan on a soft mount.
+module gasket_template() shim_sheet(tmpl_t);
+
+module shim() {
+    shim_sheet(shim_t);
     r1 = bore / 2 - tab_clr;                         // tab outer radius
     a  = tab_w / r1 * 180 / PI;                      // tab angle
     for (i = [0 : tabs - 1])                         // centred between two vanes
@@ -122,4 +133,5 @@ module assembly() {
 
 if (part == "spacer")   spacer();
 if (part == "shim")     shim();
+if (part == "gasket_template") gasket_template();
 if (part == "assembly") assembly();

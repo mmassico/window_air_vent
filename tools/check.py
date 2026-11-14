@@ -157,7 +157,7 @@ def check_louvers():
 def check_fan_spacer():
     print("9. Optional fan spacer (cad/fan_spacer.scad)")
     FSPC = os.path.join(ROOT, "cad", "fan_spacer.scad")
-    for p in ["spacer", "shim"]:
+    for p in ["spacer", "shim", "gasket_template"]:
         m = trimesh.load(openscad(os.path.join(tmp, f"fan_{p}.stl"), [f'part="{p}"'], FSPC))
         size = [round(float(v), 2) for v in m.extents]
         report(f"fan_{p}", m.is_watertight and len(m.split(only_watertight=False)) == 1 and max(size) <= SMALL_BED,
