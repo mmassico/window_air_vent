@@ -57,6 +57,8 @@ At 8 L/s, roughly 10 hours a day over a cold-climate heating season (about 200 d
 | `motor_plate` | <img src="images/part_motor_plate.png" width="180"> | 1 | The motor screws to it on the bench; it then sits on top of the housing: two screws in front of the motor, and two tabs at the back, down through the frame and screwed to the tower walls | 56 × 61 × 15 | Top face on the bed, tabs up |
 | `magnet_cap` | <img src="images/part_magnet_cap.png" width="180"> | 1 | Holds the encoder magnet on the bottom end of the shaft; one M3 grub screw, height adjustable ±1 mm | 14 × 14 × 12 | Bore down |
 | `ebox` | <img src="images/part_ebox.png" width="180"> | 1 | Electronics box under the housing; its front wall also covers the front of the bottom bay, and two back tabs screw to the bay walls | 80 × 76 × 64 | Floor on the bed |
+| `ebox_sockets` | <img src="images/part_ebox_sockets.png" width="180"> | (1) | Instead of `ebox`, for the controller PCB with the ESP32 in 8.5 mm female headers (`header_h`): the USB diamond is stretched up by that height, so the plug passes with the ESP32 in its sockets or soldered, and only the USB side's wall has it (`esp_usb`, left by default). The same wall has a round 6.6 mm hole for the external antenna's SMA bulkhead jack (1/4-36 UNS), high up between the back and the diamond: inside, its nut stands 6 mm clear of the back tab's bracket, and outside, the antenna's base stays clear of the USB plug; a sacrificial fin holds up its top while printing (push it out, or drill it with a 6.5 mm bit). The other wall, by the ESP32's antenna end, is plain | 80 × 76 × 64 | Floor on the bed |
+| `ebox_sockets_alt` | <img src="images/part_ebox_sockets_alt.png" width="180"> | (1) | The same, for the ESP32 turned 180° (USB end toward the right wall): the diamond and the SMA hole are on the right wall, the hole on the front side of the diamond (mirrored about the ESP32's centre line, as the plug is) | 80 × 76 × 64 | Floor on the bed |
 | `tube_spacer` | <img src="images/part_tube_spacer.png" width="180"> | 1 | Flat "8" over both spigots, against the stop rings and squeezed by the foam: it holds the spigots' ends at their spacing, so foam holes slightly off 96 mm can't bend the ducts and bind the shaft. The vent sits 2.5 mm further out of the foam | 90 × 186 × 2.5 | Flat |
 | `screen_frame` | <img src="images/part_screen_frame.png" width="180"> | 1 | [Insect screen](#insect-screen) frame on the foam's outdoor face: the mesh is pressed into a groove around both holes, two sleeves plug into the holes, four screws in the corners, a drain at the bottom of each hole | 94 × 193 × 15 | Outdoor face on the bed, sleeves up |
 | `tray` | <img src="images/part_tray.png" width="180"> | (1) | Optional [drip tray](#drip-tray) on the window ledge, under the whole unit: the electronics box stands on ribs above its floor, and an adjustable leg in each corner levels it | 112 × 115 × 22 | Floor on the bed |
@@ -112,7 +114,7 @@ About **0.5 kg of PETG** for one unit (about half a 1 kg spool), or roughly $12�
 | `disc` | 2 | 2 × 12.7 = 25 cm³ (`disc_nofoam`: 2 × 14.7) |
 | `motor_plate` | 1 | 12.6 cm³ |
 | `magnet_cap` | 1 | 1.6 cm³ |
-| `ebox` | 1 | 47 cm³ |
+| `ebox` (or `ebox_sockets`, `ebox_sockets_alt`) | 1 | 47 cm³ |
 | `tube_spacer` | 1 | 4.5 cm³ |
 | `screen_frame` | 1 | 39 cm³ |
 | **Total** | | **≈ 412 cm³** |
@@ -135,7 +137,7 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 | `motor_plate` | 5 | 40 % | Screw holes, bosses and tabs under clamping load |
 | `magnet_cap` | | 100 % | Tiny, with a grub screw in it: print it solid |
 | `splice` | 5 | 40 % | Joins the two halves: nut pockets and countersunk screws |
-| `ebox` | 4 | 15–20 % | No real loads; a 4th wall (same print time) makes the walls around the screw holes stronger |
+| `ebox` (or `ebox_sockets`, `ebox_sockets_alt`) | 4 | 15–20 % | No real loads; a 4th wall (same print time) makes the walls around the screw holes stronger |
 | `tube_spacer` | | 100 % | Thin rings (3 mm wide, 2.5 mm thick) that must not stretch: print it solid |
 | `screen_frame`, `screen_test` | 4 | 25 % | Thin plate and sleeves: 4 walls print them nearly solid, so the groove's walls hold the spline |
 | `tray`, `tray_feet`, `tray_test` | 4 | 25 % | The 5 bottom layers below keep the tray's 1.6 mm floor watertight; 4 walls make the posts and feet nearly solid |

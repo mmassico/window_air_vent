@@ -22,7 +22,7 @@
 // =====================================================================
 
 /* [Part to show or export] */
-part  = "assembly"; // [assembly, tray, tray_feet, tray_test, tray_view, assembly_noplug, assembly_spc, body, disc, disc_nofoam, motor_plate, magnet_cap, ebox, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide, foam_guide_a, foam_guide_b, tube_spacer, screen_frame, screen_test]
+part  = "assembly"; // [assembly, tray, tray_feet, tray_test, tray_view, assembly_noplug, assembly_spc, body, disc, disc_nofoam, motor_plate, magnet_cap, ebox, ebox_sockets, ebox_sockets_alt, fittest, fin_test, oring_test, assembly_nofan, body_top, body_bottom, splice, split_view, split_assembly, ebox_elec, ebox_elec_alt, drill_guide, foam_guide_a, foam_guide_b, tube_spacer, screen_frame, screen_test]
 angle = 30;         // [0:5:90] damper opening in the assembly preview (0 = closed)
 
 /* [Ducts and foam] */
@@ -174,6 +174,12 @@ tmc_col   = 4;      // TMC2209 on the grid: its first pin in column 4 (room for 
 tmc_row   = 12;     // its back pin row in row 12, the front one in row 17: one free row behind the ESP32's front row
 usb_dy    = 6;      // the USB-UART connector's offset from the board's centre line, toward the room (measured: 8.25 from the
                     // board's TX/GND edge, which faces the room; the USB-OTG one is 5.5 off on the other side)
+sma_d     = 6.6;    // ebox_sockets: hole for the external antenna's SMA bulkhead jack (1/4-36 UNS, 6.35 thread), round,
+                    //   held up by a sacrificial fin like the shaft holes; in the USB side's wall, between the back and
+                    //   the USB diamond
+sma_y     = 21;     // its centre from the box's back face (esp_usb = "right": mirrored about the ESP32's centre line): its nut (8 mm across flats) 6 mm clear of the back tab's bracket
+                    //   inside; outside, the antenna's base stays clear of the USB plug's boot
+sma_z     = 6.5;    // its centre below the wall's top edge (the encoder plate): as high as the nut allows
 cable_in  = [16, 10];  // cable entries at the top of both side walls, toward the front (length along y, depth)
 anchor_h  = 6;      // tie-wrap anchors: height off the back of the fan plate, to the top of their rounded back (the
                     // wires rest on it). Their slot is house-shaped (floor on the plate, 2 mm straight walls 4.5 apart,
@@ -289,6 +295,7 @@ function pb_col(i) = (i - (pb_grid[0] - 1) / 2) * 2.54;                         
 function pb_row(j) = pb_y + (j - (pb_grid[1] - 1) / 2) * 2.54;                   // grid row j -> y
 esp_z0    = pb_top + (esp_mount == "headers" ? header_h : 0) + esp_pcb[1];        // ESP32 PCB underside
 usb_z     = esp_z0 + esp_pcb[0] + 3.25 / 2;                                     // USB-C socket centre (the diamond's)
+usb_z_soldered = pb_top + esp_pcb[1] + esp_pcb[0] + 3.25 / 2;                    // the same, ESP32 soldered (ebox_sockets)
 tmc_z0    = pb_top + (tmc_mount == "headers" ? header_h : 0) + tmc_spacer;        // TMC2209 PCB underside
 esp_yc    = pb_row(esp_row) + 5 * 2.54;                                          // ESP32 centre line (y), between its pin rows
 // tie-wrap anchors on the back of the fan plate, right side: the top and bottom ones touch the
@@ -694,7 +701,30 @@ module magnet_cap() {
 // the bottom of the lower fan and closes the front of the bottom bay. Inside: a 5 x 7 cm
 // perfboard on four standoffs, carrying the ESP32 and the TMC2209 (soldered, or in female headers).
 // Modelled in place (installed coordinates); printed floor down.
-module ebox() {
+// sockets = true (part ebox_sockets): for the ESP32 in header_h female headers on the controller PCB. The USB diamond
+// is stretched up by header_h, so the plug passes at either height, and only the USB side's wall gets it (usb, default
+// esp_usb; part ebox_sockets_alt: "right"):
+// The SMA hole for the external antenna goes through the same wall, between the back and the diamond.
+module ebox(sockets = false, usb = esp_usb) {
+    sx = usb == "left" ? 1 : -1;
+    hx = sx > 0 ? ebox_w / 2 - ebox_t : -ebox_w / 2;   // the wall's inner face (left) or outer face (right)
+    // turned 180 deg (right), the board's USB plug is behind its centre line, so the hole is mirrored about that line
+    hy = sx > 0 ? y_br + sma_y : 2 * esp_yc - (y_br + sma_y);
+    hz = z_ep0 - sma_z;
+    difference() {
+        ebox_shell(sockets, usb);
+        if (sockets) translate([hx - 1, hy, hz]) rotate([0, 90, 0]) cylinder(d = sma_d, h = ebox_t + 2, $fn = 48);
+    }
+    if (sockets && fin_t > 0)   // the fin across the hole, vertical when printing (floor down)
+        translate([hx, hy, hz]) rotate([0, 0, -90]) shaft_fin(sma_d, ebox_t, fin_t);
+}
+// the SMA jack's nut and washer inside the box (8 mm across flats: 9.3 across corners; 3 mm with the washer), for
+// the clearance check
+module sma_nut(usb = esp_usb) {
+    sx = usb == "left" ? 1 : -1;
+    translate([sx * (ebox_w / 2 - ebox_t), sx > 0 ? y_br + sma_y : 2 * esp_yc - (y_br + sma_y), z_ep0 - sma_z]) rotate([0, -sx * 90, 0]) cylinder(d = 9.3, h = 3, $fn = 6);
+}
+module ebox_shell(sockets, usb) {
     x0 = -ebox_w / 2;  y0 = y_br;  y1 = duct_len + ebox_t;   // the front wall sits in front of the plate's edge
     zb = z_ep0 - ebox_h - ebox_t;                            // underside of the floor
     difference() {
@@ -728,13 +758,16 @@ module ebox() {
         // an 11 x 6.25 mm plug, or an engraved cross marking where to drill
         // (left wall), or the right wall with the ESP32 turned 180 deg, so the connector lands on the other side
         // of the board's centre line
-        for (sx = [-1, 1]) if (usb_side == "both" || (sx > 0) == (usb_side == "left")) {
+        side = sockets ? usb : usb_side;
+        uz0  = sockets ? usb_z_soldered : usb_z;          // the diamond's (lower) centre
+        uh   = sockets ? header_h : 0;                    // stretched up this much
+        for (sx = [-1, 1]) if (side == "both" || (sx > 0) == (side == "left")) {
             usb_y = esp_yc + sx * usb_dy;
             if (usb_port == "diamond")
-                translate([sx > 0 ? ebox_w / 2 - ebox_t - 1 : x0 - 1, usb_y, zb + ebox_t + usb_z]) rotate([0, 90, 0])
-                    linear_extrude(ebox_t + 2) rotate(45) square(18 / sqrt(2), center = true);
+                translate([sx > 0 ? ebox_w / 2 - ebox_t - 1 : x0 - 1, usb_y, zb + ebox_t + uz0]) rotate([0, 90, 0])
+                    linear_extrude(ebox_t + 2) hull() for (h = [0, uh]) translate([-h, 0]) rotate(45) square(18 / sqrt(2), center = true);
             if (usb_port == "mark")
-                for (r = [0, 90]) translate([sx * ebox_w / 2, usb_y, zb + ebox_t + usb_z]) rotate([r, 0, 0])
+                for (r = [0, 90]) translate([sx * ebox_w / 2, usb_y, zb + ebox_t + uz0 + uh]) rotate([r, 0, 0])
                     cube([1.2, 8, 1], center = true);   // 0.6 deep into the outer face
         }
         for (sx = [-1, 1])   // clearance for the lower fan's corner rubber bumpers
@@ -1177,6 +1210,8 @@ if (part == "disc_nofoam")    disc(seat_bare);   // for bare lips, no foam (same
 if (part == "motor_plate")    translate([0, 0, mplate_t]) rotate([180, 0, 0]) motor_plate();   // top face on the bed, tabs up
 if (part == "magnet_cap")     magnet_cap();
 if (part == "ebox")           translate([0, 0, ebox_h + ebox_t - z_ep0]) ebox();   // floor on the bed
+if (part == "ebox_sockets")   translate([0, 0, ebox_h + ebox_t - z_ep0]) ebox(true);   // the same, for the ESP32 in sockets
+if (part == "ebox_sockets_alt") translate([0, 0, ebox_h + ebox_t - z_ep0]) ebox(true, "right");   // ... USB end toward the right wall
 if (part == "fittest")        fittest();
 if (part == "fin_test")       fin_test();
 if (part == "oring_test")     oring_test();

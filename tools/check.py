@@ -14,6 +14,8 @@ Checks
      Checks 2 to 4 run for both discs: for the lip foam (disc) and without it (disc_nofoam).
   5. The electronics box only touches the housing (zero-volume contact), and the boards fit inside it in
      both ESP32 layouts (its USB plug through the left or the right opening, the TMC2209's heatsink under the lid).
+     ebox_sockets: the boards fit with the ESP32 in female headers, and soldered (the plug through its stretched diamond),
+     and the SMA jack's nut has room inside.
   6. Split housing (for 180 mm beds): the two halves are exactly the housing minus the four joint
      screw holes, they don't overlap, and the splice plate only touches them.
   7. The motor plate only touches the housing (its back tabs pass through the frame's slots).
@@ -28,7 +30,7 @@ warnings.filterwarnings('ignore')
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SCAD = os.path.join(ROOT, "cad", "window_vent.scad")
-PARTS = ["body", "disc", "disc_nofoam", "motor_plate", "magnet_cap", "ebox", "fittest", "fin_test", "oring_test", "drill_guide", "foam_guide_a", "foam_guide_b", "tube_spacer",
+PARTS = ["body", "disc", "disc_nofoam", "motor_plate", "magnet_cap", "ebox", "ebox_sockets", "ebox_sockets_alt", "fittest", "fin_test", "oring_test", "drill_guide", "foam_guide_a", "foam_guide_b", "tube_spacer",
          "screen_frame", "screen_test", "tray", "tray_feet", "tray_test", "body_top", "body_bottom", "splice"]
 BODIES = {"tray_feet": 4, "tray_test": 2}       # parts printed as several pieces; the others are one solid
 BED = 256.0                                      # Bambu Lab P1/X1/A1
@@ -103,6 +105,30 @@ def check_vent():
         f = openscad(os.path.join(tmp, f"elec_ov_{usb}.stl"), None, elw)
         v = 0.0 if f is None else abs(trimesh.load(f).volume)
         report(f"boards in the box, USB to the {usb} (perfboard, ESP32 and its USB plug, TMC2209)", v < 1e-6, f"{v:.3f} mm3")
+    for usb in ["left", "right"]:                      # ebox_sockets (_alt): the ESP32 in female headers, its plug through
+        elw = os.path.join(tmp, f"elec_sockets_{usb}.scad")   # the stretched diamond, on the USB side's wall
+        with open(elw, "w") as fh:
+            fh.write(f'include <{SCAD.replace(os.sep, "/")}>\npart = "none";\nesp_mount = "headers";\nesp_usb = "{usb}";\n'
+                     'intersection() { union() { body(); ebox(true); } electronics(esp_usb); }\n')
+        f = openscad(os.path.join(tmp, f"elec_ov_sockets_{usb}.stl"), None, elw)
+        v = 0.0 if f is None else abs(trimesh.load(f).volume)
+        report(f"ebox_sockets with esp_usb = {usb}: boards in the box, ESP32 in female headers", v < 1e-6, f"{v:.3f} mm3")
+    for usb in ["left", "right"]:                      # ... and soldered, the plug through the diamond's lower end
+        elw = os.path.join(tmp, f"elec_sold_{usb}.scad")
+        with open(elw, "w") as fh:
+            fh.write(f'include <{SCAD.replace(os.sep, "/")}>\npart = "none";\nesp_usb = "{usb}";\n'
+                     'intersection() { union() { body(); ebox(true); } electronics(esp_usb); }\n')
+        f = openscad(os.path.join(tmp, f"elec_ov_sold_{usb}.stl"), None, elw)
+        v = 0.0 if f is None else abs(trimesh.load(f).volume)
+        report(f"ebox_sockets with esp_usb = {usb}: boards in the box, ESP32 soldered", v < 1e-6, f"{v:.3f} mm3")
+    for usb in ["left", "right"]:                      # the SMA jack's nut inside: clear of the box, housing and boards
+        elw = os.path.join(tmp, f"sma_{usb}.scad")
+        with open(elw, "w") as fh:
+            fh.write(f'include <{SCAD.replace(os.sep, "/")}>\npart = "none";\nesp_mount = "headers";\nesp_usb = "{usb}";\n'
+                     'intersection() { union() { body(); ebox(true); electronics(esp_usb); } sma_nut(); }\n')
+        f = openscad(os.path.join(tmp, f"sma_ov_{usb}.stl"), None, elw)
+        v = 0.0 if f is None else abs(trimesh.load(f).volume)
+        report(f"ebox_sockets with esp_usb = {usb}: the SMA jack's nut clears the box, housing and boards", v < 1e-6, f"{v:.3f} mm3")
 
     print("6. Split housing (leftover / overlap volumes must be 0)")
     def volume(name, expr):
