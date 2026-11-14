@@ -146,6 +146,7 @@ Most parts are thin, so the number of walls (Bambu Studio: Strength → **Wall l
 | `louver_blade` | 3 | 15 % | Thin and light; their pins come out solid anyway |
 | `louver_link_nopad` (or `louver_link`), `louver_retainer` | | 100 % | Small and thin |
 | `fan_spacer` | 3 | 15 % | Thin vertical walls and vanes: 3 walls print them solid |
+| `fan_shim` | | 100 % | Thin sheet: print it solid, at a layer height that gives 1.35 mm (or just under, so the pads still press a little) |
 
 - **Infill pattern: gyroid.** Equally strong in every direction, and it prints smoothly in PETG.
 - **Top and bottom shell layers: 5.** Flat faces stay smooth and the infill doesn't show through.
@@ -166,7 +167,7 @@ Prices: Amazon.ca, October 2026, before taxes. Packs of two leave a spare.
 | DS18B20 temperature probe, waterproof | 1 (+1 optional) | Outdoor air: the 6 mm stainless probe on its cable goes through the foam insert ([template](#drilling-the-foam-insert)); if possible, far from the exhaust (the upper hole), whose warm air skews the reading. A second one, indoors on an inside wall, is optional: the SCD40 already reads the room's temperature | — |
 | Steel rod, 5 mm × 200 mm | 1 | Damper shaft. 200 mm fits as is, no cutting. If it is HSS (very hard), grind a small flat with a rotary tool where each disc and the coupler clamp, so the screws can't slip | $12.79 (pack of 2) |
 | Flexible shaft coupler, 5–5 mm, 19 × 25 mm | 1 | | $13.49 (pack of 2) |
-| M3 × 35 screws + M3 nuts | 8 each | Fans. Two stacked fans per duct ([optional](#optional-two-fans-per-duct-with-a-spacer)): M3 × 70 with the `fan_spacer`, M3 × 60 without | — |
+| M3 × 35 screws + M3 nuts | 8 each | Fans. Two stacked fans per duct ([optional](#optional-two-fans-per-duct-with-a-spacer)): M3 × 75 with the `fan_spacer` and its shims, M3 × 60 without | — |
 | M3 × 8 screws | 4 | Motor to motor plate, through the bosses under the plate. Not longer: the motor's holes are only 2.5 mm deep ([section](doc/motor_mount.svg)) | — |
 | M3 × 10 (or M3 × 12) screws + M3 nuts | 6 each | Motor plate: two through the frame in front of the motor, two through the tower walls and the plate's back tabs. Electronics box: two through the bay walls and the box's back tabs | — |
 | M3 grub screws, 6 mm (and one 4–5 mm) | 5 | Two 6 mm per disc, 24 mm apart along the hub, so the disc can't rock on the shaft (flush with the hub); one 4–5 mm in the magnet cap (a 6 mm one would stick out 1.5 mm). Self-tapping into the plastic | — |
@@ -486,12 +487,13 @@ If one fan per duct can't keep up, a second, identical fan stacked on the first 
 | Part | <div style="width:180px">Thumbnail</div> | Qty | Description | Size (mm) | Print orientation |
 |---|:---:|---|---|---|---|
 | `fan_spacer` | <img src="images/part_fan_spacer.png" width="180"> | 1 per duct | Square block the size of the fans with their 76 mm bore, a 30 mm hub ring behind the motors and 8 radial vanes, 1.2 mm thick; M3 holes in the corners | 80 × 80 × 12 | Either face on the bed, no supports |
+| `fan_shim` | <img src="images/part_fan_shim.png" width="180"> | 2 per duct | Cross-shaped sheet, 1.35 mm thick, one on each face of the spacer: its corners are cut away around the fans' corner rubber pads, which stand that far proud of the fan's face, so the fan bears on the shim instead of only on its pads. Four tabs at the middle of its sides key it into the spacer's bore, between the vanes; small triangles fill the cross's inner corners, where the sheet is narrowest | 80 × 80 × 3.4 | Flat, tabs up |
 
-About 26 cm³ (33 g) of PETG each.
+About 26 cm³ (33 g) of PETG for each spacer, and 2 g for each shim.
 
-**Assembly:** the fan bolts go through the whole stack, outer fan, spacer and inner fan, into the fan plate's nuts as before: M3 × 70 instead of the M3 × 35 (M3 × 60 for two fans stacked without the spacer). Both fans blow the same way: check the arrows on their frames. On the controller, each pair shares its fan header through a Y cable: both fans' 12 V, GND and PWM, but only one tachometer wire (leave the other fan's unconnected). The stack is 62 mm deep instead of 25, so check what's in front of it on the room side. The louvers clip onto the outer fan as before.
+**Assembly:** the fan bolts go through the whole stack, outer fan, shim, spacer, shim and inner fan, into the fan plate's nuts as before: M3 × 75 instead of the M3 × 35 (2 × 25 + 1.35 + 12 + 1.35 + the 6 mm fan plate = 70.7; an M3 × 70 would reach only 1.9 mm into the nut). With `length = 10` in the model, M3 × 70 is enough. For two fans stacked without the spacer: M3 × 60. The shims' tabs go into the spacer. Both fans blow the same way: check the arrows on their frames. On the controller, each pair shares its fan header through a Y cable: both fans' 12 V, GND and PWM, but only one tachometer wire (leave the other fan's unconnected). The stack is about 65 mm deep instead of 25, so check what's in front of it on the room side. The louvers clip onto the outer fan as before.
 
-**Settings**, in `cad/fan_spacer.scad`: `length` (the fans' spacing), `vanes`, `vane_t`, `vane_rot` (turns the set of vanes) and `hub_d`.
+**Settings**, in `cad/fan_spacer.scad`: `length` (the spacer's length), `vanes`, `vane_t`, `vane_rot` (turns the set of vanes) and `hub_d`; for the shim, `shim_t` (the pads' height), `shim_arm` (the cross's arm width) and the tabs' `tab_h`, `tab_w`, `tab_clr` and `tab_rot`, and `gusset` (the corner triangles).
 
 
 ## Files
@@ -504,12 +506,13 @@ doc/                        reference drawings: the motor, the AS5600, ESP32-S3,
 images/                     renders used in this README
 cad/window_vent.scad        parametric model (Customizer; part = "assembly" for the preview)
 cad/louvers.scad            optional adjustable louvers for the intake fan
-cad/fan_spacer.scad         optional spacer with straightening vanes between two stacked fans
+cad/fan_spacer.scad         optional spacer with straightening vanes between two stacked fans, and
+                            its shims
 stl/                        exported parts (default parameters)
 pcb/                        the controller PCB (KiCad 10): schematic and its PDF, board, Gerber zip 
                             for ordering, renders
-tools/check.py              geometry checks (must print ALL CHECKS PASSED); vent, louvers or fan_spacer:
-                            just one
+tools/check.py              geometry checks (must print ALL CHECKS PASSED); vent, louvers or
+                            fan_spacer: just one
 tools/wiring_svg.py         draws firmware/images/wiring.svg (the wiring diagram)
 tools/as5600_svg.py         draws doc/as5600.svg (the AS5600 board, dimensioned)
 tools/ebox_layout_svg.py    draws doc/ebox_layout.svg (the electronics box, to scale)

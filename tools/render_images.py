@@ -223,6 +223,7 @@ def louvers():
 
 def fan_spacer():
     save(render(t("fspc.png"), FSPC, "0,0,0,55,0,25,0", (1000, 900), ['part="spacer"'], viewall=True), "part_fan_spacer.png")
+    save(render(t("fshim.png"), FSPC, "0,0,0,55,0,25,0", (1000, 900), ['part="shim"'], viewall=True), "part_fan_shim.png")
 
 
 JOBS = {f.__name__: f for f in (assembly, assembly_lbl, damper_section, side_section, damper_cutaway, damper_closed_view,
