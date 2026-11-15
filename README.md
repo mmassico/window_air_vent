@@ -231,6 +231,12 @@ The Freenove ESP32-S3-WROOM Lite, measured. Its two pin rows are 25.3 mm apart, 
   <img src="doc/esp32_s3.svg" alt="Freenove ESP32-S3-WROOM Lite, dimensioned: PCB 50 x 28.5 mm, antenna 7 mm beyond it over the middle 18.5 mm, two rows of 20 pins 25.3 mm apart, USB-OTG and USB-UART connectors 9 mm wide at the USB end; side view: 1.62 mm PCB on a 2.78 mm pin spacer, 5.54 mm pins, 4.85 mm to the top of the tallest part" width="640">
 </p>
 
+The ESP32-S3-N16R8 board for the v2.0 PCB (DevKitC-1 layout), measured: 56.9 × 28.5 mm, black. Its 2 × 22 pins have the Freenove's 20 per row in the middle, rows about 25.35 mm apart, and its USB-C sockets sit where the Freenove's do (USB-UART on the right, the tallest parts; nothing underneath). Its module carries a U.FL (IPEX) socket for the external antenna's pigtail; the module's own antenna sticks out 6.5 mm. Why this board: better Wi-Fi reception through the external antenna, mounted outside the electronics box. It matters most when the vent unit is far from the Wi-Fi router. The Freenove's flat antenna on the module (ESP32-S3-WROOM-1) sits close to the wiring in the box, and that wiring was observed to make the signal strength vary a lot.
+
+<p align="center">
+  <img src="doc/esp32_s3_n16r8.svg" alt="ESP32-S3-N16R8 board, DevKitC-1 layout, dimensioned: PCB 56.9 x 28.5 mm, antenna 6.5 mm beyond it over the middle 18 mm, U.FL socket on the module, two rows of 22 pins 25.35 mm apart, 1.78 mm from the end pins to the PCB's ends, USB-OTG and USB-UART connectors 9 mm wide at the USB end, 4.25 and 3.75 mm from the edges" width="520">
+</p>
+
 ### The TMC2209 module, a silent stepper motor driver
 
 A StepStick-format driver, measured: 20.81 × 15.08 mm, two rows of 8 pins 12.7 mm apart (5 holes on the perfboard). The chip is on the underside; its heatsink (15 × 14.4 mm, fins along the pin rows) sticks onto the thermal pad on top, toward the DIR/GND end so it clears the potentiometer, and stands 14.70 mm from the board's underside.
@@ -530,7 +536,7 @@ tools/check.py              geometry checks (must print ALL CHECKS PASSED); vent
 tools/wiring_svg.py         draws firmware/images/wiring.svg (the wiring diagram)
 tools/as5600_svg.py         draws doc/as5600.svg (the AS5600 board, dimensioned)
 tools/ebox_layout_svg.py    draws doc/ebox_layout.svg (the electronics box, to scale)
-tools/esp32_svg.py          draws doc/esp32_s3.svg (the ESP32-S3 board, dimensioned)
+tools/esp32_svg.py          draws doc/esp32_s3*.svg (the two ESP32-S3 boards, dimensioned)
 tools/tmc2209_svg.py        draws doc/tmc2209.svg (the TMC2209 module, dimensioned)
 tools/scd40_svg.py          draws doc/scd40.svg (the SCD40 CO2 sensor board, dimensioned)
 tools/max9814_svg.py        draws doc/max9814.svg (the MAX9814 microphone board, dimensioned)
