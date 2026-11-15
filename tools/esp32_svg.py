@@ -107,17 +107,25 @@ def draw(b):
     am = (PW - ANT_W) / 2
     a, c = px(am, -ANT_L)
     out.append(f'<rect x="{a}" y="{c}" width="{ANT_W * K}" height="{MOD_L * K}" rx="3" fill="{b["ant"]}" stroke="#111" stroke-width="1.5"/>')
-    a, c = px(am + 1, MOD_L - ANT_L - 18)
-    out.append(f'<rect x="{a}" y="{c}" width="{(ANT_W - 2) * K}" height="{17 * K}" rx="3" fill="#c9cbcf" stroke="#888"/>')
-    text(*px(PW / 2, MOD_L - ANT_L - 9), b["module"], 15, color="#333", weight="bold")
+    if b["ufl"]:
+        # shield with a notch at its top right corner for the U.FL socket, scaled from a photo of the board:
+        # x 6.2 to 22.3, y 0.7 to 18.4; the notch 5.7 x 3.8; the socket 2.6 square, all inside the PCB
+        x0s, x1s, y0s, y1s, nx, ny = 6.2, 22.3, 0.7, 18.4, 16.6, 3.8
+        pts = [(x0s, y0s), (nx, y0s), (nx, ny), (x1s, ny), (x1s, y1s), (x0s, y1s)]
+        out.append('<polygon points="' + " ".join(f"{px(x, y)[0]:.1f},{px(x, y)[1]:.1f}" for x, y in pts)
+                   + '" fill="#c9cbcf" stroke="#888" stroke-linejoin="round"/>')
+        text(*px(PW / 2, 10), b["module"], 15, color="#333", weight="bold")
+        ux, uy, us = 19.3, 0.5, 2.6
+        a, c = px(ux, uy)
+        out.append(f'<rect x="{a:.1f}" y="{c:.1f}" width="{us * K:.1f}" height="{us * K:.1f}" rx="2" fill="#e8c766" stroke="#7a5c00" stroke-width="1.2"/>')
+        cx, cy = px(ux + us / 2, uy + us / 2)
+        out.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{0.8 * K:.1f}" fill="#d9d9d9" stroke="#7a5c00"/>')
+        text(*px(ux - 0.5, -0.7), "U.FL (IPEX)", 14, "end", "#ffffff", "bold")
+    else:
+        a, c = px(am + 1, MOD_L - ANT_L - 18)
+        out.append(f'<rect x="{a}" y="{c}" width="{(ANT_W - 2) * K}" height="{17 * K}" rx="3" fill="#c9cbcf" stroke="#888"/>')
+        text(*px(PW / 2, MOD_L - ANT_L - 9), b["module"], 15, color="#333", weight="bold")
     text(*px(PW / 2, -ANT_L / 2 + 0.6), "antenna", 14, color="#ffffff")
-    if b["ufl"]:                     # U.FL socket, on the module's antenna end, right side (as on the board)
-        ux, uy = PW / 2 + ANT_W / 2 - 4.2, MOD_L - ANT_L - 18 - 0.2
-        a, c = px(ux, uy - 1.6)
-        out.append(f'<rect x="{a:.1f}" y="{c:.1f}" width="{3 * K}" height="{3 * K}" rx="2" fill="#e8c766" stroke="#7a5c00" stroke-width="1.2"/>')
-        cx, cy = px(ux + 1.5, uy - 0.1)
-        out.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{0.9 * K:.1f}" fill="#d9d9d9" stroke="#7a5c00"/>')
-        text(*px(ux - 0.6, uy - 0.2), "U.FL (IPEX)", 14, "end", "#ffffff", "bold")
 
     # USB-C connectors
     for x, lab in ((OTG_X, "USB-OTG"), (PW - UART_X - USB_W, "USB-UART")):
