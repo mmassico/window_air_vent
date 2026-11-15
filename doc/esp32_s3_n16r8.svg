@@ -12,6 +12,8 @@
 <text x="413.8" y="1041.3" font-size="15" text-anchor="middle" fill="#111" font-weight="bold">USB-OTG</text>
 <rect x="504.75" y="902.1999999999999" width="117.0" height="97.5" rx="5" fill="#c0c0c0" stroke="#555" stroke-width="1.5"/>
 <text x="563.2" y="1041.3" font-size="15" text-anchor="middle" fill="#111" font-weight="bold">USB-UART</text>
+<text x="413.8" y="1059.5" font-size="14" text-anchor="middle" fill="#444" font-weight="normal">(USB)</text>
+<text x="563.2" y="1059.5" font-size="14" text-anchor="middle" fill="#444" font-weight="normal">(COM)</text>
 <circle cx="320.5" cy="283.1" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
 <text x="336.1" y="288.1" font-size="12" text-anchor="start" fill="#ffffff" font-weight="bold">3V3</text>
 <circle cx="320.5" cy="316.2" r="9.75" fill="#f4d35e" stroke="#7a5c00"/>
@@ -176,5 +178,5 @@
 <text x="40" y="1196" font-size="14" fill="#333">Measured on the board. 2 x 22 pins, 2.54 pitch; the 20 inner pins of each row are the Freenove's (the v2.0 PCB takes both boards).</text>
 <text x="40" y="1220" font-size="14" fill="#333">U.FL socket on the module, for the external antenna's pigtail (15 cm, to the SMA jack in the electronics box's wall).</text>
 <text x="40" y="1244" font-size="14" fill="#333">The USB-C sockets are at the same places as on the Freenove board and are the tallest parts; nothing on the underside.</text>
-<text x="40" y="1268" font-size="14" fill="#333">In the electronics box, plug the USB-UART connector (power and console).</text>
+<text x="40" y="1268" font-size="14" fill="#333">In the electronics box, plug the USB-UART connector, marked COM on this board (power and console).</text>
 </svg>

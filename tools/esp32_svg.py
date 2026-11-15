@@ -42,6 +42,7 @@ N16R8 = dict(
     ANT_W=18.0, ANT_L=6.5,
     MOD_L=25.5,
     module="ESP32-S3-N16R8", ufl=True, halo=True,   # halo: pin labels readable over the USB-C sockets
+    usb_alias=("USB", "COM"),    # the board's own silkscreen names for USB-OTG and USB-UART
     pcb="#1c1c1e", pcb_stroke="#000", ant="#3a3a3c",
     OTG_X=4.25, UART_X=3.75, USB_W=9.0,   # measured: at the same places as on the Freenove board
     ROW=25.35,                   # measured about 25.35, as the Freenove's: on the 25.4 grid on the v2.0 PCB
@@ -54,7 +55,7 @@ N16R8 = dict(
     notes=["Measured on the board. 2 x 22 pins, 2.54 pitch; the 20 inner pins of each row are the Freenove's (the v2.0 PCB takes both boards).",
            "U.FL socket on the module, for the external antenna's pigtail (15 cm, to the SMA jack in the electronics box's wall).",
            "The USB-C sockets are at the same places as on the Freenove board and are the tallest parts; nothing on the underside.",
-           "In the electronics box, plug the USB-UART connector (power and console)."],
+           "In the electronics box, plug the USB-UART connector, marked COM on this board (power and console)."],
 )
 
 
@@ -123,6 +124,8 @@ def draw(b):
         a, c = px(x, PL - 7.5)
         out.append(f'<rect x="{a}" y="{c}" width="{USB_W * K}" height="{7.5 * K}" rx="5" fill="#c0c0c0" stroke="#555" stroke-width="1.5"/>')
         text(*px(x + USB_W / 2, PL + 3.2), lab, 15, weight="bold")
+    for x, lab in zip((OTG_X, PW - UART_X - USB_W), b.get("usb_alias", ())):
+        text(*px(x + USB_W / 2, PL + 4.6), f"({lab})", 14, color="#444")
 
     # header pins and labels
     r1 = (PW - b["ROW"]) / 2
