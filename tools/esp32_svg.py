@@ -120,7 +120,7 @@ def draw(b):
         out.append(f'<rect x="{a:.1f}" y="{c:.1f}" width="{us * K:.1f}" height="{us * K:.1f}" rx="2" fill="#e8c766" stroke="#7a5c00" stroke-width="1.2"/>')
         cx, cy = px(ux + us / 2, uy + us / 2)
         out.append(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{0.8 * K:.1f}" fill="#d9d9d9" stroke="#7a5c00"/>')
-        text(*px(ux - 0.5, -0.7), "U.FL (IPEX)", 14, "end", "#ffffff", "bold")
+        text(*px(PW / 2 + ANT_W / 2 - 0.4, -0.7), "U.FL (IPEX)", 14, "end", "#ffffff", "bold")  # over the socket
     else:
         a, c = px(am + 1, MOD_L - ANT_L - 18)
         out.append(f'<rect x="{a}" y="{c}" width="{(ANT_W - 2) * K}" height="{17 * K}" rx="3" fill="#c9cbcf" stroke="#888"/>')
