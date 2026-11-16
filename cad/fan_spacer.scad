@@ -24,12 +24,17 @@
 //    vanes, each split in two halves that stand against the vanes, so the shim
 //    can't turn. Two per spacer, printed flat, tabs up. With them, the stack is
 //    2 x shim_t longer: see the README for the bolt length.
+//  * shim_plate: the same shim for the housing's fan plate, between the inner
+//    fan (or the only one) and the plate: the duct's 74 mm bore, and four
+//    plain tabs into the duct at the middle of its sides (no vanes there).
+//    The neoprene gasket (gasket_template) does the same job with a seal and
+//    a soft mount; this rigid one is for when the neoprene squeezes too much.
 //
 //  Coordinates: z along the airflow, z = 0 and z = length on the two faces.
 // =====================================================================
 
 /* [Part to show or export] */
-part = "spacer";    // [spacer, shim, gasket_template, assembly]
+part = "spacer";    // [spacer, shim, shim_plate, gasket_template, assembly]
 
 /* [Spacer] */
 length   = 12;      // along the airflow (the fans' spacing)
@@ -51,13 +56,15 @@ tab_rot  = 45;      // turns the tabs by whole vane pitches (45 deg: mid-sides, 
 gusset   = 4;       // right-angle triangles filling the cross's inner corners (legs this long): more plastic there
 
 /* [Gasket template] */
-tmpl_t   = 2;       // the shim's outline without its tabs, to cut a neoprene gasket for the fan plate (thicker: stiffer)
+tmpl_t   = 5;       // the shim's outline without its tabs, to cut a neoprene gasket for the fan plate (5 mm: stiff, and a
+                    // taller wall to guide the knife; at 2 mm its 2 mm mid-side bands were too flexible)
 
 /* [Fan] */
 fan      = 80;      // fan frame size
 fan_t    = 25;      // fan frame depth (assembly view only)
 fan_hole = 71.5;    // fan screw spacing
 bore     = 76;      // the fans' blade circle (the housing's duct is 74)
+duct     = 74;      // the housing's duct bore at its fan plate (shim_plate)
 hole_d   = 3.4;     // M3 clearance
 
 eps = 0.01;
@@ -79,7 +86,7 @@ module spacer() {
 }
 
 // cross-shaped shim, tabs up (as printed); in the stack, the tabs go into the spacer
-module shim_sheet(t) {
+module shim_sheet(t, b = bore) {
     difference() {
         union() {
             translate([-fan / 2, -shim_arm / 2, 0]) cube([fan, shim_arm, t]);
@@ -88,7 +95,7 @@ module shim_sheet(t) {
                 translate([shim_arm / 2 - eps, shim_arm / 2 - eps, 0])
                     linear_extrude(t) polygon([[0, 0], [gusset + eps, 0], [0, gusset + eps]]);
         }
-        translate([0, 0, -1]) cylinder(d = bore, h = t + 2, $fn = 180);
+        translate([0, 0, -1]) cylinder(d = b, h = t + 2, $fn = 180);
     }
 }
 
@@ -111,7 +118,22 @@ module shim() {
             }
 }
 
-// the stack: inner fan (on the housing's fan plate, below), shim, spacer, shim, outer fan, and the four bolts
+// the shim for the housing's fan plate: the duct's bore, and four whole tabs at the middle of its sides, into the
+// duct (tab_clr from its wall), each on a foot that joins it to the sheet
+module shim_plate() {
+    shim_sheet(shim_t, duct);
+    r1 = duct / 2 - tab_clr;                         // tab outer radius
+    a  = tab_w / r1 * 180 / PI;                      // tab angle
+    for (i = [0 : tabs - 1])
+        rotate(i * 360 / tabs - a / 2)
+            rotate_extrude(angle = a, $fn = 180) {
+                translate([r1 - tab_t, shim_t - eps]) square([tab_t, tab_h + eps]);       // the tab
+                translate([r1 - tab_t, 0]) square([duct / 2 + 0.5 - (r1 - tab_t), shim_t]);  // its foot, in the sheet
+            }
+}
+
+// the stack: the plate shim (its tabs down, into the housing's duct), inner fan, shim, spacer, shim, outer fan, and
+// the four bolts
 module fan_dummy() {
     color([0.2, 0.2, 0.22]) difference() {
         translate([-fan / 2, -fan / 2, 0]) cube([fan, fan, fan_t]);
@@ -122,13 +144,14 @@ module fan_dummy() {
 }
 
 module assembly() {
+    color([0.3, 0.8, 0.5]) translate([0, 0, -shim_t - fan_t - shim_t]) mirror([0, 0, 1]) translate([0, 0, -shim_t]) shim_plate();
     translate([0, 0, -shim_t - fan_t]) fan_dummy();
     color([0.3, 0.6, 0.9]) translate([0, 0, -shim_t]) shim();
     color([0.95, 0.6, 0.2]) spacer();
     color([0.3, 0.6, 0.9]) translate([0, 0, length + shim_t]) mirror([0, 0, 1]) shim();
     translate([0, 0, length + shim_t]) fan_dummy();
     top = length + shim_t + fan_t;
-    bolt = 2 * fan_t + length + 2 * shim_t + 6;     // to the back of the 6 mm fan plate
+    bolt = 2 * fan_t + length + 3 * shim_t + 6;     // to the back of the 6 mm fan plate
     for (dx = [-1, 1], dy = [-1, 1]) color([0.7, 0.7, 0.72]) translate([dx * fan_hole / 2, dy * fan_hole / 2, 0]) {
         translate([0, 0, top]) cylinder(d = 5.5, h = 3, $fn = 24);          // socket head
         translate([0, 0, top - bolt]) cylinder(d = 3, h = bolt, $fn = 16);  // M3, to the fan plate's nuts
@@ -137,5 +160,6 @@ module assembly() {
 
 if (part == "spacer")   spacer();
 if (part == "shim")     shim();
+if (part == "shim_plate") shim_plate();
 if (part == "gasket_template") gasket_template();
 if (part == "assembly") assembly();

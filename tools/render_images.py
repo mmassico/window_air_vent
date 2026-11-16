@@ -226,6 +226,7 @@ def louvers():
 def fan_spacer():
     save(render(t("fspc.png"), FSPC, "0,0,0,55,0,25,0", (1000, 900), ['part="spacer"'], viewall=True), "part_fan_spacer.png")
     save(render(t("fshim.png"), FSPC, "0,0,0,55,0,25,0", (1000, 900), ['part="shim"'], viewall=True), "part_fan_shim.png")
+    save(render(t("fshimp.png"), FSPC, "0,0,0,55,0,25,0", (1000, 900), ['part="shim_plate"'], viewall=True), "part_fan_shim_plate.png")
     save(render(t("fgasket.png"), FSPC, "0,0,0,55,0,25,0", (1000, 900), ['part="gasket_template"'], viewall=True), "part_fan_gasket_template.png")
 
 

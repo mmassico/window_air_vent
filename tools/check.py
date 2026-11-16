@@ -184,7 +184,7 @@ def check_louvers():
 def check_fan_spacer():
     print("9. Optional fan spacer (cad/fan_spacer.scad)")
     FSPC = os.path.join(ROOT, "cad", "fan_spacer.scad")
-    for p in ["spacer", "shim", "gasket_template"]:
+    for p in ["spacer", "shim", "shim_plate", "gasket_template"]:
         m = trimesh.load(openscad(os.path.join(tmp, f"fan_{p}.stl"), [f'part="{p}"'], FSPC))
         size = [round(float(v), 2) for v in m.extents]
         report(f"fan_{p}", m.is_watertight and len(m.split(only_watertight=False)) == 1 and max(size) <= SMALL_BED,
@@ -200,6 +200,14 @@ def check_fan_spacer():
             report("shim's tabs clear the spacer's vanes", v < 1e-6, f"{v:.3f} mm3")
         else:
             report(f"shim turned {rot:+d} deg: its tabs hit the vanes (it can't turn)", v > 1e-3, f"{v:.3f} mm3")
+    w = os.path.join(tmp, "fspc_plate.scad")    # the plate shim's tabs, above its sheet: inside the housing's duct
+    with open(w, "w") as fh:
+        fh.write(f'include <{FSPC.replace(os.sep, "/")}>\npart = "none";\n'
+                 "intersection() { shim_plate(); translate([0, 0, shim_t]) difference() {\n"
+                 "  translate([-50, -50, 0]) cube([100, 100, 10]); translate([0, 0, -1]) cylinder(d = duct, h = 12, $fn = 360); } }\n")
+    f = openscad(os.path.join(tmp, "fspc_plate.stl"), None, w)
+    v = 0.0 if f is None else abs(trimesh.load(f).volume)
+    report("plate shim's tabs fit the housing's 74 mm duct", v < 1e-6, f"{v:.3f} mm3")
 
 
 GROUPS = {"vent": check_vent, "louvers": check_louvers, "fan_spacer": check_fan_spacer}
