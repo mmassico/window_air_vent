@@ -51,8 +51,8 @@ if __name__ == "__main__":
             ("box_0b", "0,0,0,60,0,200,0", (1000, 800), BOXES, True),
             ("box_0c", "0,0,0,60,0,200,0", (1000, 800), BOXES, True),
             ("ac_joiners", "0,0,0,45,0,30,0", (1000, 800), BOXES, True),
-            ("box_1", "0,0,0,60,0,200,0", (800, 1100), BOXES, True),
-            ("box_3", "0,0,0,60,0,200,0", (800, 1100), BOXES, True),
+            ("box_1", "0,0,0,60,0,200,0", (1000, 800), BOXES, True),
+            ("box_3", "0,0,0,60,0,200,0", (1000, 800), BOXES, True),
             ("hole_test", "0,112,400,0,112,0", (600, 1100), HOLE, True)]:
         save(render(os.path.join(tmp, f"{name}.png"), camera, size, [f'part="{name}"'], True, src, full),
              f"part_{name}.png")

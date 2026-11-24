@@ -58,8 +58,8 @@ Print in PETG, with no supports. The STLs in [`stl/`](stl) are exported in their
 | `box_0b` | <img src="images/part_box_0b.png" width="180"> | 1 | The AC box's middle piece: two pillars beside the hole's straight sides, with the upper bumps | 135.5 × 50.8 × 84.8 | Standing, as installed |
 | `box_0c` | <img src="images/part_box_0c.png" width="180"> | 1 | The AC box's top piece: the upper notches and the upper arc, with 10 mm of material over the tunnel (`ac_cap`): its bed face | 135.5 × 50.8 × 74.5 | Upside down, on its top |
 | `ac_joiners` | <img src="images/part_ac_joiners.png" width="180"> | 1 plate | Four snap joiners, the caps' design: one in each pillar at each joint of the AC box | 32 × 13.8 × 7.2 each | Flat, bumps up |
-| `box_1`, `box_2`, `box_4` to `box_7` | <img src="images/part_box_1.png" height="200"> | 1 each | Plain boxes | 135.5 × 50.8 × 114.3 | Standing |
-| `box_3` | <img src="images/part_box_3.png" height="200"> | 1 | Notched around the window latch | 135.5 × 50.8 × 114.3 | Standing |
+| `box_1`, `box_2`, `box_4` to `box_7` | <img src="images/part_box_1.png" width="180"> | 1 each | Plain boxes | 135.5 × 50.8 × 114.3 | Standing |
+| `box_3` | <img src="images/part_box_3.png" width="180"> | 1 | Notched around the window latch | 135.5 × 50.8 × 114.3 | Standing |
 | `hole_test` | <img src="images/part_hole_test.png" height="200"> | 1 | The hole in a 116 × 224 plate, "UP" engraved in its upper left corner: try the hose's end in it before printing the AC box | 116 × 224 × 2.83 | Flat |
 
 The side and sash caps and their joiners don't depend on the insert's width: if they are printed for the vent's insert, the same pieces serve both. Their print settings are in the [vent insert's README](../README.md#to-print).
