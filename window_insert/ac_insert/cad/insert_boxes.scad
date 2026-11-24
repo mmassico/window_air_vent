@@ -172,6 +172,12 @@ module piece(z0, z1, flip = false) {
         if (ac) {
             along_u(vx, hz, u1 = box_t / 2 - panel_t) tunnel2d();   // from the outdoor face to the panel
             along_u(vx, hz) ac_hole();                              // through the panel
+            // a notch whose edge is this piece's cut face, carried 1 mm past it: on the exact plane, rounding leaves
+            // a skin of panel over the notch, a few microns thick (a thin overhang in the slicer)
+            for (n = notches) let(n1 = hz - n[0], n0 = n1 - n[1]) {
+                if (abs(n0 - z0) < eps) bx(vx - notch_w / 2, vx + notch_w / 2, -box_t / 2 - 1, box_t / 2 + 1, z0 - 1, n1);
+                if (abs(n1 - z1) < eps) bx(vx - notch_w / 2, vx + notch_w / 2, -box_t / 2 - 1, box_t / 2 + 1, n0, z1 + 1);
+            }
         }
         // a socket opening up as it prints has a flat bottom, one opening down a gable (as segment() does)
         for (c = pj, r = ac_socks) let(lo = abs(c - z0) < eps)
