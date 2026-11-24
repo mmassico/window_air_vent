@@ -4,6 +4,8 @@ The foam insert that fills the window gap under the [window vent](../README.md),
 
 It is measured on one horizontal sliding window: the sash opens about 12 cm, and the insert fills that gap from the floor of the track to its ceiling. Another window needs its own measurements, but the same approach.
 
+For a portable air conditioner's exhaust hose, the same window takes a wider insert with the same side and sash caps: see [Variants](#variants).
+
 <p align="center"><img src="images/assembly.png" width="600" alt="Left: the whole insert in the window, seen from the room, with the window and the foam drawn transparent. Right: three corners, numbered 1 to 3"></p>
 
 The insert in the window, seen from the room, with the window and the foam drawn transparent. On the right:
@@ -248,6 +250,7 @@ tools/window_profiles_svg.py  draws the drawings in doc/ from the measurements i
                               values as in cad/window_caps.scad)
 tools/latch_template_svg.py   draws doc/latch_template.svg and .pdf, and its preview
 tools/render_images.py        regenerates the thumbnails in images/ from the model
+ac_insert/                    the air conditioner's insert (its own README, models and STLs)
 ```
 
 To export a part from the command line:
@@ -255,6 +258,10 @@ To export a part from the command line:
 ```
 openscad -o stl/corners.stl -D 'part="corners"' cad/window_caps.scad
 ```
+
+## Variants
+
+- **[Air conditioner insert](ac_insert/README.md):** for a portable air conditioner's exhaust hose, in the summer. The insert is 136 mm wide instead of 112, a stack of eight hollow printed boxes; the lowest one has the hole of the air conditioner's own window panel, and the hose's end clips into it. It reuses this insert's side and sash caps and their joiners; only the top and bottom caps are new, 142 mm long.
 
 ## License
 

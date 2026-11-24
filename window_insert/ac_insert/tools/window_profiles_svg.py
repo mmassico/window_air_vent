@@ -2,7 +2,7 @@
 """Draw doc/window_top_view.svg, doc/window_side_view.svg and doc/insert_width.svg: the window's profiles around
 the air conditioner's insert, to scale.
 
-Usage: python tools/window_profiles_svg.py   (run from the window_conditioner_insert folder)
+Usage: python tools/window_profiles_svg.py   (run from the window_insert/ac_insert folder)
 All dimensions in mm, measured on the window (the same values as cad/window_caps.scad). u runs across the insert's
 thickness from its centre (the centre of the 25.90 sash channel), outdoor negative. Both views keep one scale in x
 and y; the side view breaks the insert's height twice to fit the page, and its z labels give the true heights.

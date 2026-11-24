@@ -1,6 +1,6 @@
 # Window insert for the air conditioner
 
-A window insert like the [vent's](../window_insert/README.md), for the exhaust hose of a portable air conditioner, for the summer. It goes in the same window, in the same way: printed caps on its four edges fit it to the window's profiles, and the insert itself is a stack of hollow printed boxes. One of them has the same hole as the air conditioner's own window panel, and the hose's end clips into it.
+A window insert like the [vent's](../README.md), for the exhaust hose of a portable air conditioner, for the summer. It goes in the same window, in the same way: printed caps on its four edges fit it to the window's profiles, and the insert itself is a stack of hollow printed boxes. One of them has the same hole as the air conditioner's own window panel, and the hose's end clips into it.
 
 <p align="center"><img src="images/box_view.png" height="600" alt="The insert in the window, seen from the room: the stack of eight boxes between the caps, the hose's hole in the lowest one, and the box notched around the window latch"></p>
 
@@ -31,7 +31,7 @@ The hole isn't symmetric top to bottom: the notches are nearer the top.
 
 ## The window's measurements
 
-The same window as the vent's: see [its measurements](../window_insert/README.md#the-windows-measurements). The drawings here show the wider insert.
+The same window as the vent's: see [its measurements](../README.md#the-windows-measurements). The drawings here show the wider insert.
 
 <p align="center">
   <img src="doc/window_top_view.svg" alt="Top view at mid-height, to scale: the sash's end with its groove, the insert 136 wide and 50.8 thick, 3 mm from the sash and from the side frame, the side frame's sash channel, and the window latch zone" width="760">
@@ -51,9 +51,9 @@ Print in PETG, with no supports. The STLs in [`stl/`](stl) are exported in their
 |---|:---:|---|---|---|---|
 | `cap_top` | <img src="images/part_cap_top.png" height="200"> | 1 | Top cap, whole: the vent insert's, 142 long | 60.8 × 20 × 142 | Standing on its end |
 | `cap_bottom` | <img src="images/part_cap_bottom.png" height="200"> | 1 | Bottom cap, whole: the vent insert's, 142 long | 60.8 × 22.5 × 142 | Standing on its end |
-| `side_0a` to `side_4b` | <img src="../window_insert/images/part_side_0a.png" height="200"> | 1 each | Side cap's pieces, from `side_0a` at the floor; `side_2a` and `side_2b` have the relief around the window latch. **Reused from the vent insert:** the STLs are in [`../window_insert/stl/`](../window_insert/stl), labelled F0a to F4b. Shown: `side_0a`, turned over | 21.2 × 60.8 × 105 to 108 | Standing; `side_0a` and `side_2b` turned over, on their upper end |
-| `sash_0a` to `sash_4b` | <img src="../window_insert/images/part_sash_0a.png" height="200"> | 1 each | Sash cap's pieces, from `sash_0a` at the floor. **Reused from the vent insert:** the STLs are in [`../window_insert/stl/`](../window_insert/stl), labelled W0a to W4b. Shown: `sash_0a`, turned over | 21.7 × 60.8 × 107 to 108 | Standing; `sash_0a` turned over, on its upper end |
-| `joiners` | <img src="../window_insert/images/part_joiners.png" width="180"> | 1 plate | The side and sash caps' joiners: 9 for the side cap, 18 for the sash cap. **Reused from the vent insert:** [`../window_insert/stl/joiners.stl`](../window_insert/stl/joiners.stl) | 168 × 146 plate | Flat, bumps up |
+| `side_0a` to `side_4b` | <img src="../images/part_side_0a.png" height="200"> | 1 each | Side cap's pieces, from `side_0a` at the floor; `side_2a` and `side_2b` have the relief around the window latch. **Reused from the vent insert:** the STLs are in [`../stl/`](../stl), labelled F0a to F4b. Shown: `side_0a`, turned over | 21.2 × 60.8 × 105 to 108 | Standing; `side_0a` and `side_2b` turned over, on their upper end |
+| `sash_0a` to `sash_4b` | <img src="../images/part_sash_0a.png" height="200"> | 1 each | Sash cap's pieces, from `sash_0a` at the floor. **Reused from the vent insert:** the STLs are in [`../stl/`](../stl), labelled W0a to W4b. Shown: `sash_0a`, turned over | 21.7 × 60.8 × 107 to 108 | Standing; `sash_0a` turned over, on its upper end |
+| `joiners` | <img src="../images/part_joiners.png" width="180"> | 1 plate | The side and sash caps' joiners: 9 for the side cap, 18 for the sash cap. **Reused from the vent insert:** [`../stl/joiners.stl`](../stl/joiners.stl) | 168 × 146 plate | Flat, bumps up |
 | `box_0a` | <img src="images/part_box_0a.png" width="180"> | 1 | The AC box's bottom piece: the lower arc and the lower notches, up to the notches' top edge | 135.5 × 50.8 × 91.1 | Standing, as installed |
 | `box_0b` | <img src="images/part_box_0b.png" width="180"> | 1 | The AC box's middle piece: two pillars beside the hole's straight sides, with the upper bumps | 135.5 × 50.8 × 84.8 | Standing, as installed |
 | `box_0c` | <img src="images/part_box_0c.png" width="180"> | 1 | The AC box's top piece: the upper notches and the upper arc, with 10 mm of material over the tunnel (`ac_cap`): its bed face | 135.5 × 50.8 × 74.5 | Upside down, on its top |
@@ -62,7 +62,7 @@ Print in PETG, with no supports. The STLs in [`stl/`](stl) are exported in their
 | `box_3` | <img src="images/part_box_3.png" height="200"> | 1 | Notched around the window latch | 135.5 × 50.8 × 114.3 | Standing |
 | `hole_test` | <img src="images/part_hole_test.png" height="200"> | 1 | The hole in a 116 × 224 plate, "UP" engraved in its upper left corner: try the hose's end in it before printing the AC box | 116 × 224 × 2.83 | Flat |
 
-The side and sash caps and their joiners don't depend on the insert's width: if they are printed for the vent's insert, the same pieces serve both. Their print settings are in the [vent insert's README](../window_insert/README.md#to-print).
+The side and sash caps and their joiners don't depend on the insert's width: if they are printed for the vent's insert, the same pieces serve both. Their print settings are in the [vent insert's README](../README.md#to-print).
 
 **The AC box's pieces.** A hole through a standing box would have flat overhangs over the hole and its tunnel, so the AC box is cut where none is left: through the upper notches' bottom edge and the lower notches' top edge. The top piece prints upside down, so both arcs print as bowls, and each notch starts as a step in the wall. The middle piece is two pillars, as any slice through a hole would be.
 
@@ -81,7 +81,7 @@ The side and sash caps and their joiners don't depend on the insert's width: if 
 
 ## Installation
 
-Like the [vent's insert](../window_insert/README.md#installation), like a drawer: nothing is glued.
+Like the [vent's insert](../README.md#installation), like a drawer: nothing is glued.
 
 1. Open the sash wider than usual.
 2. Push the side cap, its pieces snapped together, into the side frame's channel.
@@ -116,4 +116,4 @@ openscad -o stl/box_0a.stl -D 'part="box_0a"' cad/insert_boxes.scad
 
 ## License
 
-Part of the window vent: released under the same [CERN Open Hardware Licence Version 2 - Permissive](../LICENSE) (CERN-OHL-P-2.0).
+Part of the window vent: released under the same [CERN Open Hardware Licence Version 2 - Permissive](../../LICENSE) (CERN-OHL-P-2.0).

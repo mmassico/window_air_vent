@@ -4,8 +4,8 @@
 //  Boxes stacked between the top and bottom caps, held by the caps. Each
 //  box is a thin shell with inner walls
 //  parallel to its faces: the air gaps between them insulate in series,
-//  like the panes of a triple-glazed window. A copy of
-//  ../window_insert/cad/insert_boxes.scad, with the air conditioner's
+//  like the panes of a triple-glazed window. A copy of the vent insert's
+//  insert_boxes.scad (../../cad/), with the air conditioner's
 //  hose hole in place of the vent's two holes.
 //
 //  Every box prints standing: its faces and inner walls are plain

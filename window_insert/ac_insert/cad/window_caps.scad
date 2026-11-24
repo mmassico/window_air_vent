@@ -2,7 +2,7 @@
 //  Air conditioner window insert: printed edge caps around the insert
 //  Parametric OpenSCAD model (tested with OpenSCAD 2021.01).
 //
-//  A copy of ../window_insert/cad/window_caps.scad (the window vent's
+//  A copy of ../../cad/window_caps.scad (the window vent's
 //  insert), for the air conditioner's exhaust hose: the insert is wider
 //  (ins_w), so the top and bottom caps are longer. The side and sash
 //  caps are the vent insert's, unchanged: their pieces can be reused.

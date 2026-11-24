@@ -2,7 +2,7 @@
 """Regenerate the README's part thumbnails from cad/window_caps.scad, cad/insert_boxes.scad and cad/ac_hole.scad.
 
 Requires: openscad (2021.01+) on PATH, python3 with Pillow.
-Usage:    python tools/render_images.py   (run from the window_conditioner_insert folder)
+Usage:    python tools/render_images.py   (run from the window_insert/ac_insert folder)
 
 Each image is an OpenSCAD preview (Tomorrow colour scheme) of a part in its print orientation, or of the stack in the
 window, trimmed to its content.
