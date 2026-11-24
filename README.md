@@ -564,6 +564,7 @@ tools/pcb_*.py              build pcb/ with KiCad 10 and Freerouting: parts and 
                             schematic, layout, routing, then labels and Gerbers (pcb_finish.py)
 tools/render_images.py      regenerates the images in images/ from the models
 tools/webui_pack.py         packs firmware/webui/web/ (the web page) into the sketch, gzipped
+tools/lib_zip.py            zips firmware/libs/WindowVent for the Arduino IDE's Add .ZIP Library
 firmware/baremetal/         Arduino sketch: serial commands to test each electronic part (not 
                             tested on hardware yet; see firmware/README.md)
 firmware/webui/             Arduino sketch: the application, CO2 control and its web page on the
@@ -571,6 +572,7 @@ firmware/webui/             Arduino sketch: the application, CO2 control and its
 firmware/libs/WindowVent/   the pin map and the drivers both sketches use
 window_insert/              the foam insert's printed edge caps, fitted to the window's measured
                             profiles (see window_insert/README.md)
+window_insert/ac_insert/    the air conditioner's insert: the same caps, a wider stack of boxes
 PRINT_CHECKLIST.md          every printed/bought part interface to verify before printing
 ```
 

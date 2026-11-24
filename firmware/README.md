@@ -12,7 +12,15 @@ Two sketches and the library they share:
 
 - **Board:** Freenove ESP32-S3-WROOM Lite (FNK0099): 16 MB flash, 8 MB octal PSRAM, and two USB-C connectors: **USB-UART** (the onboard code uploader, a CH343 USB-serial chip wired to the ESP32's UART0) and **USB-OTG** (the ESP32-S3's own USB, host or device). Dimensions and pinout: [doc/esp32_s3.svg](../doc/esp32_s3.svg).
 - **Software:** Arduino IDE 2.x with the **esp32 by Espressif Systems** core, version 3.x (tested to compile with 3.3.12).
-- **Libraries:** the project's own `WindowVent` (in `libs/`), for both sketches; and for `webui/`, **ArduinoJson** 7.x by Benoit Blanchon (Library Manager). In the Arduino IDE, copy `libs/WindowVent` into the `libraries` folder of the sketchbook (Documents > Arduino > libraries on Windows), or link it there, so the IDE finds it.
+- **Libraries:** the project's own `WindowVent` (in `libs/`), for both sketches; and for `webui/`, **ArduinoJson** 7.x by Benoit Blanchon (Library Manager). The Arduino IDE only finds `WindowVent` in the `libraries` folder of the sketchbook (Documents > Arduino > libraries on Windows). Put it there one of three ways:
+  - **A junction (best):** a link from the sketchbook to the repository's folder, made once. The IDE then always builds the current sources, with nothing to redo after a change. On Windows, in a command prompt (no administrator rights needed, unlike a symbolic link), with the path of your clone of the repository (its `window-vent` folder) in place of `<repository>`:
+    ```
+    mklink /J "%USERPROFILE%\Documents\Arduino\libraries\WindowVent" "<repository>\firmware\libs\WindowVent"
+    ```
+  - **A ZIP:** run `python tools/lib_zip.py` from the `window-vent` folder. It writes `libs/WindowVent.zip` (not kept in git), with `WindowVent/` at its root. Then Sketch > Include Library > Add .ZIP Library. The IDE copies the library into the sketchbook: after a change in `libs/WindowVent`, make the ZIP again and add it again (it replaces the old copy).
+  - **A copy:** copy `libs/WindowVent` into the sketchbook's `libraries` folder. Like the ZIP, it goes stale after a change.
+
+  arduino-cli needs none of these: `--libraries libs` points it at the folder (below).
 - **Arduino IDE settings (Tools menu):**
 
 | Setting | Value |

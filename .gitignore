@@ -16,3 +16,5 @@ pcb/fp-info-cache
 window_insert/ac_insert/GridClim3.png
 window_insert/ac_insert/GridClim3.svg
 window_insert/ac_insert/IMG_20261123_0004.jpg
+# the WindowVent library zipped for the Arduino IDE (tools/lib_zip.py makes it from firmware/libs/WindowVent)
+firmware/libs/*.zip
