@@ -12,3 +12,7 @@ pcb/*.kicad_prl
 pcb/*-backups/
 pcb/fp-info-cache
 ~*.lck
+# the air conditioner hole's source drawings (cad/ac_hole.scad has their values)
+window_conditioner_insert/GridClim3.png
+window_conditioner_insert/GridClim3.svg
+window_conditioner_insert/IMG_20261123_0004.jpg
