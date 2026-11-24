@@ -9,8 +9,9 @@
 //  hose hole in place of the vent's two holes.
 //
 //  Every box prints standing: its faces and inner walls are plain
-//  vertical walls, and each cell's roof is a short bridge between two 45
-//  deg corbels, so nothing needs supports. The box at the window latch
+//  vertical walls, and each cell's roof is a 45 deg gable (as is the end
+//  of each socket's solid block), so nothing needs supports and there is
+//  no flat ceiling to bridge. The box at the window latch
 //  is notched around it.
 //
 //  The AC box has the hose's hole (ac_hole.scad) in a panel_t thick
@@ -49,8 +50,8 @@ n_in     = 2;       // inner walls, parallel to the faces: n_in + 1 air gaps acr
 w_face   = 1.2;     // faces and edges (3 lines with a 0.4 nozzle)
 w_in     = 0.8;     // inner walls (2 lines)
 w_end    = 1.2;     // end plates
-corbel   = 3;       // 45 deg corbels in each cell's top corners (as printed): the roof bridges gap - 2 corbel (0: a
-                    //   flat bridge across the gap; gap / 2: a full gable, but its solid triangle costs 20 cm3 a box)
+corbel   = 99;      // 45 deg corbels in each cell's top corners (as printed), at most gap / 2: the roof bridges gap - 2
+                    //   corbel. 99: a full gable, no ceiling at all (its triangles print as infill); 0: a flat bridge
 box_t    = ins_t;   // thickness: the insert's, so the boxes slide between the caps' lips
 box_xclr = 0.5;     // the boxes are this much narrower than the gap (ins_w): rigid, they must still let the sash close
 top_tape = 2.5;     // foam tape in the top channel, above the stack
@@ -163,10 +164,17 @@ module piece(z0, z1, flip = false) {
             for (k = [0 : n_in]) cell(k, z0, z1, flip);
             notch(w_face);
             if (ac) along_u(vx, hz) sleeve2d(flip ? 1 : -1);
-            // the pillars, solid around the sockets, in the middle air gap (their underside, as printed, a short bridge
-            // between walls)
-            for (c = pj, r = ac_socks)
-                bx(r[0] - j_wall, r[1] + j_wall, r[2] - j_wall, r[3] + j_wall, c - ac_boss, c + ac_boss);
+            // the pillars, solid around the sockets, in the middle air gap. Past their end inside the piece, a 45 deg
+            // corbel grows from each inner wall toward the middle and meets the other under the block: printed under
+            // the middle cell, the block is a gable roof, no ceiling (and a floor with a groove when printed over it)
+            for (c = pj, r = ac_socks) let(s = abs(c - z0) < eps ? 1 : -1, hw = j_sw / 2 + j_wall,
+                                           zn = c + s * ac_boss, zf = zn + s * hw, xa = r[0] - j_wall, xb = r[1] + j_wall) {
+                bx(xa, xb, -hw, hw, c - ac_boss, c + ac_boss);
+                for (t = [-1, 1]) hull() {
+                    bx(xa, xb, t * (hw - eps), t * hw, zn, zf);   // at the wall, from the block to the corbel's foot
+                    bx(xa, xb, 0, t * hw, zn - s * eps, zn);      // under the block, to the middle
+                }
+            }
         }
         notch();
         if (ac) {

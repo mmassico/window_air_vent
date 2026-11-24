@@ -70,7 +70,7 @@ The side and sash caps and their joiners don't depend on the insert's width: if 
 
 **Labels.** Each box is engraved with its number on its side-frame end, the face against the side cap: 0a, 0b, 0c, then 1 to 7 from the floor up. It reads upright as installed, so the ones printed upside down read upside down on the bed.
 
-**Boxes.** Their walls are the model's own (1.2 mm faces, 0.8 mm inner walls), so the slicer fills them solid: infill doesn't matter. Each cell's roof is a short bridge between two 45° corbels.
+**Boxes.** Their walls are the model's own (1.2 mm faces, 0.8 mm inner walls), so the slicer fills them solid. Nothing in them is a flat ceiling: each cell's roof, as printed, is a 45° gable, and so is the end of the solid block around each socket in the AC box. The triangles beside each gable are solid in the model, and the slicer fills them with infill: 15 % is plenty.
 
 ### To buy
 
