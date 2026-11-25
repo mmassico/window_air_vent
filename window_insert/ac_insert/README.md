@@ -4,7 +4,7 @@ A window insert like the [vent's](../README.md), for the exhaust hose of a porta
 
 <p align="center"><img src="images/box_view.png" height="600" alt="The insert in the window, seen from the room: the stack of eight boxes between the caps, the hose's hole in the lowest one, and the box notched around the window latch"></p>
 
-> **Status: designed, not printed yet.** The hose's hole is checked: a test plate printed from the drawing matches the original panel. The top and bottom caps and the boxes are new and untested. The side and sash caps are the vent insert's, unchanged.
+> **Status: partly printed.** The hose's hole is checked: a test plate printed from the drawing matches the original panel. The AC box (`box_0a`, `box_0b` and `box_0c`, snapped together) is printed, and the hose's end clips into it. The top and bottom caps and the plain boxes (`box_1` to `box_7`) are new and not printed yet. The side and sash caps are the vent insert's, unchanged.
 
 ## How it works
 
